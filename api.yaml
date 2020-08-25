@@ -1,0 +1,221 @@
+openapi: 3.0.1
+info:
+  title: TP TACS
+  version: 1.0.0
+tags:
+  - name: Auth
+    description: Authentication
+  - name: Users
+    description: Users operation
+  - name: Admin
+    description: Admins operation
+paths:
+  /auth/logIn:
+    post:
+      tags: 
+        - Auth
+      summary: login
+      description: users login
+      requestBody:
+        description: username-password
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LogIn'
+        required: true
+      responses:
+        200:
+          description: Succes
+        401:
+          description: Fail
+        500:
+          description: Server Error
+  /auth/signUp:
+    post:
+      tags: 
+        - Auth
+      summary: singUp
+      description: users sign up
+      requestBody:
+        description: username-password-mail
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignUp'
+        required: true
+      responses:
+        200:
+          description: Succes
+        401:
+          description: Fail
+        500:
+          description: Server Error
+  /auth/logOut:
+    post:
+      tags: 
+        - Auth
+      summary: logOut
+      description: users log out
+      responses:
+        200:
+          description: Succes
+  /admin/stats:
+    get:
+      tags: 
+        - Admin
+      security: 
+        - basicAuth: []
+      summary: get all system stats
+      description: get all
+      responses:
+        200:
+          description: Succes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Stats'
+        403:
+          description: Forbiden
+  /games:
+    post:
+      tags: 
+        - Users
+      summary: Create game
+      requestBody:
+        description: Usuario
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                province:
+                  type: string
+                cityCount:
+                  type: integer
+                players:
+                  description: usernames
+                  type: array
+                  items: 
+                    type: string
+      responses:
+        200:
+          description: Success
+        400:
+          description: Bad Request
+    get:
+    
+  /game/{id}:
+    patch:
+      tags:
+      - Users
+      parameters:
+      - name: "id"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                state:
+                  type: "string"
+        required: true
+      responses:
+        "200":
+          description: "Success"
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Game'
+        "400":
+          description: "Bad request"
+        "404":
+          description: "Not found"
+        "500":
+          description: "Internal server error"
+
+components:
+  schemas:
+    Games:
+      type: object
+      properties:
+        province:
+          $ref: '#/components/schemas/Province'
+        state:
+          type: string
+          enum: ["inProgress","finish","cancel"]
+        users:
+          type: array
+          items:
+            type: string
+            description: username
+        date:
+          type: string
+          format: date
+    Province:
+      type: object
+      properties:
+        cities:
+          type: array
+          items:
+            $ref: '#/components/schemas/City'
+    City:
+      type: object
+      description: municipios
+      properties:
+        owner:
+          type: string
+          description: username
+        gauchos:
+          type: integer
+        state:
+          $ref: '#/components/schemas/CityState'
+        stats:
+          type: array
+          items:
+            type: object
+            properties:
+              state:
+                $ref: '#/components/schemas/CityState'
+              gauchos:
+                type: integer
+    CityState:
+      type: object
+      properties:
+        state:
+          type: string
+          enum: ["defense","production","locked"]
+    Stats:
+      type: object
+      properties:
+        gamesCreated:
+          type: integer
+        gamesInProgress:
+          type: integer
+        gamesFinished:
+          type: integer
+        gamesCanceled:
+          type: integer
+    LogIn:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+    SignUp:
+      type: object
+      properties:
+        mail:
+          type: string
+        username:
+          type: string
+        password:
+          type: string
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
