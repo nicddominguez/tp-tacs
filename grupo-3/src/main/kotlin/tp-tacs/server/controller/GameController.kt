@@ -1,10 +1,7 @@
 package server.controller
 
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import server.models.CreateGameData
 
 @RestController
@@ -12,8 +9,19 @@ import server.models.CreateGameData
 class GameController {
 
     @PostMapping
-    fun createGame(@RequestBody gameData: CreateGameData): ResponseEntity<String> {
+    fun createUser(@RequestBody gameData: CreateGameData): ResponseEntity<String> {
         return ResponseEntity.ok().build()
     }
+
+    @GetMapping
+    fun allGames(@RequestParam date: String, @RequestParam state: String): ResponseEntity<String> {
+        return ResponseEntity.ok().build()
+    }
+
+    @PatchMapping("/{id}")
+    fun updateGameState(@PathVariable id: String, @RequestParam state: String): ResponseEntity<String> {
+        return ResponseEntity.ok().build()
+    }
+
 
 }
