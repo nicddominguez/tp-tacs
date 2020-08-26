@@ -1,5 +1,7 @@
 package server.models
 
-enum class GameState {
-    INPROGRESS, FINISH, CANCEL
+enum class GameState(val state: String) {
+    INPROGRESS("INPROGRESS"),
+    FINISH("FINISH"),
+    CANCEL("CANCEL")
 }
