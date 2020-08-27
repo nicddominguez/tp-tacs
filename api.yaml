@@ -4,11 +4,15 @@ info:
   version: 1.0.0
 tags:
   - name: Auth
-    description: Authentication
-  - name: Users
-    description: Users operation
+    description: Autenticación
+  - name: Provincias
+    description: Operaciones sobre provincias
+  - name: Usuarios
+    description: Operaciones sobre usuarios
+  - name: Partidas
+    description: Operaciones sobre partidas
   - name: Admin
-    description: Admins operation
+    description: Operaciones administrativas
 paths:
   /auth/logIn:
     post:
@@ -61,65 +65,81 @@ paths:
       description: users log out
       responses:
         200:
-          description: Succes
-  /admin/stats:
+          description: Success
+  /admin/estadisticas:
     get:
       tags:
         - Admin
+      summary: Obtiene las estadísticas generales del juego
+      operationId: getEstadisticas
+      parameters:
+        - in: query
+          name: fechaInicio
+          schema:
+            type: string
+            format: date
+          required: false
+        - in: query
+          name: fechaFin
+          schema:
+            type: string
+            format: date
+          required: false
       security:
         - basicAuth: []
-      summary: get all system stats
-      operationId: gamesStats
-      description: get all
-      responses:
-        200:
-          description: Succes
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Stats'
-        403:
-          description: Forbiden
-  /games:
-    post:
-      tags:
-        - Users
-      summary: Create game
-      operationId: createGame
-      requestBody:
-        description: Usuario
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                province:
-                  type: string
-                cityCount:
-                  type: integer
-                players:
-                  description: usernames
-                  type: array
-                  items:
-                    type: string
       responses:
         200:
           description: Success
-        400:
-          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EstadisticasDeJuego'
+        403:
+          description: Forbbiden
+  /admin/scoreboard:
     get:
       tags:
-        - Users
-      summary: get all games - filtered
-      operationId: allGames
+        - Admin
+      summary: Retorna los datos del scoreboard
+      operationId: getScoreboard
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EstadisticasDeUsuario'
+  /admin/estadisticas/usuarios/{idUsuario}:
+    get:
+      tags:
+        - Admin
+      summary: Obtiene las estadísticas particulares de un usuario
+      operationId: getEstadisticasDeUsuario
+      parameters:
+        - in: path
+          name: idUsuario
+          description: Id del usuario
+          schema:
+            type: integer
+          required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EstadisticasDeUsuario'
+  /usuarios:
+    get:
+      tags:
+        - Usuarios
+      summary: Permite listar a los usuarios
+      operationId: listarUsuarios
       parameters:
         - in: query
-          name: date
-          schema:
-            type: string
-          required: false
-        - in: query
-          name: state
+          name: filter
           schema:
             type: string
           required: false
@@ -131,25 +151,99 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Games'
-        403:
-          description: Forbiden
-  /games/{id}:
-    patch:
+                  $ref: '#/components/schemas/Usuario'
+  /provincias:
+    get:
       tags:
-        - Users
-      summary: update game state
-      operationId: updateGameState
+        - Provincias
+      summary: Permite listar las provincias
+      operationId: listarProvincias
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Provincia'
+        403:
+          description: Forbidden
+  /partidas:
+    get:
+      tags:
+        - Partidas
+      summary: Permite listar partidas. No incluye los datos de juego asociados a las mismas.
+      operationId: listarPartidas
+      parameters:
+        - in: query
+          name: fechaInicio
+          schema:
+            type: string
+            format: date
+          required: false
+        - in: query
+          name: fechaFin
+          schema:
+            type: string
+            format: date
+          required: false
+        - in: query
+          name: estado
+          schema:
+            $ref: '#/components/schemas/EstadoDeJuego'
+          required: false
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Partida'
+        403:
+          description: Forbidden
+    post:
+      tags:
+        - Partidas
+      summary: Crear una nueva pertida
+      operationId: crearPartida
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                provincia:
+                  $ref: '#/components/schemas/Provincia'
+                cantidadMunicipios:
+                  type: integer
+                  description: Cantidad de municipios que se usan
+                jugadores:
+                  description: Jugadores
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Usuario'
+                modoDeJuego:
+                  $ref: '#/components/schemas/ModoDeJuego'
+      responses:
+        200:
+          description: Success
+        400:
+          description: Bad Request
+  /partidas/{idPartida}:
+    get:
+      tags:
+        - Partidas
+      summary: "Retorna la partida con id: idPartida. Incluye los datos del juego."
+      operationId: getPartida
       parameters:
         - in: path
-          name: id
+          name: idPartida
+          description: Id de la partida
           schema:
-            type: string
-          required: true
-        - in: query
-          name: state
-          schema:
-            type: string
+            type: integer
           required: true
       responses:
         200:
@@ -157,65 +251,303 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Games'
+                $ref: '#/components/schemas/Partida'
+        403:
+          description: Forbidden
+        404:
+          description: Not found
+    patch:
+      tags:
+        - Games
+      summary: Actualiza el estado de una partida
+      operationId: actualizarEstadoPartida
+      parameters:
+        - in: path
+          name: idPartida
+          schema:
+            type: integer
+          required: true
+        - in: query
+          name: estado
+          schema:
+            $ref: '#/components/schemas/EstadoDeJuego'
+          required: true
+      responses:
+        200:
+          description: Success
         400:
           description: Bad request
         404:
           description: Not found
         500:
           description: Internal server error
+  # Opcion 1 para mover/atacar
+  /partidas/{idPartida}/municipios/movimientos:
+    post:
+      tags:
+        - Partidas
+      summary: (Opción 1 para movimientos) Mueve gauchos de un municipio a otro
+      operationId: moverGauchos
+      parameters:
+        - in: path
+          name: idPartida
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                idMunicipioOrigen:
+                  type: integer
+                  description: Id del municipio de origen
+                idMunicipioDestino:
+                  type: integer
+                  description: Id del municipio de destino
+                cantidad:
+                  type: integer
+                  description: Cantidad de gauchos a mover
+      responses:
+        200:
+          description: Success
+        403:
+          description: Forbidden
+        404:
+          description: Not found
+        500:
+          description: Internal server error
+  /partidas/{idPartida}/municipios/ataques:
+    post:
+      tags:
+        - Partidas
+      summary: (Opción 1 para ataques) Ataca a un municipio
+      operationId: atacarMunicipio
+      parameters:
+        - in: path
+          name: idPartida
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                idMunicipioAtacante:
+                  type: integer
+                  description: Id del municipio que ataca
+                idMunicipioObjetivo:
+                  type: integer
+                  description: Id del municipio atacado
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResultadoAtaque'
+        403:
+          description: Forbidden
+        404:
+          description: Not found
+        500:
+          description: Internal server error
+  /partidas/{idPartida}/acciones:
+    post:
+      tags:
+        - Partidas
+      summary: (Opción 2 para movimientos y ataques) Crea una acción entre dos municipios
+      operationId: ejecutarAccionEntreMunicipios
+      parameters:
+        - in: path
+          name: idPartida
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                idMunicipioOrigen:
+                  type: integer
+                  description: Id del municipio de origen
+                idMunicipioObjetivo:
+                  type: integer
+                  description: Id del municipio objetivo
+                action:
+                  oneOf:
+                    - $ref: '#/components/schemas/AccionDeMovimiento'
+                    - $ref: '#/components/schemas/AccionDeAtaque'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  municipioOrigen:
+                    $ref: '#/components/schemas/MunicipioEnJuego'
+                  municipioDestino:
+                    $ref: '#/components/schemas/MunicipioEnJuego'
+        403:
+          description: Forbidden
+        404:
+          description: NotFound
+        500:
+          description: Internal server error
 components:
   schemas:
-    Games:
+    Partida:
       type: object
+      description: Una partida
+      required:
+        - id
+        - provincia
+        - cantidadMunicipios
+        - estado
+        - jugadores
+        - modoDeJuego
+        - fecha
       properties:
-        province:
-          $ref: '#/components/schemas/Province'
-        state:
-          type: string
-          enum: ["inProgress","finish","cancel"]
-        users:
+        id:
+          type: integer
+          description: Id de la partida
+        provincia:
+          $ref: '#/components/schemas/Provincia'
+        cantidadMunicipios:
+          type: number
+          description: Cantidad de municipios que se usan
+        estado:
+          $ref: '#/components/schemas/EstadoDeJuego'
+        jugadores:
           type: array
+          description: Usuarios que juegan esta partida
           items:
-            type: string
-            description: username
-        date:
+            $ref: '#/components/schemas/Usuario'
+        modoDeJuego:
+          $ref: '#/components/schemas/ModoDeJuego'
+        fecha:
           type: string
           format: date
-    Province:
-      type: object
-      properties:
-        cities:
-          type: array
-          items:
-            $ref: '#/components/schemas/City'
-    City:
-      type: object
-      description: municipios
-      properties:
-        owner:
+          description: Fecha de inicio de la partida
+        informacionDeJuego:
+          $ref: '#/components/schemas/DatosDeJuego'
+        idGanador:
           type: string
-          description: username
+          description: Id del usuario ganador
+    DatosDeJuego:
+      type: object
+      description: Datos de una partida. Incluye su provincia en juego y el usuario que tiene el proximo turno.
+      required:
+        - provincia
+      properties:
+        proximoTurno:
+          $ref: '#/components/schemas/Usuario'
+        provincia:
+          $ref: '#/components/schemas/ProvinciaEnJuego'
+    EstadoDeJuego:
+      type: string
+      description: Estado de una partida.
+      enum:
+        - EnProgreso
+        - Terminada
+        - Cancelada
+    ModoDeJuego:
+      type: string
+      description: Modo de juego.
+      enum:
+        - Rapido
+        - Normal
+        - Extendido
+    Usuario:
+      type: object
+      description: Un usuario.
+      required:
+        - id
+        - nombreDeUsuario
+      properties:
+        id:
+          type: integer
+        nombreDeUsuario:
+          type: string
+    Provincia:
+      type: object
+      description: Una provincia.
+      required:
+        - id
+        - nombre
+      properties:
+        id:
+          type: integer
+          description: Id de la provincia
+        nombre:
+          type: string
+          description: Nombre de la provincia
+    ProvinciaEnJuego:
+      type: object
+      description: Provincia en juego.
+      required:
+        - municipios
+      properties:
+        municipios:
+          type: array
+          description: Municipios en juego que contiene la provincia.
+          items:
+            $ref: '#/components/schemas/MunicipioEnJuego'
+    MunicipioEnJuego:
+      type: object
+      description: Municipio en juego.
+      required:
+        - id
+        - nombre
+        - ubicacion
+        - duenio
+        - gauchos
+      properties:
+        id:
+          type: integer
+          description: Id del municipio.
+        nombre:
+          type: string
+          description: Nombre del municipio.
+        ubicacion:
+          $ref: '#/components/schemas/Coordenadas'
+        duenio:
+          $ref: '#/components/schemas/Usuario'
         gauchos:
           type: integer
-        state:
-          $ref: '#/components/schemas/CityState'
-        stats:
-          type: array
-          items:
-            type: object
-            properties:
-              state:
-                $ref: '#/components/schemas/CityState'
-              gauchos:
-                type: integer
-    CityState:
+          description: Cantidad de gauchos en el municipio.
+        modo:
+          $ref: '#/components/schemas/ModoDeMunicipio'
+        estaBloqueado:
+          type: boolean
+          description: Si el municipio está bloqueado.
+    Coordenadas:
       type: object
+      required:
+        - lat
+        - lon
+      description: Par de coordenadas en el mundo.
       properties:
-        state:
-          type: string
-          enum: ["defense","production","locked"]
-    Stats:
+        lat:
+          type: number
+          description: Latitud
+        lon:
+          type: number
+          description: Longitud
+    ModoDeMunicipio:
+      type: string
+      description: Modo de operación de un municipio.
+      enum:
+        - Defensa
+        - Produccion
+    EstadisticasDeJuego:
       type: object
       properties:
         gamesCreated:
@@ -242,6 +574,37 @@ components:
           type: string
         password:
           type: string
+    AccionDeMovimiento:
+      type: object
+      properties:
+        tipoAccion:
+          type: string
+          enum: [Movimiento]
+        cantidad:
+          type: integer
+    AccionDeAtaque:
+      type: object
+      properties:
+        tipoAccion:
+          type: string
+          enum: [Ataque]
+    ResultadoAtaque:
+      type: object
+      properties:
+        exitoso:
+          type: boolean
+        gauchosDefensoresFinal:
+          type: integer
+        gauchosAtacantesFinal:
+          type: integer
+    EstadisticasDeUsuario:
+      type: object
+      properties:
+        partidasJugadas:
+          type: integer
+        partidasGanadas:
+          type: integer
+        # TODO: Agregar más campos para las estadístiscas propias de un usuario
   securitySchemes:
     basicAuth:
       type: http
