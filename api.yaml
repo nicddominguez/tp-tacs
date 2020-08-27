@@ -214,6 +214,7 @@ paths:
           application/json:
             schema:
               type: object
+              title: crearPartidaBody
               properties:
                 provincia:
                   $ref: '#/components/schemas/Provincia'
@@ -299,6 +300,7 @@ paths:
           application/json:
             schema:
               type: object
+              title: moverGauchosBody
               properties:
                 idMunicipioOrigen:
                   type: integer
@@ -335,6 +337,7 @@ paths:
           application/json:
             schema:
               type: object
+              title: atacarMunicipioBody
               properties:
                 idMunicipioAtacante:
                   type: integer
@@ -372,6 +375,7 @@ paths:
           application/json:
             schema:
               type: object
+              title: ejecutarAccionEntreMunicipiosBody
               properties:
                 idMunicipioOrigen:
                   type: integer
@@ -390,6 +394,7 @@ paths:
             application/json:
               schema:
                 type: object
+                title: ejecutarAccionEntreMunicipiosResponse
                 properties:
                   municipioOrigen:
                     $ref: '#/components/schemas/MunicipioEnJuego'
