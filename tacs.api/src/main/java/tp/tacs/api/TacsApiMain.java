@@ -11,8 +11,6 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication
 @EnableSwagger2
-@EnableAutoConfiguration
-@ComponentScan
 public class TacsApiMain extends SpringBootServletInitializer {
 
 	@Override
