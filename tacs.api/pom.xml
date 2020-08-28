@@ -16,6 +16,10 @@
 		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.target>11</maven.compiler.target>
 		<springfox-version>2.7.0</springfox-version>
+		<jackson-datatype-threetenbp.version>2.6.4</jackson-datatype-threetenbp.version>
+		<mockito-all.version>1.9.5</mockito-all.version>
+		<powermock-api-mockito2.version>2.0.7</powermock-api-mockito2.version>
+		<start-class>tp.tacs.api.TacsApiMain</start-class>
 	</properties>
 
 	<parent>
@@ -81,20 +85,20 @@
 		<dependency>
 			<groupId>com.github.joschi.jackson</groupId>
 			<artifactId>jackson-datatype-threetenbp</artifactId>
-			<version>2.6.4</version>
+			<version>${jackson-datatype-threetenbp.version}</version>
 		</dependency>
 
 		<!-- JUnit -->
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-all</artifactId>
-			<version>1.9.5</version>
+			<version>${mockito-all.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.powermock</groupId>
 			<artifactId>powermock-api-mockito2</artifactId>
-			<version>2.0.7</version>
+			<version>${powermock-api-mockito2.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
