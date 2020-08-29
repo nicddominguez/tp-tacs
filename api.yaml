@@ -20,7 +20,7 @@ paths:
         - Auth
       summary: login
       operationId: logIn
-      description: users login
+      description: Loguea a un usuario
       requestBody:
         description: username-password
         content:
@@ -30,18 +30,18 @@ paths:
         required: true
       responses:
         200:
-          description: Succes
+          description: Success
+        400:
+          description: Bad request
         401:
           description: Fail
-        500:
-          description: Server Error
   /auth/signUp:
     post:
       tags:
         - Auth
       summary: singUp
       operationId: singUp
-      description: users sign up
+      description: Registro de un usuario
       requestBody:
         description: username-password-mail
         content:
@@ -51,11 +51,11 @@ paths:
         required: true
       responses:
         200:
-          description: Succes
+          description: Success
+        400:
+          description: Bad request
         401:
           description: Fail
-        500:
-          description: Server Error
   /auth/logOut:
     post:
       tags:
@@ -72,6 +72,8 @@ paths:
         - Admin
       summary: Obtiene las estadísticas generales del juego
       operationId: getEstadisticas
+      security:
+        - bearerAuth: []
       parameters:
         - in: query
           name: fechaInicio
@@ -85,8 +87,6 @@ paths:
             type: string
             format: date
           required: false
-      security:
-        - basicAuth: []
       responses:
         200:
           description: Success
@@ -94,6 +94,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/EstadisticasDeJuego'
+        400:
+          description: Bad request
         403:
           description: Forbbiden
   /admin/scoreboard:
@@ -102,6 +104,20 @@ paths:
         - Admin
       summary: Retorna los datos del scoreboard
       operationId: getScoreboard
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: pageSize
+          schema:
+            type: integer
+            default: 10
+          required: false
+        - in: query
+          name: page
+          schema:
+            type: integer
+          required: true
       responses:
         200:
           description: Success
@@ -111,12 +127,20 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/EstadisticasDeUsuario'
+        400:
+          description: Bad request
+        403:
+          description: Forbidden
+        404:
+          description: Page not found
   /admin/estadisticas/usuarios/{idUsuario}:
     get:
       tags:
         - Admin
       summary: Obtiene las estadísticas particulares de un usuario
       operationId: getEstadisticasDeUsuario
+      security:
+        - bearerAuth: []
       parameters:
         - in: path
           name: idUsuario
@@ -131,18 +155,36 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/EstadisticasDeUsuario'
+        400:
+          description: Bad request
+        # En el caso de que no se tengan permisos, también se retorna 404
+        404:
+          description: Page not found
   /usuarios:
     get:
       tags:
         - Usuarios
       summary: Permite listar a los usuarios
       operationId: listarUsuarios
+      security:
+        - bearerAuth: []
       parameters:
         - in: query
           name: filter
           schema:
             type: string
           required: false
+        - in: query
+          name: pageSize
+          schema:
+            type: integer
+            default: 10
+          required: false
+        - in: query
+          name: page
+          schema:
+            type: integer
+          required: true
       responses:
         200:
           description: Success
@@ -152,12 +194,32 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Usuario'
+        400:
+          description: Bad request
+        403:
+          description: Forbidden
+        404:
+          description: Page not found
   /provincias:
     get:
       tags:
         - Provincias
       summary: Permite listar las provincias
       operationId: listarProvincias
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: pageSize
+          schema:
+            type: integer
+            default: 10
+          required: false
+        - in: query
+          name: page
+          schema:
+            type: integer
+          required: true
       responses:
         200:
           description: Success
@@ -167,14 +229,20 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Provincia'
+        400:
+          description: Bad request
         403:
           description: Forbidden
+        404:
+          description: Page not found
   /partidas:
     get:
       tags:
         - Partidas
       summary: Permite listar partidas. No incluye los datos de juego asociados a las mismas.
       operationId: listarPartidas
+      security:
+        - bearerAuth: []
       parameters:
         - in: query
           name: fechaInicio
@@ -193,6 +261,17 @@ paths:
           schema:
             $ref: '#/components/schemas/EstadoDeJuego'
           required: false
+        - in: query
+          name: pageSize
+          schema:
+            type: integer
+            default: 10
+          required: false
+        - in: query
+          name: page
+          schema:
+            type: integer
+          required: true
       responses:
         200:
           description: Success
@@ -202,6 +281,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Partida'
+        400:
+          description: Bad request
         403:
           description: Forbidden
     post:
@@ -209,6 +290,8 @@ paths:
         - Partidas
       summary: Crear una nueva pertida
       operationId: crearPartida
+      security:
+        - bearerAuth: []
       requestBody:
         content:
           application/json:
@@ -216,16 +299,17 @@ paths:
               type: object
               title: crearPartidaBody
               properties:
-                provincia:
-                  $ref: '#/components/schemas/Provincia'
+                idProvincia:
+                  type: integer
+                  description: Id de la provincia donde se juega
                 cantidadMunicipios:
                   type: integer
                   description: Cantidad de municipios que se usan
-                jugadores:
+                idJugadores:
                   description: Jugadores
                   type: array
                   items:
-                    $ref: '#/components/schemas/Usuario'
+                    type: integer
                 modoDeJuego:
                   $ref: '#/components/schemas/ModoDeJuego'
       responses:
@@ -233,12 +317,18 @@ paths:
           description: Success
         400:
           description: Bad Request
+        403:
+          description: Forbidden
+        404:
+          description: Not found
   /partidas/{idPartida}:
     get:
       tags:
         - Partidas
       summary: "Retorna la partida con id: idPartida. Incluye los datos del juego."
       operationId: getPartida
+      security:
+        - bearerAuth: []
       parameters:
         - in: path
           name: idPartida
@@ -253,15 +343,17 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Partida'
-        403:
-          description: Forbidden
+        400:
+          description: Bad Request
         404:
           description: Not found
     patch:
       tags:
-        - Games
+        - Partidas
       summary: Actualiza el estado de una partida
       operationId: actualizarEstadoPartida
+      security:
+        - bearerAuth: []
       parameters:
         - in: path
           name: idPartida
@@ -280,15 +372,14 @@ paths:
           description: Bad request
         404:
           description: Not found
-        500:
-          description: Internal server error
-  # Opcion 1 para mover/atacar
-  /partidas/{idPartida}/municipios/movimientos:
+  /partidas/{idPartida}/movimientos:
     post:
       tags:
         - Partidas
-      summary: (Opción 1 para movimientos) Mueve gauchos de un municipio a otro
+      summary: Mueve gauchos de un municipio a otro
       operationId: moverGauchos
+      security:
+        - bearerAuth: []
       parameters:
         - in: path
           name: idPartida
@@ -314,18 +405,28 @@ paths:
       responses:
         200:
           description: Success
-        403:
-          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                title: moverGauchosResponse
+                properties:
+                  municipioOrigen:
+                    $ref: '#/components/schemas/MunicipioEnJuego'
+                  municipioDestino:
+                    $ref: '#/components/schemas/MunicipioEnJuego'
+        400:
+          description: Bad request
         404:
           description: Not found
-        500:
-          description: Internal server error
-  /partidas/{idPartida}/municipios/ataques:
+  /partidas/{idPartida}/ataques:
     post:
       tags:
         - Partidas
-      summary: (Opción 1 para ataques) Ataca a un municipio
+      summary: Ataca a un municipio
       operationId: atacarMunicipio
+      security:
+        - bearerAuth: []
       parameters:
         - in: path
           name: idPartida
@@ -351,61 +452,17 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ResultadoAtaque'
-        403:
-          description: Forbidden
+                type: object
+                title: atacarMunicipioResponse
+                properties:
+                  municipioAtacante:
+                    $ref: '#/components/schemas/MunicipioEnJuego'
+                  municipioAtacado:
+                    $ref: '#/components/schemas/MunicipioEnJuego'
+        400:
+          description: Bad request
         404:
           description: Not found
-        500:
-          description: Internal server error
-  /partidas/{idPartida}/acciones:
-    post:
-      tags:
-        - Partidas
-      summary: (Opción 2 para movimientos y ataques) Crea una acción entre dos municipios
-      operationId: ejecutarAccionEntreMunicipios
-      parameters:
-        - in: path
-          name: idPartida
-          schema:
-            type: integer
-          required: true
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              title: ejecutarAccionEntreMunicipiosBody
-              properties:
-                idMunicipioOrigen:
-                  type: integer
-                  description: Id del municipio de origen
-                idMunicipioObjetivo:
-                  type: integer
-                  description: Id del municipio objetivo
-                action:
-                  oneOf:
-                    - $ref: '#/components/schemas/AccionDeMovimiento'
-                    - $ref: '#/components/schemas/AccionDeAtaque'
-      responses:
-        200:
-          description: Success
-          content:
-            application/json:
-              schema:
-                type: object
-                title: ejecutarAccionEntreMunicipiosResponse
-                properties:
-                  municipioOrigen:
-                    $ref: '#/components/schemas/MunicipioEnJuego'
-                  municipioDestino:
-                    $ref: '#/components/schemas/MunicipioEnJuego'
-        403:
-          description: Forbidden
-        404:
-          description: NotFound
-        500:
-          description: Internal server error
 components:
   schemas:
     Partida:
@@ -552,17 +609,6 @@ components:
       enum:
         - Defensa
         - Produccion
-    EstadisticasDeJuego:
-      type: object
-      properties:
-        gamesCreated:
-          type: integer
-        gamesInProgress:
-          type: integer
-        gamesFinished:
-          type: integer
-        gamesCanceled:
-          type: integer
     LogIn:
       type: object
       properties:
@@ -579,38 +625,31 @@ components:
           type: string
         password:
           type: string
-    AccionDeMovimiento:
+    EstadisticasDeJuego:
       type: object
       properties:
-        tipoAccion:
-          type: string
-          enum: [Movimiento]
-        cantidad:
+        partidasCreadas:
           type: integer
-    AccionDeAtaque:
-      type: object
-      properties:
-        tipoAccion:
-          type: string
-          enum: [Ataque]
-    ResultadoAtaque:
-      type: object
-      properties:
-        exitoso:
-          type: boolean
-        gauchosDefensoresFinal:
+        partidasEnCurso:
           type: integer
-        gauchosAtacantesFinal:
+        partidesTerminadas:
+          type: integer
+        partidasCanceladas:
           type: integer
     EstadisticasDeUsuario:
       type: object
       properties:
+        usuario:
+          $ref: '#/components/schemas/Usuario'
         partidasJugadas:
           type: integer
         partidasGanadas:
           type: integer
-        # TODO: Agregar más campos para las estadístiscas propias de un usuario
+        rachaActual:
+          type: integer
+          description: Racha actual de victorias
   securitySchemes:
-    basicAuth:
+    bearerAuth:
       type: http
-      scheme: basic
+      scheme: bearer
+      bearerFormat: JWT
