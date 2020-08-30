@@ -40,9 +40,8 @@ public class ProvinciasApiController implements ProvinciasApi{
         provincias.add(new Provincia().id(23).nombre("Tucumán"));
         int start = page * pageSize;
         int end = start + pageSize;
-        if(start > provincias.size() || end > provincias.size() || start < 0 || end <= 0){
+        if(start > provincias.size() || end > provincias.size() || start < 0 || end <= 0)
             return ResponseEntity.notFound().build();
-        }
         List<Provincia> provinciasPaginadas = provincias.subList(start, end);
         return ResponseEntity.ok(provinciasPaginadas);
     }

@@ -26,8 +26,27 @@ public class ProvinciasApiControllerTest {
     }
 
     @Test
-    public void getProvincias(){
-        ResponseEntity<List<Provincia>> provincias = provinciasApiController.listarProvincias(0,10);
+    public void getProvinciasOk() {
+        ResponseEntity<List<Provincia>> provincias = provinciasApiController.listarProvincias(0, 10);
         assertEquals(HttpStatus.OK, provincias.getStatusCode());
     }
+
+    @Test
+    public void getProvinciasFail() {
+        ResponseEntity<List<Provincia>> provincias = provinciasApiController.listarProvincias(0, 0);
+        assertEquals(HttpStatus.NOT_FOUND, provincias.getStatusCode());
+    }
+
+    @Test
+    public void getProvinciasFail1() {
+        ResponseEntity<List<Provincia>> provincias = provinciasApiController.listarProvincias(-1, -2);
+        assertEquals(HttpStatus.NOT_FOUND, provincias.getStatusCode());
+    }
+
+    @Test
+    public void getProvinciasFail2() {
+        ResponseEntity<List<Provincia>> provincias = provinciasApiController.listarProvincias(100, 2);
+        assertEquals(HttpStatus.NOT_FOUND, provincias.getStatusCode());
+    }
+
 }
