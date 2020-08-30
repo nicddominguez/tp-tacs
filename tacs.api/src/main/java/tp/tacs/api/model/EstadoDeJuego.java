@@ -1,4 +1,4 @@
-package tp.tacs.api.models;
+package tp.tacs.api.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;

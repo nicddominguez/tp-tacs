@@ -1,4 +1,4 @@
-package tp.tacs.api.models;
+package tp.tacs.api.model;
 
 import java.math.BigDecimal;
 import java.util.Objects;
@@ -18,7 +18,7 @@ import io.swagger.annotations.ApiModelProperty;
  */
 @ApiModel(description = "Par de coordenadas en el mundo.")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-08-27T18:00:32.244-03:00[America/Buenos_Aires]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-08-29T21:54:39.417-03:00[America/Buenos_Aires]")
 public class Coordenadas   {
   @JsonProperty("lat")
   private BigDecimal lat = null;

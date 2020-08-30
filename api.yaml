@@ -409,6 +409,7 @@ paths:
             application/json:
               schema:
                 type: object
+                title: moverGauchosResponse
                 properties:
                   municipioOrigen:
                     $ref: '#/components/schemas/MunicipioEnJuego'
@@ -451,50 +452,8 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ResultadoAtaque'
-        403:
-          description: Forbidden
-        404:
-          description: Not found
-        500:
-          description: Internal server error
-  /partidas/{idPartida}/acciones:
-    post:
-      tags:
-        - Partidas
-      summary: (Opción 2 para movimientos y ataques) Crea una acción entre dos municipios
-      operationId: ejecutarAccionEntreMunicipios
-      parameters:
-        - in: path
-          name: idPartida
-          schema:
-            type: integer
-          required: true
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              title: ejecutarAccionEntreMunicipiosBody
-              properties:
-                idMunicipioOrigen:
-                  type: integer
-                  description: Id del municipio de origen
-                idMunicipioObjetivo:
-                  type: integer
-                  description: Id del municipio objetivo
-                action:
-                  oneOf:
-                    - $ref: '#/components/schemas/AccionDeMovimiento'
-                    - $ref: '#/components/schemas/AccionDeAtaque'
-      responses:
-        200:
-          description: Success
-          content:
-            application/json:
-              schema:
                 type: object
-                title: ejecutarAccionEntreMunicipiosResponse
+                title: atacarMunicipioResponse
                 properties:
                   municipioAtacante:
                     $ref: '#/components/schemas/MunicipioEnJuego'
@@ -650,17 +609,6 @@ components:
       enum:
         - Defensa
         - Produccion
-    EstadisticasDeJuego:
-      type: object
-      properties:
-        partidasCreadas:
-          type: integer
-        partidasEnCurso:
-          type: integer
-        partidesTerminadas:
-          type: integer
-        partidasCanceladas:
-          type: integer
     LogIn:
       type: object
       properties:
@@ -677,6 +625,17 @@ components:
           type: string
         password:
           type: string
+    EstadisticasDeJuego:
+      type: object
+      properties:
+        partidasCreadas:
+          type: integer
+        partidasEnCurso:
+          type: integer
+        partidesTerminadas:
+          type: integer
+        partidasCanceladas:
+          type: integer
     EstadisticasDeUsuario:
       type: object
       properties:

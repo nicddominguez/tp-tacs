@@ -1,4 +1,4 @@
-package tp.tacs.api.models;
+package tp.tacs.api.model;
 
 import java.util.Objects;
 
@@ -11,18 +11,18 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * EjecutarAccionEntreMunicipiosResponse
+ * MoverGauchosResponse
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-08-27T18:00:32.244-03:00[America/Buenos_Aires]")
-public class EjecutarAccionEntreMunicipiosResponse   {
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-08-29T21:54:39.417-03:00[America/Buenos_Aires]")
+public class MoverGauchosResponse   {
   @JsonProperty("municipioOrigen")
   private MunicipioEnJuego municipioOrigen = null;
 
   @JsonProperty("municipioDestino")
   private MunicipioEnJuego municipioDestino = null;
 
-  public EjecutarAccionEntreMunicipiosResponse municipioOrigen(MunicipioEnJuego municipioOrigen) {
+  public MoverGauchosResponse municipioOrigen(MunicipioEnJuego municipioOrigen) {
     this.municipioOrigen = municipioOrigen;
     return this;
   }
@@ -42,7 +42,7 @@ public class EjecutarAccionEntreMunicipiosResponse   {
     this.municipioOrigen = municipioOrigen;
   }
 
-  public EjecutarAccionEntreMunicipiosResponse municipioDestino(MunicipioEnJuego municipioDestino) {
+  public MoverGauchosResponse municipioDestino(MunicipioEnJuego municipioDestino) {
     this.municipioDestino = municipioDestino;
     return this;
   }
@@ -71,9 +71,9 @@ public class EjecutarAccionEntreMunicipiosResponse   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    EjecutarAccionEntreMunicipiosResponse ejecutarAccionEntreMunicipiosResponse = (EjecutarAccionEntreMunicipiosResponse) o;
-    return Objects.equals(this.municipioOrigen, ejecutarAccionEntreMunicipiosResponse.municipioOrigen) &&
-        Objects.equals(this.municipioDestino, ejecutarAccionEntreMunicipiosResponse.municipioDestino);
+    MoverGauchosResponse moverGauchosResponse = (MoverGauchosResponse) o;
+    return Objects.equals(this.municipioOrigen, moverGauchosResponse.municipioOrigen) &&
+        Objects.equals(this.municipioDestino, moverGauchosResponse.municipioDestino);
   }
 
   @Override
@@ -84,7 +84,7 @@ public class EjecutarAccionEntreMunicipiosResponse   {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class EjecutarAccionEntreMunicipiosResponse {\n");
+    sb.append("class MoverGauchosResponse {\n");
     
     sb.append("    municipioOrigen: ").append(toIndentedString(municipioOrigen)).append("\n");
     sb.append("    municipioDestino: ").append(toIndentedString(municipioDestino)).append("\n");
