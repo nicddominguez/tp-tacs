@@ -1,4 +1,4 @@
-package tp.tacs.api.models;
+package tp.tacs.api.model;
 
 import java.util.Objects;
 
@@ -12,28 +12,28 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * Un usuario.
+ * Una provincia.
  */
-@ApiModel(description = "Un usuario.")
+@ApiModel(description = "Una provincia.")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-08-27T18:00:32.244-03:00[America/Buenos_Aires]")
-public class Usuario   {
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-08-29T21:54:39.417-03:00[America/Buenos_Aires]")
+public class Provincia   {
   @JsonProperty("id")
   private Integer id = null;
 
-  @JsonProperty("nombreDeUsuario")
-  private String nombreDeUsuario = null;
+  @JsonProperty("nombre")
+  private String nombre = null;
 
-  public Usuario id(Integer id) {
+  public Provincia id(Integer id) {
     this.id = id;
     return this;
   }
 
   /**
-   * Get id
+   * Id de la provincia
    * @return id
   **/
-  @ApiModelProperty(required = true, value = "")
+  @ApiModelProperty(required = true, value = "Id de la provincia")
       @NotNull
 
     public Integer getId() {
@@ -44,24 +44,24 @@ public class Usuario   {
     this.id = id;
   }
 
-  public Usuario nombreDeUsuario(String nombreDeUsuario) {
-    this.nombreDeUsuario = nombreDeUsuario;
+  public Provincia nombre(String nombre) {
+    this.nombre = nombre;
     return this;
   }
 
   /**
-   * Get nombreDeUsuario
-   * @return nombreDeUsuario
+   * Nombre de la provincia
+   * @return nombre
   **/
-  @ApiModelProperty(required = true, value = "")
+  @ApiModelProperty(required = true, value = "Nombre de la provincia")
       @NotNull
 
-    public String getNombreDeUsuario() {
-    return nombreDeUsuario;
+    public String getNombre() {
+    return nombre;
   }
 
-  public void setNombreDeUsuario(String nombreDeUsuario) {
-    this.nombreDeUsuario = nombreDeUsuario;
+  public void setNombre(String nombre) {
+    this.nombre = nombre;
   }
 
 
@@ -73,23 +73,23 @@ public class Usuario   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Usuario usuario = (Usuario) o;
-    return Objects.equals(this.id, usuario.id) &&
-        Objects.equals(this.nombreDeUsuario, usuario.nombreDeUsuario);
+    Provincia provincia = (Provincia) o;
+    return Objects.equals(this.id, provincia.id) &&
+        Objects.equals(this.nombre, provincia.nombre);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, nombreDeUsuario);
+    return Objects.hash(id, nombre);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class Usuario {\n");
+    sb.append("class Provincia {\n");
     
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
-    sb.append("    nombreDeUsuario: ").append(toIndentedString(nombreDeUsuario)).append("\n");
+    sb.append("    nombre: ").append(toIndentedString(nombre)).append("\n");
     sb.append("}");
     return sb.toString();
   }

@@ -1,18 +1,19 @@
-package tp.tacs.api.models;
+package tp.tacs.api.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
- * Modo de operación de un municipio.
+ * Modo de juego.
  */
-public enum ModoDeMunicipio {
-  DEFENSA("Defensa"),
-    PRODUCCION("Produccion");
+public enum ModoDeJuego {
+  RAPIDO("Rapido"),
+    NORMAL("Normal"),
+    EXTENDIDO("Extendido");
 
   private String value;
 
-  ModoDeMunicipio(String value) {
+  ModoDeJuego(String value) {
     this.value = value;
   }
 
@@ -23,8 +24,8 @@ public enum ModoDeMunicipio {
   }
 
   @JsonCreator
-  public static ModoDeMunicipio fromValue(String text) {
-    for (ModoDeMunicipio b : ModoDeMunicipio.values()) {
+  public static ModoDeJuego fromValue(String text) {
+    for (ModoDeJuego b : ModoDeJuego.values()) {
       if (String.valueOf(b.value).equals(text)) {
         return b;
       }

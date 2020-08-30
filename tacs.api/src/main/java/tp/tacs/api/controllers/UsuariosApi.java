@@ -8,6 +8,7 @@ package tp.tacs.api.controllers;
 import java.util.List;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,18 +20,25 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import tp.tacs.api.models.Usuario;
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-08-27T18:00:30.287-03:00[America/Buenos_Aires]")
+import io.swagger.annotations.Authorization;
+import tp.tacs.api.model.Usuario;
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-08-29T21:54:36.724-03:00[America/Buenos_Aires]")
 @Api(value = "usuarios", description = "the usuarios API")
 public interface UsuariosApi {
 
-    @ApiOperation(value = "Permite listar a los usuarios", nickname = "listarUsuarios", notes = "", response = Usuario.class, responseContainer = "List", tags={ "Usuarios", })
+    @ApiOperation(value = "Permite listar a los usuarios", nickname = "listarUsuarios", notes = "", response = Usuario.class, responseContainer = "List", authorizations = {
+        @Authorization(value = "bearerAuth")    }, tags={ "Usuarios", })
     @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "Success", response = Usuario.class, responseContainer = "List") })
+        @ApiResponse(code = 200, message = "Success", response = Usuario.class, responseContainer = "List"),
+        @ApiResponse(code = 400, message = "Bad request"),
+        @ApiResponse(code = 403, message = "Forbidden"),
+        @ApiResponse(code = 404, message = "Page not found") })
     @RequestMapping(value = "/usuarios",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<List<Usuario>> listarUsuarios(@ApiParam(value = "") @Valid @RequestParam(value = "filter", required = false) String filter
+    ResponseEntity<List<Usuario>> listarUsuarios(@NotNull @ApiParam(value = "", required = true) @Valid @RequestParam(value = "page", required = true) Integer page
+,@ApiParam(value = "") @Valid @RequestParam(value = "filter", required = false) String filter
+,@ApiParam(value = "", defaultValue = "10") @Valid @RequestParam(value = "pageSize", required = false, defaultValue="10") Integer pageSize
 );
 
 }

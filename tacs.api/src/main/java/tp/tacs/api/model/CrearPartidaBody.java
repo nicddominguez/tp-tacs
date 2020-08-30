@@ -1,4 +1,4 @@
-package tp.tacs.api.models;
+package tp.tacs.api.model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,39 +16,38 @@ import io.swagger.annotations.ApiModelProperty;
  * CrearPartidaBody
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-08-27T18:00:32.244-03:00[America/Buenos_Aires]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-08-29T21:54:39.417-03:00[America/Buenos_Aires]")
 public class CrearPartidaBody   {
-  @JsonProperty("provincia")
-  private Provincia provincia = null;
+  @JsonProperty("idProvincia")
+  private Integer idProvincia = null;
 
   @JsonProperty("cantidadMunicipios")
   private Integer cantidadMunicipios = null;
 
-  @JsonProperty("jugadores")
+  @JsonProperty("idJugadores")
   @Valid
-  private List<Usuario> jugadores = null;
+  private List<Integer> idJugadores = null;
 
   @JsonProperty("modoDeJuego")
   private ModoDeJuego modoDeJuego = null;
 
-  public CrearPartidaBody provincia(Provincia provincia) {
-    this.provincia = provincia;
+  public CrearPartidaBody idProvincia(Integer idProvincia) {
+    this.idProvincia = idProvincia;
     return this;
   }
 
   /**
-   * Get provincia
-   * @return provincia
+   * Id de la provincia donde se juega
+   * @return idProvincia
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "Id de la provincia donde se juega")
   
-    @Valid
-    public Provincia getProvincia() {
-    return provincia;
+    public Integer getIdProvincia() {
+    return idProvincia;
   }
 
-  public void setProvincia(Provincia provincia) {
-    this.provincia = provincia;
+  public void setIdProvincia(Integer idProvincia) {
+    this.idProvincia = idProvincia;
   }
 
   public CrearPartidaBody cantidadMunicipios(Integer cantidadMunicipios) {
@@ -70,31 +69,31 @@ public class CrearPartidaBody   {
     this.cantidadMunicipios = cantidadMunicipios;
   }
 
-  public CrearPartidaBody jugadores(List<Usuario> jugadores) {
-    this.jugadores = jugadores;
+  public CrearPartidaBody idJugadores(List<Integer> idJugadores) {
+    this.idJugadores = idJugadores;
     return this;
   }
 
-  public CrearPartidaBody addJugadoresItem(Usuario jugadoresItem) {
-    if (this.jugadores == null) {
-      this.jugadores = new ArrayList<Usuario>();
+  public CrearPartidaBody addIdJugadoresItem(Integer idJugadoresItem) {
+    if (this.idJugadores == null) {
+      this.idJugadores = new ArrayList<Integer>();
     }
-    this.jugadores.add(jugadoresItem);
+    this.idJugadores.add(idJugadoresItem);
     return this;
   }
 
   /**
    * Jugadores
-   * @return jugadores
+   * @return idJugadores
   **/
   @ApiModelProperty(value = "Jugadores")
-      @Valid
-    public List<Usuario> getJugadores() {
-    return jugadores;
+  
+    public List<Integer> getIdJugadores() {
+    return idJugadores;
   }
 
-  public void setJugadores(List<Usuario> jugadores) {
-    this.jugadores = jugadores;
+  public void setIdJugadores(List<Integer> idJugadores) {
+    this.idJugadores = idJugadores;
   }
 
   public CrearPartidaBody modoDeJuego(ModoDeJuego modoDeJuego) {
@@ -127,15 +126,15 @@ public class CrearPartidaBody   {
       return false;
     }
     CrearPartidaBody crearPartidaBody = (CrearPartidaBody) o;
-    return Objects.equals(this.provincia, crearPartidaBody.provincia) &&
+    return Objects.equals(this.idProvincia, crearPartidaBody.idProvincia) &&
         Objects.equals(this.cantidadMunicipios, crearPartidaBody.cantidadMunicipios) &&
-        Objects.equals(this.jugadores, crearPartidaBody.jugadores) &&
+        Objects.equals(this.idJugadores, crearPartidaBody.idJugadores) &&
         Objects.equals(this.modoDeJuego, crearPartidaBody.modoDeJuego);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(provincia, cantidadMunicipios, jugadores, modoDeJuego);
+    return Objects.hash(idProvincia, cantidadMunicipios, idJugadores, modoDeJuego);
   }
 
   @Override
@@ -143,9 +142,9 @@ public class CrearPartidaBody   {
     StringBuilder sb = new StringBuilder();
     sb.append("class CrearPartidaBody {\n");
     
-    sb.append("    provincia: ").append(toIndentedString(provincia)).append("\n");
+    sb.append("    idProvincia: ").append(toIndentedString(idProvincia)).append("\n");
     sb.append("    cantidadMunicipios: ").append(toIndentedString(cantidadMunicipios)).append("\n");
-    sb.append("    jugadores: ").append(toIndentedString(jugadores)).append("\n");
+    sb.append("    idJugadores: ").append(toIndentedString(idJugadores)).append("\n");
     sb.append("    modoDeJuego: ").append(toIndentedString(modoDeJuego)).append("\n");
     sb.append("}");
     return sb.toString();

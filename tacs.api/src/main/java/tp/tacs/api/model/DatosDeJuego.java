@@ -1,4 +1,4 @@
-package tp.tacs.api.models;
+package tp.tacs.api.model;
 
 import java.util.Objects;
 
@@ -17,7 +17,7 @@ import io.swagger.annotations.ApiModelProperty;
  */
 @ApiModel(description = "Datos de una partida. Incluye su provincia en juego y el usuario que tiene el proximo turno.")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-08-27T18:00:32.244-03:00[America/Buenos_Aires]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-08-29T21:54:39.417-03:00[America/Buenos_Aires]")
 public class DatosDeJuego   {
   @JsonProperty("proximoTurno")
   private Usuario proximoTurno = null;
