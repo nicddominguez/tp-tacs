@@ -1,6 +1,9 @@
 languaje: java
 jdk:
   - openjdk11
+branches:
+  only:
+  - master
 script:
   - mvn test --file tacs.api/pom.xml
   - mvn verify --file tacs.api/pom.xml
