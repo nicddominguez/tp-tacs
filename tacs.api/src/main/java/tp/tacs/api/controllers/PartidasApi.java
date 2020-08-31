@@ -66,7 +66,7 @@ public interface PartidasApi {
     @ApiOperation(value = "Crear una nueva pertida", nickname = "crearPartida", notes = "", authorizations = {
         @Authorization(value = "bearerAuth")    }, tags={ "Partidas", })
     @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "Success"),
+        @ApiResponse(code = 201, message = "Created"),
         @ApiResponse(code = 400, message = "Bad Request"),
         @ApiResponse(code = 403, message = "Forbidden"),
         @ApiResponse(code = 404, message = "Not found") })

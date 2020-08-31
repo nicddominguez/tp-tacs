@@ -1,6 +1,5 @@
 package tp.tacs.api.model;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -30,7 +29,7 @@ public class Partida   {
   private Provincia provincia = null;
 
   @JsonProperty("cantidadMunicipios")
-  private BigDecimal cantidadMunicipios = null;
+  private Integer cantidadMunicipios = null;
 
   @JsonProperty("estado")
   private EstadoDeJuego estado = null;
@@ -92,7 +91,7 @@ public class Partida   {
     this.provincia = provincia;
   }
 
-  public Partida cantidadMunicipios(BigDecimal cantidadMunicipios) {
+  public Partida cantidadMunicipios(Integer cantidadMunicipios) {
     this.cantidadMunicipios = cantidadMunicipios;
     return this;
   }
@@ -105,11 +104,11 @@ public class Partida   {
       @NotNull
 
     @Valid
-    public BigDecimal getCantidadMunicipios() {
+    public Integer getCantidadMunicipios() {
     return cantidadMunicipios;
   }
 
-  public void setCantidadMunicipios(BigDecimal cantidadMunicipios) {
+  public void setCantidadMunicipios(Integer cantidadMunicipios) {
     this.cantidadMunicipios = cantidadMunicipios;
   }
 

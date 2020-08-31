@@ -313,8 +313,8 @@ paths:
                 modoDeJuego:
                   $ref: '#/components/schemas/ModoDeJuego'
       responses:
-        200:
-          description: Success
+        201:
+          description: Created
         400:
           description: Bad Request
         403:
