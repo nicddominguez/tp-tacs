@@ -13,7 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @RestController
-public class PartidasController implements PartidasApi {
+public class PartidasApiController implements PartidasApi {
     @Override
     public ResponseEntity<Void> actualizarEstadoPartida(Integer idPartida, @NotNull @Valid EstadoDeJuego estado) {
         return new ResponseEntity<>(HttpStatus.OK);
