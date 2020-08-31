@@ -1,0 +1,6 @@
+languaje: java
+jdk:
+  - openjdk11
+script:
+  - mvn test --file tacs.api/pom.xml
+  - mvn verify --file tacs.api/pom.xml
