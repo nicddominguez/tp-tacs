@@ -5,32 +5,15 @@
  */
 package tp.tacs.api.controllers;
 
-import java.util.List;
+import io.swagger.annotations.*;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.threeten.bp.LocalDate;
+import tp.tacs.api.model.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.threeten.bp.LocalDate;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import io.swagger.annotations.Authorization;
-import tp.tacs.api.model.AtacarMunicipioBody;
-import tp.tacs.api.model.AtacarMunicipioResponse;
-import tp.tacs.api.model.CrearPartidaBody;
-import tp.tacs.api.model.EstadoDeJuego;
-import tp.tacs.api.model.MoverGauchosBody;
-import tp.tacs.api.model.MoverGauchosResponse;
-import tp.tacs.api.model.Partida;
+import java.util.List;
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-08-29T21:54:36.724-03:00[America/Buenos_Aires]")
 @Api(value = "partidas", description = "the partidas API")
 public interface PartidasApi {
