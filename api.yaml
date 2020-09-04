@@ -89,7 +89,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/EstadisticasDeJuego'
+                $ref: '#/components/schemas/EstadisticasDeJuegoModel'
         400:
           description: Bad request
         403:
@@ -122,7 +122,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/EstadisticasDeUsuario'
+                  $ref: '#/components/schemas/EstadisticasDeUsuarioModel'
         400:
           description: Bad request
         403:
@@ -150,7 +150,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/EstadisticasDeUsuario'
+                $ref: '#/components/schemas/EstadisticasDeUsuarioModel'
         400:
           description: Bad request
         # En el caso de que no se tengan permisos, también se retorna 404
@@ -189,7 +189,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Usuario'
+                  $ref: '#/components/schemas/UsuarioModel'
         400:
           description: Bad request
         403:
@@ -224,7 +224,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Provincia'
+                  $ref: '#/components/schemas/ProvinciaModel'
         400:
           description: Bad request
         403:
@@ -255,7 +255,7 @@ paths:
         - in: query
           name: estado
           schema:
-            $ref: '#/components/schemas/EstadoDeJuego'
+            $ref: '#/components/schemas/EstadoDeJuegoModel'
           required: false
         - in: query
           name: pageSize
@@ -276,7 +276,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Partida'
+                  $ref: '#/components/schemas/PartidaModel'
         400:
           description: Bad request
         403:
@@ -307,7 +307,7 @@ paths:
                   items:
                     type: integer
                 modoDeJuego:
-                  $ref: '#/components/schemas/ModoDeJuego'
+                  $ref: '#/components/schemas/ModoDeJuegoModel'
       responses:
         201:
           description: Created
@@ -338,7 +338,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Partida'
+                $ref: '#/components/schemas/PartidaModel'
         400:
           description: Bad Request
         404:
@@ -359,7 +359,7 @@ paths:
         - in: query
           name: estado
           schema:
-            $ref: '#/components/schemas/EstadoDeJuego'
+            $ref: '#/components/schemas/EstadoDeJuegoModel'
           required: true
       responses:
         200:
@@ -408,9 +408,9 @@ paths:
                 title: moverGauchosResponse
                 properties:
                   municipioOrigen:
-                    $ref: '#/components/schemas/MunicipioEnJuego'
+                    $ref: '#/components/schemas/MunicipioEnJuegoModel'
                   municipioDestino:
-                    $ref: '#/components/schemas/MunicipioEnJuego'
+                    $ref: '#/components/schemas/MunicipioEnJuegoModel'
         400:
           description: Bad request
         404:
@@ -452,16 +452,16 @@ paths:
                 title: atacarMunicipioResponse
                 properties:
                   municipioAtacante:
-                    $ref: '#/components/schemas/MunicipioEnJuego'
+                    $ref: '#/components/schemas/MunicipioEnJuegoModel'
                   municipioAtacado:
-                    $ref: '#/components/schemas/MunicipioEnJuego'
+                    $ref: '#/components/schemas/MunicipioEnJuegoModel'
         400:
           description: Bad request
         404:
           description: Not found
 components:
   schemas:
-    Partida:
+    PartidaModel:
       type: object
       description: Una partida
       required:
@@ -477,53 +477,53 @@ components:
           type: integer
           description: Id de la partida
         provincia:
-          $ref: '#/components/schemas/Provincia'
+          $ref: '#/components/schemas/ProvinciaModel'
         cantidadMunicipios:
           type: number
           description: Cantidad de municipios que se usan
         estado:
-          $ref: '#/components/schemas/EstadoDeJuego'
+          $ref: '#/components/schemas/EstadoDeJuegoModel'
         jugadores:
           type: array
           description: Usuarios que juegan esta partida
           items:
-            $ref: '#/components/schemas/Usuario'
+            $ref: '#/components/schemas/UsuarioModel'
         modoDeJuego:
-          $ref: '#/components/schemas/ModoDeJuego'
+          $ref: '#/components/schemas/ModoDeJuegoModel'
         fecha:
           type: string
           format: date
           description: Fecha de inicio de la partida
         informacionDeJuego:
-          $ref: '#/components/schemas/DatosDeJuego'
+          $ref: '#/components/schemas/DatosDeJuegoModel'
         idGanador:
           type: string
           description: Id del usuario ganador
-    DatosDeJuego:
+    DatosDeJuegoModel:
       type: object
       description: Datos de una partida. Incluye su provincia en juego y el usuario que tiene el proximo turno.
       required:
         - provincia
       properties:
         proximoTurno:
-          $ref: '#/components/schemas/Usuario'
+          $ref: '#/components/schemas/UsuarioModel'
         provincia:
-          $ref: '#/components/schemas/ProvinciaEnJuego'
-    EstadoDeJuego:
+          $ref: '#/components/schemas/ProvinciaEnJuegoModel'
+    EstadoDeJuegoModel:
       type: string
       description: Estado de una partida.
       enum:
         - EnProgreso
         - Terminada
         - Cancelada
-    ModoDeJuego:
+    ModoDeJuegoModel:
       type: string
       description: Modo de juego.
       enum:
         - Rapido
         - Normal
         - Extendido
-    Usuario:
+    UsuarioModel:
       type: object
       description: Un usuario.
       required:
@@ -534,7 +534,7 @@ components:
           type: integer
         nombreDeUsuario:
           type: string
-    Provincia:
+    ProvinciaModel:
       type: object
       description: Una provincia.
       required:
@@ -547,7 +547,7 @@ components:
         nombre:
           type: string
           description: Nombre de la provincia
-    ProvinciaEnJuego:
+    ProvinciaEnJuegoModel:
       type: object
       description: Provincia en juego.
       required:
@@ -557,8 +557,8 @@ components:
           type: array
           description: Municipios en juego que contiene la provincia.
           items:
-            $ref: '#/components/schemas/MunicipioEnJuego'
-    MunicipioEnJuego:
+            $ref: '#/components/schemas/MunicipioEnJuegoModel'
+    MunicipioEnJuegoModel:
       type: object
       description: Municipio en juego.
       required:
@@ -575,18 +575,18 @@ components:
           type: string
           description: Nombre del municipio.
         ubicacion:
-          $ref: '#/components/schemas/Coordenadas'
+          $ref: '#/components/schemas/CoordenadasModel'
         duenio:
-          $ref: '#/components/schemas/Usuario'
+          $ref: '#/components/schemas/UsuarioModel'
         gauchos:
           type: integer
           description: Cantidad de gauchos en el municipio.
         modo:
-          $ref: '#/components/schemas/ModoDeMunicipio'
+          $ref: '#/components/schemas/ModoDeMunicipioModel'
         estaBloqueado:
           type: boolean
           description: Si el municipio está bloqueado.
-    Coordenadas:
+    CoordenadasModel:
       type: object
       required:
         - lat
@@ -599,7 +599,7 @@ components:
         lon:
           type: number
           description: Longitud
-    ModoDeMunicipio:
+    ModoDeMunicipioModel:
       type: string
       description: Modo de operación de un municipio.
       enum:
@@ -619,11 +619,11 @@ components:
         - token
       properties:
         usuario:
-          $ref: '#/components/schemas/Usuario'
+          $ref: '#/components/schemas/UsuarioModel'
         token:
           description: JWT que puede utilizarse para acceder a los recursos protegidos
           type: string
-    EstadisticasDeJuego:
+    EstadisticasDeJuegoModel:
       type: object
       properties:
         partidasCreadas:
@@ -634,11 +634,11 @@ components:
           type: integer
         partidasCanceladas:
           type: integer
-    EstadisticasDeUsuario:
+    EstadisticasDeUsuarioModel:
       type: object
       properties:
         usuario:
-          $ref: '#/components/schemas/Usuario'
+          $ref: '#/components/schemas/UsuarioModel'
         partidasJugadas:
           type: integer
         partidasGanadas:
