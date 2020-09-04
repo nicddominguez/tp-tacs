@@ -12,28 +12,28 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * Una provincia.
+ * Un usuario.
  */
-@ApiModel(description = "Una provincia.")
+@ApiModel(description = "Un usuario.")
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-08-29T21:54:39.417-03:00[America/Buenos_Aires]")
-public class Provincia   {
+public class UsuarioModel {
   @JsonProperty("id")
   private Integer id = null;
 
-  @JsonProperty("nombre")
-  private String nombre = null;
+  @JsonProperty("nombreDeUsuario")
+  private String nombreDeUsuario = null;
 
-  public Provincia id(Integer id) {
+  public UsuarioModel id(Integer id) {
     this.id = id;
     return this;
   }
 
   /**
-   * Id de la provincia
+   * Get id
    * @return id
   **/
-  @ApiModelProperty(required = true, value = "Id de la provincia")
+  @ApiModelProperty(required = true, value = "")
       @NotNull
 
     public Integer getId() {
@@ -44,24 +44,24 @@ public class Provincia   {
     this.id = id;
   }
 
-  public Provincia nombre(String nombre) {
-    this.nombre = nombre;
+  public UsuarioModel nombreDeUsuario(String nombreDeUsuario) {
+    this.nombreDeUsuario = nombreDeUsuario;
     return this;
   }
 
   /**
-   * Nombre de la provincia
-   * @return nombre
+   * Get nombreDeUsuario
+   * @return nombreDeUsuario
   **/
-  @ApiModelProperty(required = true, value = "Nombre de la provincia")
+  @ApiModelProperty(required = true, value = "")
       @NotNull
 
-    public String getNombre() {
-    return nombre;
+    public String getNombreDeUsuario() {
+    return nombreDeUsuario;
   }
 
-  public void setNombre(String nombre) {
-    this.nombre = nombre;
+  public void setNombreDeUsuario(String nombreDeUsuario) {
+    this.nombreDeUsuario = nombreDeUsuario;
   }
 
 
@@ -73,23 +73,23 @@ public class Provincia   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Provincia provincia = (Provincia) o;
-    return Objects.equals(this.id, provincia.id) &&
-        Objects.equals(this.nombre, provincia.nombre);
+    UsuarioModel usuarioModel = (UsuarioModel) o;
+    return Objects.equals(this.id, usuarioModel.id) &&
+        Objects.equals(this.nombreDeUsuario, usuarioModel.nombreDeUsuario);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, nombre);
+    return Objects.hash(id, nombreDeUsuario);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class Provincia {\n");
+    sb.append("class Usuario {\n");
     
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
-    sb.append("    nombre: ").append(toIndentedString(nombre)).append("\n");
+    sb.append("    nombreDeUsuario: ").append(toIndentedString(nombreDeUsuario)).append("\n");
     sb.append("}");
     return sb.toString();
   }

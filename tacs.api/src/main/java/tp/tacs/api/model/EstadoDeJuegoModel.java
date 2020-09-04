@@ -6,14 +6,14 @@ import com.fasterxml.jackson.annotation.JsonValue;
 /**
  * Estado de una partida.
  */
-public enum EstadoDeJuego {
+public enum EstadoDeJuegoModel {
   ENPROGRESO("EnProgreso"),
     TERMINADA("Terminada"),
     CANCELADA("Cancelada");
 
   private String value;
 
-  EstadoDeJuego(String value) {
+  EstadoDeJuegoModel(String value) {
     this.value = value;
   }
 
@@ -24,8 +24,8 @@ public enum EstadoDeJuego {
   }
 
   @JsonCreator
-  public static EstadoDeJuego fromValue(String text) {
-    for (EstadoDeJuego b : EstadoDeJuego.values()) {
+  public static EstadoDeJuegoModel fromValue(String text) {
+    for (EstadoDeJuegoModel b : EstadoDeJuegoModel.values()) {
       if (String.valueOf(b.value).equals(text)) {
         return b;
       }

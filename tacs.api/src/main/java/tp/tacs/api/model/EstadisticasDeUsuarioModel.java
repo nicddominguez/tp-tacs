@@ -15,9 +15,9 @@ import io.swagger.annotations.ApiModelProperty;
  */
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-08-29T21:54:39.417-03:00[America/Buenos_Aires]")
-public class EstadisticasDeUsuario   {
+public class EstadisticasDeUsuarioModel {
   @JsonProperty("usuario")
-  private Usuario usuario = null;
+  private UsuarioModel usuarioModel = null;
 
   @JsonProperty("partidasJugadas")
   private Integer partidasJugadas = null;
@@ -28,8 +28,8 @@ public class EstadisticasDeUsuario   {
   @JsonProperty("rachaActual")
   private Integer rachaActual = null;
 
-  public EstadisticasDeUsuario usuario(Usuario usuario) {
-    this.usuario = usuario;
+  public EstadisticasDeUsuarioModel usuario(UsuarioModel usuarioModel) {
+    this.usuarioModel = usuarioModel;
     return this;
   }
 
@@ -40,15 +40,15 @@ public class EstadisticasDeUsuario   {
   @ApiModelProperty(value = "")
   
     @Valid
-    public Usuario getUsuario() {
-    return usuario;
+    public UsuarioModel getUsuario() {
+    return usuarioModel;
   }
 
-  public void setUsuario(Usuario usuario) {
-    this.usuario = usuario;
+  public void setUsuario(UsuarioModel usuarioModel) {
+    this.usuarioModel = usuarioModel;
   }
 
-  public EstadisticasDeUsuario partidasJugadas(Integer partidasJugadas) {
+  public EstadisticasDeUsuarioModel partidasJugadas(Integer partidasJugadas) {
     this.partidasJugadas = partidasJugadas;
     return this;
   }
@@ -67,7 +67,7 @@ public class EstadisticasDeUsuario   {
     this.partidasJugadas = partidasJugadas;
   }
 
-  public EstadisticasDeUsuario partidasGanadas(Integer partidasGanadas) {
+  public EstadisticasDeUsuarioModel partidasGanadas(Integer partidasGanadas) {
     this.partidasGanadas = partidasGanadas;
     return this;
   }
@@ -86,7 +86,7 @@ public class EstadisticasDeUsuario   {
     this.partidasGanadas = partidasGanadas;
   }
 
-  public EstadisticasDeUsuario rachaActual(Integer rachaActual) {
+  public EstadisticasDeUsuarioModel rachaActual(Integer rachaActual) {
     this.rachaActual = rachaActual;
     return this;
   }
@@ -114,16 +114,16 @@ public class EstadisticasDeUsuario   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    EstadisticasDeUsuario estadisticasDeUsuario = (EstadisticasDeUsuario) o;
-    return Objects.equals(this.usuario, estadisticasDeUsuario.usuario) &&
-        Objects.equals(this.partidasJugadas, estadisticasDeUsuario.partidasJugadas) &&
-        Objects.equals(this.partidasGanadas, estadisticasDeUsuario.partidasGanadas) &&
-        Objects.equals(this.rachaActual, estadisticasDeUsuario.rachaActual);
+    EstadisticasDeUsuarioModel estadisticasDeUsuarioModel = (EstadisticasDeUsuarioModel) o;
+    return Objects.equals(this.usuarioModel, estadisticasDeUsuarioModel.usuarioModel) &&
+        Objects.equals(this.partidasJugadas, estadisticasDeUsuarioModel.partidasJugadas) &&
+        Objects.equals(this.partidasGanadas, estadisticasDeUsuarioModel.partidasGanadas) &&
+        Objects.equals(this.rachaActual, estadisticasDeUsuarioModel.rachaActual);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(usuario, partidasJugadas, partidasGanadas, rachaActual);
+    return Objects.hash(usuarioModel, partidasJugadas, partidasGanadas, rachaActual);
   }
 
   @Override
@@ -131,7 +131,7 @@ public class EstadisticasDeUsuario   {
     StringBuilder sb = new StringBuilder();
     sb.append("class EstadisticasDeUsuario {\n");
     
-    sb.append("    usuario: ").append(toIndentedString(usuario)).append("\n");
+    sb.append("    usuario: ").append(toIndentedString(usuarioModel)).append("\n");
     sb.append("    partidasJugadas: ").append(toIndentedString(partidasJugadas)).append("\n");
     sb.append("    partidasGanadas: ").append(toIndentedString(partidasGanadas)).append("\n");
     sb.append("    rachaActual: ").append(toIndentedString(rachaActual)).append("\n");

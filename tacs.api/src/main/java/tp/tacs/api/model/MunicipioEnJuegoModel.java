@@ -18,7 +18,7 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(description = "Municipio en juego.")
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-08-29T21:54:39.417-03:00[America/Buenos_Aires]")
-public class MunicipioEnJuego   {
+public class MunicipioEnJuegoModel {
   @JsonProperty("id")
   private Integer id = null;
 
@@ -26,21 +26,21 @@ public class MunicipioEnJuego   {
   private String nombre = null;
 
   @JsonProperty("ubicacion")
-  private Coordenadas ubicacion = null;
+  private CoordenadasModel ubicacion = null;
 
   @JsonProperty("duenio")
-  private Usuario duenio = null;
+  private UsuarioModel duenio = null;
 
   @JsonProperty("gauchos")
   private Integer gauchos = null;
 
   @JsonProperty("modo")
-  private ModoDeMunicipio modo = null;
+  private ModoDeMunicipioModel modo = null;
 
   @JsonProperty("estaBloqueado")
   private Boolean estaBloqueado = null;
 
-  public MunicipioEnJuego id(Integer id) {
+  public MunicipioEnJuegoModel id(Integer id) {
     this.id = id;
     return this;
   }
@@ -60,7 +60,7 @@ public class MunicipioEnJuego   {
     this.id = id;
   }
 
-  public MunicipioEnJuego nombre(String nombre) {
+  public MunicipioEnJuegoModel nombre(String nombre) {
     this.nombre = nombre;
     return this;
   }
@@ -80,7 +80,7 @@ public class MunicipioEnJuego   {
     this.nombre = nombre;
   }
 
-  public MunicipioEnJuego ubicacion(Coordenadas ubicacion) {
+  public MunicipioEnJuegoModel ubicacion(CoordenadasModel ubicacion) {
     this.ubicacion = ubicacion;
     return this;
   }
@@ -93,15 +93,15 @@ public class MunicipioEnJuego   {
       @NotNull
 
     @Valid
-    public Coordenadas getUbicacion() {
+    public CoordenadasModel getUbicacion() {
     return ubicacion;
   }
 
-  public void setUbicacion(Coordenadas ubicacion) {
+  public void setUbicacion(CoordenadasModel ubicacion) {
     this.ubicacion = ubicacion;
   }
 
-  public MunicipioEnJuego duenio(Usuario duenio) {
+  public MunicipioEnJuegoModel duenio(UsuarioModel duenio) {
     this.duenio = duenio;
     return this;
   }
@@ -114,15 +114,15 @@ public class MunicipioEnJuego   {
       @NotNull
 
     @Valid
-    public Usuario getDuenio() {
+    public UsuarioModel getDuenio() {
     return duenio;
   }
 
-  public void setDuenio(Usuario duenio) {
+  public void setDuenio(UsuarioModel duenio) {
     this.duenio = duenio;
   }
 
-  public MunicipioEnJuego gauchos(Integer gauchos) {
+  public MunicipioEnJuegoModel gauchos(Integer gauchos) {
     this.gauchos = gauchos;
     return this;
   }
@@ -142,7 +142,7 @@ public class MunicipioEnJuego   {
     this.gauchos = gauchos;
   }
 
-  public MunicipioEnJuego modo(ModoDeMunicipio modo) {
+  public MunicipioEnJuegoModel modo(ModoDeMunicipioModel modo) {
     this.modo = modo;
     return this;
   }
@@ -154,15 +154,15 @@ public class MunicipioEnJuego   {
   @ApiModelProperty(value = "")
   
     @Valid
-    public ModoDeMunicipio getModo() {
+    public ModoDeMunicipioModel getModo() {
     return modo;
   }
 
-  public void setModo(ModoDeMunicipio modo) {
+  public void setModo(ModoDeMunicipioModel modo) {
     this.modo = modo;
   }
 
-  public MunicipioEnJuego estaBloqueado(Boolean estaBloqueado) {
+  public MunicipioEnJuegoModel estaBloqueado(Boolean estaBloqueado) {
     this.estaBloqueado = estaBloqueado;
     return this;
   }
@@ -190,14 +190,14 @@ public class MunicipioEnJuego   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    MunicipioEnJuego municipioEnJuego = (MunicipioEnJuego) o;
-    return Objects.equals(this.id, municipioEnJuego.id) &&
-        Objects.equals(this.nombre, municipioEnJuego.nombre) &&
-        Objects.equals(this.ubicacion, municipioEnJuego.ubicacion) &&
-        Objects.equals(this.duenio, municipioEnJuego.duenio) &&
-        Objects.equals(this.gauchos, municipioEnJuego.gauchos) &&
-        Objects.equals(this.modo, municipioEnJuego.modo) &&
-        Objects.equals(this.estaBloqueado, municipioEnJuego.estaBloqueado);
+    MunicipioEnJuegoModel municipioEnJuegoModel = (MunicipioEnJuegoModel) o;
+    return Objects.equals(this.id, municipioEnJuegoModel.id) &&
+        Objects.equals(this.nombre, municipioEnJuegoModel.nombre) &&
+        Objects.equals(this.ubicacion, municipioEnJuegoModel.ubicacion) &&
+        Objects.equals(this.duenio, municipioEnJuegoModel.duenio) &&
+        Objects.equals(this.gauchos, municipioEnJuegoModel.gauchos) &&
+        Objects.equals(this.modo, municipioEnJuegoModel.modo) &&
+        Objects.equals(this.estaBloqueado, municipioEnJuegoModel.estaBloqueado);
   }
 
   @Override

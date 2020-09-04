@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import tp.tacs.api.model.Provincia;
+import tp.tacs.api.model.ProvinciaModel;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -19,18 +19,18 @@ import java.util.List;
 @Api(value = "provincias", description = "the provincias API")
 public interface ProvinciasApi {
 
-    @ApiOperation(value = "Permite listar las provincias", nickname = "listarProvincias", notes = "", response = Provincia.class, responseContainer = "List", authorizations = {
+    @ApiOperation(value = "Permite listar las provincias", nickname = "listarProvincias", notes = "", response = ProvinciaModel.class, responseContainer = "List", authorizations = {
         @Authorization(value = "bearerAuth")    }, tags={ "Provincias", })
     @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "Success", response = Provincia.class, responseContainer = "List"),
+        @ApiResponse(code = 200, message = "Success", response = ProvinciaModel.class, responseContainer = "List"),
         @ApiResponse(code = 400, message = "Bad request"),
         @ApiResponse(code = 403, message = "Forbidden"),
         @ApiResponse(code = 404, message = "Page not found") })
     @RequestMapping(value = "/provincias",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<List<Provincia>> listarProvincias(@NotNull @ApiParam(value = "", required = true) @Valid @RequestParam(value = "page", required = true) Integer page
-,@ApiParam(value = "", defaultValue = "10") @Valid @RequestParam(value = "pageSize", required = false, defaultValue="10") Integer pageSize
+    ResponseEntity<List<ProvinciaModel>> listarProvincias(@NotNull @ApiParam(value = "", required = true) @Valid @RequestParam(value = "page", required = true) Integer page
+, @ApiParam(value = "", defaultValue = "10") @Valid @RequestParam(value = "pageSize", required = false, defaultValue="10") Integer pageSize
 );
 
 }

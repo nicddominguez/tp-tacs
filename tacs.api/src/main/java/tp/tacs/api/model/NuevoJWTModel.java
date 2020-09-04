@@ -14,13 +14,13 @@ import javax.validation.constraints.*;
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-09-03T22:53:49.293-03:00[America/Buenos_Aires]")
 public class NuevoJWTModel   {
   @JsonProperty("usuario")
-  private Usuario usuario = null;
+  private UsuarioModel usuarioModel = null;
 
   @JsonProperty("token")
   private String token = null;
 
-  public NuevoJWTModel usuario(Usuario usuario) {
-    this.usuario = usuario;
+  public NuevoJWTModel usuario(UsuarioModel usuarioModel) {
+    this.usuarioModel = usuarioModel;
     return this;
   }
 
@@ -31,12 +31,12 @@ public class NuevoJWTModel   {
   @ApiModelProperty(value = "")
   
     @Valid
-    public Usuario getUsuario() {
-    return usuario;
+    public UsuarioModel getUsuario() {
+    return usuarioModel;
   }
 
-  public void setUsuario(Usuario usuario) {
-    this.usuario = usuario;
+  public void setUsuario(UsuarioModel usuarioModel) {
+    this.usuarioModel = usuarioModel;
   }
 
   public NuevoJWTModel token(String token) {
@@ -69,13 +69,13 @@ public class NuevoJWTModel   {
       return false;
     }
     NuevoJWTModel nuevoJWTModel = (NuevoJWTModel) o;
-    return Objects.equals(this.usuario, nuevoJWTModel.usuario) &&
+    return Objects.equals(this.usuarioModel, nuevoJWTModel.usuarioModel) &&
         Objects.equals(this.token, nuevoJWTModel.token);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(usuario, token);
+    return Objects.hash(usuarioModel, token);
   }
 
   @Override
@@ -83,7 +83,7 @@ public class NuevoJWTModel   {
     StringBuilder sb = new StringBuilder();
     sb.append("class NuevoJWTModel {\n");
     
-    sb.append("    usuario: ").append(toIndentedString(usuario)).append("\n");
+    sb.append("    usuario: ").append(toIndentedString(usuarioModel)).append("\n");
     sb.append("    token: ").append(toIndentedString(token)).append("\n");
     sb.append("}");
     return sb.toString();

@@ -1,6 +1,7 @@
 package tp.tacs.api.model;
 
-import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import javax.validation.Valid;
@@ -14,58 +15,39 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * Par de coordenadas en el mundo.
+ * Provincia en juego.
  */
-@ApiModel(description = "Par de coordenadas en el mundo.")
+@ApiModel(description = "Provincia en juego.")
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-08-29T21:54:39.417-03:00[America/Buenos_Aires]")
-public class Coordenadas   {
-  @JsonProperty("lat")
-  private BigDecimal lat = null;
+public class ProvinciaEnJuegoModel {
+  @JsonProperty("municipios")
+  @Valid
+  private List<MunicipioEnJuegoModel> municipios = new ArrayList<MunicipioEnJuegoModel>();
 
-  @JsonProperty("lon")
-  private BigDecimal lon = null;
+  public ProvinciaEnJuegoModel municipios(List<MunicipioEnJuegoModel> municipios) {
+    this.municipios = municipios;
+    return this;
+  }
 
-  public Coordenadas lat(BigDecimal lat) {
-    this.lat = lat;
+  public ProvinciaEnJuegoModel addMunicipiosItem(MunicipioEnJuegoModel municipiosItem) {
+    this.municipios.add(municipiosItem);
     return this;
   }
 
   /**
-   * Latitud
-   * @return lat
+   * Municipios en juego que contiene la provincia.
+   * @return municipios
   **/
-  @ApiModelProperty(required = true, value = "Latitud")
+  @ApiModelProperty(required = true, value = "Municipios en juego que contiene la provincia.")
       @NotNull
-
     @Valid
-    public BigDecimal getLat() {
-    return lat;
+    public List<MunicipioEnJuegoModel> getMunicipios() {
+    return municipios;
   }
 
-  public void setLat(BigDecimal lat) {
-    this.lat = lat;
-  }
-
-  public Coordenadas lon(BigDecimal lon) {
-    this.lon = lon;
-    return this;
-  }
-
-  /**
-   * Longitud
-   * @return lon
-  **/
-  @ApiModelProperty(required = true, value = "Longitud")
-      @NotNull
-
-    @Valid
-    public BigDecimal getLon() {
-    return lon;
-  }
-
-  public void setLon(BigDecimal lon) {
-    this.lon = lon;
+  public void setMunicipios(List<MunicipioEnJuegoModel> municipios) {
+    this.municipios = municipios;
   }
 
 
@@ -77,23 +59,21 @@ public class Coordenadas   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Coordenadas coordenadas = (Coordenadas) o;
-    return Objects.equals(this.lat, coordenadas.lat) &&
-        Objects.equals(this.lon, coordenadas.lon);
+    ProvinciaEnJuegoModel provinciaEnJuegoModel = (ProvinciaEnJuegoModel) o;
+    return Objects.equals(this.municipios, provinciaEnJuegoModel.municipios);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(lat, lon);
+    return Objects.hash(municipios);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class Coordenadas {\n");
+    sb.append("class ProvinciaEnJuego {\n");
     
-    sb.append("    lat: ").append(toIndentedString(lat)).append("\n");
-    sb.append("    lon: ").append(toIndentedString(lon)).append("\n");
+    sb.append("    municipios: ").append(toIndentedString(municipios)).append("\n");
     sb.append("}");
     return sb.toString();
   }

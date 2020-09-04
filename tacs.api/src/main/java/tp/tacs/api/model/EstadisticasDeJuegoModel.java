@@ -13,7 +13,7 @@ import io.swagger.annotations.ApiModelProperty;
  */
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-08-29T21:54:39.417-03:00[America/Buenos_Aires]")
-public class EstadisticasDeJuego   {
+public class EstadisticasDeJuegoModel {
   @JsonProperty("partidasCreadas")
   private Integer partidasCreadas = null;
 
@@ -26,7 +26,7 @@ public class EstadisticasDeJuego   {
   @JsonProperty("partidasCanceladas")
   private Integer partidasCanceladas = null;
 
-  public EstadisticasDeJuego partidasCreadas(Integer partidasCreadas) {
+  public EstadisticasDeJuegoModel partidasCreadas(Integer partidasCreadas) {
     this.partidasCreadas = partidasCreadas;
     return this;
   }
@@ -45,7 +45,7 @@ public class EstadisticasDeJuego   {
     this.partidasCreadas = partidasCreadas;
   }
 
-  public EstadisticasDeJuego partidasEnCurso(Integer partidasEnCurso) {
+  public EstadisticasDeJuegoModel partidasEnCurso(Integer partidasEnCurso) {
     this.partidasEnCurso = partidasEnCurso;
     return this;
   }
@@ -64,7 +64,7 @@ public class EstadisticasDeJuego   {
     this.partidasEnCurso = partidasEnCurso;
   }
 
-  public EstadisticasDeJuego partidesTerminadas(Integer partidesTerminadas) {
+  public EstadisticasDeJuegoModel partidesTerminadas(Integer partidesTerminadas) {
     this.partidesTerminadas = partidesTerminadas;
     return this;
   }
@@ -83,7 +83,7 @@ public class EstadisticasDeJuego   {
     this.partidesTerminadas = partidesTerminadas;
   }
 
-  public EstadisticasDeJuego partidasCanceladas(Integer partidasCanceladas) {
+  public EstadisticasDeJuegoModel partidasCanceladas(Integer partidasCanceladas) {
     this.partidasCanceladas = partidasCanceladas;
     return this;
   }
@@ -111,11 +111,11 @@ public class EstadisticasDeJuego   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    EstadisticasDeJuego estadisticasDeJuego = (EstadisticasDeJuego) o;
-    return Objects.equals(this.partidasCreadas, estadisticasDeJuego.partidasCreadas) &&
-        Objects.equals(this.partidasEnCurso, estadisticasDeJuego.partidasEnCurso) &&
-        Objects.equals(this.partidesTerminadas, estadisticasDeJuego.partidesTerminadas) &&
-        Objects.equals(this.partidasCanceladas, estadisticasDeJuego.partidasCanceladas);
+    EstadisticasDeJuegoModel estadisticasDeJuegoModel = (EstadisticasDeJuegoModel) o;
+    return Objects.equals(this.partidasCreadas, estadisticasDeJuegoModel.partidasCreadas) &&
+        Objects.equals(this.partidasEnCurso, estadisticasDeJuegoModel.partidasEnCurso) &&
+        Objects.equals(this.partidesTerminadas, estadisticasDeJuegoModel.partidesTerminadas) &&
+        Objects.equals(this.partidasCanceladas, estadisticasDeJuegoModel.partidasCanceladas);
   }
 
   @Override

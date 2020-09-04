@@ -29,7 +29,7 @@ public class CrearPartidaBody   {
   private List<Integer> idJugadores = null;
 
   @JsonProperty("modoDeJuego")
-  private ModoDeJuego modoDeJuego = null;
+  private ModoDeJuegoModel modoDeJuegoModel = null;
 
   public CrearPartidaBody idProvincia(Integer idProvincia) {
     this.idProvincia = idProvincia;
@@ -96,8 +96,8 @@ public class CrearPartidaBody   {
     this.idJugadores = idJugadores;
   }
 
-  public CrearPartidaBody modoDeJuego(ModoDeJuego modoDeJuego) {
-    this.modoDeJuego = modoDeJuego;
+  public CrearPartidaBody modoDeJuego(ModoDeJuegoModel modoDeJuegoModel) {
+    this.modoDeJuegoModel = modoDeJuegoModel;
     return this;
   }
 
@@ -108,12 +108,12 @@ public class CrearPartidaBody   {
   @ApiModelProperty(value = "")
   
     @Valid
-    public ModoDeJuego getModoDeJuego() {
-    return modoDeJuego;
+    public ModoDeJuegoModel getModoDeJuego() {
+    return modoDeJuegoModel;
   }
 
-  public void setModoDeJuego(ModoDeJuego modoDeJuego) {
-    this.modoDeJuego = modoDeJuego;
+  public void setModoDeJuego(ModoDeJuegoModel modoDeJuegoModel) {
+    this.modoDeJuegoModel = modoDeJuegoModel;
   }
 
 
@@ -129,12 +129,12 @@ public class CrearPartidaBody   {
     return Objects.equals(this.idProvincia, crearPartidaBody.idProvincia) &&
         Objects.equals(this.cantidadMunicipios, crearPartidaBody.cantidadMunicipios) &&
         Objects.equals(this.idJugadores, crearPartidaBody.idJugadores) &&
-        Objects.equals(this.modoDeJuego, crearPartidaBody.modoDeJuego);
+        Objects.equals(this.modoDeJuegoModel, crearPartidaBody.modoDeJuegoModel);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(idProvincia, cantidadMunicipios, idJugadores, modoDeJuego);
+    return Objects.hash(idProvincia, cantidadMunicipios, idJugadores, modoDeJuegoModel);
   }
 
   @Override
@@ -145,7 +145,7 @@ public class CrearPartidaBody   {
     sb.append("    idProvincia: ").append(toIndentedString(idProvincia)).append("\n");
     sb.append("    cantidadMunicipios: ").append(toIndentedString(cantidadMunicipios)).append("\n");
     sb.append("    idJugadores: ").append(toIndentedString(idJugadores)).append("\n");
-    sb.append("    modoDeJuego: ").append(toIndentedString(modoDeJuego)).append("\n");
+    sb.append("    modoDeJuego: ").append(toIndentedString(modoDeJuegoModel)).append("\n");
     sb.append("}");
     return sb.toString();
   }

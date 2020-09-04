@@ -6,13 +6,13 @@ import com.fasterxml.jackson.annotation.JsonValue;
 /**
  * Modo de operación de un municipio.
  */
-public enum ModoDeMunicipio {
+public enum ModoDeMunicipioModel {
   DEFENSA("Defensa"),
     PRODUCCION("Produccion");
 
   private String value;
 
-  ModoDeMunicipio(String value) {
+  ModoDeMunicipioModel(String value) {
     this.value = value;
   }
 
@@ -23,8 +23,8 @@ public enum ModoDeMunicipio {
   }
 
   @JsonCreator
-  public static ModoDeMunicipio fromValue(String text) {
-    for (ModoDeMunicipio b : ModoDeMunicipio.values()) {
+  public static ModoDeMunicipioModel fromValue(String text) {
+    for (ModoDeMunicipioModel b : ModoDeMunicipioModel.values()) {
       if (String.valueOf(b.value).equals(text)) {
         return b;
       }

@@ -1,7 +1,9 @@
 package tp.tacs.api.model;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.validation.annotation.Validated;
@@ -12,56 +14,58 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * Un usuario.
+ * Par de coordenadas en el mundo.
  */
-@ApiModel(description = "Un usuario.")
+@ApiModel(description = "Par de coordenadas en el mundo.")
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-08-29T21:54:39.417-03:00[America/Buenos_Aires]")
-public class Usuario   {
-  @JsonProperty("id")
-  private Integer id = null;
+public class CoordenadasModel {
+  @JsonProperty("lat")
+  private BigDecimal lat = null;
 
-  @JsonProperty("nombreDeUsuario")
-  private String nombreDeUsuario = null;
+  @JsonProperty("lon")
+  private BigDecimal lon = null;
 
-  public Usuario id(Integer id) {
-    this.id = id;
+  public CoordenadasModel lat(BigDecimal lat) {
+    this.lat = lat;
     return this;
   }
 
   /**
-   * Get id
-   * @return id
+   * Latitud
+   * @return lat
   **/
-  @ApiModelProperty(required = true, value = "")
+  @ApiModelProperty(required = true, value = "Latitud")
       @NotNull
 
-    public Integer getId() {
-    return id;
+    @Valid
+    public BigDecimal getLat() {
+    return lat;
   }
 
-  public void setId(Integer id) {
-    this.id = id;
+  public void setLat(BigDecimal lat) {
+    this.lat = lat;
   }
 
-  public Usuario nombreDeUsuario(String nombreDeUsuario) {
-    this.nombreDeUsuario = nombreDeUsuario;
+  public CoordenadasModel lon(BigDecimal lon) {
+    this.lon = lon;
     return this;
   }
 
   /**
-   * Get nombreDeUsuario
-   * @return nombreDeUsuario
+   * Longitud
+   * @return lon
   **/
-  @ApiModelProperty(required = true, value = "")
+  @ApiModelProperty(required = true, value = "Longitud")
       @NotNull
 
-    public String getNombreDeUsuario() {
-    return nombreDeUsuario;
+    @Valid
+    public BigDecimal getLon() {
+    return lon;
   }
 
-  public void setNombreDeUsuario(String nombreDeUsuario) {
-    this.nombreDeUsuario = nombreDeUsuario;
+  public void setLon(BigDecimal lon) {
+    this.lon = lon;
   }
 
 
@@ -73,23 +77,23 @@ public class Usuario   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Usuario usuario = (Usuario) o;
-    return Objects.equals(this.id, usuario.id) &&
-        Objects.equals(this.nombreDeUsuario, usuario.nombreDeUsuario);
+    CoordenadasModel coordenadasModel = (CoordenadasModel) o;
+    return Objects.equals(this.lat, coordenadasModel.lat) &&
+        Objects.equals(this.lon, coordenadasModel.lon);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, nombreDeUsuario);
+    return Objects.hash(lat, lon);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class Usuario {\n");
+    sb.append("class Coordenadas {\n");
     
-    sb.append("    id: ").append(toIndentedString(id)).append("\n");
-    sb.append("    nombreDeUsuario: ").append(toIndentedString(nombreDeUsuario)).append("\n");
+    sb.append("    lat: ").append(toIndentedString(lat)).append("\n");
+    sb.append("    lon: ").append(toIndentedString(lon)).append("\n");
     sb.append("}");
     return sb.toString();
   }

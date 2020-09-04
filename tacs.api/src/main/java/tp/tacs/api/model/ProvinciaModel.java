@@ -1,10 +1,7 @@
 package tp.tacs.api.model;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.validation.annotation.Validated;
@@ -15,39 +12,56 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * Provincia en juego.
+ * Una provincia.
  */
-@ApiModel(description = "Provincia en juego.")
+@ApiModel(description = "Una provincia.")
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-08-29T21:54:39.417-03:00[America/Buenos_Aires]")
-public class ProvinciaEnJuego   {
-  @JsonProperty("municipios")
-  @Valid
-  private List<MunicipioEnJuego> municipios = new ArrayList<MunicipioEnJuego>();
+public class ProvinciaModel {
+  @JsonProperty("id")
+  private Integer id = null;
 
-  public ProvinciaEnJuego municipios(List<MunicipioEnJuego> municipios) {
-    this.municipios = municipios;
-    return this;
-  }
+  @JsonProperty("nombre")
+  private String nombre = null;
 
-  public ProvinciaEnJuego addMunicipiosItem(MunicipioEnJuego municipiosItem) {
-    this.municipios.add(municipiosItem);
+  public ProvinciaModel id(Integer id) {
+    this.id = id;
     return this;
   }
 
   /**
-   * Municipios en juego que contiene la provincia.
-   * @return municipios
+   * Id de la provincia
+   * @return id
   **/
-  @ApiModelProperty(required = true, value = "Municipios en juego que contiene la provincia.")
+  @ApiModelProperty(required = true, value = "Id de la provincia")
       @NotNull
-    @Valid
-    public List<MunicipioEnJuego> getMunicipios() {
-    return municipios;
+
+    public Integer getId() {
+    return id;
   }
 
-  public void setMunicipios(List<MunicipioEnJuego> municipios) {
-    this.municipios = municipios;
+  public void setId(Integer id) {
+    this.id = id;
+  }
+
+  public ProvinciaModel nombre(String nombre) {
+    this.nombre = nombre;
+    return this;
+  }
+
+  /**
+   * Nombre de la provincia
+   * @return nombre
+  **/
+  @ApiModelProperty(required = true, value = "Nombre de la provincia")
+      @NotNull
+
+    public String getNombre() {
+    return nombre;
+  }
+
+  public void setNombre(String nombre) {
+    this.nombre = nombre;
   }
 
 
@@ -59,21 +73,23 @@ public class ProvinciaEnJuego   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    ProvinciaEnJuego provinciaEnJuego = (ProvinciaEnJuego) o;
-    return Objects.equals(this.municipios, provinciaEnJuego.municipios);
+    ProvinciaModel provinciaModel = (ProvinciaModel) o;
+    return Objects.equals(this.id, provinciaModel.id) &&
+        Objects.equals(this.nombre, provinciaModel.nombre);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(municipios);
+    return Objects.hash(id, nombre);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ProvinciaEnJuego {\n");
+    sb.append("class Provincia {\n");
     
-    sb.append("    municipios: ").append(toIndentedString(municipios)).append("\n");
+    sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("    nombre: ").append(toIndentedString(nombre)).append("\n");
     sb.append("}");
     return sb.toString();
   }

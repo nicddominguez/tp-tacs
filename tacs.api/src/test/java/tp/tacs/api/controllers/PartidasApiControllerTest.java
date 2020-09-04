@@ -8,7 +8,6 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.threeten.bp.LocalDate;
 import tp.tacs.api.model.*;
 
 import java.util.List;
@@ -28,7 +27,7 @@ class PartidasApiControllerTest {
 
     @Test
     void actualizarEstadoPartida() {
-        ResponseEntity<Void> response = partidasApiController.actualizarEstadoPartida(1, EstadoDeJuego.CANCELADA);
+        ResponseEntity<Void> response = partidasApiController.actualizarEstadoPartida(1, EstadoDeJuegoModel.CANCELADA);
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
@@ -46,13 +45,13 @@ class PartidasApiControllerTest {
 
     @Test
     void getPartida() {
-        ResponseEntity<Partida> response = partidasApiController.getPartida(1);
+        ResponseEntity<PartidaModel> response = partidasApiController.getPartida(1);
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test
     void listarPartidas() {
-        ResponseEntity<List<Partida>> response = partidasApiController.listarPartidas(1, null,null, EstadoDeJuego.CANCELADA, 1);
+        ResponseEntity<List<PartidaModel>> response = partidasApiController.listarPartidas(1, null,null, EstadoDeJuegoModel.CANCELADA, 1);
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 

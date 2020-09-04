@@ -18,14 +18,14 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(description = "Datos de una partida. Incluye su provincia en juego y el usuario que tiene el proximo turno.")
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-08-29T21:54:39.417-03:00[America/Buenos_Aires]")
-public class DatosDeJuego   {
+public class DatosDeJuegoModel {
   @JsonProperty("proximoTurno")
-  private Usuario proximoTurno = null;
+  private UsuarioModel proximoTurno = null;
 
   @JsonProperty("provincia")
-  private ProvinciaEnJuego provincia = null;
+  private ProvinciaEnJuegoModel provincia = null;
 
-  public DatosDeJuego proximoTurno(Usuario proximoTurno) {
+  public DatosDeJuegoModel proximoTurno(UsuarioModel proximoTurno) {
     this.proximoTurno = proximoTurno;
     return this;
   }
@@ -37,15 +37,15 @@ public class DatosDeJuego   {
   @ApiModelProperty(value = "")
   
     @Valid
-    public Usuario getProximoTurno() {
+    public UsuarioModel getProximoTurno() {
     return proximoTurno;
   }
 
-  public void setProximoTurno(Usuario proximoTurno) {
+  public void setProximoTurno(UsuarioModel proximoTurno) {
     this.proximoTurno = proximoTurno;
   }
 
-  public DatosDeJuego provincia(ProvinciaEnJuego provincia) {
+  public DatosDeJuegoModel provincia(ProvinciaEnJuegoModel provincia) {
     this.provincia = provincia;
     return this;
   }
@@ -58,11 +58,11 @@ public class DatosDeJuego   {
       @NotNull
 
     @Valid
-    public ProvinciaEnJuego getProvincia() {
+    public ProvinciaEnJuegoModel getProvincia() {
     return provincia;
   }
 
-  public void setProvincia(ProvinciaEnJuego provincia) {
+  public void setProvincia(ProvinciaEnJuegoModel provincia) {
     this.provincia = provincia;
   }
 
@@ -75,9 +75,9 @@ public class DatosDeJuego   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    DatosDeJuego datosDeJuego = (DatosDeJuego) o;
-    return Objects.equals(this.proximoTurno, datosDeJuego.proximoTurno) &&
-        Objects.equals(this.provincia, datosDeJuego.provincia);
+    DatosDeJuegoModel datosDeJuegoModel = (DatosDeJuegoModel) o;
+    return Objects.equals(this.proximoTurno, datosDeJuegoModel.proximoTurno) &&
+        Objects.equals(this.provincia, datosDeJuegoModel.provincia);
   }
 
   @Override

@@ -27,7 +27,7 @@ public interface PartidasApi {
     @RequestMapping(value = "/partidas/{idPartida}",
         method = RequestMethod.PATCH)
     ResponseEntity<Void> actualizarEstadoPartida(@ApiParam(value = "",required=true) @PathVariable("idPartida") Integer idPartida
-,@NotNull @ApiParam(value = "", required = true) @Valid @RequestParam(value = "estado", required = true) EstadoDeJuego estado
+,@NotNull @ApiParam(value = "", required = true) @Valid @RequestParam(value = "estado", required = true) EstadoDeJuegoModel estado
 );
 
 
@@ -60,33 +60,33 @@ public interface PartidasApi {
 );
 
 
-    @ApiOperation(value = "Retorna la partida con id: idPartida. Incluye los datos del juego.", nickname = "getPartida", notes = "", response = Partida.class, authorizations = {
+    @ApiOperation(value = "Retorna la partida con id: idPartida. Incluye los datos del juego.", nickname = "getPartida", notes = "", response = PartidaModel.class, authorizations = {
         @Authorization(value = "bearerAuth")    }, tags={ "Partidas", })
     @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "Success", response = Partida.class),
+        @ApiResponse(code = 200, message = "Success", response = PartidaModel.class),
         @ApiResponse(code = 400, message = "Bad Request"),
         @ApiResponse(code = 404, message = "Not found") })
     @RequestMapping(value = "/partidas/{idPartida}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<Partida> getPartida(@ApiParam(value = "Id de la partida",required=true) @PathVariable("idPartida") Integer idPartida
+    ResponseEntity<PartidaModel> getPartida(@ApiParam(value = "Id de la partida",required=true) @PathVariable("idPartida") Integer idPartida
 );
 
 
-    @ApiOperation(value = "Permite listar partidas. No incluye los datos de juego asociados a las mismas.", nickname = "listarPartidas", notes = "", response = Partida.class, responseContainer = "List", authorizations = {
+    @ApiOperation(value = "Permite listar partidas. No incluye los datos de juego asociados a las mismas.", nickname = "listarPartidas", notes = "", response = PartidaModel.class, responseContainer = "List", authorizations = {
         @Authorization(value = "bearerAuth")    }, tags={ "Partidas", })
     @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "Success", response = Partida.class, responseContainer = "List"),
+        @ApiResponse(code = 200, message = "Success", response = PartidaModel.class, responseContainer = "List"),
         @ApiResponse(code = 400, message = "Bad request"),
         @ApiResponse(code = 403, message = "Forbidden") })
     @RequestMapping(value = "/partidas",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<List<Partida>> listarPartidas(@NotNull @ApiParam(value = "", required = true) @Valid @RequestParam(value = "page", required = true) Integer page
-,@ApiParam(value = "") @Valid @RequestParam(value = "fechaInicio", required = false) LocalDate fechaInicio
-,@ApiParam(value = "") @Valid @RequestParam(value = "fechaFin", required = false) LocalDate fechaFin
-,@ApiParam(value = "") @Valid @RequestParam(value = "estado", required = false) EstadoDeJuego estado
-,@ApiParam(value = "", defaultValue = "10") @Valid @RequestParam(value = "pageSize", required = false, defaultValue="10") Integer pageSize
+    ResponseEntity<List<PartidaModel>> listarPartidas(@NotNull @ApiParam(value = "", required = true) @Valid @RequestParam(value = "page", required = true) Integer page
+, @ApiParam(value = "") @Valid @RequestParam(value = "fechaInicio", required = false) LocalDate fechaInicio
+, @ApiParam(value = "") @Valid @RequestParam(value = "fechaFin", required = false) LocalDate fechaFin
+, @ApiParam(value = "") @Valid @RequestParam(value = "estado", required = false) EstadoDeJuegoModel estado
+, @ApiParam(value = "", defaultValue = "10") @Valid @RequestParam(value = "pageSize", required = false, defaultValue="10") Integer pageSize
 );
 
 
