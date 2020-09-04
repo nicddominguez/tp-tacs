@@ -20,17 +20,20 @@ paths:
         - Auth
       summary: login
       operationId: logIn
-      description: Loguea a un usuario
+      description: Loguea a un usuario validando su Google Id Token y retornando un JWT de la aplicación
       requestBody:
-        description: username-password
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/LogIn'
+              $ref: '#/components/schemas/GoogleAuthModel'
         required: true
       responses:
         200:
           description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NuevoJWTModel'
         400:
           description: Bad request
         401:
@@ -41,31 +44,24 @@ paths:
         - Auth
       summary: singUp
       operationId: singUp
-      description: Registro de un usuario
+      description: Registro a un usuario nuevo y retorna un JWT de la aplicación
       requestBody:
-        description: username-password-mail
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SignUp'
+              $ref: '#/components/schemas/GoogleAuthModel'
         required: true
       responses:
         200:
           description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NuevoJWTModel'
         400:
           description: Bad request
         401:
           description: Fail
-  /auth/logOut:
-    post:
-      tags:
-        - Auth
-      summary: logOut
-      operationId: logOut
-      description: users log out
-      responses:
-        200:
-          description: Success
   /admin/estadisticas:
     get:
       tags:
@@ -609,21 +605,23 @@ components:
       enum:
         - Defensa
         - Produccion
-    LogIn:
+    GoogleAuthModel:
       type: object
+      required:
+        - idToken
       properties:
-        username:
+        idToken:
+          description: Google Id Token del usuario
           type: string
-        password:
-          type: string
-    SignUp:
+    NuevoJWTModel:
       type: object
+      required:
+        - token
       properties:
-        email:
-          type: string
-        username:
-          type: string
-        password:
+        usuario:
+          $ref: '#/components/schemas/Usuario'
+        token:
+          description: JWT que puede utilizarse para acceder a los recursos protegidos
           type: string
     EstadisticasDeJuego:
       type: object
