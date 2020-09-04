@@ -10,43 +10,37 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import tp.tacs.api.model.LogIn;
-import tp.tacs.api.model.SignUp;
+import tp.tacs.api.model.GoogleAuthModel;
+import tp.tacs.api.model.NuevoJWTModel;
 
 import javax.validation.Valid;
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-08-29T21:54:36.724-03:00[America/Buenos_Aires]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-09-03T22:53:46.901-03:00[America/Buenos_Aires]")
 @Api(value = "auth", description = "the auth API")
 public interface AuthApi {
 
-    @ApiOperation(value = "login", nickname = "logIn", notes = "Loguea a un usuario", tags={ "Auth", })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "Success"),
-        @ApiResponse(code = 400, message = "Bad request"),
-        @ApiResponse(code = 401, message = "Fail") })
+    @ApiOperation(value = "login", nickname = "logIn", notes = "Loguea a un usuario validando su Google Id Token y retornando un JWT de la aplicación", response = NuevoJWTModel.class, tags={ "Auth", })
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success", response = NuevoJWTModel.class),
+            @ApiResponse(code = 400, message = "Bad request"),
+            @ApiResponse(code = 401, message = "Fail") })
     @RequestMapping(value = "/auth/logIn",
-        consumes = { "application/json" },
-        method = RequestMethod.POST)
-    ResponseEntity<Void> logIn(@ApiParam(value = "username-password" ,required=true )  @Valid @RequestBody LogIn body
-);
+            produces = { "application/json" },
+            consumes = { "application/json" },
+            method = RequestMethod.POST)
+    ResponseEntity<NuevoJWTModel> logIn(@ApiParam(value = "" ,required=true )  @Valid @RequestBody GoogleAuthModel body
+    );
 
 
-    @ApiOperation(value = "logOut", nickname = "logOut", notes = "users log out", tags={ "Auth", })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "Success") })
-    @RequestMapping(value = "/auth/logOut",
-        method = RequestMethod.POST)
-    ResponseEntity<Void> logOut();
-
-
-    @ApiOperation(value = "singUp", nickname = "singUp", notes = "Registro de un usuario", tags={ "Auth", })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "Success"),
-        @ApiResponse(code = 400, message = "Bad request"),
-        @ApiResponse(code = 401, message = "Fail") })
+    @ApiOperation(value = "singUp", nickname = "singUp", notes = "Registro a un usuario nuevo y retorna un JWT de la aplicación", response = NuevoJWTModel.class, tags={ "Auth", })
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success", response = NuevoJWTModel.class),
+            @ApiResponse(code = 400, message = "Bad request"),
+            @ApiResponse(code = 401, message = "Fail") })
     @RequestMapping(value = "/auth/signUp",
-        consumes = { "application/json" },
-        method = RequestMethod.POST)
-    ResponseEntity<Void> singUp(@ApiParam(value = "username-password-mail" ,required=true )  @Valid @RequestBody SignUp body
-);
+            produces = { "application/json" },
+            consumes = { "application/json" },
+            method = RequestMethod.POST)
+    ResponseEntity<NuevoJWTModel> singUp(@ApiParam(value = "" ,required=true )  @Valid @RequestBody GoogleAuthModel body
+    );
 
 }
