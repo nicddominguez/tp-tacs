@@ -5,7 +5,7 @@ public class MunicipioReal {
     private Long id;
     private Double latitud;
     private Double longitud;
-    private Integer altura;
+    private Float altura;
     private String imagenPath;
 
     public Long getId() {
@@ -32,11 +32,11 @@ public class MunicipioReal {
         this.longitud = longitud;
     }
 
-    public Integer getAltura() {
+    public Float getAltura() {
         return altura;
     }
 
-    public void setAltura(Integer altura) {
+    public void setAltura(Float altura) {
         this.altura = altura;
     }
 
