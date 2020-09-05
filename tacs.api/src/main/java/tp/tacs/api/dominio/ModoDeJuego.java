@@ -2,6 +2,7 @@ package tp.tacs.api.dominio;
 
 public class ModoDeJuego {
     private Float multDefensa = 1f;
+    private Float multDefnesaProduccion = 0.5f;
     private Float multDist = 0.75f;
 
     public ModoDeJuego() {
@@ -21,5 +22,13 @@ public class ModoDeJuego {
 
     public void setMultDist(Float multDist) {
         this.multDist = multDist;
+    }
+
+    public Float getMultDefnesaProduccion() {
+        return multDefnesaProduccion;
+    }
+
+    public void setMultDefnesaProduccion(Float multDefnesaProduccion) {
+        this.multDefnesaProduccion = multDefnesaProduccion;
     }
 }

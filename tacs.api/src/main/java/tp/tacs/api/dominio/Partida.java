@@ -17,6 +17,7 @@ public class Partida {
         this.provincia = provincia;
         this.modoDeJuego = modoDeJuego;
         this.estado = Estados.EN_JUEGO;
+        RepoPartidas.instance().agregarPartida(this);
     }
 
     public Integer getCantMunicipios() {
@@ -84,9 +85,21 @@ public class Partida {
     }
 
     public void pasarTurno(){
-        this.usuarioJugando ++;
+        this.asignarProximoTurno();
     }
 
+    private void asignarProximoTurno(){
+        if(this.usuarioJugando < participantes.size() - 1) {
+            this.usuarioJugando++;
+        }
+        else {
+            this.usuarioJugando = 0;
+        }
+    }
+
+    public Usuario participanteActual(){
+        return this.participantes.get(usuarioJugando);
+    }
 
     public Float maxDist(){
         return 200f;
