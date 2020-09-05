@@ -6,6 +6,7 @@ public class Municipio {
     private boolean bloqueado;
     private Especializacion especializacion;
     private MunicipioReal municipioReal;
+    private Partida partida;
 
     public Integer getCantGauchos() {
         return cantGauchos;
@@ -29,6 +30,14 @@ public class Municipio {
 
     public void setEspecializacion(Especializacion especializacion) {
         this.especializacion = especializacion;
+    }
+
+    public Partida getPartida() {
+        return partida;
+    }
+
+    public void setPartida(Partida partida) {
+        this.partida = partida;
     }
 
     public MunicipioReal getMunicipioReal() {
@@ -71,7 +80,7 @@ public class Municipio {
         return null;
     }
 
-    private void agregarGauchos(Integer cantGauchos) {
+    public void agregarGauchos(Integer cantGauchos) {
         this.cantGauchos += cantGauchos;
     }
 }
