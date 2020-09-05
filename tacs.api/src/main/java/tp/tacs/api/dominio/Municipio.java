@@ -7,6 +7,7 @@ public class Municipio {
     private Especializacion especializacion;
     private MunicipioReal municipioReal;
     private Partida partida;
+    private Usuario duenio;
 
     public Integer getCantGauchos() {
         return cantGauchos;
@@ -38,6 +39,14 @@ public class Municipio {
 
     public void setPartida(Partida partida) {
         this.partida = partida;
+    }
+
+    public Usuario getDuenio() {
+        return duenio;
+    }
+
+    public void setDuenio(Usuario duenio) {
+        this.duenio = duenio;
     }
 
     public MunicipioReal getMunicipioReal() {
@@ -73,10 +82,12 @@ public class Municipio {
     }
 
     public Municipio atacar(Municipio municipio) {
+        //TODO
         return null;
     }
 
     public Municipio moverGauchos(Municipio municipio, Integer cantidad) {
+        //TODO
         return null;
     }
 
