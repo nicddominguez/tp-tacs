@@ -69,7 +69,7 @@ public class Municipio {
         return this.municipioReal.getLongitud();
     }
 
-    public Integer getAltura() {
+    public Float getAltura() {
         return this.municipioReal.getAltura();
     }
 
