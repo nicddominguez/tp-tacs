@@ -1,6 +1,7 @@
 package tp.tacs.api.dominio;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public class Partida {
     private Integer cantMunicipios;
@@ -76,17 +77,7 @@ public class Partida {
         this.modoDeJuego = modoDeJuego;
     }
 
-    public Float maxAltura(){
-        return 10f;
-    }
 
-    public Float minAltura(){
-        return 2.5f;
-    }
-
-    public void pasarTurno(){
-        this.asignarProximoTurno();
-    }
 
     private void asignarProximoTurno(){
         if(this.usuarioJugando < participantes.size() - 1) {
@@ -97,8 +88,26 @@ public class Partida {
         }
     }
 
+    public void pasarTurno(){
+        this.asignarProximoTurno();
+    }
+
     public Usuario participanteActual(){
         return this.participantes.get(usuarioJugando);
+    }
+
+    public Float minAltura(){
+        return (float) this.municipios.stream()
+                .mapToDouble(Municipio::getAltura)
+                .min()
+                .orElseThrow(NoSuchElementException::new);
+    }
+
+    public Float maxAltura(){
+        return (float) this.municipios.stream()
+                .mapToDouble(Municipio::getAltura)
+                .max()
+                .orElseThrow(NoSuchElementException::new);
     }
 
     public Float maxDist(){
@@ -108,4 +117,27 @@ public class Partida {
     public Float minDist(){
         return 2f;
     }
+
+    public Float getMultDefensaDefensa(){
+        return this.modoDeJuego.getMultDefensaDefensa();
+    }
+
+    public Float getMultDefensaProduccion(){
+        return this.modoDeJuego.getMultDefnesaProduccion();
+    }
+
+    public Float getMultDist(Municipio municipioOrigen, Municipio municipioDestino){
+        Float distanciaEntreMunicipios = this.distanciaEntreMunicipios(municipioOrigen, municipioDestino);
+        return this.modoDeJuego.getMultDist(distanciaEntreMunicipios, this.minDist(), this.maxDist());
+    }
+
+    private Float distanciaEntreMunicipios(Municipio unMunicipio, Municipio otroMunicipio){
+        return 100f;
+    }
+
+    public Float getMultAltura(Municipio municipioDefensor){
+        Float alturaMunicipioDefensor = municipioDefensor.getAltura();
+        return this.modoDeJuego.getMultAltura(alturaMunicipioDefensor, this.minAltura(), this.maxAltura());
+    }
+
 }
