@@ -81,17 +81,26 @@ public class Municipio {
         this.especializacion.producir(this);
     }
 
-    public Municipio atacar(Municipio municipio) {
+    public void atacar(Municipio municipio) {
         //TODO
-        return null;
+        /*
+        Integer gauchosAtacantesFinal = Math.round(this.cantGauchos * this.partida.getModoDeJuego().getMultDist()
+                - municipio.getCantGauchos() * this.partida.getModoDeJuego().multAltura() * this.partida.getModoDeJuego().getMultDefensa());
+        Integer gauchosDefensoresFinal = Math.round((municipio.getCantGauchos() * this.partida.getModoDeJuego().getMultAltura())/(this.partida.getModoDeJuego().getMultAltura() * this.partida.getModoDeJuego().getMultDefensa()));
+        */
     }
 
-    public Municipio moverGauchos(Municipio municipio, Integer cantidad) {
-        //TODO
-        return null;
+
+    public void moverGauchos(Municipio municipio, Integer cantidad) {
+        this.sacarGauchos(cantidad);
+        municipio.agregarGauchos(cantidad);
     }
 
     public void agregarGauchos(Integer cantGauchos) {
         this.cantGauchos += cantGauchos;
+    }
+
+    public void sacarGauchos(Integer cantGauchos) {
+        this.cantGauchos -= cantGauchos;
     }
 }
