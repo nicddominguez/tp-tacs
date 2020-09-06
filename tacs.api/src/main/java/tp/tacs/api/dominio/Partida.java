@@ -1,9 +1,10 @@
 package tp.tacs.api.dominio;
 
+import com.google.common.collect.Sets;
+
 import java.awt.geom.Point2D;
-import java.util.Date;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
+import java.util.stream.Collectors;
 
 //TODO manejar estadisticas de usuario
 public class Partida {
@@ -106,7 +107,7 @@ public class Partida {
     }
 
     private void desBloquearMunicipios() {
-        this.municipios.stream().forEach(municipio -> municipio.desbloquear());
+        this.municipios.forEach(Municipio::desbloquear);
     }
 
     private boolean esDuenioDeTodo(Usuario usuario) {
@@ -121,7 +122,7 @@ public class Partida {
             this.ganador.aumentarRachaActual();
             this.participantes.stream()
                     .filter(usuario -> !usuario.equals(this.ganador))
-                    .forEach(usuario -> usuario.reiniciarRacha());
+                    .forEach(Usuario::reiniciarRacha);
         }
 
         this.asignarProximoTurno();
@@ -130,7 +131,7 @@ public class Partida {
 
     public void terminar() {
         this.estado = Estado.TERMINADA;
-        this.participantes.forEach(usuario -> usuario.aumentarPartidasJugadas());
+        this.participantes.forEach(Usuario::aumentarPartidasJugadas);
     }
 
     public boolean estaEnCurso() {
@@ -160,25 +161,49 @@ public class Partida {
     }
 
     public Float maxDist() {
-        return 200f;
+        HashSet<Float> distancias = distanciasTotales();
+        return distancias
+                .stream()
+                .max(Float::compareTo)
+                .orElseThrow(NoSuchElementException::new);
     }
 
     public Float minDist() {
-        return 2f;
+        HashSet<Float> distancias = distanciasTotales();
+        return distancias
+                .stream()
+                .min(Float::compareTo)
+                .orElseThrow(NoSuchElementException::new);
+    }
+
+    private HashSet<Float> distanciasTotales() {
+        var coordenadas = this.municipios
+                .stream()
+                .map(Municipio::getCoordenadas)
+                .collect(Collectors.toSet());
+        var combinaciones = Sets.combinations(coordenadas, 2);
+        var distancias = new HashSet<Float>();
+        combinaciones.forEach(arrayLists -> {
+            var list = new ArrayList<>(arrayLists);
+            var distancia = distanciaEntre(list.get(0), list.get(1));
+            distancias.add(distancia);
+        });
+        return distancias;
+    }
+
+    private Float distanciaEntre(ArrayList<Double> coordenadasDesde, ArrayList<Double> coordenadasHasta) {
+        return (float) Point2D.distance(
+                coordenadasDesde.get(0), coordenadasDesde.get(1),
+                coordenadasHasta.get(0), coordenadasHasta.get(1));
+    }
+
+    private Float distanciaEntreMunicipios(Municipio unMunicipio, Municipio otroMunicipio) {
+        return this.distanciaEntre(unMunicipio.getCoordenadas(), otroMunicipio.getCoordenadas());
     }
 
     public Float multDist(Municipio municipioOrigen, Municipio municipioDestino) {
         Float distanciaEntreMunicipios = this.distanciaEntreMunicipios(municipioOrigen, municipioDestino);
         return this.modoDeJuego.getMultDist(distanciaEntreMunicipios, this.minDist(), this.maxDist());
-    }
-
-    private Float distanciaEntreMunicipios(Municipio unMunicipio, Municipio otroMunicipio) {
-        var lat1 = unMunicipio.getLatitud();
-        var long1 = unMunicipio.getLongitud();
-        var lat2 = otroMunicipio.getLatitud();
-        var long2 = otroMunicipio.getLongitud();
-
-        return (float) Point2D.distance(lat1, long1, lat2, long2);
     }
 
     public Float multAltura(Municipio municipioDefensor) {
