@@ -107,6 +107,7 @@ public class Municipio {
         if (this.ataqueExitoso(municipio)) {
             municipio.setDuenio(this.duenio);
         }
+        this.partida.pasarTurno();
     }
 
     public boolean ataqueExitoso(Municipio municipio) {

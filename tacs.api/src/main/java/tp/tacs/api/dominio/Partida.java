@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+//TODO manejar estadisticas de usuario
 public class Partida {
 
     private List<Usuario> participantes;
@@ -14,6 +15,7 @@ public class Partida {
     private List<Municipio> municipios;
     private ModoDeJuego modoDeJuego;
     private Date fechaCreacion;
+    private Usuario ganador;
 
     public Partida(List<Usuario> participantes, Estado estado, String provincia,
                    List<Municipio> municipios, ModoDeJuego modoDeJuego, Date fechaCreacion) {
@@ -82,6 +84,15 @@ public class Partida {
         this.fechaCreacion = fechaCreacion;
     }
 
+    public Usuario getGanador() {
+        return ganador;
+    }
+
+    public void setGanador(Usuario ganador) {
+        this.ganador = ganador;
+    }
+
+
     private void asignarProximoTurno() {
         if (this.usuarioJugando < participantes.size() - 1) {
             this.usuarioJugando++;
@@ -98,9 +109,32 @@ public class Partida {
         this.municipios.stream().forEach(municipio -> municipio.desbloquear());
     }
 
+    private boolean esDuenioDeTodo(Usuario usuario) {
+        return this.municipios.stream().allMatch(municipio -> municipio.esDe(usuario));
+    }
+
     public void pasarTurno() {
+        if (this.esDuenioDeTodo(this.usuarioEnTurnoActual())) {
+            this.terminar();
+            this.ganador = this.usuarioEnTurnoActual();
+            this.ganador.aumentarPartidasGanadas();
+            this.ganador.aumentarRachaActual();
+            this.participantes.stream()
+                    .filter(usuario -> !usuario.equals(this.ganador))
+                    .forEach(usuario -> usuario.reiniciarRacha());
+        }
+
         this.asignarProximoTurno();
         this.desBloquearMunicipios();
+    }
+
+    public void terminar() {
+        this.estado = Estado.TERMINADA;
+        this.participantes.forEach(usuario -> usuario.aumentarPartidasJugadas());
+    }
+
+    public void cancelar() {
+        this.estado = Estado.CANCELADA;
     }
 
     public Usuario participanteActual() {
