@@ -117,15 +117,7 @@ public class Partida {
         return 2f;
     }
 
-    public Float getMultDefensaDefensa(){
-        return this.modoDeJuego.getMultDefensaDefensa();
-    }
-
-    public Float getMultDefensaProduccion(){
-        return this.modoDeJuego.getMultDefnesaProduccion();
-    }
-
-    public Float getMultDist(Municipio municipioOrigen, Municipio municipioDestino){
+    public Float multDist(Municipio municipioOrigen, Municipio municipioDestino){
         Float distanciaEntreMunicipios = this.distanciaEntreMunicipios(municipioOrigen, municipioDestino);
         return this.modoDeJuego.getMultDist(distanciaEntreMunicipios, this.minDist(), this.maxDist());
     }
@@ -137,10 +129,9 @@ public class Partida {
         var long2 = otroMunicipio  .getLongitud();
 
         return (float) Point2D.distance(lat1, long1,lat2 ,long2);
-
     }
 
-    public Float getMultAltura(Municipio municipioDefensor){
+    public Float multAltura(Municipio municipioDefensor){
         Float alturaMunicipioDefensor = municipioDefensor.getAltura();
         return this.modoDeJuego.getMultAltura(alturaMunicipioDefensor, this.minAltura(), this.maxAltura());
     }
