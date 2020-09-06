@@ -1,69 +1,77 @@
 package tp.tacs.api.model;
 
 import java.util.Objects;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-
-import org.springframework.validation.annotation.Validated;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
-
+import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import java.util.ArrayList;
+import java.util.List;
+import tp.tacs.api.model.MunicipioEnJuegoModel;
+import org.springframework.validation.annotation.Validated;
+import javax.validation.Valid;
+import javax.validation.constraints.*;
 
 /**
  * Datos de una partida. Incluye su provincia en juego y el usuario que tiene el proximo turno.
  */
 @ApiModel(description = "Datos de una partida. Incluye su provincia en juego y el usuario que tiene el proximo turno.")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-08-29T21:54:39.417-03:00[America/Buenos_Aires]")
-public class DatosDeJuegoModel {
-  @JsonProperty("proximoTurno")
-  private UsuarioModel proximoTurno = null;
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-09-05T20:37:59.553716700-03:00[America/Buenos_Aires]")
 
-  @JsonProperty("provincia")
-  private ProvinciaEnJuegoModel provincia = null;
 
-  public DatosDeJuegoModel proximoTurno(UsuarioModel proximoTurno) {
-    this.proximoTurno = proximoTurno;
+public class DatosDeJuegoModel   {
+  @JsonProperty("idUsuarioProximoTurno")
+  private Long idUsuarioProximoTurno = null;
+
+  @JsonProperty("municipios")
+  @Valid
+  private List<MunicipioEnJuegoModel> municipios = null;
+
+  public DatosDeJuegoModel idUsuarioProximoTurno(Long idUsuarioProximoTurno) {
+    this.idUsuarioProximoTurno = idUsuarioProximoTurno;
     return this;
   }
 
   /**
-   * Get proximoTurno
-   * @return proximoTurno
+   * Get idUsuarioProximoTurno
+   * @return idUsuarioProximoTurno
   **/
   @ApiModelProperty(value = "")
   
-    @Valid
-    public UsuarioModel getProximoTurno() {
-    return proximoTurno;
+    public Long getIdUsuarioProximoTurno() {
+    return idUsuarioProximoTurno;
   }
 
-  public void setProximoTurno(UsuarioModel proximoTurno) {
-    this.proximoTurno = proximoTurno;
+  public void setIdUsuarioProximoTurno(Long idUsuarioProximoTurno) {
+    this.idUsuarioProximoTurno = idUsuarioProximoTurno;
   }
 
-  public DatosDeJuegoModel provincia(ProvinciaEnJuegoModel provincia) {
-    this.provincia = provincia;
+  public DatosDeJuegoModel municipios(List<MunicipioEnJuegoModel> municipios) {
+    this.municipios = municipios;
+    return this;
+  }
+
+  public DatosDeJuegoModel addMunicipiosItem(MunicipioEnJuegoModel municipiosItem) {
+    if (this.municipios == null) {
+      this.municipios = new ArrayList<MunicipioEnJuegoModel>();
+    }
+    this.municipios.add(municipiosItem);
     return this;
   }
 
   /**
-   * Get provincia
-   * @return provincia
+   * Municipios en juego que contiene la provincia.
+   * @return municipios
   **/
-  @ApiModelProperty(required = true, value = "")
-      @NotNull
-
-    @Valid
-    public ProvinciaEnJuegoModel getProvincia() {
-    return provincia;
+  @ApiModelProperty(value = "Municipios en juego que contiene la provincia.")
+      @Valid
+    public List<MunicipioEnJuegoModel> getMunicipios() {
+    return municipios;
   }
 
-  public void setProvincia(ProvinciaEnJuegoModel provincia) {
-    this.provincia = provincia;
+  public void setMunicipios(List<MunicipioEnJuegoModel> municipios) {
+    this.municipios = municipios;
   }
 
 
@@ -76,22 +84,22 @@ public class DatosDeJuegoModel {
       return false;
     }
     DatosDeJuegoModel datosDeJuegoModel = (DatosDeJuegoModel) o;
-    return Objects.equals(this.proximoTurno, datosDeJuegoModel.proximoTurno) &&
-        Objects.equals(this.provincia, datosDeJuegoModel.provincia);
+    return Objects.equals(this.idUsuarioProximoTurno, datosDeJuegoModel.idUsuarioProximoTurno) &&
+        Objects.equals(this.municipios, datosDeJuegoModel.municipios);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(proximoTurno, provincia);
+    return Objects.hash(idUsuarioProximoTurno, municipios);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class DatosDeJuego {\n");
+    sb.append("class DatosDeJuegoModel {\n");
     
-    sb.append("    proximoTurno: ").append(toIndentedString(proximoTurno)).append("\n");
-    sb.append("    provincia: ").append(toIndentedString(provincia)).append("\n");
+    sb.append("    idUsuarioProximoTurno: ").append(toIndentedString(idUsuarioProximoTurno)).append("\n");
+    sb.append("    municipios: ").append(toIndentedString(municipios)).append("\n");
     sb.append("}");
     return sb.toString();
   }

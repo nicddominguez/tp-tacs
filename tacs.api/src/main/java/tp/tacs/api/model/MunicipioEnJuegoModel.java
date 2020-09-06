@@ -1,26 +1,28 @@
 package tp.tacs.api.model;
 
 import java.util.Objects;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-
-import org.springframework.validation.annotation.Validated;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
-
+import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import tp.tacs.api.model.CoordenadasModel;
+import tp.tacs.api.model.ModoDeMunicipioModel;
+import tp.tacs.api.model.UsuarioModel;
+import org.springframework.validation.annotation.Validated;
+import javax.validation.Valid;
+import javax.validation.constraints.*;
 
 /**
  * Municipio en juego.
  */
 @ApiModel(description = "Municipio en juego.")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-08-29T21:54:39.417-03:00[America/Buenos_Aires]")
-public class MunicipioEnJuegoModel {
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-09-05T20:37:59.553716700-03:00[America/Buenos_Aires]")
+
+
+public class MunicipioEnJuegoModel   {
   @JsonProperty("id")
-  private Integer id = null;
+  private Long id = null;
 
   @JsonProperty("nombre")
   private String nombre = null;
@@ -28,11 +30,20 @@ public class MunicipioEnJuegoModel {
   @JsonProperty("ubicacion")
   private CoordenadasModel ubicacion = null;
 
+  @JsonProperty("altura")
+  private Long altura = null;
+
   @JsonProperty("duenio")
   private UsuarioModel duenio = null;
 
   @JsonProperty("gauchos")
-  private Integer gauchos = null;
+  private Long gauchos = null;
+
+  @JsonProperty("puntosDeDefensa")
+  private Long puntosDeDefensa = null;
+
+  @JsonProperty("produccionDeGauchos")
+  private Long produccionDeGauchos = null;
 
   @JsonProperty("modo")
   private ModoDeMunicipioModel modo = null;
@@ -40,7 +51,10 @@ public class MunicipioEnJuegoModel {
   @JsonProperty("estaBloqueado")
   private Boolean estaBloqueado = null;
 
-  public MunicipioEnJuegoModel id(Integer id) {
+  @JsonProperty("urlImagen")
+  private String urlImagen = null;
+
+  public MunicipioEnJuegoModel id(Long id) {
     this.id = id;
     return this;
   }
@@ -49,14 +63,13 @@ public class MunicipioEnJuegoModel {
    * Id del municipio.
    * @return id
   **/
-  @ApiModelProperty(required = true, value = "Id del municipio.")
-      @NotNull
-
-    public Integer getId() {
+  @ApiModelProperty(value = "Id del municipio.")
+  
+    public Long getId() {
     return id;
   }
 
-  public void setId(Integer id) {
+  public void setId(Long id) {
     this.id = id;
   }
 
@@ -69,9 +82,8 @@ public class MunicipioEnJuegoModel {
    * Nombre del municipio.
    * @return nombre
   **/
-  @ApiModelProperty(required = true, value = "Nombre del municipio.")
-      @NotNull
-
+  @ApiModelProperty(value = "Nombre del municipio.")
+  
     public String getNombre() {
     return nombre;
   }
@@ -89,9 +101,8 @@ public class MunicipioEnJuegoModel {
    * Get ubicacion
    * @return ubicacion
   **/
-  @ApiModelProperty(required = true, value = "")
-      @NotNull
-
+  @ApiModelProperty(value = "")
+  
     @Valid
     public CoordenadasModel getUbicacion() {
     return ubicacion;
@@ -99,6 +110,25 @@ public class MunicipioEnJuegoModel {
 
   public void setUbicacion(CoordenadasModel ubicacion) {
     this.ubicacion = ubicacion;
+  }
+
+  public MunicipioEnJuegoModel altura(Long altura) {
+    this.altura = altura;
+    return this;
+  }
+
+  /**
+   * Altura en metros del centroide del municipio
+   * @return altura
+  **/
+  @ApiModelProperty(value = "Altura en metros del centroide del municipio")
+  
+    public Long getAltura() {
+    return altura;
+  }
+
+  public void setAltura(Long altura) {
+    this.altura = altura;
   }
 
   public MunicipioEnJuegoModel duenio(UsuarioModel duenio) {
@@ -110,9 +140,8 @@ public class MunicipioEnJuegoModel {
    * Get duenio
    * @return duenio
   **/
-  @ApiModelProperty(required = true, value = "")
-      @NotNull
-
+  @ApiModelProperty(value = "")
+  
     @Valid
     public UsuarioModel getDuenio() {
     return duenio;
@@ -122,24 +151,61 @@ public class MunicipioEnJuegoModel {
     this.duenio = duenio;
   }
 
-  public MunicipioEnJuegoModel gauchos(Integer gauchos) {
+  public MunicipioEnJuegoModel gauchos(Long gauchos) {
     this.gauchos = gauchos;
     return this;
   }
 
   /**
-   * Cantidad de gauchos en el municipio.
+   * Cantidad de gauchos en el municipio
    * @return gauchos
   **/
-  @ApiModelProperty(required = true, value = "Cantidad de gauchos en el municipio.")
-      @NotNull
-
-    public Integer getGauchos() {
+  @ApiModelProperty(value = "Cantidad de gauchos en el municipio")
+  
+    public Long getGauchos() {
     return gauchos;
   }
 
-  public void setGauchos(Integer gauchos) {
+  public void setGauchos(Long gauchos) {
     this.gauchos = gauchos;
+  }
+
+  public MunicipioEnJuegoModel puntosDeDefensa(Long puntosDeDefensa) {
+    this.puntosDeDefensa = puntosDeDefensa;
+    return this;
+  }
+
+  /**
+   * Get puntosDeDefensa
+   * @return puntosDeDefensa
+  **/
+  @ApiModelProperty(value = "")
+  
+    public Long getPuntosDeDefensa() {
+    return puntosDeDefensa;
+  }
+
+  public void setPuntosDeDefensa(Long puntosDeDefensa) {
+    this.puntosDeDefensa = puntosDeDefensa;
+  }
+
+  public MunicipioEnJuegoModel produccionDeGauchos(Long produccionDeGauchos) {
+    this.produccionDeGauchos = produccionDeGauchos;
+    return this;
+  }
+
+  /**
+   * Get produccionDeGauchos
+   * @return produccionDeGauchos
+  **/
+  @ApiModelProperty(value = "")
+  
+    public Long getProduccionDeGauchos() {
+    return produccionDeGauchos;
+  }
+
+  public void setProduccionDeGauchos(Long produccionDeGauchos) {
+    this.produccionDeGauchos = produccionDeGauchos;
   }
 
   public MunicipioEnJuegoModel modo(ModoDeMunicipioModel modo) {
@@ -181,6 +247,25 @@ public class MunicipioEnJuegoModel {
     this.estaBloqueado = estaBloqueado;
   }
 
+  public MunicipioEnJuegoModel urlImagen(String urlImagen) {
+    this.urlImagen = urlImagen;
+    return this;
+  }
+
+  /**
+   * URL a una imagen del municipio
+   * @return urlImagen
+  **/
+  @ApiModelProperty(value = "URL a una imagen del municipio")
+  
+    public String getUrlImagen() {
+    return urlImagen;
+  }
+
+  public void setUrlImagen(String urlImagen) {
+    this.urlImagen = urlImagen;
+  }
+
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -194,29 +279,37 @@ public class MunicipioEnJuegoModel {
     return Objects.equals(this.id, municipioEnJuegoModel.id) &&
         Objects.equals(this.nombre, municipioEnJuegoModel.nombre) &&
         Objects.equals(this.ubicacion, municipioEnJuegoModel.ubicacion) &&
+        Objects.equals(this.altura, municipioEnJuegoModel.altura) &&
         Objects.equals(this.duenio, municipioEnJuegoModel.duenio) &&
         Objects.equals(this.gauchos, municipioEnJuegoModel.gauchos) &&
+        Objects.equals(this.puntosDeDefensa, municipioEnJuegoModel.puntosDeDefensa) &&
+        Objects.equals(this.produccionDeGauchos, municipioEnJuegoModel.produccionDeGauchos) &&
         Objects.equals(this.modo, municipioEnJuegoModel.modo) &&
-        Objects.equals(this.estaBloqueado, municipioEnJuegoModel.estaBloqueado);
+        Objects.equals(this.estaBloqueado, municipioEnJuegoModel.estaBloqueado) &&
+        Objects.equals(this.urlImagen, municipioEnJuegoModel.urlImagen);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, nombre, ubicacion, duenio, gauchos, modo, estaBloqueado);
+    return Objects.hash(id, nombre, ubicacion, altura, duenio, gauchos, puntosDeDefensa, produccionDeGauchos, modo, estaBloqueado, urlImagen);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class MunicipioEnJuego {\n");
+    sb.append("class MunicipioEnJuegoModel {\n");
     
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    nombre: ").append(toIndentedString(nombre)).append("\n");
     sb.append("    ubicacion: ").append(toIndentedString(ubicacion)).append("\n");
+    sb.append("    altura: ").append(toIndentedString(altura)).append("\n");
     sb.append("    duenio: ").append(toIndentedString(duenio)).append("\n");
     sb.append("    gauchos: ").append(toIndentedString(gauchos)).append("\n");
+    sb.append("    puntosDeDefensa: ").append(toIndentedString(puntosDeDefensa)).append("\n");
+    sb.append("    produccionDeGauchos: ").append(toIndentedString(produccionDeGauchos)).append("\n");
     sb.append("    modo: ").append(toIndentedString(modo)).append("\n");
     sb.append("    estaBloqueado: ").append(toIndentedString(estaBloqueado)).append("\n");
+    sb.append("    urlImagen: ").append(toIndentedString(urlImagen)).append("\n");
     sb.append("}");
     return sb.toString();
   }

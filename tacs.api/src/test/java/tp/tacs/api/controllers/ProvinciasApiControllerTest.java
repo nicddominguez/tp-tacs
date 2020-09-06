@@ -8,6 +8,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import tp.tacs.api.model.ListarProvinciasResponse;
 import tp.tacs.api.model.ProvinciaModel;
 
 import java.util.List;
@@ -26,25 +27,19 @@ public class ProvinciasApiControllerTest {
 
     @Test
     public void getProvinciasOk() {
-        ResponseEntity<List<ProvinciaModel>> provincias = provinciasApiController.listarProvincias(0, 10);
+        ResponseEntity<ListarProvinciasResponse> provincias = provinciasApiController.listarProvincias(1L, 0L);
         assertEquals(HttpStatus.OK, provincias.getStatusCode());
     }
 
     @Test
     public void getProvinciasFail() {
-        ResponseEntity<List<ProvinciaModel>> provincias = provinciasApiController.listarProvincias(0, 0);
-        assertEquals(HttpStatus.NOT_FOUND, provincias.getStatusCode());
-    }
-
-    @Test
-    public void getProvinciasFail1() {
-        ResponseEntity<List<ProvinciaModel>> provincias = provinciasApiController.listarProvincias(-1, -2);
+        ResponseEntity<ListarProvinciasResponse> provincias = provinciasApiController.listarProvincias(0L, 1L);
         assertEquals(HttpStatus.NOT_FOUND, provincias.getStatusCode());
     }
 
     @Test
     public void getProvinciasFail2() {
-        ResponseEntity<List<ProvinciaModel>> provincias = provinciasApiController.listarProvincias(100, 2);
+        ResponseEntity<ListarProvinciasResponse> provincias = provinciasApiController.listarProvincias(100L, 2L);
         assertEquals(HttpStatus.NOT_FOUND, provincias.getStatusCode());
     }
 

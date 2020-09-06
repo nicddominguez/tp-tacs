@@ -5,63 +5,50 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import java.util.ArrayList;
+import java.util.List;
+import tp.tacs.api.model.UsuarioModel;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
- * Una provincia.
+ * ListarUsuariosResponse
  */
-@ApiModel(description = "Una provincia.")
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-09-05T20:37:59.553716700-03:00[America/Buenos_Aires]")
 
 
-public class ProvinciaModel   {
-  @JsonProperty("id")
-  private Long id = null;
+public class ListarUsuariosResponse   {
+  @JsonProperty("usuarios")
+  @Valid
+  private List<UsuarioModel> usuarios = null;
 
-  @JsonProperty("nombre")
-  private String nombre = null;
+  public ListarUsuariosResponse usuarios(List<UsuarioModel> usuarios) {
+    this.usuarios = usuarios;
+    return this;
+  }
 
-  public ProvinciaModel id(Long id) {
-    this.id = id;
+  public ListarUsuariosResponse addUsuariosItem(UsuarioModel usuariosItem) {
+    if (this.usuarios == null) {
+      this.usuarios = new ArrayList<UsuarioModel>();
+    }
+    this.usuarios.add(usuariosItem);
     return this;
   }
 
   /**
-   * Id de la provincia
-   * @return id
+   * Get usuarios
+   * @return usuarios
   **/
-  @ApiModelProperty(required = true, value = "Id de la provincia")
-      @NotNull
-
-    public Long getId() {
-    return id;
+  @ApiModelProperty(value = "")
+      @Valid
+    public List<UsuarioModel> getUsuarios() {
+    return usuarios;
   }
 
-  public void setId(Long id) {
-    this.id = id;
-  }
-
-  public ProvinciaModel nombre(String nombre) {
-    this.nombre = nombre;
-    return this;
-  }
-
-  /**
-   * Nombre de la provincia
-   * @return nombre
-  **/
-  @ApiModelProperty(required = true, value = "Nombre de la provincia")
-      @NotNull
-
-    public String getNombre() {
-    return nombre;
-  }
-
-  public void setNombre(String nombre) {
-    this.nombre = nombre;
+  public void setUsuarios(List<UsuarioModel> usuarios) {
+    this.usuarios = usuarios;
   }
 
 
@@ -73,23 +60,21 @@ public class ProvinciaModel   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    ProvinciaModel provinciaModel = (ProvinciaModel) o;
-    return Objects.equals(this.id, provinciaModel.id) &&
-        Objects.equals(this.nombre, provinciaModel.nombre);
+    ListarUsuariosResponse listarUsuariosResponse = (ListarUsuariosResponse) o;
+    return Objects.equals(this.usuarios, listarUsuariosResponse.usuarios);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, nombre);
+    return Objects.hash(usuarios);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ProvinciaModel {\n");
+    sb.append("class ListarUsuariosResponse {\n");
     
-    sb.append("    id: ").append(toIndentedString(id)).append("\n");
-    sb.append("    nombre: ").append(toIndentedString(nombre)).append("\n");
+    sb.append("    usuarios: ").append(toIndentedString(usuarios)).append("\n");
     sb.append("}");
     return sb.toString();
   }

@@ -2,7 +2,10 @@ package tp.tacs.api.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import tp.tacs.api.model.UsuarioModel;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
@@ -11,16 +14,18 @@ import javax.validation.constraints.*;
  * NuevoJWTModel
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-09-03T22:53:49.293-03:00[America/Buenos_Aires]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-09-05T20:37:59.553716700-03:00[America/Buenos_Aires]")
+
+
 public class NuevoJWTModel   {
   @JsonProperty("usuario")
-  private UsuarioModel usuarioModel = null;
+  private UsuarioModel usuario = null;
 
   @JsonProperty("token")
   private String token = null;
 
-  public NuevoJWTModel usuario(UsuarioModel usuarioModel) {
-    this.usuarioModel = usuarioModel;
+  public NuevoJWTModel usuario(UsuarioModel usuario) {
+    this.usuario = usuario;
     return this;
   }
 
@@ -32,11 +37,11 @@ public class NuevoJWTModel   {
   
     @Valid
     public UsuarioModel getUsuario() {
-    return usuarioModel;
+    return usuario;
   }
 
-  public void setUsuario(UsuarioModel usuarioModel) {
-    this.usuarioModel = usuarioModel;
+  public void setUsuario(UsuarioModel usuario) {
+    this.usuario = usuario;
   }
 
   public NuevoJWTModel token(String token) {
@@ -69,13 +74,13 @@ public class NuevoJWTModel   {
       return false;
     }
     NuevoJWTModel nuevoJWTModel = (NuevoJWTModel) o;
-    return Objects.equals(this.usuarioModel, nuevoJWTModel.usuarioModel) &&
+    return Objects.equals(this.usuario, nuevoJWTModel.usuario) &&
         Objects.equals(this.token, nuevoJWTModel.token);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(usuarioModel, token);
+    return Objects.hash(usuario, token);
   }
 
   @Override
@@ -83,7 +88,7 @@ public class NuevoJWTModel   {
     StringBuilder sb = new StringBuilder();
     sb.append("class NuevoJWTModel {\n");
     
-    sb.append("    usuario: ").append(toIndentedString(usuarioModel)).append("\n");
+    sb.append("    usuario: ").append(toIndentedString(usuario)).append("\n");
     sb.append("    token: ").append(toIndentedString(token)).append("\n");
     sb.append("}");
     return sb.toString();

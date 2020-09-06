@@ -1,29 +1,32 @@
 package tp.tacs.api.model;
 
 import java.util.Objects;
-
-import org.springframework.validation.annotation.Validated;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
-
+import com.fasterxml.jackson.annotation.JsonCreator;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.springframework.validation.annotation.Validated;
+import javax.validation.Valid;
+import javax.validation.constraints.*;
 
 /**
  * MoverGauchosBody
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-08-29T21:54:39.417-03:00[America/Buenos_Aires]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-09-05T20:37:59.553716700-03:00[America/Buenos_Aires]")
+
+
 public class MoverGauchosBody   {
   @JsonProperty("idMunicipioOrigen")
-  private Integer idMunicipioOrigen = null;
+  private Long idMunicipioOrigen = null;
 
   @JsonProperty("idMunicipioDestino")
-  private Integer idMunicipioDestino = null;
+  private Long idMunicipioDestino = null;
 
   @JsonProperty("cantidad")
-  private Integer cantidad = null;
+  private Long cantidad = null;
 
-  public MoverGauchosBody idMunicipioOrigen(Integer idMunicipioOrigen) {
+  public MoverGauchosBody idMunicipioOrigen(Long idMunicipioOrigen) {
     this.idMunicipioOrigen = idMunicipioOrigen;
     return this;
   }
@@ -34,15 +37,15 @@ public class MoverGauchosBody   {
   **/
   @ApiModelProperty(value = "Id del municipio de origen")
   
-    public Integer getIdMunicipioOrigen() {
+    public Long getIdMunicipioOrigen() {
     return idMunicipioOrigen;
   }
 
-  public void setIdMunicipioOrigen(Integer idMunicipioOrigen) {
+  public void setIdMunicipioOrigen(Long idMunicipioOrigen) {
     this.idMunicipioOrigen = idMunicipioOrigen;
   }
 
-  public MoverGauchosBody idMunicipioDestino(Integer idMunicipioDestino) {
+  public MoverGauchosBody idMunicipioDestino(Long idMunicipioDestino) {
     this.idMunicipioDestino = idMunicipioDestino;
     return this;
   }
@@ -53,15 +56,15 @@ public class MoverGauchosBody   {
   **/
   @ApiModelProperty(value = "Id del municipio de destino")
   
-    public Integer getIdMunicipioDestino() {
+    public Long getIdMunicipioDestino() {
     return idMunicipioDestino;
   }
 
-  public void setIdMunicipioDestino(Integer idMunicipioDestino) {
+  public void setIdMunicipioDestino(Long idMunicipioDestino) {
     this.idMunicipioDestino = idMunicipioDestino;
   }
 
-  public MoverGauchosBody cantidad(Integer cantidad) {
+  public MoverGauchosBody cantidad(Long cantidad) {
     this.cantidad = cantidad;
     return this;
   }
@@ -72,11 +75,11 @@ public class MoverGauchosBody   {
   **/
   @ApiModelProperty(value = "Cantidad de gauchos a mover")
   
-    public Integer getCantidad() {
+    public Long getCantidad() {
     return cantidad;
   }
 
-  public void setCantidad(Integer cantidad) {
+  public void setCantidad(Long cantidad) {
     this.cantidad = cantidad;
   }
 

@@ -1,35 +1,37 @@
 package tp.tacs.api.model;
 
 import java.util.Objects;
-
-import javax.validation.Valid;
-
-import org.springframework.validation.annotation.Validated;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
-
+import com.fasterxml.jackson.annotation.JsonCreator;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import tp.tacs.api.model.UsuarioModel;
+import org.springframework.validation.annotation.Validated;
+import javax.validation.Valid;
+import javax.validation.constraints.*;
 
 /**
- * EstadisticasDeUsuario
+ * EstadisticasDeUsuarioModel
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-08-29T21:54:39.417-03:00[America/Buenos_Aires]")
-public class EstadisticasDeUsuarioModel {
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-09-05T20:37:59.553716700-03:00[America/Buenos_Aires]")
+
+
+public class EstadisticasDeUsuarioModel   {
   @JsonProperty("usuario")
-  private UsuarioModel usuarioModel = null;
+  private UsuarioModel usuario = null;
 
   @JsonProperty("partidasJugadas")
-  private Integer partidasJugadas = null;
+  private Long partidasJugadas = null;
 
   @JsonProperty("partidasGanadas")
-  private Integer partidasGanadas = null;
+  private Long partidasGanadas = null;
 
   @JsonProperty("rachaActual")
-  private Integer rachaActual = null;
+  private Long rachaActual = null;
 
-  public EstadisticasDeUsuarioModel usuario(UsuarioModel usuarioModel) {
-    this.usuarioModel = usuarioModel;
+  public EstadisticasDeUsuarioModel usuario(UsuarioModel usuario) {
+    this.usuario = usuario;
     return this;
   }
 
@@ -41,14 +43,14 @@ public class EstadisticasDeUsuarioModel {
   
     @Valid
     public UsuarioModel getUsuario() {
-    return usuarioModel;
+    return usuario;
   }
 
-  public void setUsuario(UsuarioModel usuarioModel) {
-    this.usuarioModel = usuarioModel;
+  public void setUsuario(UsuarioModel usuario) {
+    this.usuario = usuario;
   }
 
-  public EstadisticasDeUsuarioModel partidasJugadas(Integer partidasJugadas) {
+  public EstadisticasDeUsuarioModel partidasJugadas(Long partidasJugadas) {
     this.partidasJugadas = partidasJugadas;
     return this;
   }
@@ -59,15 +61,15 @@ public class EstadisticasDeUsuarioModel {
   **/
   @ApiModelProperty(value = "")
   
-    public Integer getPartidasJugadas() {
+    public Long getPartidasJugadas() {
     return partidasJugadas;
   }
 
-  public void setPartidasJugadas(Integer partidasJugadas) {
+  public void setPartidasJugadas(Long partidasJugadas) {
     this.partidasJugadas = partidasJugadas;
   }
 
-  public EstadisticasDeUsuarioModel partidasGanadas(Integer partidasGanadas) {
+  public EstadisticasDeUsuarioModel partidasGanadas(Long partidasGanadas) {
     this.partidasGanadas = partidasGanadas;
     return this;
   }
@@ -78,15 +80,15 @@ public class EstadisticasDeUsuarioModel {
   **/
   @ApiModelProperty(value = "")
   
-    public Integer getPartidasGanadas() {
+    public Long getPartidasGanadas() {
     return partidasGanadas;
   }
 
-  public void setPartidasGanadas(Integer partidasGanadas) {
+  public void setPartidasGanadas(Long partidasGanadas) {
     this.partidasGanadas = partidasGanadas;
   }
 
-  public EstadisticasDeUsuarioModel rachaActual(Integer rachaActual) {
+  public EstadisticasDeUsuarioModel rachaActual(Long rachaActual) {
     this.rachaActual = rachaActual;
     return this;
   }
@@ -97,11 +99,11 @@ public class EstadisticasDeUsuarioModel {
   **/
   @ApiModelProperty(value = "Racha actual de victorias")
   
-    public Integer getRachaActual() {
+    public Long getRachaActual() {
     return rachaActual;
   }
 
-  public void setRachaActual(Integer rachaActual) {
+  public void setRachaActual(Long rachaActual) {
     this.rachaActual = rachaActual;
   }
 
@@ -115,7 +117,7 @@ public class EstadisticasDeUsuarioModel {
       return false;
     }
     EstadisticasDeUsuarioModel estadisticasDeUsuarioModel = (EstadisticasDeUsuarioModel) o;
-    return Objects.equals(this.usuarioModel, estadisticasDeUsuarioModel.usuarioModel) &&
+    return Objects.equals(this.usuario, estadisticasDeUsuarioModel.usuario) &&
         Objects.equals(this.partidasJugadas, estadisticasDeUsuarioModel.partidasJugadas) &&
         Objects.equals(this.partidasGanadas, estadisticasDeUsuarioModel.partidasGanadas) &&
         Objects.equals(this.rachaActual, estadisticasDeUsuarioModel.rachaActual);
@@ -123,15 +125,15 @@ public class EstadisticasDeUsuarioModel {
 
   @Override
   public int hashCode() {
-    return Objects.hash(usuarioModel, partidasJugadas, partidasGanadas, rachaActual);
+    return Objects.hash(usuario, partidasJugadas, partidasGanadas, rachaActual);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class EstadisticasDeUsuario {\n");
+    sb.append("class EstadisticasDeUsuarioModel {\n");
     
-    sb.append("    usuario: ").append(toIndentedString(usuarioModel)).append("\n");
+    sb.append("    usuario: ").append(toIndentedString(usuario)).append("\n");
     sb.append("    partidasJugadas: ").append(toIndentedString(partidasJugadas)).append("\n");
     sb.append("    partidasGanadas: ").append(toIndentedString(partidasGanadas)).append("\n");
     sb.append("    rachaActual: ").append(toIndentedString(rachaActual)).append("\n");

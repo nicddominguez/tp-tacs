@@ -1,32 +1,35 @@
 package tp.tacs.api.model;
 
 import java.util.Objects;
-
-import org.springframework.validation.annotation.Validated;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
-
+import com.fasterxml.jackson.annotation.JsonCreator;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.springframework.validation.annotation.Validated;
+import javax.validation.Valid;
+import javax.validation.constraints.*;
 
 /**
- * EstadisticasDeJuego
+ * EstadisticasDeJuegoModel
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-08-29T21:54:39.417-03:00[America/Buenos_Aires]")
-public class EstadisticasDeJuegoModel {
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-09-05T20:37:59.553716700-03:00[America/Buenos_Aires]")
+
+
+public class EstadisticasDeJuegoModel   {
   @JsonProperty("partidasCreadas")
-  private Integer partidasCreadas = null;
+  private Long partidasCreadas = null;
 
   @JsonProperty("partidasEnCurso")
-  private Integer partidasEnCurso = null;
+  private Long partidasEnCurso = null;
 
-  @JsonProperty("partidesTerminadas")
-  private Integer partidesTerminadas = null;
+  @JsonProperty("partidasTerminadas")
+  private Long partidasTerminadas = null;
 
   @JsonProperty("partidasCanceladas")
-  private Integer partidasCanceladas = null;
+  private Long partidasCanceladas = null;
 
-  public EstadisticasDeJuegoModel partidasCreadas(Integer partidasCreadas) {
+  public EstadisticasDeJuegoModel partidasCreadas(Long partidasCreadas) {
     this.partidasCreadas = partidasCreadas;
     return this;
   }
@@ -37,15 +40,15 @@ public class EstadisticasDeJuegoModel {
   **/
   @ApiModelProperty(value = "")
   
-    public Integer getPartidasCreadas() {
+    public Long getPartidasCreadas() {
     return partidasCreadas;
   }
 
-  public void setPartidasCreadas(Integer partidasCreadas) {
+  public void setPartidasCreadas(Long partidasCreadas) {
     this.partidasCreadas = partidasCreadas;
   }
 
-  public EstadisticasDeJuegoModel partidasEnCurso(Integer partidasEnCurso) {
+  public EstadisticasDeJuegoModel partidasEnCurso(Long partidasEnCurso) {
     this.partidasEnCurso = partidasEnCurso;
     return this;
   }
@@ -56,34 +59,34 @@ public class EstadisticasDeJuegoModel {
   **/
   @ApiModelProperty(value = "")
   
-    public Integer getPartidasEnCurso() {
+    public Long getPartidasEnCurso() {
     return partidasEnCurso;
   }
 
-  public void setPartidasEnCurso(Integer partidasEnCurso) {
+  public void setPartidasEnCurso(Long partidasEnCurso) {
     this.partidasEnCurso = partidasEnCurso;
   }
 
-  public EstadisticasDeJuegoModel partidesTerminadas(Integer partidesTerminadas) {
-    this.partidesTerminadas = partidesTerminadas;
+  public EstadisticasDeJuegoModel partidasTerminadas(Long partidasTerminadas) {
+    this.partidasTerminadas = partidasTerminadas;
     return this;
   }
 
   /**
-   * Get partidesTerminadas
-   * @return partidesTerminadas
+   * Get partidasTerminadas
+   * @return partidasTerminadas
   **/
   @ApiModelProperty(value = "")
   
-    public Integer getPartidesTerminadas() {
-    return partidesTerminadas;
+    public Long getPartidasTerminadas() {
+    return partidasTerminadas;
   }
 
-  public void setPartidesTerminadas(Integer partidesTerminadas) {
-    this.partidesTerminadas = partidesTerminadas;
+  public void setPartidasTerminadas(Long partidasTerminadas) {
+    this.partidasTerminadas = partidasTerminadas;
   }
 
-  public EstadisticasDeJuegoModel partidasCanceladas(Integer partidasCanceladas) {
+  public EstadisticasDeJuegoModel partidasCanceladas(Long partidasCanceladas) {
     this.partidasCanceladas = partidasCanceladas;
     return this;
   }
@@ -94,11 +97,11 @@ public class EstadisticasDeJuegoModel {
   **/
   @ApiModelProperty(value = "")
   
-    public Integer getPartidasCanceladas() {
+    public Long getPartidasCanceladas() {
     return partidasCanceladas;
   }
 
-  public void setPartidasCanceladas(Integer partidasCanceladas) {
+  public void setPartidasCanceladas(Long partidasCanceladas) {
     this.partidasCanceladas = partidasCanceladas;
   }
 
@@ -114,23 +117,23 @@ public class EstadisticasDeJuegoModel {
     EstadisticasDeJuegoModel estadisticasDeJuegoModel = (EstadisticasDeJuegoModel) o;
     return Objects.equals(this.partidasCreadas, estadisticasDeJuegoModel.partidasCreadas) &&
         Objects.equals(this.partidasEnCurso, estadisticasDeJuegoModel.partidasEnCurso) &&
-        Objects.equals(this.partidesTerminadas, estadisticasDeJuegoModel.partidesTerminadas) &&
+        Objects.equals(this.partidasTerminadas, estadisticasDeJuegoModel.partidasTerminadas) &&
         Objects.equals(this.partidasCanceladas, estadisticasDeJuegoModel.partidasCanceladas);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(partidasCreadas, partidasEnCurso, partidesTerminadas, partidasCanceladas);
+    return Objects.hash(partidasCreadas, partidasEnCurso, partidasTerminadas, partidasCanceladas);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class EstadisticasDeJuego {\n");
+    sb.append("class EstadisticasDeJuegoModel {\n");
     
     sb.append("    partidasCreadas: ").append(toIndentedString(partidasCreadas)).append("\n");
     sb.append("    partidasEnCurso: ").append(toIndentedString(partidasEnCurso)).append("\n");
-    sb.append("    partidesTerminadas: ").append(toIndentedString(partidesTerminadas)).append("\n");
+    sb.append("    partidasTerminadas: ").append(toIndentedString(partidasTerminadas)).append("\n");
     sb.append("    partidasCanceladas: ").append(toIndentedString(partidasCanceladas)).append("\n");
     sb.append("}");
     return sb.toString();

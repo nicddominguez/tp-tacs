@@ -1,30 +1,30 @@
 package tp.tacs.api.model;
 
 import java.util.Objects;
-
-import javax.validation.constraints.NotNull;
-
-import org.springframework.validation.annotation.Validated;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
-
+import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.springframework.validation.annotation.Validated;
+import javax.validation.Valid;
+import javax.validation.constraints.*;
 
 /**
  * Un usuario.
  */
 @ApiModel(description = "Un usuario.")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-08-29T21:54:39.417-03:00[America/Buenos_Aires]")
-public class UsuarioModel {
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-09-05T20:37:59.553716700-03:00[America/Buenos_Aires]")
+
+
+public class UsuarioModel   {
   @JsonProperty("id")
-  private Integer id = null;
+  private Long id = null;
 
   @JsonProperty("nombreDeUsuario")
   private String nombreDeUsuario = null;
 
-  public UsuarioModel id(Integer id) {
+  public UsuarioModel id(Long id) {
     this.id = id;
     return this;
   }
@@ -36,11 +36,11 @@ public class UsuarioModel {
   @ApiModelProperty(required = true, value = "")
       @NotNull
 
-    public Integer getId() {
+    public Long getId() {
     return id;
   }
 
-  public void setId(Integer id) {
+  public void setId(Long id) {
     this.id = id;
   }
 
@@ -86,7 +86,7 @@ public class UsuarioModel {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class Usuario {\n");
+    sb.append("class UsuarioModel {\n");
     
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    nombreDeUsuario: ").append(toIndentedString(nombreDeUsuario)).append("\n");

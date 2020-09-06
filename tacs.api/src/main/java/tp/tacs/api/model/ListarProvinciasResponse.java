@@ -5,63 +5,50 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import java.util.ArrayList;
+import java.util.List;
+import tp.tacs.api.model.ProvinciaModel;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
- * Una provincia.
+ * ListarProvinciasResponse
  */
-@ApiModel(description = "Una provincia.")
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-09-05T20:37:59.553716700-03:00[America/Buenos_Aires]")
 
 
-public class ProvinciaModel   {
-  @JsonProperty("id")
-  private Long id = null;
+public class ListarProvinciasResponse   {
+  @JsonProperty("provincias")
+  @Valid
+  private List<ProvinciaModel> provincias = null;
 
-  @JsonProperty("nombre")
-  private String nombre = null;
+  public ListarProvinciasResponse provincias(List<ProvinciaModel> provincias) {
+    this.provincias = provincias;
+    return this;
+  }
 
-  public ProvinciaModel id(Long id) {
-    this.id = id;
+  public ListarProvinciasResponse addProvinciasItem(ProvinciaModel provinciasItem) {
+    if (this.provincias == null) {
+      this.provincias = new ArrayList<ProvinciaModel>();
+    }
+    this.provincias.add(provinciasItem);
     return this;
   }
 
   /**
-   * Id de la provincia
-   * @return id
+   * Get provincias
+   * @return provincias
   **/
-  @ApiModelProperty(required = true, value = "Id de la provincia")
-      @NotNull
-
-    public Long getId() {
-    return id;
+  @ApiModelProperty(value = "")
+      @Valid
+    public List<ProvinciaModel> getProvincias() {
+    return provincias;
   }
 
-  public void setId(Long id) {
-    this.id = id;
-  }
-
-  public ProvinciaModel nombre(String nombre) {
-    this.nombre = nombre;
-    return this;
-  }
-
-  /**
-   * Nombre de la provincia
-   * @return nombre
-  **/
-  @ApiModelProperty(required = true, value = "Nombre de la provincia")
-      @NotNull
-
-    public String getNombre() {
-    return nombre;
-  }
-
-  public void setNombre(String nombre) {
-    this.nombre = nombre;
+  public void setProvincias(List<ProvinciaModel> provincias) {
+    this.provincias = provincias;
   }
 
 
@@ -73,23 +60,21 @@ public class ProvinciaModel   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    ProvinciaModel provinciaModel = (ProvinciaModel) o;
-    return Objects.equals(this.id, provinciaModel.id) &&
-        Objects.equals(this.nombre, provinciaModel.nombre);
+    ListarProvinciasResponse listarProvinciasResponse = (ListarProvinciasResponse) o;
+    return Objects.equals(this.provincias, listarProvinciasResponse.provincias);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, nombre);
+    return Objects.hash(provincias);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ProvinciaModel {\n");
+    sb.append("class ListarProvinciasResponse {\n");
     
-    sb.append("    id: ").append(toIndentedString(id)).append("\n");
-    sb.append("    nombre: ").append(toIndentedString(nombre)).append("\n");
+    sb.append("    provincias: ").append(toIndentedString(provincias)).append("\n");
     sb.append("}");
     return sb.toString();
   }

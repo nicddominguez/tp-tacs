@@ -5,63 +5,50 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import java.util.ArrayList;
+import java.util.List;
+import tp.tacs.api.model.EstadisticasDeUsuarioModel;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
- * Una provincia.
+ * ScoreboardResponse
  */
-@ApiModel(description = "Una provincia.")
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-09-05T20:37:59.553716700-03:00[America/Buenos_Aires]")
 
 
-public class ProvinciaModel   {
-  @JsonProperty("id")
-  private Long id = null;
+public class ScoreboardResponse   {
+  @JsonProperty("scoreboard")
+  @Valid
+  private List<EstadisticasDeUsuarioModel> scoreboard = null;
 
-  @JsonProperty("nombre")
-  private String nombre = null;
+  public ScoreboardResponse scoreboard(List<EstadisticasDeUsuarioModel> scoreboard) {
+    this.scoreboard = scoreboard;
+    return this;
+  }
 
-  public ProvinciaModel id(Long id) {
-    this.id = id;
+  public ScoreboardResponse addScoreboardItem(EstadisticasDeUsuarioModel scoreboardItem) {
+    if (this.scoreboard == null) {
+      this.scoreboard = new ArrayList<EstadisticasDeUsuarioModel>();
+    }
+    this.scoreboard.add(scoreboardItem);
     return this;
   }
 
   /**
-   * Id de la provincia
-   * @return id
+   * Get scoreboard
+   * @return scoreboard
   **/
-  @ApiModelProperty(required = true, value = "Id de la provincia")
-      @NotNull
-
-    public Long getId() {
-    return id;
+  @ApiModelProperty(value = "")
+      @Valid
+    public List<EstadisticasDeUsuarioModel> getScoreboard() {
+    return scoreboard;
   }
 
-  public void setId(Long id) {
-    this.id = id;
-  }
-
-  public ProvinciaModel nombre(String nombre) {
-    this.nombre = nombre;
-    return this;
-  }
-
-  /**
-   * Nombre de la provincia
-   * @return nombre
-  **/
-  @ApiModelProperty(required = true, value = "Nombre de la provincia")
-      @NotNull
-
-    public String getNombre() {
-    return nombre;
-  }
-
-  public void setNombre(String nombre) {
-    this.nombre = nombre;
+  public void setScoreboard(List<EstadisticasDeUsuarioModel> scoreboard) {
+    this.scoreboard = scoreboard;
   }
 
 
@@ -73,23 +60,21 @@ public class ProvinciaModel   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    ProvinciaModel provinciaModel = (ProvinciaModel) o;
-    return Objects.equals(this.id, provinciaModel.id) &&
-        Objects.equals(this.nombre, provinciaModel.nombre);
+    ScoreboardResponse scoreboardResponse = (ScoreboardResponse) o;
+    return Objects.equals(this.scoreboard, scoreboardResponse.scoreboard);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, nombre);
+    return Objects.hash(scoreboard);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ProvinciaModel {\n");
+    sb.append("class ScoreboardResponse {\n");
     
-    sb.append("    id: ").append(toIndentedString(id)).append("\n");
-    sb.append("    nombre: ").append(toIndentedString(nombre)).append("\n");
+    sb.append("    scoreboard: ").append(toIndentedString(scoreboard)).append("\n");
     sb.append("}");
     return sb.toString();
   }
