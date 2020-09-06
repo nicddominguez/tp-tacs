@@ -4,6 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import tp.tacs.api.model.ListarProvinciasResponse;
 import tp.tacs.api.model.ProvinciaModel;
+import tp.tacs.api.utils.Utils;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -40,13 +41,13 @@ public class ProvinciasApiController implements ProvinciasApi{
         provinciaModels.add(new ProvinciaModel().id(22L).nombre("Tierra del Fuego, Antártida e Isla del Atlántico Sur"));
         provinciaModels.add(new ProvinciaModel().id(23L).nombre("Tucumán"));
 
-        Long start = pagina * tamanioPagina;
-        Long end = start + tamanioPagina;
+        Utils utils = new Utils();
 
-        if(start > provinciaModels.size() || end > provinciaModels.size() || start < 0 || end <= 0)
+        List<ProvinciaModel> listaPaginada = utils.obtenerListaPaginada(pagina, tamanioPagina, provinciaModels);
+
+        if(listaPaginada == null)
             return ResponseEntity.notFound().build();
 
-        List<ProvinciaModel> provinciasPaginadas = provinciaModels.subList(start.intValue(), end.intValue());
-        return ResponseEntity.ok(new ListarProvinciasResponse().provincias(provinciasPaginadas));
+        return ResponseEntity.ok(new ListarProvinciasResponse().provincias(listaPaginada));
     }
 }
