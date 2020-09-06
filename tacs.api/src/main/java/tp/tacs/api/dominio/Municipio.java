@@ -2,10 +2,10 @@ package tp.tacs.api.dominio;
 
 public class Municipio {
 
+    private String idMunicipioReal;
     private Integer cantGauchos;
     private boolean bloqueado;
     private Especializacion especializacion;
-    private MunicipioReal municipioReal;
     private Partida partida;
     private Usuario duenio;
 
@@ -53,32 +53,28 @@ public class Municipio {
         this.duenio = duenio;
     }
 
-    public MunicipioReal getMunicipioReal() {
-        return municipioReal;
+    public String getIdMunicipioReal() {
+        return this.idMunicipioReal;
     }
 
-    public void setMunicipioReal(MunicipioReal municipioReal) {
-        this.municipioReal = municipioReal;
-    }
-
-    public Long getId() {
-        return this.municipioReal.getId();
+    public void setIdMunicipioReal(String idMunicipioReal) {
+        this.idMunicipioReal = idMunicipioReal;
     }
 
     public Double getLatitud() {
-        return this.municipioReal.getLatitud();
+        return RepoMunicipios.instance().getLatitud(idMunicipioReal);
     }
 
     public Double getLongitud() {
-        return this.municipioReal.getLongitud();
+        return RepoMunicipios.instance().getLongitud(idMunicipioReal);
     }
 
     public Float getAltura() {
-        return this.municipioReal.getAltura();
+        return RepoMunicipios.instance().getAltura(idMunicipioReal);
     }
 
-    public String getImagenPath() {
-        return this.municipioReal.getImagenPath();
+    public String getPathImagen() {
+        return RepoMunicipios.instance().getPathImagen(idMunicipioReal);
     }
 
     public void producir() {

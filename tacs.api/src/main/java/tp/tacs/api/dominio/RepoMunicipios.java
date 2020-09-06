@@ -4,6 +4,15 @@ import java.util.List;
 
 public class RepoMunicipios {
 
+    private static RepoMunicipios instanciaRepoMunicipios = null;
+
+    public static RepoMunicipios instance() {
+        if (instanciaRepoMunicipios == null) {
+            instanciaRepoMunicipios = new RepoMunicipios();
+        }
+        return instanciaRepoMunicipios;
+    }
+
     List<Municipio> getMunicipios(String idProvincia, Integer cantidad) {
         return null;
     }
@@ -20,7 +29,11 @@ public class RepoMunicipios {
         return null;
     }
 
-    Double getAltura(String idProvinca) {
+    Float getAltura(String idProvinca) {
+        return null;
+    }
+
+    public String getPathImagen(String idMunicipioReal) {
         return null;
     }
 }

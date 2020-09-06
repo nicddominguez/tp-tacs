@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.List;
 
 public class PartidaBuilder {
-    private Integer cantMunicipios = 5;
     private List<Usuario> participantes;
     private Estado estado = Estado.EN_JUEGO;
     private String idProvincia;
@@ -17,9 +16,8 @@ public class PartidaBuilder {
     }
 
     public PartidaBuilder setCantMunicipios(Integer cantMunicipios) {
-        this.cantMunicipios = cantMunicipios;
-        RepoMunicipios repoMunicipios = new RepoMunicipios();
-        this.municipios = repoMunicipios.getMunicipios(this.idProvincia, this.cantMunicipios);
+        RepoMunicipios repoMunicipios = RepoMunicipios.instance();
+        this.municipios = repoMunicipios.getMunicipios(this.idProvincia, cantMunicipios);
         return this;
     }
 
