@@ -1,30 +1,30 @@
 package tp.tacs.api.model;
 
 import java.util.Objects;
-
-import javax.validation.constraints.NotNull;
-
-import org.springframework.validation.annotation.Validated;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
-
+import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.springframework.validation.annotation.Validated;
+import javax.validation.Valid;
+import javax.validation.constraints.*;
 
 /**
  * Una provincia.
  */
 @ApiModel(description = "Una provincia.")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-08-29T21:54:39.417-03:00[America/Buenos_Aires]")
-public class Provincia   {
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-09-05T20:37:59.553716700-03:00[America/Buenos_Aires]")
+
+
+public class ProvinciaModel   {
   @JsonProperty("id")
-  private Integer id = null;
+  private Long id = null;
 
   @JsonProperty("nombre")
   private String nombre = null;
 
-  public Provincia id(Integer id) {
+  public ProvinciaModel id(Long id) {
     this.id = id;
     return this;
   }
@@ -36,15 +36,15 @@ public class Provincia   {
   @ApiModelProperty(required = true, value = "Id de la provincia")
       @NotNull
 
-    public Integer getId() {
+    public Long getId() {
     return id;
   }
 
-  public void setId(Integer id) {
+  public void setId(Long id) {
     this.id = id;
   }
 
-  public Provincia nombre(String nombre) {
+  public ProvinciaModel nombre(String nombre) {
     this.nombre = nombre;
     return this;
   }
@@ -73,9 +73,9 @@ public class Provincia   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Provincia provincia = (Provincia) o;
-    return Objects.equals(this.id, provincia.id) &&
-        Objects.equals(this.nombre, provincia.nombre);
+    ProvinciaModel provinciaModel = (ProvinciaModel) o;
+    return Objects.equals(this.id, provinciaModel.id) &&
+        Objects.equals(this.nombre, provinciaModel.nombre);
   }
 
   @Override
@@ -86,7 +86,7 @@ public class Provincia   {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class Provincia {\n");
+    sb.append("class ProvinciaModel {\n");
     
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    nombre: ").append(toIndentedString(nombre)).append("\n");

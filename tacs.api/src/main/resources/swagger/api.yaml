@@ -2,6 +2,8 @@ openapi: 3.0.1
 info:
   title: TP TACS
   version: 1.0.0
+servers:
+  - url: http://127.0.0.1:8080/api/v1
 tags:
   - name: Auth
     description: Autenticación
@@ -20,17 +22,20 @@ paths:
         - Auth
       summary: login
       operationId: logIn
-      description: Loguea a un usuario
+      description: Loguea a un usuario validando su Google Id Token y retornando un JWT de la aplicación
       requestBody:
-        description: username-password
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/LogIn'
+              $ref: '#/components/schemas/GoogleAuthModel'
         required: true
       responses:
         200:
           description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NuevoJWTModel'
         400:
           description: Bad request
         401:
@@ -41,31 +46,24 @@ paths:
         - Auth
       summary: singUp
       operationId: singUp
-      description: Registro de un usuario
+      description: Registro a un usuario nuevo y retorna un JWT de la aplicación
       requestBody:
-        description: username-password-mail
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SignUp'
+              $ref: '#/components/schemas/GoogleAuthModel'
         required: true
       responses:
         200:
           description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NuevoJWTModel'
         400:
           description: Bad request
         401:
           description: Fail
-  /auth/logOut:
-    post:
-      tags:
-        - Auth
-      summary: logOut
-      operationId: logOut
-      description: users log out
-      responses:
-        200:
-          description: Success
   /admin/estadisticas:
     get:
       tags:
@@ -93,7 +91,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/EstadisticasDeJuego'
+                $ref: '#/components/schemas/EstadisticasDeJuegoModel'
         400:
           description: Bad request
         403:
@@ -102,31 +100,38 @@ paths:
     get:
       tags:
         - Admin
-      summary: Retorna los datos del scoreboard
+      summary: Retorna los datos del scoreboard ordenados por partidas ganadas descendentemente.
       operationId: getScoreboard
       security:
         - bearerAuth: []
       parameters:
         - in: query
-          name: pageSize
+          name: tamanioPagina
           schema:
             type: integer
+            format: int64
             default: 10
           required: false
         - in: query
-          name: page
+          name: pagina
           schema:
             type: integer
-          required: true
+            format: int64
+            default: 0
+          required: false
       responses:
         200:
           description: Success
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/EstadisticasDeUsuario'
+                type: object
+                title: scoreboardResponse
+                properties:
+                  scoreboard:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/EstadisticasDeUsuarioModel'
         400:
           description: Bad request
         403:
@@ -147,6 +152,7 @@ paths:
           description: Id del usuario
           schema:
             type: integer
+            format: int64
           required: true
       responses:
         200:
@@ -154,7 +160,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/EstadisticasDeUsuario'
+                $ref: '#/components/schemas/EstadisticasDeUsuarioModel'
         400:
           description: Bad request
         # En el caso de que no se tengan permisos, también se retorna 404
@@ -175,25 +181,32 @@ paths:
             type: string
           required: false
         - in: query
-          name: pageSize
+          name: tamanioPagina
           schema:
             type: integer
+            format: int64
             default: 10
           required: false
         - in: query
-          name: page
+          name: pagina
           schema:
             type: integer
-          required: true
+            format: int64
+            default: 0
+          required: false
       responses:
         200:
           description: Success
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Usuario'
+                type: object
+                title: listarUsuariosResponse
+                properties:
+                  usuarios:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/UsuarioModel'
         400:
           description: Bad request
         403:
@@ -210,25 +223,32 @@ paths:
         - bearerAuth: []
       parameters:
         - in: query
-          name: pageSize
+          name: tamanioPagina
           schema:
             type: integer
+            format: int64
             default: 10
           required: false
         - in: query
-          name: page
+          name: pagina
           schema:
             type: integer
-          required: true
+            format: int64
+            default: 0
+          required: false
       responses:
         200:
           description: Success
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Provincia'
+                type: object
+                title: listarProvinciasResponse
+                properties:
+                  provincias:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ProvinciaModel'
         400:
           description: Bad request
         403:
@@ -259,28 +279,43 @@ paths:
         - in: query
           name: estado
           schema:
-            $ref: '#/components/schemas/EstadoDeJuego'
+            $ref: '#/components/schemas/EstadoDeJuegoModel'
           required: false
         - in: query
-          name: pageSize
+          name: ordenarPor
+          description: Campos por los que ordenar separados por coma. Los campos soportados son fecha y estado.
+          example: "fecha,estado"
+          explode: false
+          schema:
+            type: string
+          required: false
+        - in: query
+          name: tamanioPagina
           schema:
             type: integer
+            format: int64
             default: 10
           required: false
         - in: query
-          name: page
+          name: pagina
           schema:
             type: integer
-          required: true
+            format: int64
+            default: 0
+          required: false
       responses:
         200:
           description: Success
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Partida'
+                type: object
+                title: listarPartidasResponse
+                properties:
+                  partidas:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/PartidaModel'
         400:
           description: Bad request
         403:
@@ -288,7 +323,7 @@ paths:
     post:
       tags:
         - Partidas
-      summary: Crear una nueva pertida
+      summary: Crear una nueva partida
       operationId: crearPartida
       security:
         - bearerAuth: []
@@ -301,17 +336,20 @@ paths:
               properties:
                 idProvincia:
                   type: integer
+                  format: int64
                   description: Id de la provincia donde se juega
                 cantidadMunicipios:
                   type: integer
+                  format: int64
                   description: Cantidad de municipios que se usan
                 idJugadores:
                   description: Jugadores
                   type: array
                   items:
                     type: integer
+                    format: int64
                 modoDeJuego:
-                  $ref: '#/components/schemas/ModoDeJuego'
+                  $ref: '#/components/schemas/ModoDeJuegoModel'
       responses:
         201:
           description: Created
@@ -335,6 +373,7 @@ paths:
           description: Id de la partida
           schema:
             type: integer
+            format: int64
           required: true
       responses:
         200:
@@ -342,7 +381,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Partida'
+                $ref: '#/components/schemas/PartidaModel'
         400:
           description: Bad Request
         404:
@@ -359,12 +398,13 @@ paths:
           name: idPartida
           schema:
             type: integer
+            format: int64
           required: true
-        - in: query
-          name: estado
-          schema:
-            $ref: '#/components/schemas/EstadoDeJuego'
-          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PartidaModel'
       responses:
         200:
           description: Success
@@ -385,6 +425,7 @@ paths:
           name: idPartida
           schema:
             type: integer
+            format: int64
           required: true
       requestBody:
         content:
@@ -395,12 +436,15 @@ paths:
               properties:
                 idMunicipioOrigen:
                   type: integer
+                  format: int64
                   description: Id del municipio de origen
                 idMunicipioDestino:
                   type: integer
+                  format: int64
                   description: Id del municipio de destino
                 cantidad:
                   type: integer
+                  format: int64
                   description: Cantidad de gauchos a mover
       responses:
         200:
@@ -412,9 +456,42 @@ paths:
                 title: moverGauchosResponse
                 properties:
                   municipioOrigen:
-                    $ref: '#/components/schemas/MunicipioEnJuego'
+                    $ref: '#/components/schemas/MunicipioEnJuegoModel'
                   municipioDestino:
-                    $ref: '#/components/schemas/MunicipioEnJuego'
+                    $ref: '#/components/schemas/MunicipioEnJuegoModel'
+        400:
+          description: Bad request
+        404:
+          description: Not found
+  /partidas/{idPartida}/municipios/{idMunicipio}:
+    patch:
+      tags:
+        - Partidas
+      summary: Actualiza el estado de un municipio en juego
+      operationId: actualizarMunicipio
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: idPartida
+          schema:
+            type: integer
+            format: int64
+          required: true
+        - in: path
+          name: idMunicipio
+          schema:
+            type: integer
+            format: int64
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MunicipioEnJuegoModel'
+      responses:
+        200:
+          description: Success
         400:
           description: Bad request
         404:
@@ -423,7 +500,7 @@ paths:
     post:
       tags:
         - Partidas
-      summary: Ataca a un municipio
+      summary: Ataca a un municipio. Al atacar, se ataca con todos los gauchos del municipio atacante.
       operationId: atacarMunicipio
       security:
         - bearerAuth: []
@@ -432,6 +509,7 @@ paths:
           name: idPartida
           schema:
             type: integer
+            format: int64
           required: true
       requestBody:
         content:
@@ -442,9 +520,11 @@ paths:
               properties:
                 idMunicipioAtacante:
                   type: integer
+                  format: int64
                   description: Id del municipio que ataca
                 idMunicipioObjetivo:
                   type: integer
+                  format: int64
                   description: Id del municipio atacado
       responses:
         200:
@@ -456,16 +536,62 @@ paths:
                 title: atacarMunicipioResponse
                 properties:
                   municipioAtacante:
-                    $ref: '#/components/schemas/MunicipioEnJuego'
+                    $ref: '#/components/schemas/MunicipioEnJuegoModel'
                   municipioAtacado:
-                    $ref: '#/components/schemas/MunicipioEnJuego'
+                    $ref: '#/components/schemas/MunicipioEnJuegoModel'
+        400:
+          description: Bad request
+        404:
+          description: Not found
+  /partidas/{idPartida}/ataques/simulaciones:
+    post:
+      tags:
+        - Partidas
+      summary: Ataca a un municipio
+      operationId: simularAtacarMunicipio
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: idPartida
+          schema:
+            type: integer
+            format: int64
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              title: simularAtacarMunicipioBody
+              properties:
+                idMunicipioAtacante:
+                  type: integer
+                  format: int64
+                  description: Id del municipio que ataca
+                idMunicipioObjetivo:
+                  type: integer
+                  format: int64
+                  description: Id del municipio atacado
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                title: simularAtacarMunicipioResponse
+                properties:
+                  exitoso:
+                    type: boolean
+                    description: Si el ataque fue exitoso en la simulación
         400:
           description: Bad request
         404:
           description: Not found
 components:
   schemas:
-    Partida:
+    PartidaModel:
       type: object
       description: Una partida
       required:
@@ -479,55 +605,61 @@ components:
       properties:
         id:
           type: integer
+          format: int64
           description: Id de la partida
         provincia:
-          $ref: '#/components/schemas/Provincia'
+          $ref: '#/components/schemas/ProvinciaModel'
         cantidadMunicipios:
-          type: number
+          type: integer
+          format: int64
           description: Cantidad de municipios que se usan
         estado:
-          $ref: '#/components/schemas/EstadoDeJuego'
+          $ref: '#/components/schemas/EstadoDeJuegoModel'
         jugadores:
           type: array
           description: Usuarios que juegan esta partida
           items:
-            $ref: '#/components/schemas/Usuario'
+            $ref: '#/components/schemas/UsuarioModel'
         modoDeJuego:
-          $ref: '#/components/schemas/ModoDeJuego'
+          $ref: '#/components/schemas/ModoDeJuegoModel'
         fecha:
           type: string
           format: date
           description: Fecha de inicio de la partida
         informacionDeJuego:
-          $ref: '#/components/schemas/DatosDeJuego'
+          $ref: '#/components/schemas/DatosDeJuegoModel'
         idGanador:
           type: string
           description: Id del usuario ganador
-    DatosDeJuego:
+    DatosDeJuegoModel:
       type: object
       description: Datos de una partida. Incluye su provincia en juego y el usuario que tiene el proximo turno.
       required:
         - provincia
       properties:
-        proximoTurno:
-          $ref: '#/components/schemas/Usuario'
-        provincia:
-          $ref: '#/components/schemas/ProvinciaEnJuego'
-    EstadoDeJuego:
+        idUsuarioProximoTurno:
+          type: integer
+          format: int64
+        municipios:
+          type: array
+          description: Municipios en juego que contiene la provincia.
+          items:
+            $ref: '#/components/schemas/MunicipioEnJuegoModel'
+    EstadoDeJuegoModel:
       type: string
       description: Estado de una partida.
       enum:
         - EnProgreso
         - Terminada
         - Cancelada
-    ModoDeJuego:
+    ModoDeJuegoModel:
       type: string
       description: Modo de juego.
       enum:
         - Rapido
         - Normal
         - Extendido
-    Usuario:
+    UsuarioModel:
       type: object
       description: Un usuario.
       required:
@@ -536,9 +668,10 @@ components:
       properties:
         id:
           type: integer
+          format: int64
         nombreDeUsuario:
           type: string
-    Provincia:
+    ProvinciaModel:
       type: object
       description: Una provincia.
       required:
@@ -547,50 +680,49 @@ components:
       properties:
         id:
           type: integer
+          format: int64
           description: Id de la provincia
         nombre:
           type: string
           description: Nombre de la provincia
-    ProvinciaEnJuego:
-      type: object
-      description: Provincia en juego.
-      required:
-        - municipios
-      properties:
-        municipios:
-          type: array
-          description: Municipios en juego que contiene la provincia.
-          items:
-            $ref: '#/components/schemas/MunicipioEnJuego'
-    MunicipioEnJuego:
+    MunicipioEnJuegoModel:
       type: object
       description: Municipio en juego.
-      required:
-        - id
-        - nombre
-        - ubicacion
-        - duenio
-        - gauchos
       properties:
         id:
           type: integer
+          format: int64
           description: Id del municipio.
         nombre:
           type: string
           description: Nombre del municipio.
         ubicacion:
-          $ref: '#/components/schemas/Coordenadas'
+          $ref: '#/components/schemas/CoordenadasModel'
+        altura:
+          type: integer
+          format: int64
+          description: Altura en metros del centroide del municipio
         duenio:
-          $ref: '#/components/schemas/Usuario'
+          $ref: '#/components/schemas/UsuarioModel'
         gauchos:
           type: integer
-          description: Cantidad de gauchos en el municipio.
+          format: int64
+          description: Cantidad de gauchos en el municipio
+        puntosDeDefensa:
+          type: integer
+          format: int64
+        produccionDeGauchos:
+          type: integer
+          format: int64
         modo:
-          $ref: '#/components/schemas/ModoDeMunicipio'
+          $ref: '#/components/schemas/ModoDeMunicipioModel'
         estaBloqueado:
           type: boolean
           description: Si el municipio está bloqueado.
-    Coordenadas:
+        urlImagen:
+          type: string
+          description: URL a una imagen del municipio
+    CoordenadasModel:
       type: object
       required:
         - lat
@@ -598,55 +730,66 @@ components:
       description: Par de coordenadas en el mundo.
       properties:
         lat:
-          type: number
+          type: integer
+          format: int64
           description: Latitud
         lon:
-          type: number
+          type: integer
+          format: int64
           description: Longitud
-    ModoDeMunicipio:
+    ModoDeMunicipioModel:
       type: string
       description: Modo de operación de un municipio.
       enum:
         - Defensa
         - Produccion
-    LogIn:
+    GoogleAuthModel:
       type: object
+      required:
+        - idToken
       properties:
-        username:
+        idToken:
+          description: Google Id Token del usuario
           type: string
-        password:
-          type: string
-    SignUp:
+    NuevoJWTModel:
       type: object
+      required:
+        - token
       properties:
-        email:
+        usuario:
+          $ref: '#/components/schemas/UsuarioModel'
+        token:
+          description: JWT que puede utilizarse para acceder a los recursos protegidos
           type: string
-        username:
-          type: string
-        password:
-          type: string
-    EstadisticasDeJuego:
+    EstadisticasDeJuegoModel:
       type: object
       properties:
         partidasCreadas:
           type: integer
+          format: int64
         partidasEnCurso:
           type: integer
-        partidesTerminadas:
+          format: int64
+        partidasTerminadas:
           type: integer
+          format: int64
         partidasCanceladas:
           type: integer
-    EstadisticasDeUsuario:
+          format: int64
+    EstadisticasDeUsuarioModel:
       type: object
       properties:
         usuario:
-          $ref: '#/components/schemas/Usuario'
+          $ref: '#/components/schemas/UsuarioModel'
         partidasJugadas:
           type: integer
+          format: int64
         partidasGanadas:
           type: integer
+          format: int64
         rachaActual:
           type: integer
+          format: int64
           description: Racha actual de victorias
   securitySchemes:
     bearerAuth:

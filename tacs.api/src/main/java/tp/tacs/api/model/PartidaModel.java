@@ -1,56 +1,60 @@
 package tp.tacs.api.model;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-
-import org.springframework.validation.annotation.Validated;
-import org.threeten.bp.LocalDate;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
-
+import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import tp.tacs.api.model.DatosDeJuegoModel;
+import tp.tacs.api.model.EstadoDeJuegoModel;
+import tp.tacs.api.model.ModoDeJuegoModel;
+import tp.tacs.api.model.ProvinciaModel;
+import tp.tacs.api.model.UsuarioModel;
+import org.springframework.validation.annotation.Validated;
+import javax.validation.Valid;
+import javax.validation.constraints.*;
 
 /**
  * Una partida
  */
 @ApiModel(description = "Una partida")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-08-29T21:54:39.417-03:00[America/Buenos_Aires]")
-public class Partida   {
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-09-05T20:37:59.553716700-03:00[America/Buenos_Aires]")
+
+
+public class PartidaModel   {
   @JsonProperty("id")
-  private Integer id = null;
+  private Long id = null;
 
   @JsonProperty("provincia")
-  private Provincia provincia = null;
+  private ProvinciaModel provincia = null;
 
   @JsonProperty("cantidadMunicipios")
-  private Integer cantidadMunicipios = null;
+  private Long cantidadMunicipios = null;
 
   @JsonProperty("estado")
-  private EstadoDeJuego estado = null;
+  private EstadoDeJuegoModel estado = null;
 
   @JsonProperty("jugadores")
   @Valid
-  private List<Usuario> jugadores = new ArrayList<Usuario>();
+  private List<UsuarioModel> jugadores = new ArrayList<UsuarioModel>();
 
   @JsonProperty("modoDeJuego")
-  private ModoDeJuego modoDeJuego = null;
+  private ModoDeJuegoModel modoDeJuego = null;
 
   @JsonProperty("fecha")
-  private LocalDate fecha = null;
+  private Date fecha = null;
 
   @JsonProperty("informacionDeJuego")
-  private DatosDeJuego informacionDeJuego = null;
+  private DatosDeJuegoModel informacionDeJuego = null;
 
   @JsonProperty("idGanador")
   private String idGanador = null;
 
-  public Partida id(Integer id) {
+  public PartidaModel id(Long id) {
     this.id = id;
     return this;
   }
@@ -62,15 +66,15 @@ public class Partida   {
   @ApiModelProperty(required = true, value = "Id de la partida")
       @NotNull
 
-    public Integer getId() {
+    public Long getId() {
     return id;
   }
 
-  public void setId(Integer id) {
+  public void setId(Long id) {
     this.id = id;
   }
 
-  public Partida provincia(Provincia provincia) {
+  public PartidaModel provincia(ProvinciaModel provincia) {
     this.provincia = provincia;
     return this;
   }
@@ -83,15 +87,15 @@ public class Partida   {
       @NotNull
 
     @Valid
-    public Provincia getProvincia() {
+    public ProvinciaModel getProvincia() {
     return provincia;
   }
 
-  public void setProvincia(Provincia provincia) {
+  public void setProvincia(ProvinciaModel provincia) {
     this.provincia = provincia;
   }
 
-  public Partida cantidadMunicipios(Integer cantidadMunicipios) {
+  public PartidaModel cantidadMunicipios(Long cantidadMunicipios) {
     this.cantidadMunicipios = cantidadMunicipios;
     return this;
   }
@@ -103,16 +107,15 @@ public class Partida   {
   @ApiModelProperty(required = true, value = "Cantidad de municipios que se usan")
       @NotNull
 
-    @Valid
-    public Integer getCantidadMunicipios() {
+    public Long getCantidadMunicipios() {
     return cantidadMunicipios;
   }
 
-  public void setCantidadMunicipios(Integer cantidadMunicipios) {
+  public void setCantidadMunicipios(Long cantidadMunicipios) {
     this.cantidadMunicipios = cantidadMunicipios;
   }
 
-  public Partida estado(EstadoDeJuego estado) {
+  public PartidaModel estado(EstadoDeJuegoModel estado) {
     this.estado = estado;
     return this;
   }
@@ -125,20 +128,20 @@ public class Partida   {
       @NotNull
 
     @Valid
-    public EstadoDeJuego getEstado() {
+    public EstadoDeJuegoModel getEstado() {
     return estado;
   }
 
-  public void setEstado(EstadoDeJuego estado) {
+  public void setEstado(EstadoDeJuegoModel estado) {
     this.estado = estado;
   }
 
-  public Partida jugadores(List<Usuario> jugadores) {
+  public PartidaModel jugadores(List<UsuarioModel> jugadores) {
     this.jugadores = jugadores;
     return this;
   }
 
-  public Partida addJugadoresItem(Usuario jugadoresItem) {
+  public PartidaModel addJugadoresItem(UsuarioModel jugadoresItem) {
     this.jugadores.add(jugadoresItem);
     return this;
   }
@@ -150,15 +153,15 @@ public class Partida   {
   @ApiModelProperty(required = true, value = "Usuarios que juegan esta partida")
       @NotNull
     @Valid
-    public List<Usuario> getJugadores() {
+    public List<UsuarioModel> getJugadores() {
     return jugadores;
   }
 
-  public void setJugadores(List<Usuario> jugadores) {
+  public void setJugadores(List<UsuarioModel> jugadores) {
     this.jugadores = jugadores;
   }
 
-  public Partida modoDeJuego(ModoDeJuego modoDeJuego) {
+  public PartidaModel modoDeJuego(ModoDeJuegoModel modoDeJuego) {
     this.modoDeJuego = modoDeJuego;
     return this;
   }
@@ -171,15 +174,15 @@ public class Partida   {
       @NotNull
 
     @Valid
-    public ModoDeJuego getModoDeJuego() {
+    public ModoDeJuegoModel getModoDeJuego() {
     return modoDeJuego;
   }
 
-  public void setModoDeJuego(ModoDeJuego modoDeJuego) {
+  public void setModoDeJuego(ModoDeJuegoModel modoDeJuego) {
     this.modoDeJuego = modoDeJuego;
   }
 
-  public Partida fecha(LocalDate fecha) {
+  public PartidaModel fecha(Date fecha) {
     this.fecha = fecha;
     return this;
   }
@@ -192,15 +195,15 @@ public class Partida   {
       @NotNull
 
     @Valid
-    public LocalDate getFecha() {
+    public Date getFecha() {
     return fecha;
   }
 
-  public void setFecha(LocalDate fecha) {
+  public void setFecha(Date fecha) {
     this.fecha = fecha;
   }
 
-  public Partida informacionDeJuego(DatosDeJuego informacionDeJuego) {
+  public PartidaModel informacionDeJuego(DatosDeJuegoModel informacionDeJuego) {
     this.informacionDeJuego = informacionDeJuego;
     return this;
   }
@@ -212,15 +215,15 @@ public class Partida   {
   @ApiModelProperty(value = "")
   
     @Valid
-    public DatosDeJuego getInformacionDeJuego() {
+    public DatosDeJuegoModel getInformacionDeJuego() {
     return informacionDeJuego;
   }
 
-  public void setInformacionDeJuego(DatosDeJuego informacionDeJuego) {
+  public void setInformacionDeJuego(DatosDeJuegoModel informacionDeJuego) {
     this.informacionDeJuego = informacionDeJuego;
   }
 
-  public Partida idGanador(String idGanador) {
+  public PartidaModel idGanador(String idGanador) {
     this.idGanador = idGanador;
     return this;
   }
@@ -248,16 +251,16 @@ public class Partida   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Partida partida = (Partida) o;
-    return Objects.equals(this.id, partida.id) &&
-        Objects.equals(this.provincia, partida.provincia) &&
-        Objects.equals(this.cantidadMunicipios, partida.cantidadMunicipios) &&
-        Objects.equals(this.estado, partida.estado) &&
-        Objects.equals(this.jugadores, partida.jugadores) &&
-        Objects.equals(this.modoDeJuego, partida.modoDeJuego) &&
-        Objects.equals(this.fecha, partida.fecha) &&
-        Objects.equals(this.informacionDeJuego, partida.informacionDeJuego) &&
-        Objects.equals(this.idGanador, partida.idGanador);
+    PartidaModel partidaModel = (PartidaModel) o;
+    return Objects.equals(this.id, partidaModel.id) &&
+        Objects.equals(this.provincia, partidaModel.provincia) &&
+        Objects.equals(this.cantidadMunicipios, partidaModel.cantidadMunicipios) &&
+        Objects.equals(this.estado, partidaModel.estado) &&
+        Objects.equals(this.jugadores, partidaModel.jugadores) &&
+        Objects.equals(this.modoDeJuego, partidaModel.modoDeJuego) &&
+        Objects.equals(this.fecha, partidaModel.fecha) &&
+        Objects.equals(this.informacionDeJuego, partidaModel.informacionDeJuego) &&
+        Objects.equals(this.idGanador, partidaModel.idGanador);
   }
 
   @Override
@@ -268,7 +271,7 @@ public class Partida   {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class Partida {\n");
+    sb.append("class PartidaModel {\n");
     
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    provincia: ").append(toIndentedString(provincia)).append("\n");

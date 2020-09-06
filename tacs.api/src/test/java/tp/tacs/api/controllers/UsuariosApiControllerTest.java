@@ -8,7 +8,8 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import tp.tacs.api.model.Usuario;
+import tp.tacs.api.model.ListarUsuariosResponse;
+import tp.tacs.api.model.UsuarioModel;
 
 import java.util.List;
 
@@ -27,7 +28,8 @@ class UsuariosApiControllerTest {
 
     @Test
     void listarUsuarios() {
-        ResponseEntity<List<Usuario>> usuariosResponse = usuariosApiController.listarUsuarios(0, null, 5);
+        ResponseEntity<ListarUsuariosResponse> usuariosResponse = usuariosApiController.listarUsuarios("", 5L, 0L);
         assertEquals(HttpStatus.OK, usuariosResponse.getStatusCode());
     }
+
 }

@@ -10,20 +10,20 @@ import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
- * AtacarMunicipioBody
+ * SimularAtacarMunicipioBody
  */
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-09-05T20:37:59.553716700-03:00[America/Buenos_Aires]")
 
 
-public class AtacarMunicipioBody   {
+public class SimularAtacarMunicipioBody   {
   @JsonProperty("idMunicipioAtacante")
   private Long idMunicipioAtacante = null;
 
   @JsonProperty("idMunicipioObjetivo")
   private Long idMunicipioObjetivo = null;
 
-  public AtacarMunicipioBody idMunicipioAtacante(Long idMunicipioAtacante) {
+  public SimularAtacarMunicipioBody idMunicipioAtacante(Long idMunicipioAtacante) {
     this.idMunicipioAtacante = idMunicipioAtacante;
     return this;
   }
@@ -42,7 +42,7 @@ public class AtacarMunicipioBody   {
     this.idMunicipioAtacante = idMunicipioAtacante;
   }
 
-  public AtacarMunicipioBody idMunicipioObjetivo(Long idMunicipioObjetivo) {
+  public SimularAtacarMunicipioBody idMunicipioObjetivo(Long idMunicipioObjetivo) {
     this.idMunicipioObjetivo = idMunicipioObjetivo;
     return this;
   }
@@ -70,9 +70,9 @@ public class AtacarMunicipioBody   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    AtacarMunicipioBody atacarMunicipioBody = (AtacarMunicipioBody) o;
-    return Objects.equals(this.idMunicipioAtacante, atacarMunicipioBody.idMunicipioAtacante) &&
-        Objects.equals(this.idMunicipioObjetivo, atacarMunicipioBody.idMunicipioObjetivo);
+    SimularAtacarMunicipioBody simularAtacarMunicipioBody = (SimularAtacarMunicipioBody) o;
+    return Objects.equals(this.idMunicipioAtacante, simularAtacarMunicipioBody.idMunicipioAtacante) &&
+        Objects.equals(this.idMunicipioObjetivo, simularAtacarMunicipioBody.idMunicipioObjetivo);
   }
 
   @Override
@@ -83,7 +83,7 @@ public class AtacarMunicipioBody   {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class AtacarMunicipioBody {\n");
+    sb.append("class SimularAtacarMunicipioBody {\n");
     
     sb.append("    idMunicipioAtacante: ").append(toIndentedString(idMunicipioAtacante)).append("\n");
     sb.append("    idMunicipioObjetivo: ").append(toIndentedString(idMunicipioObjetivo)).append("\n");

@@ -1,32 +1,30 @@
 package tp.tacs.api.model;
 
-import java.math.BigDecimal;
 import java.util.Objects;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-
-import org.springframework.validation.annotation.Validated;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
-
+import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.springframework.validation.annotation.Validated;
+import javax.validation.Valid;
+import javax.validation.constraints.*;
 
 /**
  * Par de coordenadas en el mundo.
  */
 @ApiModel(description = "Par de coordenadas en el mundo.")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-08-29T21:54:39.417-03:00[America/Buenos_Aires]")
-public class Coordenadas   {
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-09-05T20:37:59.553716700-03:00[America/Buenos_Aires]")
+
+
+public class CoordenadasModel   {
   @JsonProperty("lat")
-  private BigDecimal lat = null;
+  private Long lat = null;
 
   @JsonProperty("lon")
-  private BigDecimal lon = null;
+  private Long lon = null;
 
-  public Coordenadas lat(BigDecimal lat) {
+  public CoordenadasModel lat(Long lat) {
     this.lat = lat;
     return this;
   }
@@ -38,16 +36,15 @@ public class Coordenadas   {
   @ApiModelProperty(required = true, value = "Latitud")
       @NotNull
 
-    @Valid
-    public BigDecimal getLat() {
+    public Long getLat() {
     return lat;
   }
 
-  public void setLat(BigDecimal lat) {
+  public void setLat(Long lat) {
     this.lat = lat;
   }
 
-  public Coordenadas lon(BigDecimal lon) {
+  public CoordenadasModel lon(Long lon) {
     this.lon = lon;
     return this;
   }
@@ -59,12 +56,11 @@ public class Coordenadas   {
   @ApiModelProperty(required = true, value = "Longitud")
       @NotNull
 
-    @Valid
-    public BigDecimal getLon() {
+    public Long getLon() {
     return lon;
   }
 
-  public void setLon(BigDecimal lon) {
+  public void setLon(Long lon) {
     this.lon = lon;
   }
 
@@ -77,9 +73,9 @@ public class Coordenadas   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Coordenadas coordenadas = (Coordenadas) o;
-    return Objects.equals(this.lat, coordenadas.lat) &&
-        Objects.equals(this.lon, coordenadas.lon);
+    CoordenadasModel coordenadasModel = (CoordenadasModel) o;
+    return Objects.equals(this.lat, coordenadasModel.lat) &&
+        Objects.equals(this.lon, coordenadasModel.lon);
   }
 
   @Override
@@ -90,7 +86,7 @@ public class Coordenadas   {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class Coordenadas {\n");
+    sb.append("class CoordenadasModel {\n");
     
     sb.append("    lat: ").append(toIndentedString(lat)).append("\n");
     sb.append("    lon: ").append(toIndentedString(lon)).append("\n");

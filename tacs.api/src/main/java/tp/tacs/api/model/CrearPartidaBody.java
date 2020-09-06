@@ -1,37 +1,39 @@
 package tp.tacs.api.model;
 
+import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-
-import javax.validation.Valid;
-
+import tp.tacs.api.model.ModoDeJuegoModel;
 import org.springframework.validation.annotation.Validated;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import io.swagger.annotations.ApiModelProperty;
+import javax.validation.Valid;
+import javax.validation.constraints.*;
 
 /**
  * CrearPartidaBody
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-08-29T21:54:39.417-03:00[America/Buenos_Aires]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-09-05T20:37:59.553716700-03:00[America/Buenos_Aires]")
+
+
 public class CrearPartidaBody   {
   @JsonProperty("idProvincia")
-  private Integer idProvincia = null;
+  private Long idProvincia = null;
 
   @JsonProperty("cantidadMunicipios")
-  private Integer cantidadMunicipios = null;
+  private Long cantidadMunicipios = null;
 
   @JsonProperty("idJugadores")
   @Valid
-  private List<Integer> idJugadores = null;
+  private List<Long> idJugadores = null;
 
   @JsonProperty("modoDeJuego")
-  private ModoDeJuego modoDeJuego = null;
+  private ModoDeJuegoModel modoDeJuego = null;
 
-  public CrearPartidaBody idProvincia(Integer idProvincia) {
+  public CrearPartidaBody idProvincia(Long idProvincia) {
     this.idProvincia = idProvincia;
     return this;
   }
@@ -42,15 +44,15 @@ public class CrearPartidaBody   {
   **/
   @ApiModelProperty(value = "Id de la provincia donde se juega")
   
-    public Integer getIdProvincia() {
+    public Long getIdProvincia() {
     return idProvincia;
   }
 
-  public void setIdProvincia(Integer idProvincia) {
+  public void setIdProvincia(Long idProvincia) {
     this.idProvincia = idProvincia;
   }
 
-  public CrearPartidaBody cantidadMunicipios(Integer cantidadMunicipios) {
+  public CrearPartidaBody cantidadMunicipios(Long cantidadMunicipios) {
     this.cantidadMunicipios = cantidadMunicipios;
     return this;
   }
@@ -61,22 +63,22 @@ public class CrearPartidaBody   {
   **/
   @ApiModelProperty(value = "Cantidad de municipios que se usan")
   
-    public Integer getCantidadMunicipios() {
+    public Long getCantidadMunicipios() {
     return cantidadMunicipios;
   }
 
-  public void setCantidadMunicipios(Integer cantidadMunicipios) {
+  public void setCantidadMunicipios(Long cantidadMunicipios) {
     this.cantidadMunicipios = cantidadMunicipios;
   }
 
-  public CrearPartidaBody idJugadores(List<Integer> idJugadores) {
+  public CrearPartidaBody idJugadores(List<Long> idJugadores) {
     this.idJugadores = idJugadores;
     return this;
   }
 
-  public CrearPartidaBody addIdJugadoresItem(Integer idJugadoresItem) {
+  public CrearPartidaBody addIdJugadoresItem(Long idJugadoresItem) {
     if (this.idJugadores == null) {
-      this.idJugadores = new ArrayList<Integer>();
+      this.idJugadores = new ArrayList<Long>();
     }
     this.idJugadores.add(idJugadoresItem);
     return this;
@@ -88,15 +90,15 @@ public class CrearPartidaBody   {
   **/
   @ApiModelProperty(value = "Jugadores")
   
-    public List<Integer> getIdJugadores() {
+    public List<Long> getIdJugadores() {
     return idJugadores;
   }
 
-  public void setIdJugadores(List<Integer> idJugadores) {
+  public void setIdJugadores(List<Long> idJugadores) {
     this.idJugadores = idJugadores;
   }
 
-  public CrearPartidaBody modoDeJuego(ModoDeJuego modoDeJuego) {
+  public CrearPartidaBody modoDeJuego(ModoDeJuegoModel modoDeJuego) {
     this.modoDeJuego = modoDeJuego;
     return this;
   }
@@ -108,11 +110,11 @@ public class CrearPartidaBody   {
   @ApiModelProperty(value = "")
   
     @Valid
-    public ModoDeJuego getModoDeJuego() {
+    public ModoDeJuegoModel getModoDeJuego() {
     return modoDeJuego;
   }
 
-  public void setModoDeJuego(ModoDeJuego modoDeJuego) {
+  public void setModoDeJuego(ModoDeJuegoModel modoDeJuego) {
     this.modoDeJuego = modoDeJuego;
   }
 

@@ -8,10 +8,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.threeten.bp.LocalDate;
 import tp.tacs.api.model.*;
-
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -28,13 +25,13 @@ class PartidasApiControllerTest {
 
     @Test
     void actualizarEstadoPartida() {
-        ResponseEntity<Void> response = partidasApiController.actualizarEstadoPartida(1, EstadoDeJuego.CANCELADA);
+        ResponseEntity<Void> response = partidasApiController.actualizarEstadoPartida(1L, new PartidaModel());
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test
     void atacarMunicipio() {
-        ResponseEntity<AtacarMunicipioResponse> response = partidasApiController.atacarMunicipio(1, new AtacarMunicipioBody());
+        ResponseEntity<AtacarMunicipioResponse> response = partidasApiController.atacarMunicipio(1L, new AtacarMunicipioBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
@@ -46,19 +43,19 @@ class PartidasApiControllerTest {
 
     @Test
     void getPartida() {
-        ResponseEntity<Partida> response = partidasApiController.getPartida(1);
+        ResponseEntity<PartidaModel> response = partidasApiController.getPartida(1L);
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test
     void listarPartidas() {
-        ResponseEntity<List<Partida>> response = partidasApiController.listarPartidas(1, null,null, EstadoDeJuego.CANCELADA, 1);
+        ResponseEntity<ListarPartidasResponse> response = partidasApiController.listarPartidas(null, null, EstadoDeJuegoModel.ENPROGRESO, "", 10L, 0L);
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test
     void moverGauchos() {
-        ResponseEntity<MoverGauchosResponse> response = partidasApiController.moverGauchos(1, new MoverGauchosBody());
+        ResponseEntity<MoverGauchosResponse> response = partidasApiController.moverGauchos(1L, new MoverGauchosBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 }

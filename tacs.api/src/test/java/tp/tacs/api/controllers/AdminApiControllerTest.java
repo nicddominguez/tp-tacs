@@ -8,11 +8,11 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.threeten.bp.LocalDate;
-import tp.tacs.api.model.EstadisticasDeJuego;
-import tp.tacs.api.model.EstadisticasDeUsuario;
+import tp.tacs.api.model.EstadisticasDeJuegoModel;
+import tp.tacs.api.model.EstadisticasDeUsuarioModel;
+import tp.tacs.api.model.ScoreboardResponse;
 
-import java.util.List;
+import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -29,19 +29,20 @@ class AdminApiControllerTest {
 
     @Test
     void getEstadisticas() {
-        ResponseEntity<EstadisticasDeJuego> estadisticasDeJuegoResponseEntity = adminController.getEstadisticas(LocalDate.now(), LocalDate.now());
+        ResponseEntity<EstadisticasDeJuegoModel> estadisticasDeJuegoResponseEntity = adminController.getEstadisticas(new Date(), new Date());
         assertEquals(HttpStatus.OK, estadisticasDeJuegoResponseEntity.getStatusCode());
     }
 
     @Test
     void getEstadisticasDeUsuario() {
-        ResponseEntity<EstadisticasDeUsuario> estadisticasDeUsuarioResponseEntity = adminController.getEstadisticasDeUsuario(1);
+        ResponseEntity<EstadisticasDeUsuarioModel> estadisticasDeUsuarioResponseEntity = adminController.getEstadisticasDeUsuario(1L);
         assertEquals(HttpStatus.OK, estadisticasDeUsuarioResponseEntity.getStatusCode());
     }
 
     @Test
     void getScoreboard() {
-        ResponseEntity<List<EstadisticasDeUsuario>> scoreboard = adminController.getScoreboard(0, 5);
+        ResponseEntity<ScoreboardResponse> scoreboard = adminController.getScoreboard(1L, 0L);
         assertEquals(HttpStatus.OK, scoreboard.getStatusCode());
     }
+
 }

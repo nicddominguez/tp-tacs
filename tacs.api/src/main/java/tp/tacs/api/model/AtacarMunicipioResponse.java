@@ -1,28 +1,30 @@
 package tp.tacs.api.model;
 
 import java.util.Objects;
-
-import javax.validation.Valid;
-
-import org.springframework.validation.annotation.Validated;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
-
+import com.fasterxml.jackson.annotation.JsonCreator;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import tp.tacs.api.model.MunicipioEnJuegoModel;
+import org.springframework.validation.annotation.Validated;
+import javax.validation.Valid;
+import javax.validation.constraints.*;
 
 /**
  * AtacarMunicipioResponse
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-08-29T21:54:39.417-03:00[America/Buenos_Aires]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-09-05T20:37:59.553716700-03:00[America/Buenos_Aires]")
+
+
 public class AtacarMunicipioResponse   {
   @JsonProperty("municipioAtacante")
-  private MunicipioEnJuego municipioAtacante = null;
+  private MunicipioEnJuegoModel municipioAtacante = null;
 
   @JsonProperty("municipioAtacado")
-  private MunicipioEnJuego municipioAtacado = null;
+  private MunicipioEnJuegoModel municipioAtacado = null;
 
-  public AtacarMunicipioResponse municipioAtacante(MunicipioEnJuego municipioAtacante) {
+  public AtacarMunicipioResponse municipioAtacante(MunicipioEnJuegoModel municipioAtacante) {
     this.municipioAtacante = municipioAtacante;
     return this;
   }
@@ -34,15 +36,15 @@ public class AtacarMunicipioResponse   {
   @ApiModelProperty(value = "")
   
     @Valid
-    public MunicipioEnJuego getMunicipioAtacante() {
+    public MunicipioEnJuegoModel getMunicipioAtacante() {
     return municipioAtacante;
   }
 
-  public void setMunicipioAtacante(MunicipioEnJuego municipioAtacante) {
+  public void setMunicipioAtacante(MunicipioEnJuegoModel municipioAtacante) {
     this.municipioAtacante = municipioAtacante;
   }
 
-  public AtacarMunicipioResponse municipioAtacado(MunicipioEnJuego municipioAtacado) {
+  public AtacarMunicipioResponse municipioAtacado(MunicipioEnJuegoModel municipioAtacado) {
     this.municipioAtacado = municipioAtacado;
     return this;
   }
@@ -54,11 +56,11 @@ public class AtacarMunicipioResponse   {
   @ApiModelProperty(value = "")
   
     @Valid
-    public MunicipioEnJuego getMunicipioAtacado() {
+    public MunicipioEnJuegoModel getMunicipioAtacado() {
     return municipioAtacado;
   }
 
-  public void setMunicipioAtacado(MunicipioEnJuego municipioAtacado) {
+  public void setMunicipioAtacado(MunicipioEnJuegoModel municipioAtacado) {
     this.municipioAtacado = municipioAtacado;
   }
 
