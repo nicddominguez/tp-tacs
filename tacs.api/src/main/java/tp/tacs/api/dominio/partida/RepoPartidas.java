@@ -1,4 +1,4 @@
-package tp.tacs.api.dominio;
+package tp.tacs.api.dominio.partida;
 
 import tp.tacs.api.model.EstadisticasDeJuegoModel;
 
@@ -39,7 +39,7 @@ public class RepoPartidas {
                         partida.getFechaCreacion().after(fechaInicio) && partida.getFechaCreacion().before(fechaFin))
                 .collect(Collectors.toList());
 
-        Long partidasCreadas = partidas.stream().count();
+        Long partidasCreadas = (long) partidas.size();
 
         Long partidasEnCurso = partidas.stream().filter(partida -> partida.getEstado().equals(Estado.EN_CURSO)).count();
 

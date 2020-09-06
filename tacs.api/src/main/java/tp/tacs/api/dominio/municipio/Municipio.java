@@ -1,6 +1,8 @@
-package tp.tacs.api.dominio;
+package tp.tacs.api.dominio.municipio;
 
 import com.google.common.collect.Lists;
+import tp.tacs.api.dominio.partida.Partida;
+import tp.tacs.api.dominio.usuario.Usuario;
 
 import java.util.ArrayList;
 

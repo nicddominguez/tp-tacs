@@ -1,4 +1,6 @@
-package tp.tacs.api.dominio;
+package tp.tacs.api.dominio.municipio;
+
+import tp.tacs.api.dominio.partida.Partida;
 
 public class Defensa implements Especializacion {
 

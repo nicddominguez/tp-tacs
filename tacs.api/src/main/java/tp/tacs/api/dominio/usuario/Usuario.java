@@ -1,4 +1,4 @@
-package tp.tacs.api.dominio;
+package tp.tacs.api.dominio.usuario;
 
 public class Usuario {
 

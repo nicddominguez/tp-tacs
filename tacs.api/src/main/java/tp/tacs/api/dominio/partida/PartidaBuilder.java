@@ -1,4 +1,8 @@
-package tp.tacs.api.dominio;
+package tp.tacs.api.dominio.partida;
+
+import tp.tacs.api.dominio.usuario.Usuario;
+import tp.tacs.api.dominio.municipio.Municipio;
+import tp.tacs.api.dominio.municipio.RepoMunicipios;
 
 import java.util.ArrayList;
 import java.util.Date;
