@@ -23,6 +23,7 @@ public class Partida {
         this.municipios = municipios;
         this.modoDeJuego = modoDeJuego;
         this.fechaCreacion = fechaCreacion;
+        RepoPartidas.instance().agregarPartida(this);
     }
 
     public List<Usuario> getParticipantes() {

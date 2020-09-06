@@ -6,7 +6,7 @@ import java.util.List;
 
 public class PartidaBuilder {
     private List<Usuario> participantes;
-    private Estado estado = Estado.EN_JUEGO;
+    private Estado estado = Estado.EN_CURSO;
     private String idProvincia;
     private List<Municipio> municipios = new ArrayList<>();
     private ModoDeJuego modoDeJuego = new ModoFacil();
