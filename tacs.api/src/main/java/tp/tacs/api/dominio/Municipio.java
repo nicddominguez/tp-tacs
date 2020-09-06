@@ -1,5 +1,11 @@
 package tp.tacs.api.dominio;
 
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
+
+import java.util.ArrayList;
+import java.util.Set;
+
 public class Municipio {
 
     private String idMunicipioReal;
@@ -69,6 +75,9 @@ public class Municipio {
         return RepoMunicipios.instance().getLongitud(idMunicipioReal);
     }
 
+    public ArrayList<Double> getCoordenadas(){
+        return Lists.newArrayList(this.getLatitud(), this.getLongitud());
+    }
     public Float getAltura() {
         return RepoMunicipios.instance().getAltura(idMunicipioReal);
     }
@@ -82,16 +91,17 @@ public class Municipio {
     }
 
     private Integer gauchosAtacantesFinal(Municipio municipio) {
-        Integer gauchosAtacantesFinal = Math.round(this.cantGauchos * this.partida.multDist(this, municipio)
-                - municipio.getCantGauchos() * this.partida.multAltura(municipio) * this.especializacion.multDensa());
-        return gauchosAtacantesFinal;
+        return (Integer) (int) Math.floor(
+                this.cantGauchos * this.partida.multDist(this, municipio)
+                - municipio.getCantGauchos() * this.partida.multAltura(municipio) * this.especializacion.multDensa()
+        );
     }
 
     private Integer gauchosDefensoresFinal(Municipio municipio) {
-        Integer gauchosDefensoresFinal = Math.round((municipio.getCantGauchos() * this.partida.multAltura(municipio) * this.especializacion.multDensa()
-                - this.cantGauchos * this.partida.multDist(this, municipio))
+        return (Integer) (int) Math.round(Math.ceil(
+                (municipio.getCantGauchos() * this.partida.multAltura(municipio) * this.especializacion.multDensa())
+                        - (this.cantGauchos * this.partida.multDist(this, municipio)))
                 / (this.partida.multAltura(municipio) * this.especializacion.multDensa()));
-        return gauchosDefensoresFinal;
     }
 
     public void atacar(Municipio municipio) {
