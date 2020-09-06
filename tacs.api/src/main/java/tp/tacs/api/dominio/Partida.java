@@ -1,24 +1,28 @@
 package tp.tacs.api.dominio;
 
 import java.awt.geom.Point2D;
+import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 
 public class Partida {
+
     private List<Usuario> participantes;
     private Integer usuarioJugando = 0;
-    private Estados estado;
+    private Estado estado;
     private String provincia;
     private List<Municipio> municipios;
     private ModoDeJuego modoDeJuego;
+    private Date fechaCreacion;
 
-    public Partida(List<Usuario> participantes, Estados estado, String provincia,
-                   List<Municipio> municipios, ModoDeJuego modoDeJuego) {
+    public Partida(List<Usuario> participantes, Estado estado, String provincia,
+                   List<Municipio> municipios, ModoDeJuego modoDeJuego, Date fechaCreacion) {
         this.participantes = participantes;
         this.estado = estado;
         this.provincia = provincia;
         this.municipios = municipios;
         this.modoDeJuego = modoDeJuego;
+        this.fechaCreacion = fechaCreacion;
     }
 
     public List<Usuario> getParticipantes() {
@@ -37,11 +41,11 @@ public class Partida {
         this.usuarioJugando = usuarioJugando;
     }
 
-    public Estados getEstado() {
+    public Estado getEstado() {
         return estado;
     }
 
-    public void setEstado(Estados estado) {
+    public void setEstado(Estado estado) {
         this.estado = estado;
     }
 
@@ -69,11 +73,18 @@ public class Partida {
         this.modoDeJuego = modoDeJuego;
     }
 
-    private void asignarProximoTurno(){
-        if(this.usuarioJugando < participantes.size() - 1) {
+    public Date getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public void setFechaCreacion(Date fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+
+    private void asignarProximoTurno() {
+        if (this.usuarioJugando < participantes.size() - 1) {
             this.usuarioJugando++;
-        }
-        else {
+        } else {
             this.usuarioJugando = 0;
         }
     }
@@ -86,52 +97,52 @@ public class Partida {
         this.municipios.stream().forEach(municipio -> municipio.desbloquear());
     }
 
-    public void pasarTurno(){
+    public void pasarTurno() {
         this.asignarProximoTurno();
         this.desBloquearMunicipios();
     }
 
-    public Usuario participanteActual(){
+    public Usuario participanteActual() {
         return this.participantes.get(usuarioJugando);
     }
 
-    public Float minAltura(){
+    public Float minAltura() {
         return (float) this.municipios.stream()
                 .mapToDouble(Municipio::getAltura)
                 .min()
                 .orElseThrow(NoSuchElementException::new);
     }
 
-    public Float maxAltura(){
+    public Float maxAltura() {
         return (float) this.municipios.stream()
                 .mapToDouble(Municipio::getAltura)
                 .max()
                 .orElseThrow(NoSuchElementException::new);
     }
 
-    public Float maxDist(){
+    public Float maxDist() {
         return 200f;
     }
 
-    public Float minDist(){
+    public Float minDist() {
         return 2f;
     }
 
-    public Float multDist(Municipio municipioOrigen, Municipio municipioDestino){
+    public Float multDist(Municipio municipioOrigen, Municipio municipioDestino) {
         Float distanciaEntreMunicipios = this.distanciaEntreMunicipios(municipioOrigen, municipioDestino);
         return this.modoDeJuego.getMultDist(distanciaEntreMunicipios, this.minDist(), this.maxDist());
     }
 
-    private Float distanciaEntreMunicipios(Municipio unMunicipio, Municipio otroMunicipio){
+    private Float distanciaEntreMunicipios(Municipio unMunicipio, Municipio otroMunicipio) {
         var lat1 = unMunicipio.getLatitud();
         var long1 = unMunicipio.getLongitud();
         var lat2 = otroMunicipio.getLatitud();
-        var long2 = otroMunicipio  .getLongitud();
+        var long2 = otroMunicipio.getLongitud();
 
-        return (float) Point2D.distance(lat1, long1,lat2 ,long2);
+        return (float) Point2D.distance(lat1, long1, lat2, long2);
     }
 
-    public Float multAltura(Municipio municipioDefensor){
+    public Float multAltura(Municipio municipioDefensor) {
         Float alturaMunicipioDefensor = municipioDefensor.getAltura();
         return this.modoDeJuego.getMultAltura(alturaMunicipioDefensor, this.minAltura(), this.maxAltura());
     }
