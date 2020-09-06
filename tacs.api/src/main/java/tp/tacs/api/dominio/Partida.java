@@ -9,7 +9,7 @@ import java.util.NoSuchElementException;
 public class Partida {
 
     private List<Usuario> participantes;
-    private Integer usuarioJugando = 0;
+    private Integer usuarioJugandoIndiceLista = 0;
     private Estado estado;
     private String provincia;
     private List<Municipio> municipios;
@@ -36,12 +36,12 @@ public class Partida {
         this.participantes = participantes;
     }
 
-    public Integer getUsuarioJugando() {
-        return usuarioJugando;
+    public Integer getUsuarioJugandoIndiceLista() {
+        return usuarioJugandoIndiceLista;
     }
 
-    public void setUsuarioJugando(Integer usuarioJugando) {
-        this.usuarioJugando = usuarioJugando;
+    public void setUsuarioJugandoIndiceLista(Integer usuarioJugandoIndiceLista) {
+        this.usuarioJugandoIndiceLista = usuarioJugandoIndiceLista;
     }
 
     public Estado getEstado() {
@@ -94,15 +94,15 @@ public class Partida {
 
 
     private void asignarProximoTurno() {
-        if (this.usuarioJugando < participantes.size() - 1) {
-            this.usuarioJugando++;
+        if (this.usuarioJugandoIndiceLista < this.participantes.size() - 1) {
+            this.usuarioJugandoIndiceLista++;
         } else {
-            this.usuarioJugando = 0;
+            this.usuarioJugandoIndiceLista = 0;
         }
     }
 
     private Usuario usuarioEnTurnoActual() {
-        return this.participantes.get(usuarioJugando);
+        return this.participantes.get(this.usuarioJugandoIndiceLista);
     }
 
     private void desBloquearMunicipios() {
@@ -142,7 +142,7 @@ public class Partida {
     }
 
     public Usuario participanteActual() {
-        return this.participantes.get(usuarioJugando);
+        return this.participantes.get(this.usuarioJugandoIndiceLista);
     }
 
     public Float minAltura() {
