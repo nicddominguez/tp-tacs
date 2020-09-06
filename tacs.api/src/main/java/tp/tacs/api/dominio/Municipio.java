@@ -97,6 +97,9 @@ public class Municipio {
     }
 
     public void atacar(Municipio municipio) {
+        if (this.mismoDuenio(municipio)) {
+            throw new RuntimeException("No puede atacar a sus propios municipios");
+        }
         Integer gauchosAtacantesFinal = gauchosAtacantesFinal(municipio);
         Integer gauchosDefensoresFinal = gauchosDefensoresFinal(municipio);
 
@@ -112,8 +115,14 @@ public class Municipio {
         return gauchosDefensoresFinal <= 0;
     }
 
+    private boolean mismoDuenio(Municipio municipio) {
+        return this.duenio == municipio.getDuenio();
+    }
+
     public void moverGauchos(Municipio municipio, Integer cantidad) {
-        //TODO verificar si son del mismo dueño
+        if (this.mismoDuenio(municipio)) {
+            throw new RuntimeException("Debe ser el duenio del municipio para poder mover gauchos");
+        }
         this.sacarGauchos(cantidad);
         municipio.agregarGauchos(cantidad);
     }
