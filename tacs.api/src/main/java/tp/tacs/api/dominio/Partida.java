@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 public class Partida {
-    private Integer cantMunicipios;
     private List<Usuario> participantes;
     private Integer usuarioJugando = 0;
     private Estados estado;
@@ -13,21 +12,13 @@ public class Partida {
     private List<Municipio> municipios;
     private ModoDeJuego modoDeJuego;
 
-    public Partida(Integer cantMunicipios, List<Usuario> participantes, String provincia, ModoDeJuego modoDeJuego) {
-        this.cantMunicipios = cantMunicipios;
+    public Partida(List<Usuario> participantes, Estados estado, String provincia,
+                   List<Municipio> municipios, ModoDeJuego modoDeJuego) {
         this.participantes = participantes;
+        this.estado = estado;
         this.provincia = provincia;
+        this.municipios = municipios;
         this.modoDeJuego = modoDeJuego;
-        this.estado = Estados.EN_JUEGO;
-        RepoPartidas.instance().agregarPartida(this);
-    }
-
-    public Integer getCantMunicipios() {
-        return cantMunicipios;
-    }
-
-    public void setCantMunicipios(Integer cantMunicipios) {
-        this.cantMunicipios = cantMunicipios;
     }
 
     public List<Usuario> getParticipantes() {

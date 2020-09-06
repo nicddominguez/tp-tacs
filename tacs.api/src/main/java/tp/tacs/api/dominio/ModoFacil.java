@@ -1,6 +1,6 @@
 package tp.tacs.api.dominio;
 
-public class Facil implements ModoDeJuego {
+public class ModoFacil implements ModoDeJuego {
 
     @Override
     public Float getMultDist(Float distanciaMunicipios, Float minDist, Float maxDist) {
