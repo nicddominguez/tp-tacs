@@ -133,6 +133,10 @@ public class Partida {
         this.participantes.forEach(usuario -> usuario.aumentarPartidasJugadas());
     }
 
+    public boolean estaEnCurso() {
+        return this.estado == Estado.EN_CURSO;
+    }
+
     public void cancelar() {
         this.estado = Estado.CANCELADA;
     }
