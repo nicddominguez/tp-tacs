@@ -45,7 +45,7 @@ public class RepoPartidas {
 
         Long partidasTerminadas = partidas.stream().filter(partida -> partida.getEstado().equals(Estado.TERMINADA)).count();
 
-        Long partidasCanceladas = partidas.stream().filter(partida -> partida.getEstado().equals(Estado.CANCELADAS)).count();
+        Long partidasCanceladas = partidas.stream().filter(partida -> partida.getEstado().equals(Estado.CANCELADA)).count();
 
         return new EstadisticasDeJuegoModel()
                 .partidasCreadas(partidasCreadas)
