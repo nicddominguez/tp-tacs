@@ -81,17 +81,39 @@ public class Municipio {
         this.especializacion.producir(this);
     }
 
-    public void atacar(Municipio municipio) {
-        //TODO
-        /*
-        Integer gauchosAtacantesFinal = Math.round(this.cantGauchos * this.partida.getModoDeJuego().getMultDist()
-                - municipio.getCantGauchos() * this.partida.getModoDeJuego().multAltura() * this.partida.getModoDeJuego().getMultDefensa());
-        Integer gauchosDefensoresFinal = Math.round((municipio.getCantGauchos() * this.partida.getModoDeJuego().getMultAltura())/(this.partida.getModoDeJuego().getMultAltura() * this.partida.getModoDeJuego().getMultDefensa()));
-        */
+    private Integer gauchosAtacantesFinal(Municipio municipio) {
+        //TODO ver redondeo
+        Integer gauchosAtacantesFinal = Math.round(this.cantGauchos * this.partida.getMultDist(this, municipio)
+                - municipio.getCantGauchos() * this.partida.getMultAltura(municipio) * this.especializacion.multDensa());
+        return gauchosAtacantesFinal;
     }
 
+    private Integer gauchosDefensoresFinal(Municipio municipio) {
+        //TODO ver redondeo
+        Integer gauchosDefensoresFinal = Math.round((municipio.getCantGauchos() * this.partida.getMultAltura(municipio) * this.especializacion.multDensa()
+                - this.cantGauchos * this.partida.getMultDist(this, municipio))
+                / (this.partida.getMultAltura(municipio) * this.especializacion.multDensa()));
+        return gauchosDefensoresFinal;
+    }
+
+    public void atacar(Municipio municipio) {
+        Integer gauchosAtacantesFinal = gauchosAtacantesFinal(municipio);
+        Integer gauchosDefensoresFinal = gauchosDefensoresFinal(municipio);
+
+        this.setCantGauchos(gauchosAtacantesFinal);
+        municipio.setCantGauchos(gauchosDefensoresFinal);
+        if (this.ataqueExitoso(municipio)) {
+            municipio.setDuenio(this.duenio);
+        }
+    }
+
+    public boolean ataqueExitoso(Municipio municipio) {
+        Integer gauchosDefensoresFinal = gauchosDefensoresFinal(municipio);
+        return gauchosDefensoresFinal <= 0;
+    }
 
     public void moverGauchos(Municipio municipio, Integer cantidad) {
+        //TODO verificar si son del mismo dueño
         this.sacarGauchos(cantidad);
         municipio.agregarGauchos(cantidad);
     }
