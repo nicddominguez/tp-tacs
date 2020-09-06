@@ -17,12 +17,16 @@ public class Municipio {
         this.cantGauchos = cantGauchos;
     }
 
-    public boolean isBloqueado() {
+    public boolean estaBloqueado() {
         return bloqueado;
     }
 
-    public void setBloqueado(boolean bloqueado) {
-        this.bloqueado = bloqueado;
+    public void desbloquear() {
+        this.bloqueado = false;
+    }
+
+    public void bloquear() {
+        this.bloqueado = true;
     }
 
     public Especializacion getEspecializacion() {
@@ -96,6 +100,7 @@ public class Municipio {
     }
 
     public void atacar(Municipio municipio) {
+        //TODO ver si es su turno
         if (this.mismoDuenio(municipio)) {
             throw new RuntimeException("No puede atacar a sus propios municipios");
         }
@@ -119,11 +124,16 @@ public class Municipio {
     }
 
     public void moverGauchos(Municipio municipio, Integer cantidad) {
+        //TODO ver si es su turno
         if (this.mismoDuenio(municipio)) {
             throw new RuntimeException("Debe ser el duenio del municipio para poder mover gauchos");
         }
+        if (this.estaBloqueado()) {
+            throw new RuntimeException("Un municipio bloqueado no puede mover gauchos");
+        }
         this.sacarGauchos(cantidad);
         municipio.agregarGauchos(cantidad);
+        municipio.bloquear();
     }
 
     public void agregarGauchos(Integer cantGauchos) {
@@ -132,5 +142,9 @@ public class Municipio {
 
     public void sacarGauchos(Integer cantGauchos) {
         this.cantGauchos -= cantGauchos;
+    }
+
+    public boolean esDe(Usuario usuario) {
+        return this.duenio == usuario;
     }
 }
