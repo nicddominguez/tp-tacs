@@ -1,5 +1,6 @@
 package tp.tacs.api.dominio;
 
+import java.awt.geom.Point2D;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -77,8 +78,6 @@ public class Partida {
         this.modoDeJuego = modoDeJuego;
     }
 
-
-
     private void asignarProximoTurno(){
         if(this.usuarioJugando < participantes.size() - 1) {
             this.usuarioJugando++;
@@ -132,7 +131,13 @@ public class Partida {
     }
 
     private Float distanciaEntreMunicipios(Municipio unMunicipio, Municipio otroMunicipio){
-        return 100f;
+        var lat1 = unMunicipio.getLatitud();
+        var long1 = unMunicipio.getLongitud();
+        var lat2 = otroMunicipio.getLatitud();
+        var long2 = otroMunicipio  .getLongitud();
+
+        return (float) Point2D.distance(lat1, long1,lat2 ,long2);
+
     }
 
     public Float getMultAltura(Municipio municipioDefensor){
