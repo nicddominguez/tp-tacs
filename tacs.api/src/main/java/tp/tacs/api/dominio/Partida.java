@@ -202,13 +202,17 @@ public class Partida {
     }
 
     public Float multDist(Municipio municipioOrigen, Municipio municipioDestino) {
-        Float distanciaEntreMunicipios = this.distanciaEntreMunicipios(municipioOrigen, municipioDestino);
-        return this.modoDeJuego.getMultDist(distanciaEntreMunicipios, this.minDist(), this.maxDist());
+        Float distanciaMunicipios = this.distanciaEntreMunicipios(municipioOrigen, municipioDestino);
+        var minDist = this.minDist();
+        var maxDist = this.maxDist();
+        return 1 - (distanciaMunicipios - minDist)/(2*(maxDist-minDist));
     }
 
     public Float multAltura(Municipio municipioDefensor) {
         Float alturaMunicipioDefensor = municipioDefensor.getAltura();
-        return this.modoDeJuego.getMultAltura(alturaMunicipioDefensor, this.minAltura(), this.maxAltura());
+        var minAltura = this.minAltura();
+        var maxAltura = this.maxAltura();
+        return 1 + (alturaMunicipioDefensor - minAltura)/(2*(maxAltura-minAltura));
     }
 
 }

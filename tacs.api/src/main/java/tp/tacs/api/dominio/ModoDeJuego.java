@@ -1,8 +1,23 @@
 package tp.tacs.api.dominio;
 
-public interface ModoDeJuego {
+public abstract class ModoDeJuego {
 
-    Float getMultDist(Float distanciaMunicipios, Float minDist, Float maxDist);
+    Float multDefEnDefensa;
+    Float multDefEnAtaque;
 
-    Float getMultAltura(Float alturaMunicipioDefensor, Float minAltura, Float maxAltura);
+    public Float getMultDefEnDefensa() {
+        return multDefEnDefensa;
+    }
+
+    public void setMultDefEnDefensa(Float multDefEnDefensa) {
+        this.multDefEnDefensa = multDefEnDefensa;
+    }
+
+    public Float getMultDefEnProduccion() {
+        return multDefEnAtaque;
+    }
+
+    public void setMultDefEnAtaque(Float multDefEnAtaque) {
+        this.multDefEnAtaque = multDefEnAtaque;
+    }
 }
