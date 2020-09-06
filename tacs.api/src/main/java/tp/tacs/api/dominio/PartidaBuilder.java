@@ -1,17 +1,20 @@
 package tp.tacs.api.dominio;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class PartidaBuilder {
     private Integer cantMunicipios = 5;
     private List<Usuario> participantes;
-    private Estados estado = Estados.EN_JUEGO;
+    private Estado estado = Estado.EN_JUEGO;
     private String idProvincia;
     private List<Municipio> municipios = new ArrayList<>();
     private ModoDeJuego modoDeJuego = new ModoFacil();
+    private Date fechaCreacion;
 
-    public PartidaBuilder() { }
+    public PartidaBuilder() {
+    }
 
     public PartidaBuilder setCantMunicipios(Integer cantMunicipios) {
         this.cantMunicipios = cantMunicipios;
@@ -25,7 +28,7 @@ public class PartidaBuilder {
         return this;
     }
 
-    public PartidaBuilder setEstado(Estados estado) {
+    public PartidaBuilder setEstado(Estado estado) {
         this.estado = estado;
         return this;
     }
@@ -46,9 +49,13 @@ public class PartidaBuilder {
         return this;
     }
 
+    public void setFechaCreacion(Date fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+
     public Partida constriur() {
         this.validarAtributos();
-        return new Partida(this.participantes, this.estado, this.idProvincia, this.municipios, this.modoDeJuego);
+        return new Partida(this.participantes, this.estado, this.idProvincia, this.municipios, this.modoDeJuego, fechaCreacion);
     }
 
     public void validarAtributos() {
