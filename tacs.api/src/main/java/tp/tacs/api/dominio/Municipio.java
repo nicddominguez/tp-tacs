@@ -82,16 +82,15 @@ public class Municipio {
     }
 
     private Integer gauchosAtacantesFinal(Municipio municipio) {
-        //TODO ver redondeo
-        Integer gauchosAtacantesFinal = Math.round(this.cantGauchos * this.partida.getMultDist(this, municipio)
+        Integer gauchosAtacantesFinal = (int) Math.floor(this.cantGauchos * this.partida.getMultDist(this, municipio)
                 - municipio.getCantGauchos() * this.partida.getMultAltura(municipio) * this.especializacion.multDensa());
         return gauchosAtacantesFinal;
     }
 
     private Integer gauchosDefensoresFinal(Municipio municipio) {
-        //TODO ver redondeo
-        Integer gauchosDefensoresFinal = Math.round((municipio.getCantGauchos() * this.partida.getMultAltura(municipio) * this.especializacion.multDensa()
-                - this.cantGauchos * this.partida.getMultDist(this, municipio))
+        Integer gauchosDefensoresFinal = (int) Math.round(Math.ceil(
+                (municipio.getCantGauchos() * this.partida.getMultAltura(municipio) * this.especializacion.multDensa())
+                        - (this.cantGauchos * this.partida.getMultDist(this, municipio)))
                 / (this.partida.getMultAltura(municipio) * this.especializacion.multDensa()));
         return gauchosDefensoresFinal;
     }
