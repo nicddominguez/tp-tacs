@@ -1,7 +1,6 @@
 package tp.tacs.api.dominio;
 
 import org.assertj.core.util.Lists;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -30,9 +29,8 @@ class PartidaTest {
     Usuario usuario;
     List<Usuario> usuarios = new ArrayList<>();
 
-    @Mock
-    ModoFacil modo = new ModoFacil();
 
+    ModoFacil modo = new ModoFacil();
     Partida partidaBase;
     Date fechaPartida;
 
@@ -40,13 +38,10 @@ class PartidaTest {
     void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        mockarMunicipio(municipioA, 500d, 0d, 10f);
-        mockarMunicipio(municipioB, 0d, 0d, 110f);
-        mockarMunicipio(municipioC, 30d, 40d, 210f);
-        mockarMunicipio(municipioD, 30d, 40d, 210f);
-
-        when(modo.getMultAltura(anyFloat(),anyFloat(), anyFloat())).thenReturn(2f);
-        when(modo.getMultDist(anyFloat(),anyFloat(), anyFloat())).thenReturn(2.5f);
+        mockearMunicipio(municipioA, 500d, 0d, 10f);
+        mockearMunicipio(municipioB, 0d, 0d, 110f);
+        mockearMunicipio(municipioC, 30d, 40d, 210f);
+        mockearMunicipio(municipioD, 30d, 40d, 210f);
 
         fechaPartida = new Date(2020, Calendar.APRIL,1);
         usuarios.add(usuario);
@@ -57,16 +52,12 @@ class PartidaTest {
         partidaBase = new Partida(usuarios, Estado.EN_CURSO, "1234", municipios, modo, fechaPartida);
     }
 
-    private void mockarMunicipio(Municipio municipioA, double latitud, double longitud, float altura) {
+    private void mockearMunicipio(Municipio municipioA, double latitud, double longitud, float altura) {
         when(municipioA.getLatitud()).thenReturn(latitud);
         when(municipioA.getLongitud()).thenReturn(longitud);
         ArrayList<Double> coordenadasA = Lists.newArrayList(municipioA.getLatitud(), municipioA.getLongitud());
         when(municipioA.getCoordenadas()).thenReturn(coordenadasA);
         when(municipioA.getAltura()).thenReturn(altura);
-    }
-
-    @AfterEach
-    void tearDown() {
     }
 
     @Test
@@ -111,6 +102,8 @@ class PartidaTest {
 
     @Test
     void multDist() {
+        var multDist = partidaBase.multDist(municipioA, municipioB);
+        assertEquals(multDist, 0.5f);
     }
 
     @Test
