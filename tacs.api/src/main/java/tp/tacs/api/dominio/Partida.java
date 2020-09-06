@@ -87,8 +87,17 @@ public class Partida {
         }
     }
 
+    private Usuario usuarioEnTurnoActual() {
+        return this.participantes.get(usuarioJugando);
+    }
+
+    private void desBloquearMunicipios() {
+        this.municipios.stream().forEach(municipio -> municipio.desbloquear());
+    }
+
     public void pasarTurno(){
         this.asignarProximoTurno();
+        this.desBloquearMunicipios();
     }
 
     public Usuario participanteActual(){
