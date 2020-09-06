@@ -1,4 +1,4 @@
-package tp.tacs.api.dominio;
+package tp.tacs.api.dominio.usuario;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import tp.tacs.api.mappers.UsuarioMapper;

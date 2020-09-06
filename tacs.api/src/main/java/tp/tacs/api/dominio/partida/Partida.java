@@ -1,6 +1,8 @@
-package tp.tacs.api.dominio;
+package tp.tacs.api.dominio.partida;
 
 import com.google.common.collect.Sets;
+import tp.tacs.api.dominio.usuario.Usuario;
+import tp.tacs.api.dominio.municipio.Municipio;
 
 import java.awt.geom.Point2D;
 import java.util.*;

@@ -1,7 +1,7 @@
 package tp.tacs.api.mappers;
 
 import org.springframework.stereotype.Component;
-import tp.tacs.api.dominio.Usuario;
+import tp.tacs.api.dominio.usuario.Usuario;
 import tp.tacs.api.model.UsuarioModel;
 
 @Component

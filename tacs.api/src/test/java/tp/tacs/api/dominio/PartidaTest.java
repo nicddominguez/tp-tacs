@@ -5,11 +5,15 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import tp.tacs.api.dominio.municipio.Municipio;
+import tp.tacs.api.dominio.partida.Estado;
+import tp.tacs.api.dominio.partida.ModoFacil;
+import tp.tacs.api.dominio.partida.Partida;
+import tp.tacs.api.dominio.usuario.Usuario;
 
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyFloat;
 import static org.mockito.Mockito.when;
 
 class PartidaTest {

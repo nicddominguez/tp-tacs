@@ -1,4 +1,4 @@
-package tp.tacs.api.dominio;
+package tp.tacs.api.dominio.municipio;
 
 import java.util.List;
 

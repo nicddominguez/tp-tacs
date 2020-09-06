@@ -1,4 +1,4 @@
-package tp.tacs.api.dominio;
+package tp.tacs.api.dominio.partida;
 
 public abstract class ModoDeJuego {
 
