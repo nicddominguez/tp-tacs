@@ -9,8 +9,8 @@ public class Defensa implements Especializacion {
     }
 
     @Override
-    public Float multDensa() {
-        return 1f;
+    public Float multDefensa(Partida partida) {
+        return partida.getModoDeJuego().getMultDefEnDefensa();
     }
 
     @Override

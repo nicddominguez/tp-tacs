@@ -13,7 +13,7 @@ public class RepoMunicipios {
         return instanciaRepoMunicipios;
     }
 
-    List<Municipio> getMunicipios(String idProvincia, Integer cantidad) {
+    public List<Municipio> getMunicipios(String idProvincia, Integer cantidad) {
         return null;
     }
 

@@ -1,10 +1,8 @@
 package tp.tacs.api.dominio;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 
 import java.util.ArrayList;
-import java.util.Set;
 
 public class Municipio {
 
@@ -93,15 +91,15 @@ public class Municipio {
     private Integer gauchosAtacantesFinal(Municipio municipio) {
         return (Integer) (int) Math.floor(
                 this.cantGauchos * this.partida.multDist(this, municipio)
-                - municipio.getCantGauchos() * this.partida.multAltura(municipio) * this.especializacion.multDensa()
+                - municipio.getCantGauchos() * this.partida.multAltura(municipio) * this.especializacion.multDefensa(this.partida)
         );
     }
 
     private Integer gauchosDefensoresFinal(Municipio municipio) {
         return (Integer) (int) Math.round(Math.ceil(
-                (municipio.getCantGauchos() * this.partida.multAltura(municipio) * this.especializacion.multDensa())
+                (municipio.getCantGauchos() * this.partida.multAltura(municipio) * this.especializacion.multDefensa(this.partida))
                         - (this.cantGauchos * this.partida.multDist(this, municipio)))
-                / (this.partida.multAltura(municipio) * this.especializacion.multDensa()));
+                / (this.partida.multAltura(municipio) * this.especializacion.multDefensa(this.partida)));
     }
 
     public void atacar(Municipio municipio) {

@@ -1,14 +1,9 @@
 package tp.tacs.api.dominio;
 
-public class ModoFacil implements ModoDeJuego {
+public class ModoFacil extends ModoDeJuego {
 
-    @Override
-    public Float getMultDist(Float distanciaMunicipios, Float minDist, Float maxDist) {
-        return 1 - (distanciaMunicipios - minDist)/(2*(maxDist-minDist));
-    }
-
-    @Override
-    public Float getMultAltura(Float alturaMunicipioDefensor, Float minAltura, Float maxAltura) {
-        return 1 + (alturaMunicipioDefensor - minAltura)/(2*(maxAltura-minAltura));
+    public ModoFacil() {
+        this.multDefEnAtaque = 1f;
+        this.multDefEnDefensa = 1.25f;
     }
 }
