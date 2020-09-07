@@ -146,7 +146,7 @@ public class Municipio {
 
     public void moverGauchos(Municipio municipio, Integer cantidad) {
         //TODO ver si es su turno
-        if (this.mismoDuenio(municipio)) {
+        if (!this.mismoDuenio(municipio)) {
             throw new RuntimeException("Debe ser el duenio del municipio para poder mover gauchos");
         }
         if (this.estaBloqueado()) {
