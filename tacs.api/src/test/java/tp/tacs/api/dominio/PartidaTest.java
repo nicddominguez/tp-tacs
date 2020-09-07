@@ -5,33 +5,36 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 import tp.tacs.api.dominio.municipio.Municipio;
+import tp.tacs.api.dominio.municipio.Produccion;
 import tp.tacs.api.dominio.partida.Estado;
 import tp.tacs.api.dominio.partida.ModoFacil;
 import tp.tacs.api.dominio.partida.Partida;
 import tp.tacs.api.dominio.usuario.Usuario;
 
+import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 
 class PartidaTest {
 
-    @Mock
+    @Spy
     Municipio municipioA;
-    @Mock
+    @Spy
     Municipio municipioB;
-    @Mock
+    @Spy
     Municipio municipioC;
-    @Mock
+    @Spy
     Municipio municipioD;
 
     List<Municipio> municipios = new ArrayList<>();
 
-    @Mock
     Usuario usuarioA;
-    @Mock
     Usuario usuarioB;
 
     List<Usuario> usuarios = new ArrayList<>();
@@ -50,6 +53,8 @@ class PartidaTest {
         mockearMunicipio(municipioC, 30d, 40d, 210f);
         mockearMunicipio(municipioD, 30d, 40d, 210f);
 
+        usuarioA = new Usuario(1234L, "hola@gmail.com", "carlos");
+        usuarioB = new Usuario(12L, "hola@gmail.com", "tomas");
         fechaPartida = new Date(2020, Calendar.APRIL, 1);
         usuarios.add(usuarioA);
         usuarios.add(usuarioB);
@@ -57,15 +62,26 @@ class PartidaTest {
         municipios.add(municipioB);
         municipios.add(municipioC);
         municipios.add(municipioD);
-        partidaBase = new Partida(usuarios, Estado.EN_CURSO, "1234", municipios, modo, fechaPartida);
+        partidaBase = new Partida(usuarios, Estado.EN_CURSO, "1234",municipios, modo, fechaPartida);
     }
 
-    private void mockearMunicipio(Municipio municipioA, double latitud, double longitud, float altura) {
-        when(municipioA.getLatitud()).thenReturn(latitud);
-        when(municipioA.getLongitud()).thenReturn(longitud);
-        ArrayList<Double> coordenadasA = Lists.newArrayList(municipioA.getLatitud(), municipioA.getLongitud());
-        when(municipioA.getCoordenadas()).thenReturn(coordenadasA);
-        when(municipioA.getAltura()).thenReturn(altura);
+    private void mockearMunicipio(Municipio municipio, double latitud, double longitud, float altura) {
+        doReturn(latitud).when(municipio).getLatitud();
+        doReturn(longitud).when(municipio).getLongitud();
+        ArrayList<Double> coordenadasA = Lists.newArrayList(municipio.getLatitud(), municipio.getLongitud());
+        doReturn(coordenadasA).when(municipio).getCoordenadas();
+        doReturn(altura).when(municipio).getAltura();
+    }
+
+    @Test
+    void repartirMunicipios() {
+        partidaBase.repartirMunicipios();
+        var municipiosPorUsuario = municipios.stream()
+                .collect(Collectors.groupingBy(Municipio::getDuenio, Collectors.counting()));
+        var cantidadMaximaRepartida = Collections
+                .max(municipiosPorUsuario.entrySet(), Map.Entry.comparingByValue())
+                .getValue();
+        assertEquals(cantidadMaximaRepartida, 2);
     }
 
     @Test
@@ -75,13 +91,23 @@ class PartidaTest {
     }
 
     @Test
+    void asignarGanadorAlTerminar() {
+        municipioA.setDuenio(usuarioA);
+        municipioB.setDuenio(usuarioA);
+        municipioC.setDuenio(usuarioA);
+        municipioD.setDuenio(usuarioB);
+        partidaBase.terminar();
+        assertEquals(partidaBase.getGanador(), usuarioA);
+    }
+
+    @Test
     void terminar() {
-        assertTrue(usuarios.stream().allMatch(usuario -> usuario.getPartidasGanadas() == 0));
+        assertTrue(partidaBase.getJugadores().stream().allMatch(usuario -> usuario.getPartidasJugadas() == 0));
         partidaBase.terminar();
         var ganador = partidaBase.getGanador();
-        assertTrue(usuarios.stream().allMatch(usuario -> usuario.getPartidasGanadas() == 1));
+        assertTrue(partidaBase.getJugadores().stream().allMatch(usuario -> usuario.getPartidasJugadas() == 1));
         assertEquals(ganador.getRachaActual(), 1);
-        usuarios.stream()
+        partidaBase.getJugadores().stream()
                 .filter(usuario -> !usuario.equals(ganador))
                 .findAny()
                 .ifPresent(perdedor -> assertEquals(perdedor.getRachaActual(), 0));
@@ -89,6 +115,7 @@ class PartidaTest {
 
     @Test
     void usuarioEnTurnoActual() {
+        partidaBase.asignarProximoTurnoA(usuarioA);
         partidaBase.pasarTurno();
         partidaBase.pasarTurno();
         partidaBase.pasarTurno();
@@ -124,4 +151,5 @@ class PartidaTest {
     void multAltura() {
         assertEquals(partidaBase.multAltura(municipioB), 1.25f);
     }
+
 }

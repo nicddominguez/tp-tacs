@@ -59,6 +59,10 @@ public class Municipio {
         this.duenio = duenio;
     }
 
+    public Boolean estaBacante() {
+        return duenio == null;
+    }
+
     public String getIdMunicipioReal() {
         return this.idMunicipioReal;
     }
@@ -75,9 +79,10 @@ public class Municipio {
         return RepoMunicipios.instance().getLongitud(idMunicipioReal);
     }
 
-    public ArrayList<Double> getCoordenadas(){
+    public ArrayList<Double> getCoordenadas() {
         return Lists.newArrayList(this.getLatitud(), this.getLongitud());
     }
+
     public Float getAltura() {
         return RepoMunicipios.instance().getAltura(idMunicipioReal);
     }
@@ -93,7 +98,7 @@ public class Municipio {
     private Integer gauchosAtacantesFinal(Municipio municipio) {
         return (Integer) (int) Math.floor(
                 this.cantGauchos * this.partida.multDist(this, municipio)
-                - municipio.getCantGauchos() * this.partida.multAltura(municipio) * this.especializacion.multDefensa(this.partida)
+                        - municipio.getCantGauchos() * this.partida.multAltura(municipio) * this.especializacion.multDefensa(this.partida)
         );
     }
 

@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 //TODO manejar estadisticas de usuario
 public class Partida {
 
-    private List<Usuario> participantes;
+    private List<Usuario> jugadores;
     private Integer usuarioJugandoIndiceLista = 0;
     private Estado estado;
     private String provincia;
@@ -20,9 +20,9 @@ public class Partida {
     private Date fechaCreacion;
     private Usuario ganador;
 
-    public Partida(List<Usuario> participantes, Estado estado, String provincia,
+    public Partida(List<Usuario> jugadores, Estado estado, String provincia,
                    List<Municipio> municipios, ModoDeJuego modoDeJuego, Date fechaCreacion) {
-        this.participantes = participantes;
+        this.jugadores = jugadores;
         this.estado = estado;
         this.provincia = provincia;
         this.municipios = municipios;
@@ -31,12 +31,12 @@ public class Partida {
         RepoPartidas.instance().agregarPartida(this);
     }
 
-    public List<Usuario> getParticipantes() {
-        return participantes;
+    public List<Usuario> getJugadores() {
+        return jugadores;
     }
 
-    public void setParticipantes(List<Usuario> participantes) {
-        this.participantes = participantes;
+    public void setJugadores(List<Usuario> jugadores) {
+        this.jugadores = jugadores;
     }
 
     public Integer getUsuarioJugandoIndiceLista() {
@@ -95,17 +95,39 @@ public class Partida {
         this.ganador = ganador;
     }
 
+    public void repartirMunicipios() {
+        Integer cantidadInicial = (int) Math.floor((double) municipios.size() / jugadores.size());
+
+        jugadores.forEach(usuario -> {
+            for (int i = 0; i < cantidadInicial; i++) {
+                municipios.stream()
+                        .filter(Municipio::estaBacante)
+                        .findAny()
+                        .ifPresent(municipio -> municipio.setDuenio(usuario));
+            }
+        });
+
+    }
 
     private void asignarProximoTurno() {
-        if (this.usuarioJugandoIndiceLista < this.participantes.size() - 1) {
+        if (this.usuarioJugandoIndiceLista < this.jugadores.size() - 1) {
             this.usuarioJugandoIndiceLista++;
         } else {
             this.usuarioJugandoIndiceLista = 0;
         }
     }
 
+    public void asignarProximoTurnoA(Usuario usuario) {
+        var indice = jugadores.indexOf(usuario);
+        if (indice >= 0) {
+            this.setUsuarioJugandoIndiceLista(indice);
+        } else {
+            throw new RuntimeException("No se pudo asignar el turno al usuario: no forma parte de la partida");
+        }
+    }
+
     public Usuario usuarioEnTurnoActual() {
-        return this.participantes.get(this.usuarioJugandoIndiceLista);
+        return this.jugadores.get(this.usuarioJugandoIndiceLista);
     }
 
     private void desBloquearMunicipios() {
@@ -116,22 +138,44 @@ public class Partida {
         return this.municipios.stream().allMatch(municipio -> municipio.esDe(usuario));
     }
 
-    public void pasarTurno() {
-        if (this.esDuenioDeTodo(this.usuarioEnTurnoActual())) {
-            this.terminar();
-        }
+    public boolean hayGanador() {
+        return jugadores.stream().anyMatch(this::esDuenioDeTodo);
+    }
 
-        this.asignarProximoTurno();
-        this.desBloquearMunicipios();
+    private void manejarPasajeDeTurno() {
+        if (this.hayGanador()) {
+            this.terminar();
+        } else {
+            this.asignarProximoTurno();
+            this.desBloquearMunicipios();
+            municipios.forEach(Municipio::producir);
+        }
+    }
+
+    public void pasarTurno() {
+        if (this.estaEnCurso()) {
+            this.manejarPasajeDeTurno();
+        } else
+            throw new RuntimeException("No se puede pasar el turno de una partida que no este en curso");
+
+    }
+
+    public Usuario usuarioConMasMunicipios() {
+        var ganadosPorUsuario = municipios.stream()
+                .collect(Collectors.groupingBy(Municipio::getDuenio, Collectors.counting()));
+
+        return Collections
+                .max(ganadosPorUsuario.entrySet(), Map.Entry.comparingByValue())
+                .getKey();
     }
 
     public void terminar() {
-        this.estado = Estado.TERMINADA;
-        this.participantes.forEach(Usuario::aumentarPartidasJugadas);
-        this.ganador = this.usuarioEnTurnoActual();
-        this.ganador.aumentarPartidasGanadas();
-        this.ganador.aumentarRachaActual();
-        this.participantes.stream()
+        setEstado(Estado.TERMINADA);
+        jugadores.forEach(Usuario::aumentarPartidasJugadas);
+        ganador = this.usuarioConMasMunicipios();
+        ganador.aumentarPartidasGanadas();
+        ganador.aumentarRachaActual();
+        jugadores.stream()
                 .filter(usuario -> !usuario.equals(this.ganador))
                 .forEach(Usuario::reiniciarRacha);
     }
@@ -180,9 +224,10 @@ public class Partida {
                 .map(Municipio::getCoordenadas)
                 .collect(Collectors.toSet());
         var combinaciones = Sets.combinations(coordenadas, 2);
+
         var distancias = new HashSet<Float>();
-        combinaciones.forEach(arrayLists -> {
-            var list = new ArrayList<>(arrayLists);
+        combinaciones.forEach(combinacion -> {
+            var list = new ArrayList<>(combinacion);
             var distancia = distanciaEntre(list.get(0), list.get(1));
             distancias.add(distancia);
         });
@@ -203,14 +248,14 @@ public class Partida {
         Float distanciaMunicipios = this.distanciaEntreMunicipios(municipioOrigen, municipioDestino);
         var minDist = this.minDist();
         var maxDist = this.maxDist();
-        return 1 - (distanciaMunicipios - minDist)/(2*(maxDist-minDist));
+        return 1 - (distanciaMunicipios - minDist) / (2 * (maxDist - minDist));
     }
 
     public Float multAltura(Municipio municipioDefensor) {
         Float alturaMunicipioDefensor = municipioDefensor.getAltura();
         var minAltura = this.minAltura();
         var maxAltura = this.maxAltura();
-        return 1 + (alturaMunicipioDefensor - minAltura)/(2*(maxAltura-minAltura));
+        return 1 + (alturaMunicipioDefensor - minAltura) / (2 * (maxAltura - minAltura));
     }
 
 }
