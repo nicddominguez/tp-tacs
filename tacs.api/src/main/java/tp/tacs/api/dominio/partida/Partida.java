@@ -1,14 +1,13 @@
 package tp.tacs.api.dominio.partida;
 
 import com.google.common.collect.Sets;
-import tp.tacs.api.dominio.usuario.Usuario;
 import tp.tacs.api.dominio.municipio.Municipio;
+import tp.tacs.api.dominio.usuario.Usuario;
 
 import java.awt.geom.Point2D;
 import java.util.*;
 import java.util.stream.Collectors;
 
-//TODO manejar estadisticas de usuario
 public class Partida {
 
     private List<Usuario> jugadores;
@@ -26,6 +25,7 @@ public class Partida {
         this.estado = estado;
         this.provincia = provincia;
         this.municipios = municipios;
+        this.municipios.forEach(municipio -> municipio.setPartida(this));
         this.modoDeJuego = modoDeJuego;
         this.fechaCreacion = fechaCreacion;
         RepoPartidas.instance().agregarPartida(this);
@@ -69,6 +69,7 @@ public class Partida {
 
     public void setMunicipios(List<Municipio> municipios) {
         this.municipios = municipios;
+        this.municipios.forEach(municipio -> municipio.setPartida(this));
     }
 
     public ModoDeJuego getModoDeJuego() {
