@@ -129,6 +129,7 @@ public class Municipio {
         this.setCantGauchos(gauchosAtacantesFinal);
         municipio.setCantGauchos(gauchosDefensoresFinal);
         if (this.ataqueExitoso(municipio)) {
+            municipio.setCantGauchos(0);
             municipio.setDuenio(this.duenio);
         }
         this.partida.pasarTurno();
