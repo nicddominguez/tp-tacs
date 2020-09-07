@@ -1,25 +1,19 @@
-package tp.tacs.api.dominio;
+package tp.tacs.api.dominio.partida;
 
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import tp.tacs.api.dominio.municipio.Municipio;
-import tp.tacs.api.dominio.municipio.Produccion;
-import tp.tacs.api.dominio.partida.Estado;
-import tp.tacs.api.dominio.partida.ModoFacil;
-import tp.tacs.api.dominio.partida.Partida;
 import tp.tacs.api.dominio.usuario.Usuario;
 
-import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.when;
 
 class PartidaTest {
 
@@ -71,6 +65,7 @@ class PartidaTest {
         ArrayList<Double> coordenadasA = Lists.newArrayList(municipio.getLatitud(), municipio.getLongitud());
         doReturn(coordenadasA).when(municipio).getCoordenadas();
         doReturn(altura).when(municipio).getAltura();
+        doNothing().when(municipio).producir();
     }
 
     @Test
@@ -103,6 +98,8 @@ class PartidaTest {
     @Test
     void terminar() {
         assertTrue(partidaBase.getJugadores().stream().allMatch(usuario -> usuario.getPartidasJugadas() == 0));
+        municipioA.setDuenio(usuarioA);
+        municipioB.setDuenio(usuarioA);
         partidaBase.terminar();
         var ganador = partidaBase.getGanador();
         assertTrue(partidaBase.getJugadores().stream().allMatch(usuario -> usuario.getPartidasJugadas() == 1));
