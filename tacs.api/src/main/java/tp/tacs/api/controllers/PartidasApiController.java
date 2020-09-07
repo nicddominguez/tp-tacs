@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.threeten.bp.LocalDate;
 import tp.tacs.api.model.*;
+import tp.tacs.api.utils.Utils;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -78,7 +79,14 @@ public class PartidasApiController implements PartidasApi {
                 .jugadores(jugadores_una_partida);
 
         List<PartidaModel> partidaModels = Arrays.asList(partida, partida2);
-        ListarPartidasResponse response = new ListarPartidasResponse().partidas(partidaModels);
+        Utils utils = new Utils();
+
+        List<PartidaModel> listaPaginada = utils.obtenerListaPaginada(pagina, tamanioPagina, partidaModels);
+
+        if(listaPaginada == null)
+            return ResponseEntity.notFound().build();
+
+        ListarPartidasResponse response = new ListarPartidasResponse().partidas(listaPaginada);
         return ResponseEntity.ok(response);
     }
 
