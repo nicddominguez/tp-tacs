@@ -151,6 +151,9 @@ public class Municipio {
         if (this.estaBloqueado()) {
             throw new RuntimeException("Un municipio bloqueado no puede mover gauchos");
         }
+        if (cantidad > this.cantGauchos) {
+            throw new RuntimeException("Cantidad Insuficiente");
+        }
         this.sacarGauchos(cantidad);
         municipio.agregarGauchos(cantidad);
         municipio.bloquear();
