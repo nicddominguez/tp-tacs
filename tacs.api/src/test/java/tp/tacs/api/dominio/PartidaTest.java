@@ -30,7 +30,10 @@ class PartidaTest {
     List<Municipio> municipios = new ArrayList<>();
 
     @Mock
-    Usuario usuario;
+    Usuario usuarioA;
+    @Mock
+    Usuario usuarioB;
+
     List<Usuario> usuarios = new ArrayList<>();
 
 
@@ -47,8 +50,9 @@ class PartidaTest {
         mockearMunicipio(municipioC, 30d, 40d, 210f);
         mockearMunicipio(municipioD, 30d, 40d, 210f);
 
-        fechaPartida = new Date(2020, Calendar.APRIL,1);
-        usuarios.add(usuario);
+        fechaPartida = new Date(2020, Calendar.APRIL, 1);
+        usuarios.add(usuarioA);
+        usuarios.add(usuarioB);
         municipios.add(municipioA);
         municipios.add(municipioB);
         municipios.add(municipioC);
@@ -66,22 +70,29 @@ class PartidaTest {
 
     @Test
     void pasarTurno() {
+        partidaBase.pasarTurno();
+        assertFalse(municipios.stream().anyMatch(Municipio::estaBloqueado));
     }
 
     @Test
     void terminar() {
+        assertTrue(usuarios.stream().allMatch(usuario -> usuario.getPartidasGanadas() == 0));
+        partidaBase.terminar();
+        var ganador = partidaBase.getGanador();
+        assertTrue(usuarios.stream().allMatch(usuario -> usuario.getPartidasGanadas() == 1));
+        assertEquals(ganador.getRachaActual(), 1);
+        usuarios.stream()
+                .filter(usuario -> !usuario.equals(ganador))
+                .findAny()
+                .ifPresent(perdedor -> assertEquals(perdedor.getRachaActual(), 0));
     }
 
     @Test
-    void estaEnCurso() {
-    }
-
-    @Test
-    void cancelar() {
-    }
-
-    @Test
-    void participanteActual() {
+    void usuarioEnTurnoActual() {
+        partidaBase.pasarTurno();
+        partidaBase.pasarTurno();
+        partidaBase.pasarTurno();
+        assertEquals(partidaBase.usuarioEnTurnoActual(), usuarioB);
     }
 
     @Test
@@ -106,11 +117,11 @@ class PartidaTest {
 
     @Test
     void multDist() {
-        var multDist = partidaBase.multDist(municipioA, municipioB);
-        assertEquals(multDist, 0.5f);
+        assertEquals(partidaBase.multDist(municipioA, municipioB), 0.5f);
     }
 
     @Test
     void multAltura() {
+        assertEquals(partidaBase.multAltura(municipioB), 1.25f);
     }
 }

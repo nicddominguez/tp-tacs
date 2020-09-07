@@ -104,7 +104,7 @@ public class Partida {
         }
     }
 
-    private Usuario usuarioEnTurnoActual() {
+    public Usuario usuarioEnTurnoActual() {
         return this.participantes.get(this.usuarioJugandoIndiceLista);
     }
 
@@ -119,12 +119,6 @@ public class Partida {
     public void pasarTurno() {
         if (this.esDuenioDeTodo(this.usuarioEnTurnoActual())) {
             this.terminar();
-            this.ganador = this.usuarioEnTurnoActual();
-            this.ganador.aumentarPartidasGanadas();
-            this.ganador.aumentarRachaActual();
-            this.participantes.stream()
-                    .filter(usuario -> !usuario.equals(this.ganador))
-                    .forEach(Usuario::reiniciarRacha);
         }
 
         this.asignarProximoTurno();
@@ -134,6 +128,12 @@ public class Partida {
     public void terminar() {
         this.estado = Estado.TERMINADA;
         this.participantes.forEach(Usuario::aumentarPartidasJugadas);
+        this.ganador = this.usuarioEnTurnoActual();
+        this.ganador.aumentarPartidasGanadas();
+        this.ganador.aumentarRachaActual();
+        this.participantes.stream()
+                .filter(usuario -> !usuario.equals(this.ganador))
+                .forEach(Usuario::reiniciarRacha);
     }
 
     public boolean estaEnCurso() {
@@ -142,10 +142,6 @@ public class Partida {
 
     public void cancelar() {
         this.estado = Estado.CANCELADA;
-    }
-
-    public Usuario participanteActual() {
-        return this.participantes.get(this.usuarioJugandoIndiceLista);
     }
 
     public Float minAltura() {
