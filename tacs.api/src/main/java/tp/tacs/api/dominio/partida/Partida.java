@@ -161,7 +161,11 @@ public class Partida {
     }
 
     public Usuario usuarioConMasMunicipios() {
-        var ganadosPorUsuario = municipios.stream()
+        var municipiosConDuenio = municipios.stream()
+                .filter(municipio -> municipio.getDuenio() != null).collect(Collectors.toSet());
+
+        //Agrupa por usuario sumando la cantidad de municipios que tenga
+        var ganadosPorUsuario = municipiosConDuenio.stream()
                 .collect(Collectors.groupingBy(Municipio::getDuenio, Collectors.counting()));
 
         return Collections

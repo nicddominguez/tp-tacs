@@ -14,6 +14,10 @@ class MunicipioTest {
     }
 
     @Test
+    void jugarPartida(){
+
+    }
+    @Test
     void producir() {
     }
 
