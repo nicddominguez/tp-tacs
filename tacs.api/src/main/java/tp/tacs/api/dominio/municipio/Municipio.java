@@ -14,6 +14,7 @@ public class Municipio {
     private Especializacion especializacion = new Produccion();
     private Partida partida;
     private Usuario duenio;
+    RepoMunicipios repoMunicipios = RepoMunicipios.instance();
 
     public Integer getCantGauchos() {
         return cantGauchos;
@@ -71,12 +72,20 @@ public class Municipio {
         this.idMunicipioReal = idMunicipioReal;
     }
 
+    public RepoMunicipios getRepoMunicipios() {
+        return repoMunicipios;
+    }
+
+    public void setRepoMunicipios(RepoMunicipios repoMunicipios) {
+        this.repoMunicipios = repoMunicipios;
+    }
+
     public Double getLatitud() {
-        return RepoMunicipios.instance().getLatitud(idMunicipioReal);
+        return this.repoMunicipios.getLatitud(idMunicipioReal);
     }
 
     public Double getLongitud() {
-        return RepoMunicipios.instance().getLongitud(idMunicipioReal);
+        return this.repoMunicipios.getLongitud(idMunicipioReal);
     }
 
     public ArrayList<Double> getCoordenadas() {
@@ -84,11 +93,11 @@ public class Municipio {
     }
 
     public Float getAltura() {
-        return RepoMunicipios.instance().getAltura(idMunicipioReal);
+        return this.repoMunicipios.getAltura(idMunicipioReal);
     }
 
     public String getPathImagen() {
-        return RepoMunicipios.instance().getPathImagen(idMunicipioReal);
+        return this.repoMunicipios.getPathImagen(idMunicipioReal);
     }
 
     public void producir() {
