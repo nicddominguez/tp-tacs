@@ -9,9 +9,9 @@ import java.util.ArrayList;
 public class Municipio {
 
     private String idMunicipioReal;
-    private Integer cantGauchos;
-    private boolean bloqueado;
-    private Especializacion especializacion;
+    private Integer cantGauchos = 0;
+    private boolean bloqueado = false;
+    private Especializacion especializacion = new Produccion();
     private Partida partida;
     private Usuario duenio;
 
