@@ -85,12 +85,16 @@ public class AuthApiController implements AuthApi {
                     var userId = this.nextUserId.getAndIncrement();
                     var nuevoUsuario = new Usuario(userId, name, email);
                     nuevoUsuario.setGoogleId(googleId);
-                    nuevoUsuario.setAdmin(false);
+                    nuevoUsuario.setAdmin(true);
                     this.usuarioDao.save(nuevoUsuario);
                     return nuevoUsuario;
                 });
 
-        var nuevoJwt = this.jwtTokenService.createToken(usuario.getId(), usuario.getNombre(), Boolean.FALSE);
+        var nuevoJwt = this.jwtTokenService.createToken(
+                usuario.getId(),
+                usuario.getNombre(),
+                usuario.getAdmin()
+        );
         return ResponseEntity.ok(new NuevoJWTModel().token(nuevoJwt));
     }
 

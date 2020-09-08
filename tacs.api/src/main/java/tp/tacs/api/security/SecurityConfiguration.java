@@ -19,11 +19,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        // TODO: Permitir que los administradores accedan a las rutas de admin
         http
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().authorizeRequests().antMatchers("/auth/**").permitAll()
+                .and().authorizeRequests().antMatchers("/admin/**").hasRole("ADMIN")
                 .and().authorizeRequests()
                 .anyRequest().authenticated()
                 .and().addFilterBefore(
