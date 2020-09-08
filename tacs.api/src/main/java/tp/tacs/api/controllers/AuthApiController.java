@@ -54,7 +54,11 @@ public class AuthApiController implements AuthApi {
                         .getByGoogleId(googleId)
                         .orElseThrow(() -> new UsuarioDesconocido("Intentó iniciar sesión un usuario desconocido"));
 
-        var nuevoJwt = this.jwtTokenService.createToken(usuario.getId(), usuario.getNombre(), Boolean.FALSE);
+        var nuevoJwt = this.jwtTokenService.createToken(
+                usuario.getId(),
+                usuario.getNombre(),
+                usuario.getAdmin()
+        );
         var response = new NuevoJWTModel()
                 .token(nuevoJwt)
                 .usuario(this.usuarioMapper.toModel(usuario));
@@ -81,6 +85,7 @@ public class AuthApiController implements AuthApi {
                     var userId = this.nextUserId.getAndIncrement();
                     var nuevoUsuario = new Usuario(userId, name, email);
                     nuevoUsuario.setGoogleId(googleId);
+                    nuevoUsuario.setAdmin(false);
                     this.usuarioDao.save(nuevoUsuario);
                     return nuevoUsuario;
                 });
