@@ -4,6 +4,7 @@ public abstract class ModoDeJuego {
 
     Float multDefEnDefensa;
     Float multDefEnAtaque;
+    String nombreAMostrar;
 
     public Float getMultDefEnDefensa() {
         return multDefEnDefensa;
@@ -19,5 +20,13 @@ public abstract class ModoDeJuego {
 
     public void setMultDefEnAtaque(Float multDefEnAtaque) {
         this.multDefEnAtaque = multDefEnAtaque;
+    }
+
+    public Float getMultDefEnAtaque() {
+        return multDefEnAtaque;
+    }
+
+    public String getNombreAMostrar() {
+        return nombreAMostrar;
     }
 }

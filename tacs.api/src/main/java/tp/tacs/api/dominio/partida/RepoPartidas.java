@@ -1,13 +1,18 @@
 package tp.tacs.api.dominio.partida;
 
-import tp.tacs.api.model.EstadisticasDeJuegoModel;
+import org.springframework.beans.factory.annotation.Autowired;
+import tp.tacs.api.dominio.municipio.Municipio;
+import tp.tacs.api.dominio.usuario.Usuario;
+import tp.tacs.api.mappers.PartidaMapper;
+import tp.tacs.api.model.*;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class RepoPartidas {
+
+    @Autowired
+    private PartidaMapper partidaMapper;
 
     private List<Partida> partidas = new ArrayList<>();
 
@@ -18,6 +23,13 @@ public class RepoPartidas {
             instancia = new RepoPartidas();
         }
         return instancia;
+    }
+
+    public Partida getPartida(Long idPartida){
+        var jugadores = Collections.singletonList(new Usuario(1l, "2", "juan"));
+        var partida = new Partida(jugadores, Estado.EN_CURSO, "123",
+                new ArrayList<Municipio>(), new ModoFacil(), new Date());
+        return partida;
     }
 
     public List<Partida> getPartidas() {

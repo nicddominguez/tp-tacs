@@ -25,10 +25,10 @@ public class Partida {
         this.estado = estado;
         this.provincia = provincia;
         this.municipios = municipios;
-        //TODO distribuir municipios
         this.municipios.forEach(municipio -> municipio.setPartida(this));
         this.modoDeJuego = modoDeJuego;
         this.fechaCreacion = fechaCreacion;
+        this.repartirMunicipios();
         RepoPartidas.instance().agregarPartida(this);
     }
 

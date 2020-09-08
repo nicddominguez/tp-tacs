@@ -1,9 +1,12 @@
 package tp.tacs.api.controllers;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.threeten.bp.LocalDate;
+import tp.tacs.api.dominio.partida.RepoPartidas;
+import tp.tacs.api.mappers.PartidaMapper;
 import tp.tacs.api.model.*;
 import tp.tacs.api.utils.Utils;
 
@@ -15,6 +18,9 @@ import java.util.List;
 
 @RestController
 public class PartidasApiController implements PartidasApi {
+
+    @Autowired
+    private PartidaMapper partidaMapper;
 
     @Override
     public ResponseEntity<Void> actualizarEstadoPartida(Long idPartida, @Valid PartidaModel body) {
@@ -38,18 +44,10 @@ public class PartidasApiController implements PartidasApi {
 
     @Override
     public ResponseEntity<PartidaModel> getPartida(Long idPartida) {
-        var jugadores = Arrays.asList(new UsuarioModel(), new UsuarioModel());
-        var partida = new PartidaModel();
-        partida
-                .id(1L)
-                .modoDeJuego(ModoDeJuegoModel.RAPIDO)
-                .provincia(new ProvinciaModel())
-                .cantidadMunicipios(12L)
-                .informacionDeJuego(new DatosDeJuegoModel())
-                .estado(EstadoDeJuegoModel.ENPROGRESO)
-                .fecha(new Date())
-                .jugadores(jugadores);
-        return ResponseEntity.ok(partida);
+        var partida = RepoPartidas.instance().getPartida(idPartida);
+        var partidaModel = this.partidaMapper.toModel(partida);
+        System.out.println(partidaModel);
+        return ResponseEntity.ok(partidaModel);
     }
 
     @Override
