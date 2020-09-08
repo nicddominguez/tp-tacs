@@ -48,4 +48,16 @@ public class GoogleIdTokenService {
         }
     }
 
+    public String extractGoogleId(GoogleIdToken token) {
+        return token.getPayload().getSubject();
+    }
+
+    public String extractUserName(GoogleIdToken token) {
+        return (String) token.getPayload().get("name");
+    }
+
+    public String extractEmail(GoogleIdToken token) {
+        return token.getPayload().getEmail();
+    }
+
 }
