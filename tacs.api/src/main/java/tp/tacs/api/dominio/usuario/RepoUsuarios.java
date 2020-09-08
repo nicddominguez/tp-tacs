@@ -3,10 +3,10 @@ package tp.tacs.api.dominio.usuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import tp.tacs.api.mappers.UsuarioMapper;
 import tp.tacs.api.model.EstadisticasDeUsuarioModel;
-import tp.tacs.api.model.ScoreboardResponse;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class RepoUsuarios {
 
@@ -36,6 +36,10 @@ public class RepoUsuarios {
         this.usuarios.add(usuario);
     }
 
+    public Usuario getUsuario(Long usuarioId) {
+        return this.usuarios.stream().filter(usuario -> usuario.mismoId(usuarioId)).collect(Collectors.toList()).get(0);
+    }
+
     public EstadisticasDeUsuarioModel estadisticas(Usuario usuario) {
         return new EstadisticasDeUsuarioModel()
                 .usuario(this.usuarioMapper.toModel(usuario))
@@ -44,9 +48,9 @@ public class RepoUsuarios {
                 .rachaActual(usuario.getRachaActual());
     }
 
-    public ScoreboardResponse scoreBoard() {
-        ScoreboardResponse scoreboardResponse = new ScoreboardResponse();
-        this.usuarios.forEach(usuario -> scoreboardResponse.addScoreboardItem(this.estadisticas(usuario)));
-        return scoreboardResponse;
+    public List<EstadisticasDeUsuarioModel> scoreBoard() {
+        List<EstadisticasDeUsuarioModel> estadisticasDeUsuarioModels = new ArrayList<>();
+        this.usuarios.forEach(usuario -> estadisticasDeUsuarioModels.add(this.estadisticas(usuario)));
+        return estadisticasDeUsuarioModels;
     }
 }
