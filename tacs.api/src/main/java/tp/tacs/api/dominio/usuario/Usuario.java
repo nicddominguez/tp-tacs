@@ -92,4 +92,8 @@ public class Usuario {
     public void reiniciarRacha() {
         this.rachaActual = 0L;
     }
+
+    public boolean mismoId(Long id) {
+        return this.id == id;
+    }
 }
