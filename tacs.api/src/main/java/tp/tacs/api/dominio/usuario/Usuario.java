@@ -8,6 +8,8 @@ public class Usuario {
 
     private String nombre;
 
+    private String googleId;
+
     private Long partidasJugadas = 0L;
 
     private Long partidasGanadas = 0L;
@@ -31,6 +33,14 @@ public class Usuario {
 
     public String getNombre() {
         return nombre;
+    }
+
+    public String getGoogleId() {
+        return googleId;
+    }
+
+    public void setGoogleId(String googleId) {
+        this.googleId = googleId;
     }
 
     public Long getPartidasJugadas() {
