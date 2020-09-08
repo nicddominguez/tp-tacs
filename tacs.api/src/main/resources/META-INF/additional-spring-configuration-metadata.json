@@ -9,6 +9,11 @@
       "name": "security.jwt.issuer",
       "type": "java.lang.String",
       "description": "Issuer para los JWTs firmados"
+    },
+    {
+      "name": "security.google.clientId",
+      "type": "java.lang.String",
+      "description": "Client Id de OAuth2 de nuestra aplicación registrado en Google"
     }
   ]
 }
