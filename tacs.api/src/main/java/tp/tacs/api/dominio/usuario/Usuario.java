@@ -10,6 +10,8 @@ public class Usuario {
 
     private String googleId;
 
+    private Boolean isAdmin = false;
+
     private Long partidasJugadas = 0L;
 
     private Long partidasGanadas = 0L;
@@ -41,6 +43,14 @@ public class Usuario {
 
     public void setGoogleId(String googleId) {
         this.googleId = googleId;
+    }
+
+    public Boolean getAdmin() {
+        return isAdmin;
+    }
+
+    public void setAdmin(Boolean admin) {
+        isAdmin = admin;
     }
 
     public Long getPartidasJugadas() {
