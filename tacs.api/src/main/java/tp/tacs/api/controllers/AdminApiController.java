@@ -7,6 +7,7 @@ import tp.tacs.api.model.EstadisticasDeJuegoModel;
 import tp.tacs.api.model.EstadisticasDeUsuarioModel;
 import tp.tacs.api.model.ScoreboardResponse;
 import tp.tacs.api.model.UsuarioModel;
+import tp.tacs.api.utils.Utils;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -37,14 +38,14 @@ public class AdminApiController implements AdminApi {
         estadisticasDeUsuarioModels.add(new EstadisticasDeUsuarioModel().partidasGanadas(4L).partidasJugadas(12L).rachaActual(6L).usuario(new UsuarioModel().id(5L).nombreDeUsuario("Nico2")));
         estadisticasDeUsuarioModels.add(new EstadisticasDeUsuarioModel().partidasGanadas(9L).partidasJugadas(15L).rachaActual(3L).usuario(new UsuarioModel().id(6L).nombreDeUsuario("Juan")));
 
-        Long start = pagina * tamanioPagina;
-        Long end = start + tamanioPagina;
+        Utils utils = new Utils();
 
-        if (start > estadisticasDeUsuarioModels.size() || end > estadisticasDeUsuarioModels.size() || start < 0 || end <= 0)
+        List<EstadisticasDeUsuarioModel> listaPaginada = utils.obtenerListaPaginada(pagina, tamanioPagina, estadisticasDeUsuarioModels);
+
+        if(listaPaginada == null)
             return ResponseEntity.notFound().build();
 
-        List<EstadisticasDeUsuarioModel> scoreboard = estadisticasDeUsuarioModels.subList(start.intValue(), end.intValue());
-        ScoreboardResponse scoreboardResponse = new ScoreboardResponse().scoreboard(scoreboard);
+        ScoreboardResponse scoreboardResponse = new ScoreboardResponse().scoreboard(listaPaginada);
         return ResponseEntity.ok(scoreboardResponse);
     }
 }

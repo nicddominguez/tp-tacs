@@ -32,8 +32,21 @@ public class ProvinciasApiControllerTest {
     }
 
     @Test
+    public void getProvinciasOk1() {
+        //Este test está pensado para que retorne menos cantidad que el tamaño de pagina (porque no hay mas items)
+        ResponseEntity<ListarProvinciasResponse> provincias = provinciasApiController.listarProvincias(10L, 2L);
+        assertEquals(HttpStatus.OK, provincias.getStatusCode());
+    }
+
+    @Test
     public void getProvinciasFail() {
-        ResponseEntity<ListarProvinciasResponse> provincias = provinciasApiController.listarProvincias(0L, 1L);
+        ResponseEntity<ListarProvinciasResponse> provincias = provinciasApiController.listarProvincias(0L, 0L);
+        assertEquals(HttpStatus.NOT_FOUND, provincias.getStatusCode());
+    }
+
+    @Test
+    public void getProvinciasFail1() {
+        ResponseEntity<ListarProvinciasResponse> provincias = provinciasApiController.listarProvincias(10L, -1L);
         assertEquals(HttpStatus.NOT_FOUND, provincias.getStatusCode());
     }
 
