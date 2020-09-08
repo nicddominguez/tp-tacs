@@ -10,11 +10,11 @@ import java.util.stream.Collectors;
 
 public class Partida {
 
-    private List<Usuario> jugadores;
+    private List<Usuario> jugadores = new ArrayList<>();
     private Integer usuarioJugandoIndiceLista = 0;
     private Estado estado;
     private String provincia;
-    private List<Municipio> municipios;
+    private List<Municipio> municipios = new ArrayList<>();
     private ModoDeJuego modoDeJuego;
     private Date fechaCreacion;
     private Usuario ganador;
@@ -25,6 +25,7 @@ public class Partida {
         this.estado = estado;
         this.provincia = provincia;
         this.municipios = municipios;
+        //TODO distribuir municipios
         this.municipios.forEach(municipio -> municipio.setPartida(this));
         this.modoDeJuego = modoDeJuego;
         this.fechaCreacion = fechaCreacion;
