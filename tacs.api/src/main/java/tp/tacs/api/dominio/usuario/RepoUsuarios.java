@@ -1,6 +1,5 @@
 package tp.tacs.api.dominio.usuario;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import tp.tacs.api.mappers.UsuarioMapper;
 import tp.tacs.api.model.EstadisticasDeUsuarioModel;
 
@@ -12,8 +11,7 @@ public class RepoUsuarios {
 
     private List<Usuario> usuarios = new ArrayList<>();
 
-    @Autowired
-    private UsuarioMapper usuarioMapper;
+    private UsuarioMapper usuarioMapper = new UsuarioMapper();
 
     private static RepoUsuarios instancia = null;
 
