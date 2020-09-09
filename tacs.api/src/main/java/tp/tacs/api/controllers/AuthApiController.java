@@ -97,7 +97,12 @@ public class AuthApiController implements AuthApi {
                 usuario.getNombre(),
                 usuario.getAdmin()
         );
-        return ResponseEntity.ok(new NuevoJWTModel().token(nuevoJwt));
+
+        var response = new NuevoJWTModel()
+                .token(nuevoJwt)
+                .usuario(this.usuarioMapper.toModel(usuario));
+
+        return ResponseEntity.ok(response);
     }
 
     @Override
