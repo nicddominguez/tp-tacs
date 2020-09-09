@@ -1,6 +1,7 @@
 package tp.tacs.api.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -9,6 +10,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+
+    @Value("${security.rutas.permitidas}")
+    private String[] rutasPermitidas;
+
+    @Value("${security.rutas.administrativas}")
+    private String[] rutasAdministrativas;
 
     private final JWTTokenService jwtTokenService;
 
@@ -22,8 +29,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and().authorizeRequests().antMatchers("/auth/**").permitAll()
-                .and().authorizeRequests().antMatchers("/admin/**").hasRole("ADMIN")
+                .and().authorizeRequests().antMatchers(rutasPermitidas).permitAll()
+                .and().authorizeRequests().antMatchers(rutasAdministrativas).hasRole("ADMIN")
                 .and().authorizeRequests()
                 .anyRequest().authenticated()
                 .and().addFilterBefore(

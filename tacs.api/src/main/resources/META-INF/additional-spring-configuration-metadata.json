@@ -14,6 +14,16 @@
       "name": "security.google.clientId",
       "type": "java.lang.String",
       "description": "Client Id de OAuth2 de nuestra aplicación registrado en Google"
+    },
+    {
+      "name": "security.rutas.permitidas",
+      "type": "java.lang.String",
+      "description": "Rutas que no requieren autenticación"
+    },
+    {
+      "name": "security.rutas.administrativas",
+      "type": "java.lang.String",
+      "description": "Rutas para las cuales se necesitan permisos de administrador"
     }
   ]
 }

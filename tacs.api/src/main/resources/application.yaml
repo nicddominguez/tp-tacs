@@ -4,3 +4,6 @@ security:
     issuer: Grupo3
   google:
     clientId: ${GOOGLE_OAUTH_CLIENT_ID:secret}
+  rutas:
+    permitidas: /auth/logIn,/auth/signUp
+    administrativas: "/admin/**"

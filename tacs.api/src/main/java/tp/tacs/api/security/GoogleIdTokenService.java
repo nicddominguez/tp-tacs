@@ -43,7 +43,7 @@ public class GoogleIdTokenService {
             var decodedToken = this.verifier.verify(token);
             Assert.notNull(decodedToken, "Google Id Token inválido");
             return decodedToken;
-        } catch (GeneralSecurityException | IOException | AssertionError exc) {
+        } catch (GeneralSecurityException | IOException | AssertionError | IllegalArgumentException exc) {
             throw new GoogleIdTokenInvalido("Google Id Token inválido");
         }
     }
