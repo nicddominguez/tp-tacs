@@ -42,6 +42,17 @@ public class AuthApiController implements AuthApi {
         this.usuarioMapper = usuarioMapper;
     }
 
+    private NuevoJWTModel generarJwtParaUsuario(Usuario usuario) {
+        var nuevoJwt = this.jwtTokenService.createToken(
+                usuario.getId(),
+                usuario.getNombre(),
+                usuario.getAdmin()
+        );
+        return new NuevoJWTModel()
+                .token(nuevoJwt)
+                .usuario(this.usuarioMapper.toModel(usuario));
+    }
+
     @Override
     public ResponseEntity<NuevoJWTModel> logIn(@Valid GoogleAuthModel body) {
         var idTokenString =
@@ -56,14 +67,7 @@ public class AuthApiController implements AuthApi {
                         .getByGoogleId(googleId)
                         .orElseThrow(() -> new UsuarioDesconocido("Intentó iniciar sesión un usuario desconocido"));
 
-        var nuevoJwt = this.jwtTokenService.createToken(
-                usuario.getId(),
-                usuario.getNombre(),
-                usuario.getAdmin()
-        );
-        var response = new NuevoJWTModel()
-                .token(nuevoJwt)
-                .usuario(this.usuarioMapper.toModel(usuario));
+        var response = this.generarJwtParaUsuario(usuario);
 
         return ResponseEntity.ok(response);
     }
@@ -92,15 +96,7 @@ public class AuthApiController implements AuthApi {
                     return nuevoUsuario;
                 });
 
-        var nuevoJwt = this.jwtTokenService.createToken(
-                usuario.getId(),
-                usuario.getNombre(),
-                usuario.getAdmin()
-        );
-
-        var response = new NuevoJWTModel()
-                .token(nuevoJwt)
-                .usuario(this.usuarioMapper.toModel(usuario));
+        var response = this.generarJwtParaUsuario(usuario);
 
         return ResponseEntity.ok(response);
     }
@@ -113,16 +109,9 @@ public class AuthApiController implements AuthApi {
                 .getByUsername(username)
                 .orElseThrow(() -> new UsuarioDesconocido("Usuario desconocido"));
 
-        var nuevoJwt = this.jwtTokenService.createToken(
-                usuario.getId(),
-                usuario.getNombre(),
-                usuario.getAdmin()
-        );
-        var usuarioModel = this.usuarioMapper.toModel(usuario);
+        var response = this.generarJwtParaUsuario(usuario);
 
-        return ResponseEntity.ok(
-                new NuevoJWTModel().token(nuevoJwt).usuario(usuarioModel)
-        );
+        return ResponseEntity.ok(response);
     }
 
 }
