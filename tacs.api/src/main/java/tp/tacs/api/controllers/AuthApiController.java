@@ -2,6 +2,8 @@ package tp.tacs.api.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.RestController;
 import tp.tacs.api.daos.UsuarioDao;
 import tp.tacs.api.dominio.usuario.Usuario;
@@ -83,7 +85,7 @@ public class AuthApiController implements AuthApi {
                 .orElseGet(() -> {
                     // El usuario no existe, lo creamos
                     var userId = this.nextUserId.getAndIncrement();
-                    var nuevoUsuario = new Usuario(userId, name, email);
+                    var nuevoUsuario = new Usuario(userId, email, name);
                     nuevoUsuario.setGoogleId(googleId);
                     nuevoUsuario.setAdmin(true);
                     this.usuarioDao.save(nuevoUsuario);
@@ -96,6 +98,26 @@ public class AuthApiController implements AuthApi {
                 usuario.getAdmin()
         );
         return ResponseEntity.ok(new NuevoJWTModel().token(nuevoJwt));
+    }
+
+    @Override
+    public ResponseEntity<NuevoJWTModel> refreshToken() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        var username = (String) principal;
+        var usuario = this.usuarioDao
+                .getByUsername(username)
+                .orElseThrow(() -> new UsuarioDesconocido("Usuario desconocido"));
+
+        var nuevoJwt = this.jwtTokenService.createToken(
+                usuario.getId(),
+                usuario.getNombre(),
+                usuario.getAdmin()
+        );
+        var usuarioModel = this.usuarioMapper.toModel(usuario);
+
+        return ResponseEntity.ok(
+                new NuevoJWTModel().token(nuevoJwt).usuario(usuarioModel)
+        );
     }
 
 }

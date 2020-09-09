@@ -23,6 +23,14 @@ public class UsuarioDao implements Dao<Usuario> {
                 .findFirst();
     }
 
+    public Optional<Usuario> getByUsername(String username) {
+        return this.usuarios
+                .values()
+                .stream()
+                .filter(usuario -> usuario.getNombre().equals(username))
+                .findFirst();
+    }
+
     @Override
     public List<Usuario> getAll() {
         return new ArrayList<>(this.usuarios.values());
