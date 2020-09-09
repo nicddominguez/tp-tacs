@@ -34,7 +34,7 @@ class PartidaTest {
     List<Usuario> usuarios = new ArrayList<>();
 
 
-    ModoFacil modo = new ModoFacil();
+    ModoRapido modo = new ModoRapido();
     Partida partidaBase;
     Date fechaPartida;
 

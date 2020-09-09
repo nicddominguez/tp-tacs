@@ -1,11 +1,10 @@
 package tp.tacs.api.dominio.municipio;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import tp.tacs.api.dominio.partida.ModoFacil;
+import tp.tacs.api.dominio.partida.ModoRapido;
 import tp.tacs.api.dominio.partida.Partida;
 import tp.tacs.api.dominio.usuario.Usuario;
 
@@ -24,7 +23,7 @@ class MunicipioTest {
     @Mock
     Partida partida;
 
-    ModoFacil modoFacil = new ModoFacil();
+    ModoRapido modoFacil = new ModoRapido();
 
     Usuario usuario0 = new Usuario(0l, "mail0@mock.com", "mock0");
     Usuario usuario1 = new Usuario(1l, "mail1@mock.com", "mock1");

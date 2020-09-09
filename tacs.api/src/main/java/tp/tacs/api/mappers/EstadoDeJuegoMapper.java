@@ -18,4 +18,8 @@ public class EstadoDeJuegoMapper {
         }
         return EstadoDeJuegoModel.fromValue("Terminada");
     }
+
+    public Estado toEntity(EstadoDeJuegoModel model){
+        return Estado.fromValue(model.toString());
+    }
 }

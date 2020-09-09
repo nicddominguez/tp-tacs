@@ -38,6 +38,12 @@ public class RepoUsuarios {
         return this.usuarios.stream().filter(usuario -> usuario.mismoId(usuarioId)).collect(Collectors.toList()).get(0);
     }
 
+    public List<Usuario> getUsuariosFromIDs(List<Long> ids){
+        var usuarios = new ArrayList<Usuario>();
+        ids.forEach(id -> usuarios.add(this.getUsuario(id)));
+        return usuarios;
+    }
+
     public EstadisticasDeUsuarioModel estadisticas(Usuario usuario) {
         return new EstadisticasDeUsuarioModel()
                 .usuario(this.usuarioMapper.toModel(usuario))

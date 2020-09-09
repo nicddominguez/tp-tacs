@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import tp.tacs.api.dominio.partida.Partida;
 import tp.tacs.api.model.DatosDeJuegoModel;
-import tp.tacs.api.model.MunicipioEnJuegoModel;
 
 @Component
 public class DatosDeJuegoMapper {
@@ -14,7 +13,7 @@ public class DatosDeJuegoMapper {
 
     public DatosDeJuegoModel toModel(Partida entity) {
         return new DatosDeJuegoModel()
-                .municipios(municipioEnJuegoMapper.mapearMunicipios(entity.getMunicipios()))
+                .municipios(municipioEnJuegoMapper.municipiosToModel(entity.getMunicipios()))
                 .idUsuarioProximoTurno(entity.usuarioEnTurnoActual().getId());
     }
 }

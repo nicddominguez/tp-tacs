@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import tp.tacs.api.dominio.municipio.Municipio;
 import tp.tacs.api.dominio.municipio.RepoMunicipios;
 import tp.tacs.api.dominio.usuario.Usuario;
+import tp.tacs.api.mappers.EstadoDeJuegoMapper;
 import tp.tacs.api.mappers.PartidaMapper;
 import tp.tacs.api.model.*;
 
@@ -14,6 +15,9 @@ public class RepoPartidas {
 
     @Autowired
     private PartidaMapper partidaMapper;
+
+    @Autowired
+    private EstadoDeJuegoMapper estadoDeJuegoMapper;
 
     private List<Partida> partidas = new ArrayList<>();
 
@@ -31,7 +35,7 @@ public class RepoPartidas {
                 new Usuario(2L, "aa@gmail.com", "carlos"));
         List<Municipio> municipios = RepoMunicipios.instance().getMunicipios("buenos aires", 5);
         var partida = new Partida(jugadores, Estado.EN_CURSO, "123",
-                municipios, new ModoFacil(), new Date());
+                municipios, new ModoRapido(), new Date());
         return partida;
     }
 
@@ -48,11 +52,7 @@ public class RepoPartidas {
     }
 
     public EstadisticasDeJuegoModel estadisticas(Date fechaInicio, Date fechaFin) {
-        List<Partida> partidas = this.partidas
-                .stream()
-                .filter(partida ->
-                        partida.getFechaCreacion().after(fechaInicio) && partida.getFechaCreacion().before(fechaFin))
-                .collect(Collectors.toList());
+        List<Partida> partidas = partidasEntre(fechaInicio, fechaFin);
 
         Long partidasCreadas = (long) partidas.size();
 
@@ -67,5 +67,21 @@ public class RepoPartidas {
                 .partidasEnCurso(partidasEnCurso)
                 .partidasTerminadas(partidasTerminadas)
                 .partidasCanceladas(partidasCanceladas);
+    }
+
+    private List<Partida> partidasEntre(Date fechaInicio, Date fechaFin) {
+        return this.partidas
+                .stream()
+                .filter(partida ->
+                        partida.getFechaCreacion().after(fechaInicio) && partida.getFechaCreacion().before(fechaFin))
+                .collect(Collectors.toList());
+    }
+
+    public List<Partida> getPartidasFiltradas(Date fechaInicio, Date fechaFin, EstadoDeJuegoModel estado) {
+        var estadoDeJuego = estadoDeJuegoMapper.toEntity(estado);
+        return partidasEntre(fechaInicio, fechaFin)
+                .stream()
+                .filter(partida -> partida.getEstado().equals(estadoDeJuego))
+                .collect(Collectors.toList());
     }
 }

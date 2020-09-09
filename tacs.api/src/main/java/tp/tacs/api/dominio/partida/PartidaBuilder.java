@@ -13,10 +13,11 @@ public class PartidaBuilder {
     private Estado estado = Estado.EN_CURSO;
     private String idProvincia;
     private List<Municipio> municipios = new ArrayList<>();
-    private ModoDeJuego modoDeJuego = new ModoFacil();
-    private Date fechaCreacion;
+    private ModoDeJuego modoDeJuego = new ModoRapido();
+    private Date fechaCreacion = new Date();
 
-    public PartidaBuilder() {
+    public PartidaBuilder(String idProvincia) {
+        this.idProvincia = idProvincia;
     }
 
     public PartidaBuilder setCantMunicipios(Integer cantMunicipios) {
@@ -35,11 +36,6 @@ public class PartidaBuilder {
         return this;
     }
 
-    public PartidaBuilder setIdProvincia(String idProvincia) {
-        this.idProvincia = idProvincia;
-        return this;
-    }
-
     public PartidaBuilder setMunicipios(List<Municipio> municipios) {
         //No es necesario si se setea la cantidad de municipios
         this.municipios = municipios;
@@ -51,8 +47,9 @@ public class PartidaBuilder {
         return this;
     }
 
-    public void setFechaCreacion(Date fechaCreacion) {
+    public PartidaBuilder setFechaCreacion(Date fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
+        return this;
     }
 
     public Partida constriur() {

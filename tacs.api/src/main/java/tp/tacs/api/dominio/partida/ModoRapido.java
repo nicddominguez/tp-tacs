@@ -1,10 +1,10 @@
 package tp.tacs.api.dominio.partida;
 
-public class ModoFacil extends ModoDeJuego {
+public class ModoRapido extends ModoDeJuego {
 
-    public ModoFacil() {
+    public ModoRapido() {
         this.nombreAMostrar = "Rapido";
-        this.multDefEnAtaque = 1f;
+        this.multDefEnAtaque = 0.5f;
         this.multDefEnDefensa = 1.25f;
     }
 }

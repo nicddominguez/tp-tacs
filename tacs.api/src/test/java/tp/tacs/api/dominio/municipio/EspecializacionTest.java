@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
-import tp.tacs.api.dominio.partida.ModoFacil;
+import tp.tacs.api.dominio.partida.ModoRapido;
 import tp.tacs.api.dominio.partida.Partida;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -20,7 +20,7 @@ class EspecializacionTest {
     @Spy
     Municipio municipio = new Municipio();
 
-    ModoFacil modoFacil = new ModoFacil();
+    ModoRapido modoFacil = new ModoRapido();
 
     @Mock
     Partida partida;
