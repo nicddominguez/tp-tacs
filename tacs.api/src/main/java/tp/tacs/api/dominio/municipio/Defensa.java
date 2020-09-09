@@ -20,4 +20,10 @@ public class Defensa implements Especializacion {
         return Math.round(10 * (1 - ((municipio.getAltura() - municipio.getPartida().minAltura())
                 / (2 * (municipio.getPartida().maxAltura() - municipio.getPartida().minAltura())))));
     }
+
+    @Override
+    public String getNombreAMostrar() {
+        return "Defensa";
+    }
+
 }

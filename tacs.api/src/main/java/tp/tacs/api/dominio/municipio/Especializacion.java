@@ -9,4 +9,6 @@ public interface Especializacion {
     Float multDefensa(Partida partida);
 
     Integer nivelDeProduccion(Municipio municipio);
+
+    String getNombreAMostrar();
 }

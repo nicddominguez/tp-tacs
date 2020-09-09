@@ -12,9 +12,9 @@ public class DatosDeJuegoMapper {
     @Autowired
     MunicipioEnJuegoMapper municipioEnJuegoMapper;
 
-    //TODO
     public DatosDeJuegoModel toModel(Partida entity) {
         return new DatosDeJuegoModel()
-                .municipios(municipioEnJuegoMapper.mapearMunicipios(entity.getMunicipios()));
+                .municipios(municipioEnJuegoMapper.mapearMunicipios(entity.getMunicipios()))
+                .idUsuarioProximoTurno(entity.usuarioEnTurnoActual().getId());
     }
 }

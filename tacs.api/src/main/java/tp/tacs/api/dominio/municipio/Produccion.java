@@ -20,4 +20,10 @@ public class Produccion implements Especializacion {
         return Math.round(15 * (1 - ((municipio.getAltura() - municipio.getPartida().minAltura())
                 / (2 * (municipio.getPartida().maxAltura() - municipio.getPartida().minAltura())))));
     }
+
+    @Override
+    public String getNombreAMostrar() {
+        return "Produccion";
+    }
+
 }
