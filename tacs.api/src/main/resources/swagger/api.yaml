@@ -64,6 +64,21 @@ paths:
           description: Bad request
         401:
           description: Fail
+  /auth/refresh:
+    post:
+      tags:
+        - Auth
+      summary: Permite obtener un nuevo JWT
+      operationId: refreshToken
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NuevoJWTModel'
+        401:
+          description: Unauthorized
   /admin/estadisticas:
     get:
       tags:
