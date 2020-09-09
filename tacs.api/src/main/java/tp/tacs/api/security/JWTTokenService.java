@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,11 +33,14 @@ public class JWTTokenService {
     }
 
     public String createToken(Long userId, String username, Boolean isAdmin) {
+        var calendar = Calendar.getInstance();
+        calendar.add(Calendar.HOUR, 1);
         return JWT.create()
                 .withClaim("userId", userId)
                 .withClaim("username", username)
                 .withClaim("isAdmin", isAdmin)
                 .withIssuer(this.jwtIssuer)
+                .withExpiresAt(calendar.getTime())
                 .sign(this.jwtAlgorithm);
     }
 

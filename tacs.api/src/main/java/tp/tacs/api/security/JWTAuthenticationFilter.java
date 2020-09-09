@@ -1,5 +1,6 @@
 package tp.tacs.api.security;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -23,10 +24,18 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
             HttpServletResponse httpServletResponse,
             FilterChain filterChain) throws ServletException, IOException {
 
-        this.jwtTokenService
-                .extractToken(httpServletRequest)
-                .flatMap(this.jwtTokenService::validateToken)
-                .ifPresent(SecurityContextHolder.getContext()::setAuthentication);
+        var maybeTokenString = this.jwtTokenService.extractToken(httpServletRequest);
+        var maybeAuthentication = maybeTokenString.flatMap(this.jwtTokenService::validateToken);
+
+        if(maybeTokenString.isPresent() && maybeAuthentication.isEmpty()) {
+            // El request tiene un token inválido o expirado
+            httpServletResponse.setStatus(HttpStatus.UNAUTHORIZED.value());
+            return;
+        }
+
+        maybeAuthentication.ifPresent(authentication ->
+                SecurityContextHolder.getContext().setAuthentication(authentication)
+        );
 
         filterChain.doFilter(httpServletRequest, httpServletResponse);
     }
