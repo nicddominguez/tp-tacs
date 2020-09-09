@@ -96,4 +96,8 @@ public class Usuario {
     public boolean mismoId(Long id) {
         return this.id == id;
     }
+
+    public boolean mismoNombre(String nombre) {
+        return this.nombre == nombre;
+    }
 }
