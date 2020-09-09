@@ -4,14 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
-import org.threeten.bp.LocalDate;
+import tp.tacs.api.dominio.municipio.RepoMunicipios;
 import tp.tacs.api.dominio.partida.RepoPartidas;
+import tp.tacs.api.mappers.MunicipioEnJuegoMapper;
 import tp.tacs.api.mappers.PartidaMapper;
 import tp.tacs.api.model.*;
 import tp.tacs.api.utils.Utils;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -21,6 +21,9 @@ public class PartidasApiController implements PartidasApi {
 
     @Autowired
     private PartidaMapper partidaMapper;
+
+    @Autowired
+    private MunicipioEnJuegoMapper municipioEnJuegoMapper;
 
     @Override
     public ResponseEntity<Void> actualizarEstadoPartida(Long idPartida, @Valid PartidaModel body) {
@@ -34,7 +37,15 @@ public class PartidasApiController implements PartidasApi {
 
     @Override
     public ResponseEntity<AtacarMunicipioResponse> atacarMunicipio(Long idPartida, @Valid AtacarMunicipioBody body) {
-        return ResponseEntity.ok().build();
+        var municipioAtacante = RepoMunicipios.instance().getMunicipio(idPartida, body.getIdMunicipioAtacante());
+        var municipioObjetivo = RepoMunicipios.instance().getMunicipio(idPartida, body.getIdMunicipioObjetivo());
+        var municipioAtacanteModel = municipioEnJuegoMapper.toModel(municipioAtacante);
+        var municipioObjetivoModel = municipioEnJuegoMapper.toModel(municipioObjetivo);
+
+        var response = new AtacarMunicipioResponse()
+                .municipioAtacado(municipioObjetivoModel)
+                .municipioAtacante(municipioAtacanteModel);
+        return ResponseEntity.ok(response);
     }
 
     @Override
@@ -46,7 +57,6 @@ public class PartidasApiController implements PartidasApi {
     public ResponseEntity<PartidaModel> getPartida(Long idPartida) {
         var partida = RepoPartidas.instance().getPartida(idPartida);
         var partidaModel = this.partidaMapper.toModel(partida);
-        System.out.println(partidaModel);
         return ResponseEntity.ok(partidaModel);
     }
 

@@ -1,6 +1,8 @@
 package tp.tacs.api.dominio.municipio;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 public class RepoMunicipios {
 
@@ -14,26 +16,34 @@ public class RepoMunicipios {
     }
 
     public List<Municipio> getMunicipios(String idProvincia, Integer cantidad) {
-        return null;
+        Municipio municipio1 = new Municipio();
+        Municipio municipio2 = new Municipio();
+        return Arrays.asList(municipio1, municipio2);
     }
 
+    public Municipio getMunicipio(Long idPartida, Long idMunicipio) {
+        return new Municipio();
+    }
     String getNombre(String idProvinca) {
-        return null;
+        return "ola";
     }
 
     Double getLatitud(String idProvinca) {
-        return null;
+        Random rand = new Random();
+        return (double)rand.nextInt(100);
     }
 
     Double getLongitud(String idProvinca) {
-        return null;
+        Random rand = new Random();
+        return (double)rand.nextInt(100);
     }
 
     Float getAltura(String idProvinca) {
-        return null;
+        Random rand = new Random();
+        return (float) rand.nextInt(200);
     }
 
     public String getPathImagen(String idMunicipioReal) {
-        return null;
+        return "google.com";
     }
 }

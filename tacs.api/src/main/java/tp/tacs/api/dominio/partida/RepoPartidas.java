@@ -2,6 +2,7 @@ package tp.tacs.api.dominio.partida;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import tp.tacs.api.dominio.municipio.Municipio;
+import tp.tacs.api.dominio.municipio.RepoMunicipios;
 import tp.tacs.api.dominio.usuario.Usuario;
 import tp.tacs.api.mappers.PartidaMapper;
 import tp.tacs.api.model.*;
@@ -26,9 +27,11 @@ public class RepoPartidas {
     }
 
     public Partida getPartida(Long idPartida){
-        var jugadores = Collections.singletonList(new Usuario(1l, "2", "juan"));
+        var jugadores = Arrays.asList(new Usuario(1L, "jasdfo@gmail.com", "juan"),
+                new Usuario(2L, "aa@gmail.com", "carlos"));
+        List<Municipio> municipios = RepoMunicipios.instance().getMunicipios("buenos aires", 5);
         var partida = new Partida(jugadores, Estado.EN_CURSO, "123",
-                new ArrayList<Municipio>(), new ModoFacil(), new Date());
+                municipios, new ModoFacil(), new Date());
         return partida;
     }
 
