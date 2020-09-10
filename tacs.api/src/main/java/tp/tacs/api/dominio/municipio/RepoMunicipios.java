@@ -1,5 +1,7 @@
 package tp.tacs.api.dominio.municipio;
 
+import tp.tacs.api.dominio.partida.RepoPartidas;
+import tp.tacs.api.dominio.usuario.Usuario;
 import tp.tacs.api.model.ProvinciaModel;
 
 import java.util.ArrayList;
@@ -21,24 +23,35 @@ public class RepoMunicipios {
     public List<Municipio> getMunicipios(String idProvincia, Integer cantidad) {
         Municipio municipio1 = new Municipio();
         Municipio municipio2 = new Municipio();
+        municipio1.setIdMunicipioReal("1234");
+        municipio1.setDuenio(new Usuario(123L, "@gmaol", "nd"));
+        municipio2.setIdMunicipioReal("5432");
+        municipio2.setDuenio(new Usuario(1L, "@gml", "asdf"));
         return Arrays.asList(municipio1, municipio2);
     }
 
     public Municipio getMunicipio(Long idPartida, Long idMunicipio) {
-        return new Municipio();
+        var partida = RepoPartidas.instance().getPartida(idPartida);
+        var municipios = partida.getMunicipios();
+        return municipios
+                .stream()
+                .filter(municipio -> municipio.getIdMunicipioReal().equals(idMunicipio.toString()))
+                .findFirst()
+                .orElse(null); //TODO
     }
+
     String getNombre(String idProvinca) {
         return "ola";
     }
 
     Double getLatitud(String idProvinca) {
         Random rand = new Random();
-        return (double)rand.nextInt(100);
+        return (double) rand.nextInt(100);
     }
 
     Double getLongitud(String idProvinca) {
         Random rand = new Random();
-        return (double)rand.nextInt(100);
+        return (double) rand.nextInt(100);
     }
 
     Float getAltura(String idProvinca) {

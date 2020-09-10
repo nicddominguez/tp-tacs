@@ -35,6 +35,7 @@ public class PartidasApiController implements PartidasApi {
         try {
             Partida partida = repoPartidas.getPartida(idPartida);
             var nuevoEstado = estadoDeJuegoMapper.toEntity(body.getEstado());
+            System.out.println(nuevoEstado);
             partida.setEstado(nuevoEstado);
             return ResponseEntity.ok().build();
         } catch (Exception e) {
@@ -116,6 +117,7 @@ public class PartidasApiController implements PartidasApi {
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
+
     }
 
     @Override
@@ -123,7 +125,6 @@ public class PartidasApiController implements PartidasApi {
         try {
             var idMunicipioOrigen = body.getIdMunicipioOrigen();
             var idMunicipioDestino = body.getIdMunicipioDestino();
-
             var municipioOrigen = RepoMunicipios.instance().getMunicipio(idPartida, idMunicipioOrigen);
             var municipioDestino = RepoMunicipios.instance().getMunicipio(idPartida, idMunicipioDestino);
 
@@ -139,6 +140,7 @@ public class PartidasApiController implements PartidasApi {
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
+
     }
 
     @Override

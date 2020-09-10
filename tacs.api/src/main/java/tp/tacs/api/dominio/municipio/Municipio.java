@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class Municipio {
 
-    private String idMunicipioReal;
+    private String idMunicipioReal = "1234";
     private Integer cantGauchos = 0;
     private boolean bloqueado = false;
     private Especializacion especializacion = new Produccion();
