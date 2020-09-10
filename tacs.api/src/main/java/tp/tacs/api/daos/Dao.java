@@ -1,13 +1,12 @@
 package tp.tacs.api.daos;
 
-import java.util.Collection;
-import java.util.Optional;
+import java.util.List;
 
 public interface Dao<T> {
 
-    Optional<T> get(Long id);
+    T get(Long id);
 
-    Collection<T> getAll();
+    List<T> getAll();
 
     void save(T element);
 

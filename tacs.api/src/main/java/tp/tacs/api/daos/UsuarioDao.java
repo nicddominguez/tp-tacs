@@ -1,24 +1,21 @@
 package tp.tacs.api.daos;
 
-import tp.tacs.api.dominio.Usuario;
+import tp.tacs.api.dominio.usuario.Usuario;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public class UsuarioDao implements Dao<Usuario> {
 
     private Map<Long, Usuario> usuarios = new HashMap<>();
 
     @Override
-    public Optional<Usuario> get(Long id) {
-        return Optional.ofNullable(this.usuarios.get(id));
+    public Usuario get(Long id) {
+        return Optional.ofNullable(this.usuarios.get(id)).orElse(null);
     }
 
     @Override
-    public Collection<Usuario> getAll() {
-        return this.usuarios.values();
+    public List<Usuario> getAll() {
+        return new ArrayList<>(this.usuarios.values());
     }
 
     @Override
