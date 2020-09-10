@@ -58,7 +58,7 @@ class MunicipioTest {
         municipioAtacante.setCantGauchos(100);
         municipioDefensor.setCantGauchos(1);
         municipioAtacante.atacar(municipioDefensor);
-        assertEquals(48, municipioAtacante.getCantGauchos());
+        assertEquals(49, municipioAtacante.getCantGauchos());
         assertEquals(0, municipioDefensor.getCantGauchos());
     }
 

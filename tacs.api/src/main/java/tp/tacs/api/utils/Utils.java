@@ -2,6 +2,7 @@ package tp.tacs.api.utils;
 
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -14,8 +15,9 @@ public class Utils {
             end = (long) lista.size();
         }
 
-        if (start >= lista.size() || start < 0 || end <= 0)
-            return null;
+        if (start >= lista.size() || start < 0 || end <= 0) {
+            return new ArrayList<>();
+        }
 
         return lista.subList(start.intValue(), end.intValue());
     }

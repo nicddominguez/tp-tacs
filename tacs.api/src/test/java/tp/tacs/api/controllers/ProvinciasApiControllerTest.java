@@ -69,9 +69,4 @@ public class ProvinciasApiControllerTest {
         assertEquals(HttpStatus.OK, provincias.getStatusCode());
     }
 
-    @Test
-    public void getProvinciasFail() {
-        ResponseEntity<ListarProvinciasResponse> provincias = provinciasApiController.listarProvincias(0L, 0L);
-        assertEquals(HttpStatus.NOT_FOUND, provincias.getStatusCode());
-    }
 }

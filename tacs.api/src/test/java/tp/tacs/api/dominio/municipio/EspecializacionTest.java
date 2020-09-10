@@ -63,7 +63,7 @@ class EspecializacionTest {
 
     @Test
     void multDefDeProduccion() {
-        assertEquals(1f, produccion.multDefensa(partida));
+        assertEquals(0.5f, produccion.multDefensa(partida));
     }
 
     @Test

@@ -1,23 +1,21 @@
 package tp.tacs.api.dominio.partida;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import tp.tacs.api.dominio.municipio.Municipio;
 import tp.tacs.api.dominio.municipio.RepoMunicipios;
 import tp.tacs.api.dominio.usuario.Usuario;
 import tp.tacs.api.mappers.EstadoDeJuegoMapper;
-import tp.tacs.api.mappers.PartidaMapper;
-import tp.tacs.api.model.*;
+import tp.tacs.api.model.EstadisticasDeJuegoModel;
+import tp.tacs.api.model.EstadoDeJuegoModel;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class RepoPartidas {
 
-    @Autowired
-    private PartidaMapper partidaMapper;
-
-    @Autowired
-    private EstadoDeJuegoMapper estadoDeJuegoMapper;
+    private EstadoDeJuegoMapper estadoDeJuegoMapper = new EstadoDeJuegoMapper();
 
     private List<Partida> partidas = new ArrayList<>();
 

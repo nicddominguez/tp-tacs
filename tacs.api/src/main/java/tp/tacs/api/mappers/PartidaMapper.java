@@ -1,6 +1,5 @@
 package tp.tacs.api.mappers;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import tp.tacs.api.dominio.partida.Estado;
 import tp.tacs.api.dominio.partida.Partida;
@@ -12,20 +11,15 @@ import java.util.List;
 @Component
 public class PartidaMapper {
 
-    @Autowired
-    private UsuarioMapper usuarioMapper;
+    private UsuarioMapper usuarioMapper = new UsuarioMapper();
 
-    @Autowired
-    private EstadoDeJuegoMapper estadoDeJuegoMapper;
+    private EstadoDeJuegoMapper estadoDeJuegoMapper = new EstadoDeJuegoMapper();
 
-    @Autowired
-    private ModoDeJuegoMapper modoDeJuegoMapper;
+    private ModoDeJuegoMapper modoDeJuegoMapper = new ModoDeJuegoMapper();
 
-    @Autowired
-    private ProvinciaMapper provinciaMapper;
+    private ProvinciaMapper provinciaMapper = new ProvinciaMapper();
 
-    @Autowired
-    private DatosDeJuegoMapper datosDeJuegoMapper;
+    private DatosDeJuegoMapper datosDeJuegoMapper = new DatosDeJuegoMapper();
 
     public PartidaModel toModel(Partida entity) {
         var jugadores = this.usuarioMapper.mapearUsuarios(entity.getJugadores());

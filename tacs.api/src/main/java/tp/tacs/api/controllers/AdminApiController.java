@@ -48,9 +48,6 @@ public class AdminApiController implements AdminApi {
 
         List<EstadisticasDeUsuarioModel> listaPaginada = this.utils.obtenerListaPaginada(pagina, tamanioPagina, this.repoUsuarios.scoreBoard());
 
-        if (listaPaginada == null)
-            return ResponseEntity.notFound().build();
-
         ScoreboardResponse scoreboardResponse = new ScoreboardResponse().scoreboard(listaPaginada);
         return ResponseEntity.ok(scoreboardResponse);
     }

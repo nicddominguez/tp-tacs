@@ -35,9 +35,6 @@ public class UsuariosApiController implements UsuariosApi {
 
         List<UsuarioModel> listaPaginada = this.utils.obtenerListaPaginada(pagina, tamanioPagina, usuarioModels);
 
-        if (listaPaginada == null)
-            return ResponseEntity.notFound().build();
-
         return ResponseEntity.ok(new ListarUsuariosResponse().usuarios(listaPaginada));
     }
 }

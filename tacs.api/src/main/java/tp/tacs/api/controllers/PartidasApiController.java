@@ -1,6 +1,5 @@
 package tp.tacs.api.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,25 +18,22 @@ import java.util.Date;
 @RestController
 public class PartidasApiController implements PartidasApi {
 
-    @Autowired
-    private PartidaMapper partidaMapper;
+    private PartidaMapper partidaMapper = new PartidaMapper();
 
-    @Autowired
-    private MunicipioEnJuegoMapper municipioEnJuegoMapper;
+    private MunicipioEnJuegoMapper municipioEnJuegoMapper = new MunicipioEnJuegoMapper();
 
-    @Autowired
-    private EstadoDeJuegoMapper estadoDeJuegoMapper;
+    private EstadoDeJuegoMapper estadoDeJuegoMapper = new EstadoDeJuegoMapper();
 
-    @Autowired
-    private ModoDeMunicipioMapper modoDeMunicipioMapper;
+    private ModoDeMunicipioMapper modoDeMunicipioMapper = new ModoDeMunicipioMapper();
 
-    @Autowired
-    private ModoDeJuegoMapper modoDeJuegoMapper;
+    private ModoDeJuegoMapper modoDeJuegoMapper = new ModoDeJuegoMapper();
+
+    private RepoPartidas repoPartidas = RepoPartidas.instance();
 
     @Override
     public ResponseEntity<Void> actualizarEstadoPartida(Long idPartida, @Valid PartidaModel body) {
         try {
-            Partida partida = RepoPartidas.instance().getPartida(idPartida);
+            Partida partida = repoPartidas.getPartida(idPartida);
             var nuevoEstado = estadoDeJuegoMapper.toEntity(body.getEstado());
             partida.setEstado(nuevoEstado);
             return ResponseEntity.ok().build();
@@ -92,12 +88,14 @@ public class PartidasApiController implements PartidasApi {
     @Override
     public ResponseEntity<PartidaModel> getPartida(Long idPartida) {
         try {
-            var partida = RepoPartidas.instance().getPartida(idPartida);
+            var partida = repoPartidas.getPartida(idPartida);
             var partidaModel = this.partidaMapper.toModel(partida);
+
             return ResponseEntity.ok(partidaModel);
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
+
     }
 
     @Override
@@ -110,12 +108,9 @@ public class PartidasApiController implements PartidasApi {
         try {
             Utils utils = new Utils();
 
-            var partidas = RepoPartidas.instance().getPartidasFiltradas(fechaInicio, fechaFin, estado);
+            var partidas = repoPartidas.getPartidasFiltradas(fechaInicio, fechaFin, estado);
             var partidaModels = partidaMapper.toModels(partidas);
             var listaPaginada = utils.obtenerListaPaginada(pagina, tamanioPagina, partidaModels);
-
-            if (listaPaginada == null)
-                return ResponseEntity.notFound().build();
             var response = new ListarPartidasResponse().partidas(listaPaginada);
             return ResponseEntity.ok(response);
         } catch (Exception e) {

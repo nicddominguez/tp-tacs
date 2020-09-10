@@ -27,9 +27,6 @@ public class ProvinciasApiController implements ProvinciasApi {
 
         List<ProvinciaModel> listaPaginada = utils.obtenerListaPaginada(pagina, tamanioPagina, provinciaModels);
 
-        if (listaPaginada == null)
-            return ResponseEntity.notFound().build();
-
         return ResponseEntity.ok(new ListarProvinciasResponse().provincias(listaPaginada));
     }
 }

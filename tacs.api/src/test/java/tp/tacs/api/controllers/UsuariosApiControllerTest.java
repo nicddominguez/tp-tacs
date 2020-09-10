@@ -50,9 +50,4 @@ class UsuariosApiControllerTest {
         assertEquals(HttpStatus.OK, usuariosResponse.getStatusCode());
     }
 
-    @Test
-    void listarUsuariosNotFound() {
-        ResponseEntity<ListarUsuariosResponse> usuariosResponse = usuariosApiController.listarUsuarios("", 0L, 0L);
-        assertEquals(HttpStatus.NOT_FOUND, usuariosResponse.getStatusCode());
-    }
 }

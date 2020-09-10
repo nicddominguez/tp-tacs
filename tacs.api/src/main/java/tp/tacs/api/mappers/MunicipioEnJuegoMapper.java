@@ -1,6 +1,5 @@
 package tp.tacs.api.mappers;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import tp.tacs.api.dominio.municipio.Municipio;
 import tp.tacs.api.model.MunicipioEnJuegoModel;
@@ -11,14 +10,11 @@ import java.util.List;
 @Component
 public class MunicipioEnJuegoMapper {
 
-    @Autowired
-    UsuarioMapper usuarioMapper;
+    UsuarioMapper usuarioMapper = new UsuarioMapper();
 
-    @Autowired
-    ModoDeMunicipioMapper modoDeMunicipioMapper;
+    ModoDeMunicipioMapper modoDeMunicipioMapper = new ModoDeMunicipioMapper();
 
-    @Autowired
-    CoordenadasMapper coordenadasMapper;
+    CoordenadasMapper coordenadasMapper = new CoordenadasMapper();
 
     public MunicipioEnJuegoModel toModel(Municipio entity) {
         return new MunicipioEnJuegoModel()
