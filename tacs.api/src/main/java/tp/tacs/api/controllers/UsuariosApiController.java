@@ -27,7 +27,7 @@ public class UsuariosApiController implements UsuariosApi {
     @Override
     public ResponseEntity<ListarUsuariosResponse> listarUsuarios(@Valid String filter, @Valid Long tamanioPagina, @Valid Long pagina) {
         List<Usuario> usuarios = this.repoUsuarios.getUsuarios();
-        if (!filter.isBlank()) {
+        if (filter != null) {
             usuarios = usuarios.stream().filter(usuario -> usuario.mismoNombre(filter)).collect(Collectors.toList());
         }
         List<UsuarioModel> usuarioModels =

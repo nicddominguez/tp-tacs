@@ -39,7 +39,7 @@ class UsuariosApiControllerTest {
 
     @Test
     void listarUsuariosSinFiltro() {
-        ResponseEntity<ListarUsuariosResponse> usuariosResponse = usuariosApiController.listarUsuarios("", 5L, 0L);
+        ResponseEntity<ListarUsuariosResponse> usuariosResponse = usuariosApiController.listarUsuarios(null, 5L, 0L);
         assertEquals(HttpStatus.OK, usuariosResponse.getStatusCode());
     }
 
