@@ -15,20 +15,22 @@ public class UsuarioDao implements Dao<Usuario> {
         return Optional.ofNullable(this.usuarios.get(id)).orElse(null);
     }
 
-    public Optional<Usuario> getByGoogleId(String googleId) {
+    public Usuario getByGoogleId(String googleId) {
         return this.usuarios
                 .values()
                 .stream()
                 .filter(usuario -> usuario.getGoogleId().equals(googleId))
-                .findFirst();
+                .findFirst()
+                .orElse(null);
     }
 
-    public Optional<Usuario> getByUsername(String username) {
+    public Usuario getByUsername(String username) {
         return this.usuarios
                 .values()
                 .stream()
                 .filter(usuario -> usuario.getNombre().equals(username))
-                .findFirst();
+                .findFirst()
+                .orElse(null);
     }
 
     @Override

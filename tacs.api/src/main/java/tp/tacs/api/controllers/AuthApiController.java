@@ -63,8 +63,8 @@ public class AuthApiController implements AuthApi {
         var googleId = this.googleIdTokenService.extractGoogleId(idToken);
 
         var usuario =
-                this.usuarioDao
-                        .getByGoogleId(googleId)
+                Optional.ofNullable(this.usuarioDao
+                        .getByGoogleId(googleId))
                         .orElseThrow(() -> new UsuarioDesconocido("Intentó iniciar sesión un usuario desconocido"));
 
         var response = this.generarJwtParaUsuario(usuario);
@@ -84,8 +84,7 @@ public class AuthApiController implements AuthApi {
         var email = this.googleIdTokenService.extractEmail(idToken);
         var googleId = this.googleIdTokenService.extractGoogleId(idToken);
 
-        var usuario = this.usuarioDao
-                .getByGoogleId(googleId)
+        var usuario = Optional.ofNullable(this.usuarioDao.getByGoogleId(googleId))
                 .orElseGet(() -> {
                     // El usuario no existe, lo creamos
                     var userId = this.nextUserId.getAndIncrement();
@@ -105,8 +104,7 @@ public class AuthApiController implements AuthApi {
     public ResponseEntity<NuevoJWTModel> refreshToken() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         var username = (String) principal;
-        var usuario = this.usuarioDao
-                .getByUsername(username)
+        var usuario = Optional.ofNullable(this.usuarioDao.getByUsername(username))
                 .orElseThrow(() -> new UsuarioDesconocido("Usuario desconocido"));
 
         var response = this.generarJwtParaUsuario(usuario);
