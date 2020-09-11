@@ -4,11 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import tp.tacs.api.dominio.partida.Estado;
 import tp.tacs.api.dominio.partida.Partida;
-import tp.tacs.api.http.wrappers.AbstractWrapper;
 import tp.tacs.api.model.PartidaModel;
 
 @Component
-public class PartidaMapper extends AbstractWrapper<Partida,PartidaModel> {
+public class PartidaMapper extends AbstractMapper<Partida,PartidaModel> {
     @Autowired
     private UsuarioMapper usuarioMapper;
     @Autowired
@@ -28,7 +27,7 @@ public class PartidaMapper extends AbstractWrapper<Partida,PartidaModel> {
                 .cantidadMunicipios((long) model.getMunicipios().size())
                 .fecha(model.getFechaCreacion())
                 .modoDeJuego(modoDeJuegoMapper.toModel(model.getModoDeJuego()))
-                .provincia(provinciaMapper.toModel(model.getProvincia()))
+//                .provincia(provinciaMapper.wrapModel(model.getProvincia())) //todo revisar modelo
                 .informacionDeJuego(datosDeJuegoMapper.wrap(model))
                 .id(24L);
     }

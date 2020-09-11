@@ -3,11 +3,10 @@ package tp.tacs.api.mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import tp.tacs.api.dominio.municipio.Municipio;
-import tp.tacs.api.http.wrappers.AbstractWrapper;
 import tp.tacs.api.model.MunicipioEnJuegoModel;
 
 @Component
-public class MunicipioEnJuegoMapper extends AbstractWrapper<Municipio,MunicipioEnJuegoModel> {
+public class MunicipioEnJuegoMapper extends AbstractMapper<Municipio,MunicipioEnJuegoModel> {
     @Autowired
     UsuarioMapper usuarioMapper;
     @Autowired

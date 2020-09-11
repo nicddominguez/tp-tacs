@@ -6,8 +6,8 @@ import tp.tacs.api.http.HttpClientConnector;
 import tp.tacs.api.http.externalApis.models.MunicipiosApi;
 import tp.tacs.api.http.externalApis.models.Provincias;
 import tp.tacs.api.http.externalApis.models.TopoResult;
-import tp.tacs.api.http.wrappers.GeorefWrapper;
-import tp.tacs.api.http.wrappers.ProvinciaWrapper;
+import tp.tacs.api.mappers.GeorefMapper;
+import tp.tacs.api.mappers.ProvinciaMapper;
 import tp.tacs.api.model.ProvinciaModel;
 
 import java.util.List;
@@ -16,8 +16,8 @@ public class ExternalApis implements RepoMunicipios {
 
     private static ExternalApis instancia;
     private HttpClientConnector connector;
-    private GeorefWrapper geoRefWrapper;
-    private ProvinciaWrapper provinciaWrapper;
+    private GeorefMapper geoRefWrapper;
+    private ProvinciaMapper provinciaWrapper;
 
     private String geoRefMunicipioBaseUrlBasico     = "https://apis.datos.gob.ar/georef/api/municipios?campos=basico&aplanar=true";
     private String geoRefMunicipioBaseUrlEstandar   = "https://apis.datos.gob.ar/georef/api/municipios?aplanar=true";
@@ -28,8 +28,8 @@ public class ExternalApis implements RepoMunicipios {
         if (instancia == null) {
             instancia = new ExternalApis();
             instancia.connector = HttpClientConnector.instance();
-            instancia.geoRefWrapper = new GeorefWrapper();
-            instancia.provinciaWrapper = new ProvinciaWrapper();
+            instancia.geoRefWrapper = new GeorefMapper();
+            instancia.provinciaWrapper = new ProvinciaMapper();
         }
         return instancia;
     }

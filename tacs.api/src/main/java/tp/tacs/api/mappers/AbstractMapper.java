@@ -1,11 +1,11 @@
-package tp.tacs.api.http.wrappers;
+package tp.tacs.api.mappers;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public abstract class AbstractWrapper<T, Y> {
+public abstract class AbstractMapper<T, Y> {
 
     protected abstract Y wrapModel(T model);
 

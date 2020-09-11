@@ -1,9 +1,9 @@
-package tp.tacs.api.http.wrappers;
+package tp.tacs.api.mappers;
 
 import tp.tacs.api.dominio.municipio.Municipio;
 import tp.tacs.api.http.externalApis.models.MunicipioApi;
 
-public class GeorefWrapper extends AbstractWrapper <MunicipioApi, Municipio> {
+public class GeorefMapper extends AbstractMapper<MunicipioApi, Municipio> {
 
 
     @Override
