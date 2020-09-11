@@ -3,12 +3,14 @@ package tp.tacs.api.controllers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import tp.tacs.api.dominio.usuario.RepoUsuarios;
 import tp.tacs.api.dominio.usuario.Usuario;
+import tp.tacs.api.mappers.UsuarioMapper;
 import tp.tacs.api.model.ListarUsuariosResponse;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -21,7 +23,8 @@ class UsuariosApiControllerTest {
     RepoUsuarios repoUsuarios = new RepoUsuarios();
 
     private UsuariosApiController usuariosApiController = new UsuariosApiController();
-
+    @Mock
+    private UsuarioMapper usuarioMapper;
     @BeforeEach
     public void before() {
         MockitoAnnotations.initMocks(this);

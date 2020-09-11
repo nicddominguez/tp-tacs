@@ -1,5 +1,7 @@
 package tp.tacs.api.dominio.municipio;
 
+import tp.tacs.api.model.ProvinciaModel;
+
 import java.util.List;
 
 public interface RepoMunicipios {
@@ -17,4 +19,7 @@ public interface RepoMunicipios {
     String getPathImagen(String idMunicipio);
 
     String getCoordenadas(String idMunicipio);
+
+    List<ProvinciaModel> getProvincias();
 }
+

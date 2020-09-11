@@ -46,7 +46,7 @@ public class RepoUsuarios {
 
     public EstadisticasDeUsuarioModel estadisticas(Usuario usuario) {
         return new EstadisticasDeUsuarioModel()
-                .usuario(this.usuarioMapper.toModel(usuario))
+                .usuario(this.usuarioMapper.wrap(usuario))
                 .partidasJugadas(usuario.getPartidasJugadas())
                 .partidasGanadas(usuario.getPartidasGanadas())
                 .rachaActual(usuario.getRachaActual());

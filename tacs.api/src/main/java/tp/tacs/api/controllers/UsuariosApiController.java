@@ -1,5 +1,6 @@
 package tp.tacs.api.controllers;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import tp.tacs.api.dominio.usuario.RepoUsuarios;
@@ -15,10 +16,11 @@ import java.util.stream.Collectors;
 
 @RestController
 public class UsuariosApiController implements UsuariosApi {
-
-    Utils utils = new Utils();
-    RepoUsuarios repoUsuarios = RepoUsuarios.instance();
-    UsuarioMapper usuarioMapper = new UsuarioMapper();
+    @Autowired
+    private Utils utils;
+    private RepoUsuarios repoUsuarios = RepoUsuarios.instance();
+    @Autowired
+    private UsuarioMapper usuarioMapper;
 
     public void setRepoUsuarios(RepoUsuarios repoUsuarios) {
         this.repoUsuarios = repoUsuarios;
@@ -30,10 +32,9 @@ public class UsuariosApiController implements UsuariosApi {
         if (filter != null) {
             usuarios = usuarios.stream().filter(usuario -> usuario.mismoNombre(filter)).collect(Collectors.toList());
         }
-        List<UsuarioModel> usuarioModels =
-                usuarios.stream().map(usuario -> this.usuarioMapper.toModel(usuario)).collect(Collectors.toList());
+        List<UsuarioModel> usuarioModels = usuarioMapper.wrapList(usuarios);
 
-        List<UsuarioModel> listaPaginada = this.utils.obtenerListaPaginada(pagina, tamanioPagina, usuarioModels);
+        List<UsuarioModel> listaPaginada = utils.obtenerListaPaginada(pagina, tamanioPagina, usuarioModels);
 
         return ResponseEntity.ok(new ListarUsuariosResponse().usuarios(listaPaginada));
     }

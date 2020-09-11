@@ -1,25 +1,24 @@
 package tp.tacs.api.http;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import tp.tacs.api.http.exception.HttpErrorException;
 
 import java.util.Map;
 
-@Component
 public class HttpClientConnector {
 
-    @Autowired
+    private static HttpClientConnector instancia;
     private RestTemplate restTemplate;
 
-    @Bean
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
+    public static HttpClientConnector instance() {
+        if (instancia == null) {
+            instancia = new HttpClientConnector();
+            instancia.restTemplate = new RestTemplate();
+        }
+        return instancia;
     }
 
     public <T> T get(String url, Class<T> clazz) {
@@ -42,5 +41,4 @@ public class HttpClientConnector {
             throw new HttpErrorException(ex.getMessage());
         }
     }
-
 }

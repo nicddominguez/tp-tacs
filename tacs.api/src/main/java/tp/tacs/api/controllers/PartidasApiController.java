@@ -3,7 +3,6 @@ package tp.tacs.api.controllers;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
-import tp.tacs.api.dominio.municipio.RepoMunicipios;
 import tp.tacs.api.dominio.partida.Partida;
 import tp.tacs.api.dominio.partida.PartidaBuilder;
 import tp.tacs.api.dominio.partida.RepoPartidas;
@@ -61,8 +60,8 @@ public class PartidasApiController implements PartidasApi {
         try {
             var municipioAtacante = ExternalApis.instance().getMunicipios(idPartida.toString(), body.getIdMunicipioAtacante().intValue()).get(0);
             var municipioObjetivo = ExternalApis.instance().getMunicipios(idPartida.toString(), body.getIdMunicipioObjetivo().intValue()).get(0);
-            var municipioAtacanteModel = municipioEnJuegoMapper.toModel(municipioAtacante);
-            var municipioObjetivoModel = municipioEnJuegoMapper.toModel(municipioObjetivo);
+            var municipioAtacanteModel = municipioEnJuegoMapper.wrap(municipioAtacante);
+            var municipioObjetivoModel = municipioEnJuegoMapper.wrap(municipioObjetivo);
 
             var response = new AtacarMunicipioResponse()
                     .municipioAtacado(municipioObjetivoModel)
@@ -91,7 +90,7 @@ public class PartidasApiController implements PartidasApi {
     public ResponseEntity<PartidaModel> getPartida(Long idPartida) {
         try {
             var partida = repoPartidas.getPartida(idPartida);
-            var partidaModel = this.partidaMapper.toModel(partida);
+            var partidaModel = this.partidaMapper.wrap(partida);
 
             return ResponseEntity.ok(partidaModel);
         } catch (Exception e) {
@@ -111,7 +110,7 @@ public class PartidasApiController implements PartidasApi {
             Utils utils = new Utils();
 
             var partidas = repoPartidas.getPartidasFiltradas(fechaInicio, fechaFin, estado);
-            var partidaModels = partidaMapper.toModels(partidas);
+            var partidaModels = partidaMapper.wrapList(partidas);
             var listaPaginada = utils.obtenerListaPaginada(pagina, tamanioPagina, partidaModels);
             var response = new ListarPartidasResponse().partidas(listaPaginada);
             return ResponseEntity.ok(response);
@@ -131,8 +130,8 @@ public class PartidasApiController implements PartidasApi {
 
             municipioOrigen.moverGauchos(municipioDestino, Math.toIntExact(body.getCantidad()));
 
-            var municipioOrigenModel = municipioEnJuegoMapper.toModel(municipioOrigen);
-            var municipioDestinoModel = municipioEnJuegoMapper.toModel(municipioDestino);
+            var municipioOrigenModel = municipioEnJuegoMapper.wrap(municipioOrigen);
+            var municipioDestinoModel = municipioEnJuegoMapper.wrap(municipioDestino);
 
             var moverGauchosResponse = new MoverGauchosResponse()
                     .municipioOrigen(municipioOrigenModel)

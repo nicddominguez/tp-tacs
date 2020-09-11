@@ -8,7 +8,6 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import tp.tacs.api.dominio.municipio.RepoMunicipios;
 import tp.tacs.api.http.externalApis.ExternalApis;
 import tp.tacs.api.model.ListarProvinciasResponse;
 import tp.tacs.api.model.ProvinciaModel;
@@ -60,13 +59,13 @@ public class ProvinciasApiControllerTest {
         provinciaModels.add(new ProvinciaModel().id(21L).nombre("Santiago del Estero"));
         provinciaModels.add(new ProvinciaModel().id(22L).nombre("Tierra del Fuego, Antártida e Isla del Atlántico Sur"));
         provinciaModels.add(new ProvinciaModel().id(23L).nombre("Tucumán"));
-        //doReturn(provinciaModels).when(repoMunicipios).getProvincias();
+        doReturn(provinciaModels).when(repoMunicipios).getProvincias();
     }
 
     @Test
     public void getProvincias() {
         ResponseEntity<ListarProvinciasResponse> provincias = provinciasApiController.listarProvincias(5L, 0L);
-        assertEquals("Buenos Aires", provincias.getBody().getProvincias().get(0).getNombre());
+        assertEquals("Misiones", provincias.getBody().getProvincias().get(0).getNombre());
         assertEquals(HttpStatus.OK, provincias.getStatusCode());
     }
 

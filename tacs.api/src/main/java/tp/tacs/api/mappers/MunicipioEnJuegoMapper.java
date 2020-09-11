@@ -1,40 +1,36 @@
 package tp.tacs.api.mappers;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import tp.tacs.api.dominio.municipio.Municipio;
+import tp.tacs.api.http.wrappers.AbstractWrapper;
 import tp.tacs.api.model.MunicipioEnJuegoModel;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Component
-public class MunicipioEnJuegoMapper {
+public class MunicipioEnJuegoMapper extends AbstractWrapper<Municipio,MunicipioEnJuegoModel> {
+    @Autowired
+    UsuarioMapper usuarioMapper;
+    @Autowired
+    ModoDeMunicipioMapper modoDeMunicipioMapper;
+    @Autowired
+    CoordenadasMapper coordenadasMapper;
 
-    UsuarioMapper usuarioMapper = new UsuarioMapper();
-
-    ModoDeMunicipioMapper modoDeMunicipioMapper = new ModoDeMunicipioMapper();
-
-    CoordenadasMapper coordenadasMapper = new CoordenadasMapper();
-
-    public MunicipioEnJuegoModel toModel(Municipio entity) {
+    @Override protected MunicipioEnJuegoModel wrapModel(Municipio model) {
         return new MunicipioEnJuegoModel()
-                .altura(entity.getAltura().longValue())
-                .duenio(usuarioMapper.toModel(entity.getDuenio()))
-                .estaBloqueado(entity.estaBloqueado())
-                .gauchos(entity.getCantGauchos().longValue())
-                .modo(modoDeMunicipioMapper.toModel(entity.getEspecializacion()))
+                .altura(model.getAltura().longValue())
+                .duenio(usuarioMapper.wrap(model.getDuenio()))
+                .estaBloqueado(model.estaBloqueado())
+                .gauchos(model.getCantGauchos().longValue())
+                .modo(modoDeMunicipioMapper.toModel(model.getEspecializacion()))
                 .id(123L) //TODO
                 .nombre("TODO") //TODO
-                .produccionDeGauchos(entity.getEspecializacion().nivelDeProduccion(entity).longValue())
-                .puntosDeDefensa(entity.getEspecializacion().multDefensa(entity.getPartida()).longValue())
-                .ubicacion(coordenadasMapper.toModel(entity.getLatitud(), entity.getLongitud()))
-                .urlImagen(entity.getPathImagen());
+                .produccionDeGauchos(model.getEspecializacion().nivelDeProduccion(model).longValue())
+                .puntosDeDefensa(model.getEspecializacion().multDefensa(model.getPartida()).longValue())
+                .ubicacion(coordenadasMapper.toModel(model.getLatitud(), model.getLongitud()))
+                .urlImagen(model.getPathImagen());
     }
 
-    public List<MunicipioEnJuegoModel> municipiosToModel(List<Municipio> municipios) {
-        List<MunicipioEnJuegoModel> municipioModels = new ArrayList<>();
-        municipios.forEach(municipio -> municipioModels.add(this.toModel(municipio)));
-        return municipioModels;
+    @Override protected Municipio unwrapModel(MunicipioEnJuegoModel model) {
+        return null;
     }
-
 }
