@@ -39,8 +39,19 @@ public class JWTTokenService {
                 .withClaim("userId", userId)
                 .withClaim("username", username)
                 .withClaim("isAdmin", isAdmin)
+                .withClaim("type", "access")
                 .withIssuer(this.jwtIssuer)
                 .withExpiresAt(calendar.getTime())
+                .sign(this.jwtAlgorithm);
+    }
+
+    public String createRefreshToken(Long userId, String username, Boolean isAdmin) {
+        return JWT.create()
+                .withClaim("userId", userId)
+                .withClaim("username", username)
+                .withClaim("isAdmin", isAdmin)
+                .withClaim("type", "refresh")
+                .withIssuer(this.jwtIssuer)
                 .sign(this.jwtAlgorithm);
     }
 

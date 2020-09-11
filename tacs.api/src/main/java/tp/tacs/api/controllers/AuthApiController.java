@@ -1,21 +1,26 @@
 package tp.tacs.api.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import tp.tacs.api.daos.UsuarioDao;
 import tp.tacs.api.dominio.usuario.Usuario;
 import tp.tacs.api.exceptions.UsuarioDesconocido;
 import tp.tacs.api.mappers.UsuarioMapper;
 import tp.tacs.api.model.GoogleAuthModel;
 import tp.tacs.api.model.NuevoJWTModel;
+import tp.tacs.api.model.RefreshAccessTokenBody;
 import tp.tacs.api.security.GoogleIdTokenService;
 import tp.tacs.api.security.JWTTokenService;
 import tp.tacs.api.exceptions.GoogleIdTokenFaltante;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -53,6 +58,16 @@ public class AuthApiController implements AuthApi {
                 .usuario(this.usuarioMapper.toModel(usuario));
     }
 
+    private NuevoJWTModel agregarRefreshToken(Usuario usuario, NuevoJWTModel model) {
+        var nuevoRefreshToken = this.jwtTokenService.createRefreshToken(
+                usuario.getId(),
+                usuario.getNombre(),
+                usuario.getAdmin()
+        );
+
+        return model.refreshToken(nuevoRefreshToken);
+    }
+
     @Override
     public ResponseEntity<NuevoJWTModel> logIn(@Valid GoogleAuthModel body) {
         var idTokenString =
@@ -68,6 +83,7 @@ public class AuthApiController implements AuthApi {
                         .orElseThrow(() -> new UsuarioDesconocido("Intentó iniciar sesión un usuario desconocido"));
 
         var response = this.generarJwtParaUsuario(usuario);
+        response = this.agregarRefreshToken(usuario, response);
 
         return ResponseEntity.ok(response);
     }
@@ -96,14 +112,28 @@ public class AuthApiController implements AuthApi {
                 });
 
         var response = this.generarJwtParaUsuario(usuario);
+        response = this.agregarRefreshToken(usuario, response);
 
         return ResponseEntity.ok(response);
     }
 
+    public Optional<HttpServletRequest> getCurrentRequest() {
+        return Optional.ofNullable(RequestContextHolder.getRequestAttributes())
+                .map(attributes -> (ServletRequestAttributes) attributes)
+                .map(ServletRequestAttributes::getRequest);
+    }
+
     @Override
-    public ResponseEntity<NuevoJWTModel> refreshToken() {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        var username = (String) principal;
+    public ResponseEntity<NuevoJWTModel> refreshAccessToken(@Valid RefreshAccessTokenBody body) {
+        var refreshToken = body.getRefreshToken();
+        var maybeAuthorization = Optional.ofNullable(refreshToken)
+                .flatMap(this.jwtTokenService::validateToken);
+
+        if(maybeAuthorization.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        var username = (String) maybeAuthorization.get().getPrincipal();
         var usuario = Optional.ofNullable(this.usuarioDao.getByUsername(username))
                 .orElseThrow(() -> new UsuarioDesconocido("Usuario desconocido"));
 

@@ -69,7 +69,16 @@ paths:
       tags:
         - Auth
       summary: Permite obtener un nuevo JWT
-      operationId: refreshToken
+      operationId: refreshAccessToken
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              title: refreshAccessTokenBody
+              properties:
+                refreshToken:
+                  type: string
       responses:
         200:
           description: Success
@@ -770,11 +779,15 @@ components:
       type: object
       required:
         - token
+        - usuario
       properties:
         usuario:
           $ref: '#/components/schemas/UsuarioModel'
         token:
           description: JWT que puede utilizarse para acceder a los recursos protegidos
+          type: string
+        refreshToken:
+          description: Token de refresh para generar un nuevo token de acceso
           type: string
     EstadisticasDeJuegoModel:
       type: object

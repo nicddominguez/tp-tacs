@@ -14,7 +14,7 @@ import javax.validation.constraints.*;
  * NuevoJWTModel
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-09-05T20:37:59.553716700-03:00[America/Buenos_Aires]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-09-10T23:54:09.200258200-03:00[America/Buenos_Aires]")
 
 
 public class NuevoJWTModel   {
@@ -23,6 +23,9 @@ public class NuevoJWTModel   {
 
   @JsonProperty("token")
   private String token = null;
+
+  @JsonProperty("refreshToken")
+  private String refreshToken = null;
 
   public NuevoJWTModel usuario(UsuarioModel usuario) {
     this.usuario = usuario;
@@ -33,8 +36,9 @@ public class NuevoJWTModel   {
    * Get usuario
    * @return usuario
   **/
-  @ApiModelProperty(value = "")
-  
+  @ApiModelProperty(required = true, value = "")
+      @NotNull
+
     @Valid
     public UsuarioModel getUsuario() {
     return usuario;
@@ -64,6 +68,25 @@ public class NuevoJWTModel   {
     this.token = token;
   }
 
+  public NuevoJWTModel refreshToken(String refreshToken) {
+    this.refreshToken = refreshToken;
+    return this;
+  }
+
+  /**
+   * Token de refresh para generar un nuevo token de acceso
+   * @return refreshToken
+  **/
+  @ApiModelProperty(value = "Token de refresh para generar un nuevo token de acceso")
+  
+    public String getRefreshToken() {
+    return refreshToken;
+  }
+
+  public void setRefreshToken(String refreshToken) {
+    this.refreshToken = refreshToken;
+  }
+
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -75,12 +98,13 @@ public class NuevoJWTModel   {
     }
     NuevoJWTModel nuevoJWTModel = (NuevoJWTModel) o;
     return Objects.equals(this.usuario, nuevoJWTModel.usuario) &&
-        Objects.equals(this.token, nuevoJWTModel.token);
+        Objects.equals(this.token, nuevoJWTModel.token) &&
+        Objects.equals(this.refreshToken, nuevoJWTModel.refreshToken);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(usuario, token);
+    return Objects.hash(usuario, token, refreshToken);
   }
 
   @Override
@@ -90,6 +114,7 @@ public class NuevoJWTModel   {
     
     sb.append("    usuario: ").append(toIndentedString(usuario)).append("\n");
     sb.append("    token: ").append(toIndentedString(token)).append("\n");
+    sb.append("    refreshToken: ").append(toIndentedString(refreshToken)).append("\n");
     sb.append("}");
     return sb.toString();
   }

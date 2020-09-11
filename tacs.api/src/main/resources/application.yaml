@@ -5,5 +5,5 @@ security:
   google:
     clientId: ${GOOGLE_OAUTH_CLIENT_ID:secret}
   rutas:
-    permitidas: /auth/logIn,/auth/signUp
+    permitidas: "/auth/**"
     administrativas: "/admin/**"

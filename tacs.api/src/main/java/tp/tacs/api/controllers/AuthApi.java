@@ -7,6 +7,7 @@ package tp.tacs.api.controllers;
 
 import tp.tacs.api.model.GoogleAuthModel;
 import tp.tacs.api.model.NuevoJWTModel;
+import tp.tacs.api.model.RefreshAccessTokenBody;
 import io.swagger.annotations.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -24,7 +25,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.util.List;
 import java.util.Map;
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-09-09T00:48:02.892711-03:00[America/Buenos_Aires]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-09-11T00:18:42.309597800-03:00[America/Buenos_Aires]")
 @Api(value = "auth", description = "the auth API")
 public interface AuthApi {
 
@@ -41,14 +42,16 @@ public interface AuthApi {
 );
 
 
-    @ApiOperation(value = "Permite obtener un nuevo JWT", nickname = "refreshToken", notes = "", response = NuevoJWTModel.class, tags={ "Auth", })
+    @ApiOperation(value = "Permite obtener un nuevo JWT", nickname = "refreshAccessToken", notes = "", response = NuevoJWTModel.class, tags={ "Auth", })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "Success", response = NuevoJWTModel.class),
         @ApiResponse(code = 401, message = "Unauthorized") })
     @RequestMapping(value = "/auth/refresh",
         produces = { "application/json" }, 
+        consumes = { "application/json" },
         method = RequestMethod.POST)
-    ResponseEntity<NuevoJWTModel> refreshToken();
+    ResponseEntity<NuevoJWTModel> refreshAccessToken(@ApiParam(value = ""  )  @Valid @RequestBody RefreshAccessTokenBody body
+);
 
 
     @ApiOperation(value = "singUp", nickname = "singUp", notes = "Registro a un usuario nuevo y retorna un JWT de la aplicación", response = NuevoJWTModel.class, tags={ "Auth", })
