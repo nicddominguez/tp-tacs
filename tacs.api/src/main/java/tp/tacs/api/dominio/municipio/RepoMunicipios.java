@@ -1,7 +1,5 @@
 package tp.tacs.api.dominio.municipio;
 
-import tp.tacs.api.dominio.Municipio;
-
 import java.util.List;
 
 public interface RepoMunicipios {

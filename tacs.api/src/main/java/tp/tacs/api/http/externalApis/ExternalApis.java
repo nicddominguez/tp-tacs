@@ -1,32 +1,38 @@
 package tp.tacs.api.http.externalApis;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import tp.tacs.api.dominio.Municipio;
+import tp.tacs.api.dominio.municipio.Municipio;
 import tp.tacs.api.dominio.municipio.RepoMunicipios;
 import tp.tacs.api.http.HttpClientConnector;
 import tp.tacs.api.http.externalApis.models.MunicipiosApi;
 import tp.tacs.api.http.externalApis.models.TopoResult;
+import tp.tacs.api.http.wrappers.GeorefWrapper;
 
 import java.util.List;
 
-@Component
 public class ExternalApis implements RepoMunicipios {
 
-    @Autowired
+    private static ExternalApis instancia;
     private HttpClientConnector connector;
-
+    private GeorefWrapper wrapper;
 
     private String geoRefBaseUrlBasico      = "https://apis.datos.gob.ar/georef/api/municipios?campos=basico&aplanar=true";
     private String geoRefbaseUrlEstandar    = "https://apis.datos.gob.ar/georef/api/municipios?aplanar=true";
     private String topoBaseUrl              = "https://api.opentopodata.org/v1/srtm90m?locations=";
 
+    public static ExternalApis instance() {
+        if (instancia == null) {
+            instancia = new ExternalApis();
+            instancia.connector = new HttpClientConnector();
+            instancia.wrapper = new GeorefWrapper();
+        }
+        return instancia;
+    }
+
     @Override
     public List<Municipio> getMunicipios(String idProvincia, Integer cantidad) {
-        //        String url = baseUrl + "/municipios?campos=basico&provincia=" + idProvincia;
-        //        MunicipiosApi municipiosApi = connector.get(url, MunicipiosApi.class);
-        //        return wrapper.wrapList(municipiosApi.getMunicipios());
-        return null;
+        String url = geoRefBaseUrlBasico + "&provincia=" + idProvincia;
+        MunicipiosApi municipiosApi = connector.get(url, MunicipiosApi.class);
+        return wrapper.wrapList(municipiosApi.getMunicipios());
     }
 
     @Override

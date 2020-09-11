@@ -10,11 +10,13 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
+import tp.tacs.api.dominio.municipio.Municipio;
 import tp.tacs.api.http.HttpClientConnector;
 import tp.tacs.api.http.externalApis.models.MunicipioApi;
 import tp.tacs.api.http.externalApis.models.MunicipiosApi;
 import tp.tacs.api.http.externalApis.models.TopoData;
 import tp.tacs.api.http.externalApis.models.TopoResult;
+import tp.tacs.api.http.wrappers.GeorefWrapper;
 
 import java.util.Arrays;
 import java.util.List;
@@ -27,6 +29,8 @@ import static org.mockito.Mockito.when;
 public class ExternalApisTest {
     @InjectMocks
     private ExternalApis api;
+    @Mock
+    private GeorefWrapper wrapper;
     @Mock
     private HttpClientConnector connector;
     @Rule
@@ -96,7 +100,7 @@ public class ExternalApisTest {
 
     @Test
     public void getMunicipios(){
-        assertNull(api.getMunicipios("1",1));
+        assertEquals(api.getMunicipios("1",1), Arrays.asList());
     }
 
     @Test

@@ -1,20 +1,20 @@
 package tp.tacs.api.http.wrappers;
 
+import tp.tacs.api.dominio.municipio.Municipio;
 import tp.tacs.api.http.externalApis.models.MunicipioApi;
-import tp.tacs.api.model.MunicipioEnJuegoModel;
 
-public class GeorefWrapper extends AbstractWrapper <MunicipioApi, MunicipioEnJuegoModel> {
+public class GeorefWrapper extends AbstractWrapper <MunicipioApi, Municipio> {
 
 
     @Override
-    protected MunicipioEnJuegoModel wrapModel(MunicipioApi model) {
-        MunicipioEnJuegoModel municipio = new MunicipioEnJuegoModel();
-        municipio.setId(Long.valueOf(model.getId()));
+    protected Municipio wrapModel(MunicipioApi model) {
+        Municipio municipio = new Municipio();
+        municipio.setIdMunicipioReal(model.getId());
         return municipio;
     }
 
     @Override
-    protected MunicipioApi unwrapModel(MunicipioEnJuegoModel model) {
+    protected MunicipioApi unwrapModel(Municipio model) {
         return null;
     }
 }

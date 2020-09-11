@@ -20,6 +20,7 @@
 		<mockito-all.version>1.9.5</mockito-all.version>
 		<powermock-api-mockito2.version>2.0.7</powermock-api-mockito2.version>
 		<lombok.version>1.18.8</lombok.version>
+		<guava.version>29.0-jre</guava.version>
 		<start-class>tp.tacs.api.TacsApiMain</start-class>
 	</properties>
 
@@ -183,6 +184,12 @@
 			<artifactId>powermock-api-mockito2</artifactId>
 			<version>${powermock-api-mockito2.version}</version>
 			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>${guava.version}</version>
 		</dependency>
 	</dependencies>
 </project>
