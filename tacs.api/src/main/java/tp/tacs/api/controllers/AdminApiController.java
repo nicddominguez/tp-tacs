@@ -2,8 +2,8 @@ package tp.tacs.api.controllers;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
+import tp.tacs.api.daos.PartidaDao;
 import tp.tacs.api.daos.UsuarioDao;
-import tp.tacs.api.dominio.partida.RepoPartidas;
 import tp.tacs.api.model.EstadisticasDeJuegoModel;
 import tp.tacs.api.model.EstadisticasDeUsuarioModel;
 import tp.tacs.api.model.ScoreboardResponse;
@@ -16,14 +16,14 @@ import java.util.List;
 @RestController
 public class AdminApiController implements AdminApi {
 
-    Utils utils = new Utils();
+    private Utils utils = new Utils();
 
-    RepoPartidas repoPartidas = RepoPartidas.instance();
+    private PartidaDao partidaDao = new PartidaDao();
 
-    UsuarioDao usuarioDao = new UsuarioDao();
+    private UsuarioDao usuarioDao = new UsuarioDao();
 
-    public void setRepoPartidas(RepoPartidas repoPartidas) {
-        this.repoPartidas = repoPartidas;
+    public void setPartidaDao(PartidaDao partidaDao) {
+        this.partidaDao = partidaDao;
     }
 
     public void setUsuarioDao(UsuarioDao usuarioDao) {
@@ -32,7 +32,7 @@ public class AdminApiController implements AdminApi {
 
     @Override
     public ResponseEntity<EstadisticasDeJuegoModel> getEstadisticas(@Valid Date fechaInicio, @Valid Date fechaFin) {
-        return ResponseEntity.ok(this.repoPartidas.estadisticas(fechaInicio, fechaFin));
+        return ResponseEntity.ok(this.partidaDao.estadisticas(fechaInicio, fechaFin));
     }
 
     @Override

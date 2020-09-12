@@ -3,10 +3,10 @@ package tp.tacs.api.controllers;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
+import tp.tacs.api.daos.PartidaDao;
 import tp.tacs.api.daos.UsuarioDao;
 import tp.tacs.api.dominio.partida.Partida;
 import tp.tacs.api.dominio.partida.PartidaBuilder;
-import tp.tacs.api.dominio.partida.RepoPartidas;
 import tp.tacs.api.http.externalApis.ExternalApis;
 import tp.tacs.api.mappers.*;
 import tp.tacs.api.model.*;
@@ -28,7 +28,7 @@ public class PartidasApiController implements PartidasApi {
 
     private ModoDeJuegoMapper modoDeJuegoMapper = new ModoDeJuegoMapper();
 
-    private RepoPartidas repoPartidas = RepoPartidas.instance();
+    private PartidaDao partidaDao = new PartidaDao();
 
     UsuarioDao usuarioDao = new UsuarioDao();
 
@@ -39,7 +39,7 @@ public class PartidasApiController implements PartidasApi {
     @Override
     public ResponseEntity<Void> actualizarEstadoPartida(Long idPartida, @Valid PartidaModel body) {
         try {
-            Partida partida = repoPartidas.getPartida(idPartida);
+            Partida partida = this.partidaDao.get(idPartida);
             var nuevoEstado = estadoDeJuegoMapper.toEntity(body.getEstado());
             System.out.println(nuevoEstado);
             partida.setEstado(nuevoEstado);
@@ -95,7 +95,7 @@ public class PartidasApiController implements PartidasApi {
     @Override
     public ResponseEntity<PartidaModel> getPartida(Long idPartida) {
         try {
-            var partida = repoPartidas.getPartida(idPartida);
+            var partida = this.partidaDao.get(idPartida);
             var partidaModel = this.partidaMapper.wrap(partida);
 
             return ResponseEntity.ok(partidaModel);
@@ -115,7 +115,7 @@ public class PartidasApiController implements PartidasApi {
         try {
             Utils utils = new Utils();
 
-            var partidas = repoPartidas.getPartidasFiltradas(fechaInicio, fechaFin, estado);
+            var partidas = this.partidaDao.getPartidasFiltradas(fechaInicio, fechaFin, estado);
             var partidaModels = partidaMapper.wrapList(partidas);
             var listaPaginada = utils.obtenerListaPaginada(pagina, tamanioPagina, partidaModels);
             var response = new ListarPartidasResponse().partidas(listaPaginada);

@@ -1,5 +1,6 @@
 package tp.tacs.api.controllers;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -7,11 +8,11 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import tp.tacs.api.daos.PartidaDao;
 import tp.tacs.api.daos.UsuarioDao;
 import tp.tacs.api.dominio.municipio.Municipio;
 import tp.tacs.api.dominio.partida.Estado;
 import tp.tacs.api.dominio.partida.Partida;
-import tp.tacs.api.dominio.partida.RepoPartidas;
 import tp.tacs.api.dominio.usuario.Usuario;
 import tp.tacs.api.model.EstadisticasDeJuegoModel;
 import tp.tacs.api.model.EstadisticasDeUsuarioModel;
@@ -37,7 +38,7 @@ class AdminApiControllerTest {
 
     private AdminApiController adminController = new AdminApiController();
 
-    RepoPartidas repoPartidas = new RepoPartidas();
+    PartidaDao partidaDao = new PartidaDao();
 
     UsuarioDao usuarioDao = new UsuarioDao();
 
@@ -57,8 +58,12 @@ class AdminApiControllerTest {
 
         partida = new Partida(usuarios, Estado.EN_CURSO, null, municipios, null, null);
         partida.setFechaCreacion(fechaCreacion);
-        repoPartidas.agregarPartida(partida);
-        adminController.setRepoPartidas(repoPartidas);
+        adminController.setPartidaDao(partidaDao);
+    }
+
+    @AfterEach
+    public void after() {
+        partidaDao.limpiar();
     }
 
     @Test

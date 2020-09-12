@@ -1,53 +1,45 @@
-package tp.tacs.api.dominio.partida;
+package tp.tacs.api.daos;
 
-import tp.tacs.api.dominio.municipio.Municipio;
-import tp.tacs.api.dominio.municipio.RepoMunicipios;
-import tp.tacs.api.dominio.usuario.Usuario;
-import tp.tacs.api.http.externalApis.ExternalApis;
+import tp.tacs.api.dominio.partida.Estado;
+import tp.tacs.api.dominio.partida.Partida;
 import tp.tacs.api.mappers.EstadoDeJuegoMapper;
 import tp.tacs.api.model.EstadisticasDeJuegoModel;
 import tp.tacs.api.model.EstadoDeJuegoModel;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class RepoPartidas {
+public class PartidaDao implements Dao<Partida> {
 
-    private EstadoDeJuegoMapper estadoDeJuegoMapper = new EstadoDeJuegoMapper();
+    private final EstadoDeJuegoMapper estadoDeJuegoMapper = new EstadoDeJuegoMapper();
 
-    private List<Partida> partidas = new ArrayList<>();
+    private static List<Partida> partidas = new ArrayList<>();
 
-    private static RepoPartidas instancia = null;
-
-    public static RepoPartidas instance() {
-        if (instancia == null) {
-            instancia = new RepoPartidas();
-        }
-        return instancia;
+    public synchronized void limpiar() {
+        PartidaDao.partidas = new ArrayList<>();
     }
 
-    public Partida getPartida(Long idPartida){
-        var jugadores = Arrays.asList(new Usuario(1L, "jasdfo@gmail.com", "juan"),
-                new Usuario(2L, "aa@gmail.com", "carlos"));
-        List<Municipio> municipios = ExternalApis.instance().getMunicipios("buenos aires", 5);
-        var partida = new Partida(jugadores, Estado.EN_CURSO, "123",
-                municipios, new ModoRapido(), new Date());
-        return partida;
+    @Override
+    public synchronized Partida get(Long id) {
+        return PartidaDao.partidas.get(Math.toIntExact(id));
     }
 
-    public List<Partida> getPartidas() {
-        return partidas;
+    @Override
+    public synchronized List<Partida> getAll() {
+        return PartidaDao.partidas;
     }
 
-    public void setPartidas(List<Partida> partidas) {
-        this.partidas = partidas;
+    @Override
+    public synchronized void save(Partida element) {
+        element.setId((long) PartidaDao.partidas.size());
+        PartidaDao.partidas.add(element);
     }
 
-    public void agregarPartida(Partida partida) {
-        this.partidas.add(partida);
+    @Override
+    public synchronized void delete(Partida element) {
+        PartidaDao.partidas.remove(element);
     }
 
     public EstadisticasDeJuegoModel estadisticas(Date fechaInicio, Date fechaFin) {
@@ -69,7 +61,7 @@ public class RepoPartidas {
     }
 
     private List<Partida> partidasEntre(Date fechaInicio, Date fechaFin) {
-        return this.partidas
+        return PartidaDao.partidas
                 .stream()
                 .filter(partida ->
                         partida.getFechaCreacion().after(fechaInicio) && partida.getFechaCreacion().before(fechaFin))

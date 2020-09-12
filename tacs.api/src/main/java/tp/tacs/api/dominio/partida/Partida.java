@@ -1,6 +1,7 @@
 package tp.tacs.api.dominio.partida;
 
 import com.google.common.collect.Sets;
+import tp.tacs.api.daos.PartidaDao;
 import tp.tacs.api.dominio.municipio.Municipio;
 import tp.tacs.api.dominio.usuario.Usuario;
 
@@ -10,6 +11,7 @@ import java.util.stream.Collectors;
 
 public class Partida {
 
+    private Long id;
     private List<Usuario> jugadores = new ArrayList<>();
     private Integer usuarioJugandoIndiceLista = 0;
     private Estado estado;
@@ -29,7 +31,15 @@ public class Partida {
         this.modoDeJuego = modoDeJuego;
         this.fechaCreacion = fechaCreacion;
         this.repartirMunicipios();
-        RepoPartidas.instance().agregarPartida(this);
+        new PartidaDao().save(this);
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public List<Usuario> getJugadores() {
