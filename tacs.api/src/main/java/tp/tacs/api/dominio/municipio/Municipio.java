@@ -9,13 +9,22 @@ import java.util.ArrayList;
 
 public class Municipio {
 
-    private String idMunicipioReal = "1234";
+    private Long id;
+    private String idMunicipioReal = "2";
     private Integer cantGauchos = 0;
     private boolean bloqueado = false;
     private Especializacion especializacion = new Produccion();
     private Partida partida;
     private Usuario duenio;
     ExternalApis repoMunicipios = ExternalApis.instance();
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public Integer getCantGauchos() {
         return cantGauchos;
@@ -65,6 +74,9 @@ public class Municipio {
         return duenio == null;
     }
 
+    public String getNombre(){
+        return this.repoMunicipios.getNombre(this.idMunicipioReal);
+    }
     public String getIdMunicipioReal() {
         return this.idMunicipioReal;
     }

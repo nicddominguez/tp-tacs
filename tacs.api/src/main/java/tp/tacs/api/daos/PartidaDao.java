@@ -69,10 +69,19 @@ public class PartidaDao implements Dao<Partida> {
     }
 
     public List<Partida> getPartidasFiltradas(Date fechaInicio, Date fechaFin, EstadoDeJuegoModel estado) {
-        var estadoDeJuego = estadoDeJuegoMapper.toEntity(estado);
-        return partidasEntre(fechaInicio, fechaFin)
-                .stream()
-                .filter(partida -> partida.getEstado().equals(estadoDeJuego))
-                .collect(Collectors.toList());
+        if (fechaInicio != null || fechaFin != null) { //TODO
+            if (estado != null) {
+                var estadoDeJuego = estadoDeJuegoMapper.toEntity(estado);
+                return partidasEntre(fechaInicio, fechaFin)
+                        .stream()
+                        .filter(partida -> partida.getEstado().equals(estadoDeJuego))
+                        .collect(Collectors.toList());
+            } else {
+                return new ArrayList<>(partidasEntre(fechaInicio, fechaFin));
+            }
+        }
+        else {
+            return this.getAll();
+        }
     }
 }

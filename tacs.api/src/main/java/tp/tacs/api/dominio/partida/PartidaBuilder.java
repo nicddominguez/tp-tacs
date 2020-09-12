@@ -1,13 +1,10 @@
 package tp.tacs.api.dominio.partida;
 
-import tp.tacs.api.dominio.usuario.Usuario;
 import tp.tacs.api.dominio.municipio.Municipio;
-import tp.tacs.api.dominio.municipio.RepoMunicipios;
+import tp.tacs.api.dominio.usuario.Usuario;
 import tp.tacs.api.http.externalApis.ExternalApis;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class PartidaBuilder {
     private List<Usuario> participantes;
@@ -15,7 +12,7 @@ public class PartidaBuilder {
     private String idProvincia;
     private List<Municipio> municipios = new ArrayList<>();
     private ModoDeJuego modoDeJuego = new ModoRapido();
-    private Date fechaCreacion = new Date();
+    private Date fechaCreacion = new GregorianCalendar(2019, Calendar.FEBRUARY, 11).getTime(); //TODO
 
     public PartidaBuilder(String idProvincia) {
         this.idProvincia = idProvincia;

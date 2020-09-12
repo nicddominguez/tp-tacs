@@ -36,7 +36,7 @@ public class ExternalApis implements RepoMunicipios {
 
     @Override
     public List<Municipio> getMunicipios(String idProvincia, Integer cantidad) {
-        String url = geoRefMunicipioBaseUrlBasico + "&provincia=" + idProvincia;
+        String url = geoRefMunicipioBaseUrlBasico + "&provincia=" + idProvincia + "&max=" + cantidad;
         MunicipiosApi municipiosApi = connector.get(url, MunicipiosApi.class);
         return geoRefWrapper.wrapList(municipiosApi.getMunicipios());
     }
