@@ -8,15 +8,15 @@ import java.util.*;
 @Component
 public class UsuarioDao implements Dao<Usuario> {
 
-    private final Map<Long, Usuario> usuarios = new HashMap<>();
+    private static final Map<Long, Usuario> usuarios = new HashMap<>();
 
     @Override
-    public Usuario get(Long id) {
-        return Optional.ofNullable(this.usuarios.get(id)).orElse(null);
+    public synchronized Usuario get(Long id) {
+        return Optional.ofNullable(UsuarioDao.usuarios.get(id)).orElse(null);
     }
 
-    public Usuario getByGoogleId(String googleId) {
-        return this.usuarios
+    public synchronized Usuario getByGoogleId(String googleId) {
+        return UsuarioDao.usuarios
                 .values()
                 .stream()
                 .filter(usuario -> usuario.getGoogleId().equals(googleId))
@@ -24,8 +24,8 @@ public class UsuarioDao implements Dao<Usuario> {
                 .orElse(null);
     }
 
-    public Usuario getByUsername(String username) {
-        return this.usuarios
+    public synchronized Usuario getByUsername(String username) {
+        return UsuarioDao.usuarios
                 .values()
                 .stream()
                 .filter(usuario -> usuario.getNombre().equals(username))
@@ -34,18 +34,18 @@ public class UsuarioDao implements Dao<Usuario> {
     }
 
     @Override
-    public List<Usuario> getAll() {
-        return new ArrayList<>(this.usuarios.values());
+    public synchronized List<Usuario> getAll() {
+        return new ArrayList<>(UsuarioDao.usuarios.values());
     }
 
     @Override
-    public void save(Usuario element) {
-        this.usuarios.put(element.getId(), element);
+    public synchronized void save(Usuario element) {
+        UsuarioDao.usuarios.put(element.getId(), element);
     }
 
     @Override
-    public void delete(Usuario element) {
-        this.usuarios.remove(element.getId());
+    public synchronized void delete(Usuario element) {
+        UsuarioDao.usuarios.remove(element.getId());
     }
 
 }
