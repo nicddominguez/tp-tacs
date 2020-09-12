@@ -20,6 +20,8 @@ public class Partida {
     private ModoDeJuego modoDeJuego;
     private Date fechaCreacion;
     private Usuario ganador;
+    private Float minAltura = null;
+    private Float maxAltura = null;
 
     public Partida(List<Usuario> jugadores, Estado estado, String provincia,
                    List<Municipio> municipios, ModoDeJuego modoDeJuego, Date fechaCreacion) {
@@ -31,7 +33,22 @@ public class Partida {
         this.modoDeJuego = modoDeJuego;
         this.fechaCreacion = fechaCreacion;
         this.repartirMunicipios();
+        this.calcularAlturas();
         new PartidaDao().save(this);
+    }
+
+    //TODO: recalcular cuando los datos esten dirty
+    private void calcularAlturas() {
+        this.minAltura = (float) this.municipios.stream()
+                .mapToDouble(Municipio::getAltura)
+                .min()
+                .orElseThrow(NoSuchElementException::new);
+
+        this.maxAltura = (float) this.municipios.stream()
+                .mapToDouble(Municipio::getAltura)
+                .max()
+                .orElseThrow(NoSuchElementException::new);
+
     }
 
     public Long getId() {
@@ -205,17 +222,11 @@ public class Partida {
     }
 
     public Float minAltura() {
-        return (float) this.municipios.stream()
-                .mapToDouble(Municipio::getAltura)
-                .min()
-                .orElseThrow(NoSuchElementException::new);
+        return this.minAltura;
     }
 
     public Float maxAltura() {
-        return (float) this.municipios.stream()
-                .mapToDouble(Municipio::getAltura)
-                .max()
-                .orElseThrow(NoSuchElementException::new);
+        return this.maxAltura;
     }
 
     public Float maxDist() {

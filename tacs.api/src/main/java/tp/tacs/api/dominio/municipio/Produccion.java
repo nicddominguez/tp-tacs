@@ -17,8 +17,11 @@ public class Produccion implements Especializacion {
 
     @Override
     public Integer nivelDeProduccion(Municipio municipio) {
-        return Math.round(15 * (1 - ((municipio.getAltura() - municipio.getPartida().minAltura())
-                / (2 * (municipio.getPartida().maxAltura() - municipio.getPartida().minAltura())))));
+        var minAltura = municipio.getPartida().minAltura();
+        var maxAltura = municipio.getPartida().maxAltura();
+
+        return Math.round(15 * (1 - ((municipio.getAltura() - minAltura)
+                / (2 * (maxAltura - minAltura)))));
     }
 
     @Override

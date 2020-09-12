@@ -86,10 +86,15 @@ public class PartidasApiController implements PartidasApi {
 
     @Override
     public ResponseEntity<PartidaModel> getPartida(Long idPartida) {
+//        try {
         var partida = this.partidaDao.get(idPartida);
         var partidaModel = this.partidaMapper.wrap(partida);
         return ResponseEntity.ok(partidaModel);
-
+/*        }
+        catch (Exception e){
+            return ResponseEntity.badRequest().build();
+        }
+*/
     }
 
     @Override

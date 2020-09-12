@@ -1,6 +1,7 @@
 package tp.tacs.api.dominio.municipio;
 
 import com.google.common.collect.Lists;
+import tp.tacs.api.daos.MunicipioDao;
 import tp.tacs.api.dominio.partida.Partida;
 import tp.tacs.api.dominio.usuario.Usuario;
 import tp.tacs.api.http.externalApis.ExternalApis;
@@ -17,6 +18,10 @@ public class Municipio {
     private Partida partida;
     private Usuario duenio;
     ExternalApis repoMunicipios = ExternalApis.instance();
+
+    public Municipio() {
+        new MunicipioDao().save(this);
+    }
 
     public Long getId() {
         return id;
@@ -74,9 +79,10 @@ public class Municipio {
         return duenio == null;
     }
 
-    public String getNombre(){
+    public String getNombre() {
         return this.repoMunicipios.getNombre(this.idMunicipioReal);
     }
+
     public String getIdMunicipioReal() {
         return this.idMunicipioReal;
     }
@@ -94,11 +100,11 @@ public class Municipio {
     }
 
     public Double getLatitud() {
-        return this.repoMunicipios.getLatitud(idMunicipioReal);
+        return this.repoMunicipios.getLatitud(this.idMunicipioReal);
     }
 
     public Double getLongitud() {
-        return this.repoMunicipios.getLongitud(idMunicipioReal);
+        return this.repoMunicipios.getLongitud(this.idMunicipioReal);
     }
 
     public ArrayList<Double> getCoordenadas() {
@@ -106,11 +112,11 @@ public class Municipio {
     }
 
     public Float getAltura() {
-        return this.repoMunicipios.getAltura(idMunicipioReal);
+        return this.repoMunicipios.getAltura(this.idMunicipioReal);
     }
 
     public String getPathImagen() {
-        return this.repoMunicipios.getPathImagen(idMunicipioReal);
+        return this.repoMunicipios.getPathImagen(this.idMunicipioReal);
     }
 
     public void producir() {
