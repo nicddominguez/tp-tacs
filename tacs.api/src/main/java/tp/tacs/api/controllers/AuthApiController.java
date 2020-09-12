@@ -78,8 +78,7 @@ public class AuthApiController implements AuthApi {
         var googleId = this.googleIdTokenService.extractGoogleId(idToken);
 
         var usuario =
-                Optional.ofNullable(this.usuarioDao
-                        .getByGoogleId(googleId))
+                Optional.ofNullable(this.usuarioDao.getByGoogleId(googleId))
                         .orElseThrow(() -> new UsuarioDesconocido("Intentó iniciar sesión un usuario desconocido"));
 
         var response = this.generarJwtParaUsuario(usuario);
@@ -115,12 +114,6 @@ public class AuthApiController implements AuthApi {
         response = this.agregarRefreshToken(usuario, response);
 
         return ResponseEntity.ok(response);
-    }
-
-    public Optional<HttpServletRequest> getCurrentRequest() {
-        return Optional.ofNullable(RequestContextHolder.getRequestAttributes())
-                .map(attributes -> (ServletRequestAttributes) attributes)
-                .map(ServletRequestAttributes::getRequest);
     }
 
     @Override
