@@ -16,7 +16,7 @@ public class UsuarioDao implements Dao<Usuario> {
 
     @Override
     public synchronized Usuario get(Long id) {
-        return Optional.ofNullable(UsuarioDao.usuarios.get(id)).orElse(null);
+        return UsuarioDao.usuarios.get(id);
     }
 
     public synchronized Usuario getByGoogleId(String googleId) {
