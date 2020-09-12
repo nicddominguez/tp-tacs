@@ -8,7 +8,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import tp.tacs.api.dominio.usuario.RepoUsuarios;
+import tp.tacs.api.daos.UsuarioDao;
 import tp.tacs.api.dominio.usuario.Usuario;
 import tp.tacs.api.mappers.UsuarioMapper;
 import tp.tacs.api.model.ListarUsuariosResponse;
@@ -20,7 +20,8 @@ class UsuariosApiControllerTest {
 
     Usuario usuario0 = new Usuario(0l, "mail0@mock.com", "mock0");
     Usuario usuario1 = new Usuario(1l, "mail1@mock.com", "mock1");
-    RepoUsuarios repoUsuarios = new RepoUsuarios();
+
+    UsuarioDao usuarioDao = new UsuarioDao();
 
     private UsuariosApiController usuariosApiController = new UsuariosApiController();
     @Mock
@@ -35,9 +36,9 @@ class UsuariosApiControllerTest {
         usuario1.setPartidasJugadas(2L);
         usuario1.setPartidasGanadas(1L);
         usuario1.setRachaActual(0L);
-        repoUsuarios.agregarUsuario(usuario0);
-        repoUsuarios.agregarUsuario(usuario1);
-        usuariosApiController.setRepoUsuarios(repoUsuarios);
+        usuarioDao.save(usuario0);
+        usuarioDao.save(usuario1);
+        usuariosApiController.setUsuarioDao(usuarioDao);
     }
 
     @Test

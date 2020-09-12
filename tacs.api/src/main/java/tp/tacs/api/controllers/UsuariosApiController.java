@@ -1,9 +1,8 @@
 package tp.tacs.api.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
-import tp.tacs.api.dominio.usuario.RepoUsuarios;
+import tp.tacs.api.daos.UsuarioDao;
 import tp.tacs.api.dominio.usuario.Usuario;
 import tp.tacs.api.mappers.UsuarioMapper;
 import tp.tacs.api.model.ListarUsuariosResponse;
@@ -16,19 +15,18 @@ import java.util.stream.Collectors;
 
 @RestController
 public class UsuariosApiController implements UsuariosApi {
-    @Autowired
-    private Utils utils;
-    private RepoUsuarios repoUsuarios = RepoUsuarios.instance();
-    @Autowired
-    private UsuarioMapper usuarioMapper;
 
-    public void setRepoUsuarios(RepoUsuarios repoUsuarios) {
-        this.repoUsuarios = repoUsuarios;
+    private Utils utils = new Utils();
+    private UsuarioDao usuarioDao = new UsuarioDao();
+    private UsuarioMapper usuarioMapper = new UsuarioMapper();
+
+    public void setUsuarioDao(UsuarioDao usuarioDao) {
+        this.usuarioDao = usuarioDao;
     }
 
     @Override
     public ResponseEntity<ListarUsuariosResponse> listarUsuarios(@Valid String filter, @Valid Long tamanioPagina, @Valid Long pagina) {
-        List<Usuario> usuarios = this.repoUsuarios.getUsuarios();
+        List<Usuario> usuarios = this.usuarioDao.getAll();
         if (filter != null) {
             usuarios = usuarios.stream().filter(usuario -> usuario.mismoNombre(filter)).collect(Collectors.toList());
         }

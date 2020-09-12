@@ -7,13 +7,12 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import tp.tacs.api.daos.UsuarioDao;
 import tp.tacs.api.dominio.municipio.Municipio;
 import tp.tacs.api.dominio.partida.Estado;
 import tp.tacs.api.dominio.partida.Partida;
 import tp.tacs.api.dominio.partida.RepoPartidas;
-import tp.tacs.api.dominio.usuario.RepoUsuarios;
 import tp.tacs.api.dominio.usuario.Usuario;
-import tp.tacs.api.mappers.UsuarioMapper;
 import tp.tacs.api.model.EstadisticasDeJuegoModel;
 import tp.tacs.api.model.EstadisticasDeUsuarioModel;
 import tp.tacs.api.model.ScoreboardResponse;
@@ -38,9 +37,9 @@ class AdminApiControllerTest {
 
     private AdminApiController adminController = new AdminApiController();
 
-    RepoUsuarios repoUsuarios = new RepoUsuarios();
     RepoPartidas repoPartidas = new RepoPartidas();
 
+    UsuarioDao usuarioDao = new UsuarioDao();
 
     @BeforeEach
     public void before() {
@@ -52,9 +51,9 @@ class AdminApiControllerTest {
         usuario1.setPartidasJugadas(2L);
         usuario1.setPartidasGanadas(1L);
         usuario1.setRachaActual(0L);
-        repoUsuarios.agregarUsuario(usuario0);
-        repoUsuarios.agregarUsuario(usuario1);
-        adminController.setRepoUsuarios(repoUsuarios);
+        usuarioDao.save(usuario0);
+        usuarioDao.save(usuario1);
+        adminController.setUsuarioDao(usuarioDao);
 
         partida = new Partida(usuarios, Estado.EN_CURSO, null, municipios, null, null);
         partida.setFechaCreacion(fechaCreacion);

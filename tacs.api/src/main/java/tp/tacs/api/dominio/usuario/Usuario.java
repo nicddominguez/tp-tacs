@@ -1,5 +1,7 @@
 package tp.tacs.api.dominio.usuario;
 
+import tp.tacs.api.daos.UsuarioDao;
+
 public class Usuario {
 
     private Long id;
@@ -22,7 +24,7 @@ public class Usuario {
         this.id = id;
         this.mail = mail;
         this.nombre = nombre;
-        RepoUsuarios.instance().agregarUsuario(this);
+        new UsuarioDao().save(this);
     }
 
     public Long getId() {

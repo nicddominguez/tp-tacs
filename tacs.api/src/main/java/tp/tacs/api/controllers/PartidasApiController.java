@@ -3,10 +3,10 @@ package tp.tacs.api.controllers;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
+import tp.tacs.api.daos.UsuarioDao;
 import tp.tacs.api.dominio.partida.Partida;
 import tp.tacs.api.dominio.partida.PartidaBuilder;
 import tp.tacs.api.dominio.partida.RepoPartidas;
-import tp.tacs.api.dominio.usuario.RepoUsuarios;
 import tp.tacs.api.http.externalApis.ExternalApis;
 import tp.tacs.api.mappers.*;
 import tp.tacs.api.model.*;
@@ -29,6 +29,12 @@ public class PartidasApiController implements PartidasApi {
     private ModoDeJuegoMapper modoDeJuegoMapper = new ModoDeJuegoMapper();
 
     private RepoPartidas repoPartidas = RepoPartidas.instance();
+
+    UsuarioDao usuarioDao = new UsuarioDao();
+
+    public void setUsuarioDao(UsuarioDao usuarioDao) {
+        this.usuarioDao = usuarioDao;
+    }
 
     @Override
     public ResponseEntity<Void> actualizarEstadoPartida(Long idPartida, @Valid PartidaModel body) {
@@ -77,7 +83,7 @@ public class PartidasApiController implements PartidasApi {
         try {
             new PartidaBuilder(body.getIdProvincia().toString())
                     .setCantMunicipios(Math.toIntExact(body.getCantidadMunicipios()))
-                    .setParticipantes(RepoUsuarios.instance().getUsuariosFromIDs(body.getIdJugadores()))
+                    .setParticipantes(this.usuarioDao.getSegunIds(body.getIdJugadores()))
                     .setModoDeJuego(modoDeJuegoMapper.toEntity(body.getModoDeJuego()))
                     .constriur();
             return new ResponseEntity<>(HttpStatus.CREATED);
