@@ -47,6 +47,7 @@ function getSteps() {
   return [
     "Seleccionar una provincia",
     "Seleccionar cantidad de municipios",
+    "Seleccionar modo de juego",
     "Buscar jugadores",
   ];
 }
@@ -56,6 +57,7 @@ export default function NuevaPartidaStepper() {
   const steps = getSteps();
   const [activeStep, setActiveStep] = React.useState(0);
   const [provincia, setProvincia] = React.useState("");
+  const [modoDeJuego, setModoDeJuego] = React.useState("");
   const [cantidadDeMunicipios, setCantidadDeMunicipios] = React.useState<
     number | string | Array<number | string>
   >(30);
@@ -70,6 +72,10 @@ export default function NuevaPartidaStepper() {
 
   const handleProvincia = (event: React.ChangeEvent<{ value: unknown }>) => {
     setProvincia(event.target.value as string);
+  };
+
+  const handleModoDeJuego = (event: React.ChangeEvent<{ value: unknown }>) => {
+    setModoDeJuego(event.target.value as string);
   };
 
   const handleSliderChange = (event: any, newValue: number | number[]) => {
@@ -151,6 +157,22 @@ export default function NuevaPartidaStepper() {
           </div>
         );
       case 2:
+        return (
+          <FormControl className={classes.formControl}>
+            <InputLabel id="modoDeJuego-label">Modo de juego</InputLabel>
+            <Select
+              labelId="modoDeJuego-label"
+              id="modoDeJuego"
+              value={modoDeJuego}
+              onChange={handleModoDeJuego}
+            >
+              <MenuItem value={10}>Rápido</MenuItem>
+              <MenuItem value={20}>Normal</MenuItem>
+              <MenuItem value={30}>Extendido</MenuItem>
+            </Select>
+          </FormControl>
+        );
+      case 3:
         return "Buscando jugadores...";
       default:
         return "Unknown step";
