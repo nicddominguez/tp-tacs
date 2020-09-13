@@ -1,10 +1,12 @@
 package tp.tacs.api.controllers;
 
+import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +23,8 @@ import tp.tacs.api.model.ScoreboardResponse;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doReturn;
 
 @RunWith(MockitoJUnitRunner.class)
 class AdminApiControllerTest {
@@ -30,6 +34,11 @@ class AdminApiControllerTest {
 
     Partida partida;
     List<Usuario> usuarios = new ArrayList<>();
+
+    @Spy
+    Municipio municipioA;
+    @Spy
+    Municipio municipioB;
     List<Municipio> municipios = new ArrayList<>();
 
     Date fechaCreacion = new GregorianCalendar(2019, Calendar.FEBRUARY, 11).getTime();
@@ -56,6 +65,11 @@ class AdminApiControllerTest {
         usuarioDao.save(usuario1);
         adminController.setUsuarioDao(usuarioDao);
 
+        mockearMunicipio(municipioA, 500d, 0d, 10f, usuario0);
+        mockearMunicipio(municipioB, 0d, 0d, 110f, usuario1);
+        municipios.add(municipioA);
+        municipios.add(municipioB);
+
         partida = new Partida(usuarios, Estado.EN_CURSO, null, municipios, null, null);
         partida.setFechaCreacion(fechaCreacion);
         adminController.setPartidaDao(partidaDao);
@@ -64,6 +78,16 @@ class AdminApiControllerTest {
     @AfterEach
     public void after() {
         partidaDao.limpiar();
+    }
+
+    private void mockearMunicipio(Municipio municipio, double latitud, double longitud, float altura, Usuario duenio) {
+        doReturn(latitud).when(municipio).getLatitud();
+        doReturn(longitud).when(municipio).getLongitud();
+        ArrayList<Double> coordenadasA = Lists.newArrayList(municipio.getLatitud(), municipio.getLongitud());
+        doReturn(coordenadasA).when(municipio).getCoordenadas();
+        doReturn(altura).when(municipio).getAltura();
+        doNothing().when(municipio).producir();
+        doReturn(duenio).when(municipio).getDuenio();
     }
 
     @Test
