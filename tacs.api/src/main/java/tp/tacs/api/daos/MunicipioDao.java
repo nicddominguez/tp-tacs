@@ -11,7 +11,7 @@ public class MunicipioDao implements Dao<Municipio> {
 
     private static final Map<Long, Municipio> municipios = new HashMap<>();
 
-    private Long i = 0L;
+    private static Long i = 0L;
 
     @Override
     public synchronized Municipio get(Long id) {
@@ -25,9 +25,9 @@ public class MunicipioDao implements Dao<Municipio> {
 
     @Override
     public synchronized void save(Municipio element) {
-        element.setId(this.i);
+        element.setId(MunicipioDao.i);
         MunicipioDao.municipios.put(element.getId(), element);
-        i++;
+        MunicipioDao.i++;
     }
 
     @Override
