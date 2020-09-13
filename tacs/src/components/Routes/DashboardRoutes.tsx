@@ -3,6 +3,7 @@ import HomeIcon from "@material-ui/icons/Home";
 import MapIcon from "@material-ui/icons/Map";
 import ViewListIcon from "@material-ui/icons/ViewList";
 import Home from "components/Dashboard/Home";
+import NuevaPartidaStepper from "components/Partidas/NuevaPartidaStepper";
 import Partidas from "components/Partidas/Partidas";
 import React from "react";
 
@@ -24,7 +25,7 @@ export const dashboardRoutes = [
     path: "/app/nuevaPartida",
     exact: true,
     sidebar: "Nueva Partida",
-    main: () => <h2>Nueva Partida</h2>,
+    main: () => <NuevaPartidaStepper />,
     icon: () => <MapIcon />,
   },
   {
