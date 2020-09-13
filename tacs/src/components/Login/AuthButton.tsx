@@ -13,6 +13,7 @@ const CLIENT_ID =
 
 export interface AuthButtonProps {
   flagLoggedIn: (user: UsuarioModel) => void;
+  onLoginFailure: () => void;
 };
 
 export default abstract class AuthButton extends React.Component<AuthButtonProps, {}> {
@@ -24,7 +25,6 @@ export default abstract class AuthButton extends React.Component<AuthButtonProps
 
     this.handleGoogleLogin = this.handleGoogleLogin.bind(this);
     this.handleGoogleLoginFailure = this.handleGoogleLoginFailure.bind(this);
-    this.handleBackendFailure = this.handleBackendFailure.bind(this);
   }
 
   handleGoogleLogin(response: GoogleLoginResponse | GoogleLoginResponseOffline) {
@@ -33,19 +33,15 @@ export default abstract class AuthButton extends React.Component<AuthButtonProps
 
     this.doBackendAuthentication(idToken)
       .then(nuevoJwtModel => this.props.flagLoggedIn(nuevoJwtModel.usuario))
-      .catch(_ => this.handleBackendFailure());
+      .catch(_ => this.props.onLoginFailure());
 
   }
 
   handleGoogleLoginFailure(response?: GoogleLoginResponse) {
-    alert("Failed to log in");
+    this.props.onLoginFailure();
   }
 
   abstract doBackendAuthentication(idToken: string): Promise<NuevoJWTModel>
-
-  handleBackendFailure() {
-
-  }
 
   abstract renderButton(renderProps: {onClick: () => void, disabled?: boolean}): JSX.Element
 

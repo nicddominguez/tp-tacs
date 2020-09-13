@@ -10,6 +10,7 @@ import logo from "assets/img/logo2.png";
 import LoginButton from "components/Login/LoginButton";
 import SignUpButton from "components/Login/SignUpButton";
 import React from "react";
+import AuthFailureModal from "components/Login/AuthFailureModal";
 import { UsuarioModel } from "api/api";
 
 const useStyles = makeStyles((theme) => ({
@@ -47,6 +48,10 @@ export interface LoginTemplateSideBarProps {
 export default function LoginTemplateSideBar(props: LoginTemplateSideBarProps) {
   const classes = useStyles();
 
+  const [loginFailed, setLoginFailed] = React.useState(false);
+
+  const onLoginFailure = () => setLoginFailed(true);
+
   return (
     <Grid container component="main" className={classes.root}>
       <CssBaseline />
@@ -78,10 +83,16 @@ export default function LoginTemplateSideBar(props: LoginTemplateSideBarProps) {
             </Avatar>
           </div>
           <div style={{ marginBottom: "10px", width: "100%" }}>
-            <LoginButton flagLoggedIn={props.flagLoggedIn} />
+            <LoginButton
+              flagLoggedIn={props.flagLoggedIn}
+              onLoginFailure={onLoginFailure}
+            />
           </div>
           <div style={{ marginBottom: "10px", width: "100%" }}>
-            <SignUpButton flagLoggedIn={props.flagLoggedIn} />
+            <SignUpButton
+              flagLoggedIn={props.flagLoggedIn}
+              onLoginFailure={onLoginFailure}
+            />
           </div>
           <div style={{ width: "100%" }}>
             <Button
@@ -96,6 +107,10 @@ export default function LoginTemplateSideBar(props: LoginTemplateSideBarProps) {
           </div>
         </div>
       </Grid>
+      <AuthFailureModal
+        open={loginFailed}
+        setOpen={setLoginFailed}
+      />
     </Grid>
   );
 }
