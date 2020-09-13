@@ -23,10 +23,12 @@ import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import {
   KeyboardDatePicker,
-  MuiPickersUtilsProvider
+  MuiPickersUtilsProvider,
 } from "@material-ui/pickers";
+import { EstadoDeJuegoModel, PartidaModel } from "api";
+import { WololoPartidasApiClient } from "api/client";
 import "date-fns";
-import React from "react";
+import React, { useEffect } from "react";
 import NuevaPartidaFabButton from "./NuevaPartidaFabButton";
 import CustomTablePagination from "./TablePagination";
 
@@ -82,32 +84,8 @@ const MenuProps = {
   },
 };
 
-function createData(
-  idPartida: number,
-  fecha: string,
-  estado: string,
-  provincia: string,
-  modoDeJuego: string,
-  partidaGanada: boolean | null,
-  jugadores: string[],
-  ganador: string | null,
-  cantidadDeMunicipios: number
-) {
-  return {
-    idPartida,
-    fecha,
-    estado,
-    provincia,
-    modoDeJuego,
-    partidaGanada,
-    jugadores,
-    ganador,
-    cantidadDeMunicipios,
-  };
-}
-
-function Row(props: { row: ReturnType<typeof createData> }) {
-  const { row } = props;
+function Row(props: { partida: PartidaModel }) {
+  const { partida } = props;
   const [open, setOpen] = React.useState(false);
   const classes = useRowStyles();
 
@@ -123,11 +101,11 @@ function Row(props: { row: ReturnType<typeof createData> }) {
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
-        <TableCell scope="row">{row.idPartida}</TableCell>
-        <TableCell align="center">{row.fecha}</TableCell>
-        <TableCell align="center">{row.estado}</TableCell>
-        <TableCell align="center">{row.provincia}</TableCell>
-        <TableCell align="center">{row.modoDeJuego}</TableCell>
+        <TableCell scope="row">{partida.id}</TableCell>
+        <TableCell align="center">{partida.fecha}</TableCell>
+        <TableCell align="center">{partida.estado}</TableCell>
+        <TableCell align="center">{partida.provincia}</TableCell>
+        <TableCell align="center">{partida.modoDeJuego}</TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
@@ -139,19 +117,24 @@ function Row(props: { row: ReturnType<typeof createData> }) {
               <Grid item xs={6}>
                 <Typography variant="body1" gutterBottom>
                   <div>Jugadores</div>
-                  {row.jugadores.map((jugador) => (
+                  {partida.jugadores.map((jugador) => (
                     <div className={classes.subDetalle}>
-                      <Typography variant="body1">{jugador}</Typography>
+                      <Typography variant="body1">
+                        {jugador.nombreDeUsuario}
+                      </Typography>
                     </div>
                   ))}
                 </Typography>
               </Grid>
               <Grid item xs={6}>
                 <Typography variant="body1">
-                  Ganador: {row.estado == "En Progreso" ? "-" : row.ganador}
+                  Ganador:{" "}
+                  {partida.estado == EstadoDeJuegoModel.EnProgreso
+                    ? "-"
+                    : partida.idGanador}
                 </Typography>
                 <Typography variant="body1" gutterBottom>
-                  Cantidad de municipios: {row.cantidadDeMunicipios}
+                  Cantidad de municipios: {partida.cantidadMunicipios}
                 </Typography>
               </Grid>
             </Grid>
@@ -162,120 +145,9 @@ function Row(props: { row: ReturnType<typeof createData> }) {
   );
 }
 
-const rows = [
-  createData(
-    1,
-    "09/09/2020 15:23",
-    "En Progreso",
-    "Buenos Aires",
-    "Normal",
-    null,
-    ["Cuario", "Cirif", "XMonad", "Annatar"],
-    null,
-    27
-  ),
-  createData(
-    2,
-    "08/09/2020 13:27",
-    "Terminada",
-    "Cordoba",
-    "Rapido",
-    null,
-    ["Cuario", "Cirif", "XMonad", "Annatar"],
-    "Cuario",
-    12
-  ),
-  createData(
-    3,
-    "06/09/2020 18:37",
-    "Terminada",
-    "La Pampa",
-    "Normal",
-    null,
-    ["Cuario", "Cirif", "XMonad", "Annatar"],
-    "Cirif",
-    17
-  ),
-  createData(
-    4,
-    "03/09/2020 12:51",
-    "Cancelada",
-    "Buenos Aires",
-    "Extendido",
-    null,
-    ["Cuario", "Cirif", "XMonad", "Annatar"],
-    "XMonad",
-    30
-  ),
-  createData(
-    5,
-    "27/08/2020 14:14",
-    "Terminada",
-    "Tucuman",
-    "Normal",
-    null,
-    ["Cuario", "Cirif", "XMonad", "Annatar"],
-    "Annatar",
-    10
-  ),
-  createData(
-    6,
-    "09/09/2020 15:23",
-    "En Progreso",
-    "Buenos Aires",
-    "Normal",
-    null,
-    ["Cuario", "Cirif", "XMonad", "Annatar"],
-    null,
-    27
-  ),
-  createData(
-    7,
-    "08/09/2020 13:27",
-    "Terminada",
-    "Cordoba",
-    "Rapido",
-    null,
-    ["Cuario", "Cirif", "XMonad", "Annatar"],
-    "Cuario",
-    12
-  ),
-  createData(
-    8,
-    "06/09/2020 18:37",
-    "Terminada",
-    "La Pampa",
-    "Normal",
-    null,
-    ["Cuario", "Cirif", "XMonad", "Annatar"],
-    "Cirif",
-    17
-  ),
-  createData(
-    9,
-    "03/09/2020 12:51",
-    "Cancelada",
-    "Buenos Aires",
-    "Extendido",
-    null,
-    ["Cuario", "Cirif", "XMonad", "Annatar"],
-    "XMonad",
-    30
-  ),
-  createData(
-    10,
-    "27/08/2020 14:14",
-    "Terminada",
-    "Tucuman",
-    "Normal",
-    null,
-    ["Cuario", "Cirif", "XMonad", "Annatar"],
-    "Annatar",
-    10
-  ),
-];
-
 export default function Partidas() {
+  const partidasApi = new WololoPartidasApiClient();
+
   const classes = useStyles();
   const [primerOrden, setPrimerOrden] = React.useState("");
   const [segundoOrden, setSegundoOrden] = React.useState("");
@@ -288,6 +160,7 @@ export default function Partidas() {
   const [estado, setEstado] = React.useState<string[]>([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [partidas, setPartidas] = React.useState<PartidaModel[]>();
 
   const handlePrimerOrden = (event: React.ChangeEvent<{ value: unknown }>) => {
     setPrimerOrden(event.target.value as string);
@@ -308,6 +181,21 @@ export default function Partidas() {
   const handleEstado = (event: React.ChangeEvent<{ value: unknown }>) => {
     setEstado(event.target.value as string[]);
   };
+
+  useEffect(() => {
+    partidasApi
+      .listarPartidas(
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        rowsPerPage,
+        page
+      )
+      .then((listarPartidasResponse) =>
+        setPartidas(listarPartidasResponse.partidas)
+      );
+  });
 
   const handleChangePage = (
     event: React.MouseEvent<HTMLButtonElement> | null,
@@ -431,14 +319,14 @@ export default function Partidas() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.map((row) => (
-                  <Row key={row.idPartida} row={row} />
+                {partidas?.map((partida) => (
+                  <Row key={partida.id} partida={partida} />
                 ))}
               </TableBody>
               <TableFooter>
                 <TableRow>
                   <CustomTablePagination
-                    rowsLength={rows.length}
+                    rowsLength={partidas ? partidas.length : 0}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onChangePage={handleChangePage}
