@@ -104,7 +104,7 @@ function Row(props: { partida: PartidaModel }) {
         <TableCell scope="row">{partida.id}</TableCell>
         <TableCell align="center">{partida.fecha}</TableCell>
         <TableCell align="center">{partida.estado}</TableCell>
-        <TableCell align="center">{partida.provincia}</TableCell>
+        <TableCell align="center">{partida.provincia.nombre}</TableCell>
         <TableCell align="center">{partida.modoDeJuego}</TableCell>
       </TableRow>
       <TableRow>
@@ -157,7 +157,7 @@ export default function Partidas() {
   const [fechaHasta, setFechaHasta] = React.useState<Date | null>(
     new Date("2014-08-18T21:11:54")
   );
-  const [estado, setEstado] = React.useState<string[]>([]);
+  const [estado, setEstado] = React.useState<EstadoDeJuegoModel>();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [partidas, setPartidas] = React.useState<PartidaModel[]>();
@@ -179,7 +179,7 @@ export default function Partidas() {
   };
 
   const handleEstado = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setEstado(event.target.value as string[]);
+    setEstado(event.target.value as EstadoDeJuegoModel);
   };
 
   useEffect(() => {
@@ -225,20 +225,20 @@ export default function Partidas() {
                 value={primerOrden}
                 onChange={handlePrimerOrden}
               >
-                <MenuItem value={10}>Fecha</MenuItem>
-                <MenuItem value={20}>Estado</MenuItem>
+                <MenuItem value={"fecha"}>Fecha</MenuItem>
+                <MenuItem value={"estado"}>Estado</MenuItem>
               </Select>
             </FormControl>
             <FormControl className={classes.formControl}>
               <InputLabel id="segundo-orden-label">Luego por</InputLabel>
               <Select
                 labelId="segundo-orden-label"
-                id="rimer-orden"
+                id="segundo-orden"
                 value={segundoOrden}
                 onChange={handleSegundoOrden}
               >
-                <MenuItem value={10}>Fecha</MenuItem>
-                <MenuItem value={20}>Estado</MenuItem>
+                <MenuItem value={"fecha"}>Fecha</MenuItem>
+                <MenuItem value={"estado"}>Estado</MenuItem>
               </Select>
             </FormControl>
           </Paper>
@@ -277,30 +277,22 @@ export default function Partidas() {
               </Grid>
             </MuiPickersUtilsProvider>
             <FormControl className={classes.formControl}>
-              <InputLabel id="estado-label">Chip</InputLabel>
+              <InputLabel id="estado-label">Estado</InputLabel>
               <Select
                 labelId="estado-label"
                 id="estado"
-                multiple
                 value={estado}
                 onChange={handleEstado}
-                input={<Input id="select-estado" />}
-                renderValue={(selected) => (
-                  <div className={classes.chips}>
-                    {(selected as string[]).map((value) => (
-                      <Chip
-                        key={value}
-                        label={value}
-                        className={classes.chip}
-                      />
-                    ))}
-                  </div>
-                )}
-                MenuProps={MenuProps}
               >
-                <MenuItem value="En Progreso">En Progreso</MenuItem>
-                <MenuItem value="Terminada">Terminada</MenuItem>
-                <MenuItem value="Cancelada">Cancelada</MenuItem>
+                <MenuItem value={EstadoDeJuegoModel.EnProgreso}>
+                  En progreso
+                </MenuItem>
+                <MenuItem value={EstadoDeJuegoModel.Terminada}>
+                  Terminada
+                </MenuItem>
+                <MenuItem value={EstadoDeJuegoModel.Cancelada}>
+                  Cancelada
+                </MenuItem>
               </Select>
             </FormControl>
           </Paper>
