@@ -20,8 +20,10 @@ public class Partida {
     private ModoDeJuego modoDeJuego;
     private Date fechaCreacion;
     private Usuario ganador;
-    private Float minAltura = null;
-    private Float maxAltura = null;
+    private Float minAltura;
+    private Float maxAltura;
+    private Float maxDist;
+    private Float minDist;
 
     public Partida(List<Usuario> jugadores, Estado estado, String provincia,
                    List<Municipio> municipios, ModoDeJuego modoDeJuego, Date fechaCreacion) {
@@ -34,6 +36,7 @@ public class Partida {
         this.fechaCreacion = fechaCreacion;
         this.repartirMunicipios();
         this.calcularAlturas();
+        this.calcularDistancias();
         new PartidaDao().save(this);
     }
 
@@ -229,20 +232,25 @@ public class Partida {
         return this.maxAltura;
     }
 
-    public Float maxDist() {
+    public void calcularDistancias() {
         HashSet<Float> distancias = distanciasTotales();
-        return distancias
+        this.maxDist = distancias
                 .stream()
                 .max(Float::compareTo)
                 .orElseThrow(NoSuchElementException::new);
-    }
-
-    public Float minDist() {
-        HashSet<Float> distancias = distanciasTotales();
-        return distancias
+        this.minDist = distancias
                 .stream()
                 .min(Float::compareTo)
                 .orElseThrow(NoSuchElementException::new);
+
+    }
+
+    public Float maxDist() {
+        return this.maxDist;
+    }
+
+    public Float minDist() {
+        return this.minDist;
     }
 
     private HashSet<Float> distanciasTotales() {

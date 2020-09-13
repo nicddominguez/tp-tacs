@@ -62,7 +62,9 @@ public class PartidasApiController implements PartidasApi {
     @Override
     public ResponseEntity<AtacarMunicipioResponse> atacarMunicipio(Long idPartida, @Valid AtacarMunicipioBody body) {
         var municipioAtacante = municipioDao.get(body.getIdMunicipioAtacante());
-        var municipioObjetivo = municipioDao.get(body.getIdMunicipioAtacante());
+        var municipioObjetivo = municipioDao.get(body.getIdMunicipioObjetivo());
+
+        municipioAtacante.atacar(municipioObjetivo);
 
         var municipioAtacanteModel = municipioEnJuegoMapper.wrap(municipioAtacante);
         var municipioObjetivoModel = municipioEnJuegoMapper.wrap(municipioObjetivo);
@@ -86,15 +88,13 @@ public class PartidasApiController implements PartidasApi {
 
     @Override
     public ResponseEntity<PartidaModel> getPartida(Long idPartida) {
-//        try {
-        var partida = this.partidaDao.get(idPartida);
-        var partidaModel = this.partidaMapper.wrap(partida);
-        return ResponseEntity.ok(partidaModel);
-/*        }
-        catch (Exception e){
+        try {
+            var partida = this.partidaDao.get(idPartida);
+            var partidaModel = this.partidaMapper.wrap(partida);
+            return ResponseEntity.ok(partidaModel);
+        } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
-*/
     }
 
     @Override
@@ -107,7 +107,6 @@ public class PartidasApiController implements PartidasApi {
         Utils utils = new Utils();
 
         var partidas = this.partidaDao.getPartidasFiltradas(fechaInicio, fechaFin, estado);
-//        var partidaModels = partidaMapper.wrapList(partidas);
         var partidaModels = partidaMapper.partidasParaListar(partidas);
         var listaPaginada = utils.obtenerListaPaginada(pagina, tamanioPagina, partidaModels);
         var response = new ListarPartidasResponse().partidas(listaPaginada);

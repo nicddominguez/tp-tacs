@@ -12,7 +12,7 @@ public class Municipio {
 
     private Long id;
     private String idMunicipioReal = "2";
-    private Integer cantGauchos = 0;
+    private Integer cantGauchos = 15;
     private boolean bloqueado = false;
     private Especializacion especializacion = new Produccion();
     private Partida partida;
