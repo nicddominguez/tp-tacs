@@ -44,6 +44,12 @@ public class PartidasApiController implements PartidasApi {
         this.usuarioDao = usuarioDao;
     }
 
+    public void setPartidaBuilder(PartidaBuilder partidaBuilder) {
+        this.partidaBuilder = partidaBuilder;
+    }
+
+    private PartidaBuilder partidaBuilder = new PartidaBuilder();
+
     @Override
     public ResponseEntity<Void> actualizarEstadoPartida(Long idPartida, @Valid PartidaModel body) {
         Partida partida = this.partidaDao.get(idPartida);
@@ -78,10 +84,11 @@ public class PartidasApiController implements PartidasApi {
 
     @Override
     public ResponseEntity<Void> crearPartida(@Valid CrearPartidaBody body) {
-        new PartidaBuilder(body.getIdProvincia().toString())
+        partidaBuilder
+                .setIdProvincia(body.getIdProvincia().toString())
                 .setCantMunicipios(Math.toIntExact(body.getCantidadMunicipios()))
-                .setParticipantes(this.usuarioDao.getSegunIds(body.getIdJugadores()))
-                .setParticipantes(Arrays.asList(usuarioA, usuarioD))
+//                .setParticipantes(this.usuarioDao.getSegunIds(body.getIdJugadores())) //Implementación reL
+                .setParticipantes(Arrays.asList(usuarioA, usuarioD)) //TODO cambiar por la implementación real cuando se puedan crear usaurios desde alguna ruta
                 .setModoDeJuego(modoDeJuegoMapper.toEntity(body.getModoDeJuego()))
                 .constriur();
         return new ResponseEntity<>(HttpStatus.CREATED);

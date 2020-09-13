@@ -13,14 +13,24 @@ public class PartidaBuilder {
     private List<Municipio> municipios = new ArrayList<>();
     private ModoDeJuego modoDeJuego = new ModoRapido();
     private Date fechaCreacion = new GregorianCalendar(2019, Calendar.FEBRUARY, 11).getTime(); //TODO
+    private ExternalApis repoMunicipios = ExternalApis.instance();
+    public PartidaBuilder() {}
 
     public PartidaBuilder(String idProvincia) {
         this.idProvincia = idProvincia;
     }
 
+    public PartidaBuilder setIdProvincia(String idProvincia) {
+        this.idProvincia = idProvincia;
+        return this;
+    }
+
+    public void setRepoMunicipios(ExternalApis repoMunicipios) {
+        this.repoMunicipios = repoMunicipios;
+    }
+
     public PartidaBuilder setCantMunicipios(Integer cantMunicipios) {
-        ExternalApis repoMunicipios = ExternalApis.instance();
-        this.municipios = repoMunicipios.getMunicipios(this.idProvincia, cantMunicipios);
+        this.municipios = this.repoMunicipios.getMunicipios(this.idProvincia, cantMunicipios);
         return this;
     }
 

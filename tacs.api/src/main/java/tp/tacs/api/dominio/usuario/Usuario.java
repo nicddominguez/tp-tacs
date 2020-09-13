@@ -20,6 +20,9 @@ public class Usuario {
 
     private Long rachaActual = 0L;
 
+    public Usuario() {
+    }
+
     public Usuario(Long id, String mail, String nombre) {
         this.id = id;
         this.mail = mail;

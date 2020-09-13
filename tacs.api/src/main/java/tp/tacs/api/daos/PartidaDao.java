@@ -22,6 +22,7 @@ public class PartidaDao implements Dao<Partida> {
 
     public synchronized void limpiar() {
         PartidaDao.partidas = new HashMap<>();
+        PartidaDao.i = 0L;
     }
 
     @Override

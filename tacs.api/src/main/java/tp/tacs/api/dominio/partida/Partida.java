@@ -26,9 +26,21 @@ public class Partida {
     private Float maxAltura;
     private Float maxDist;
     private Float minDist;
+    private PartidaDao partidaDao = new PartidaDao();
 
     public Partida(List<Usuario> jugadores, Estado estado, String provincia,
                    List<Municipio> municipios, ModoDeJuego modoDeJuego, Date fechaCreacion) {
+            this.constructor(jugadores, estado, provincia, municipios, modoDeJuego, fechaCreacion);
+    }
+
+    public Partida(PartidaDao partidaDao, List<Usuario> jugadores, Estado estado, String provincia,
+                   List<Municipio> municipios, ModoDeJuego modoDeJuego, Date fechaCreacion) {
+        this.partidaDao = partidaDao;
+        this.constructor(jugadores, estado, provincia, municipios, modoDeJuego, fechaCreacion);
+    }
+
+    private void constructor(List<Usuario> jugadores, Estado estado, String provincia,
+                             List<Municipio> municipios, ModoDeJuego modoDeJuego, Date fechaCreacion){
         this.jugadores = jugadores;
         this.estado = estado;
         this.provincia = provincia;
@@ -39,9 +51,8 @@ public class Partida {
         this.repartirMunicipios();
         this.calcularAlturas();
         this.calcularDistancias();
-        new PartidaDao().save(this);
+        this.partidaDao.save(this);
     }
-
     //TODO: recalcular cuando los datos esten dirty
     private void calcularAlturas() {
         this.minAltura = (float) this.municipios.stream()
@@ -295,8 +306,7 @@ public class Partida {
             var minAltura = this.minAltura();
             var maxAltura = this.maxAltura();
             return 1 + (alturaMunicipioDefensor - minAltura) / (2 * (maxAltura - minAltura));
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             throw new RuntimeException();
         }
     }

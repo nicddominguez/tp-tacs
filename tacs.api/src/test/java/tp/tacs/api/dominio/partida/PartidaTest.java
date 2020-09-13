@@ -52,10 +52,6 @@ class PartidaTest {
         fechaPartida = new Date(2020, Calendar.APRIL, 1);
         usuarios.add(usuarioA);
         usuarios.add(usuarioB);
-        municipios.add(municipioA);
-        municipios.add(municipioB);
-        municipios.add(municipioC);
-        municipios.add(municipioD);
         partidaBase = new Partida(usuarios, Estado.EN_CURSO, "1234",municipios, modo, fechaPartida);
     }
 
@@ -66,6 +62,7 @@ class PartidaTest {
         doReturn(coordenadasA).when(municipio).getCoordenadas();
         doReturn(altura).when(municipio).getAltura();
         doNothing().when(municipio).producir();
+        municipios.add(municipio);
     }
 
     @Test
