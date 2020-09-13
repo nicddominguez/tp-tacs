@@ -12,6 +12,8 @@ import tp.tacs.api.model.ProvinciaModel;
 
 import java.util.List;
 
+import static java.lang.Thread.sleep;
+
 public class ExternalApis implements RepoMunicipios {
 
     private static ExternalApis instancia;
@@ -36,35 +38,61 @@ public class ExternalApis implements RepoMunicipios {
 
     @Override
     public List<Municipio> getMunicipios(String idProvincia, Integer cantidad) {
-        String url = geoRefMunicipioBaseUrlBasico + "&provincia=" + idProvincia + "&max=" + cantidad;
-        MunicipiosApi municipiosApi = connector.get(url, MunicipiosApi.class);
-        return geoRefWrapper.wrapList(municipiosApi.getMunicipios());
+        try {
+            sleep(200);
+            String url = geoRefMunicipioBaseUrlBasico + "&provincia=" + idProvincia + "&max=" + cantidad;
+            MunicipiosApi municipiosApi = connector.get(url, MunicipiosApi.class);
+            return geoRefWrapper.wrapList(municipiosApi.getMunicipios());
+        } catch (Exception e) {
+            throw new RuntimeException();
+        }
     }
 
     @Override
     public String getNombre(String idMunicipio) {
-        String url = geoRefMunicipioBaseUrlBasico + "&id=" + idMunicipio;
-        MunicipiosApi municipiosApi = connector.get(url, MunicipiosApi.class);
-        return municipiosApi.getMunicipios().get(0).getNombre();
+        try {
+            sleep(200);
+            String url = geoRefMunicipioBaseUrlBasico + "&id=" + idMunicipio;
+            MunicipiosApi municipiosApi = connector.get(url, MunicipiosApi.class);
+            return municipiosApi.getMunicipios().get(0).getNombre();
+        } catch (Exception e) {
+            throw new RuntimeException();
+        }
+
     }
 
     @Override
     public Double getLatitud(String idMunicipio) {
-        String url = String.format("%s&campos=centroide.lat&id=%s", geoRefMunicipioBaseUrlEstandar, idMunicipio);
-        return connector.get(url, MunicipiosApi.class).getMunicipios().get(0).getCentroide_lat().doubleValue();
+        try {
+            sleep(200);
+            String url = String.format("%s&campos=centroide.lat&id=%s", geoRefMunicipioBaseUrlEstandar, idMunicipio);
+            return connector.get(url, MunicipiosApi.class).getMunicipios().get(0).getCentroide_lat().doubleValue();
+        } catch (Exception e) {
+            throw new RuntimeException();
+        }
     }
 
     @Override
     public Double getLongitud(String idMunicipio) {
-        String url = String.format("%s&campos=centroide.lon&id=%s", geoRefMunicipioBaseUrlEstandar, idMunicipio);
-        return connector.get(url, MunicipiosApi.class).getMunicipios().get(0).getCentroide_lon().doubleValue();
+        try {
+            sleep(200);
+            String url = String.format("%s&campos=centroide.lon&id=%s", geoRefMunicipioBaseUrlEstandar, idMunicipio);
+            return connector.get(url, MunicipiosApi.class).getMunicipios().get(0).getCentroide_lon().doubleValue();
+        } catch (Exception e) {
+            throw new RuntimeException();
+        }
     }
 
     @Override
     public Float getAltura(String idMunicipio) {
-        String coordenadas = getCoordenadas(idMunicipio);
-        String url = String.format("%s%s", topoBaseUrl, coordenadas);
-        return connector.get(url, TopoResult.class).getResults().get(0).getElevation().floatValue();
+        try {
+            sleep(200);
+            String coordenadas = getCoordenadas(idMunicipio);
+            String url = String.format("%s%s", topoBaseUrl, coordenadas);
+            return connector.get(url, TopoResult.class).getResults().get(0).getElevation().floatValue();
+        } catch (Exception e) {
+            throw new RuntimeException();
+        }
     }
 
     @Override
@@ -74,13 +102,23 @@ public class ExternalApis implements RepoMunicipios {
 
     @Override
     public String getCoordenadas(String idMunicipio) {
-        String url = String.format("%s&campos=centroide.lat,centroide.lon&id=%s", geoRefMunicipioBaseUrlEstandar, idMunicipio);
-        return connector.get(url, MunicipiosApi.class).getMunicipios().get(0).coordenadasParaTopo();
+        try {
+            sleep(200);
+            String url = String.format("%s&campos=centroide.lat,centroide.lon&id=%s", geoRefMunicipioBaseUrlEstandar, idMunicipio);
+            return connector.get(url, MunicipiosApi.class).getMunicipios().get(0).coordenadasParaTopo();
+        } catch (Exception e) {
+            throw new RuntimeException();
+        }
     }
 
     @Override
     public List<ProvinciaModel> getProvincias() {
-        Provincias provincias = connector.get(geoRefProvinciabaseUrlEstandar, Provincias.class);
-        return provinciaWrapper.wrapList(provincias.getProvincias());
+        try {
+            sleep(200);
+            Provincias provincias = connector.get(geoRefProvinciabaseUrlEstandar, Provincias.class);
+            return provinciaWrapper.wrapList(provincias.getProvincias());
+        } catch (Exception e) {
+            throw new RuntimeException();
+        }
     }
 }

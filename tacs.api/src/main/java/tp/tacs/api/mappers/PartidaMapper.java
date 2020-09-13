@@ -1,7 +1,6 @@
 package tp.tacs.api.mappers;
 
 import org.springframework.stereotype.Component;
-import tp.tacs.api.dominio.partida.Estado;
 import tp.tacs.api.dominio.partida.Partida;
 import tp.tacs.api.model.PartidaModel;
 
@@ -33,7 +32,7 @@ public class PartidaMapper extends AbstractMapper<Partida, PartidaModel> {
         var jugadores = usuarioMapper.wrapList(partida.getJugadores());
         return new PartidaModel()
                 .jugadores(jugadores)
-                .estado(estadoDeJuegoMapper.toModel(Estado.EN_CURSO))
+                .estado(estadoDeJuegoMapper.toModel(partida.getEstado()))
                 .cantidadMunicipios((long) partida.getMunicipios().size())
                 .fecha(partida.getFechaCreacion())
                 .modoDeJuego(modoDeJuegoMapper.toModel(partida.getModoDeJuego()))

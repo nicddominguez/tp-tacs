@@ -100,10 +100,12 @@ public class Municipio {
     }
 
     public Double getLatitud() {
+//        sleep(1000);
         return this.repoMunicipios.getLatitud(this.idMunicipioReal);
     }
 
     public Double getLongitud() {
+//        sleep(1000);
         return this.repoMunicipios.getLongitud(this.idMunicipioReal);
     }
 
@@ -124,21 +126,28 @@ public class Municipio {
     }
 
     private Integer gauchosAtacantesFinal(Municipio municipio) {
-        return (Integer) (int) Math.floor(
-                this.cantGauchos * this.partida.multDist(this, municipio)
-                        - municipio.getCantGauchos() * this.partida.multAltura(municipio) * this.especializacion.multDefensa(this.partida)
-        );
+        var multDist = this.partida.multDist(this, municipio);
+        var multAltura = this.partida.multAltura(municipio);
+        var multDefensa = this.especializacion.multDefensa(this.partida);
+
+        return (int) Math.floor(this.cantGauchos * multDist - municipio.getCantGauchos() * multAltura * multDefensa);
     }
 
     private Integer gauchosDefensoresFinal(Municipio municipio) {
-        return (Integer) (int) Math.round(Math.ceil(
-                (municipio.getCantGauchos() * this.partida.multAltura(municipio) * this.especializacion.multDefensa(this.partida))
-                        - (this.cantGauchos * this.partida.multDist(this, municipio)))
-                / (this.partida.multAltura(municipio) * this.especializacion.multDefensa(this.partida)));
+        var multAltura = this.partida.multAltura(municipio);
+        var multDefensa = this.especializacion.multDefensa(this.partida);
+        var multDist = this.partida.multDist(this, municipio);
+        var gauchosDefensores = municipio.getCantGauchos();
+
+        return (int) Math.round(Math.ceil(
+                (gauchosDefensores * multAltura * multDefensa) - (this.cantGauchos * multDist))
+                / (multAltura * multDefensa));
     }
 
     public void atacar(Municipio municipio) {
-        //TODO ver si es su turno
+        if (this.partida.usuarioEnTurnoActual() != this.duenio) {
+            throw new RuntimeException("No es el turno del dueño del municipio. No puede atacar.");
+        }
         if (this.mismoDuenio(municipio)) {
             throw new RuntimeException("No puede atacar a sus propios municipios");
         }
@@ -164,7 +173,9 @@ public class Municipio {
     }
 
     public void moverGauchos(Municipio municipio, Integer cantidad) {
-        //TODO ver si es su turno
+        if (this.partida.usuarioEnTurnoActual() != this.duenio) {
+            throw new RuntimeException("No es el turno del dueño del municipio. No puede mover gauchos.");
+        }
         if (!this.mismoDuenio(municipio)) {
             throw new RuntimeException("Debe ser el duenio del municipio para poder mover gauchos");
         }

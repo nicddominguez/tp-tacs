@@ -9,6 +9,8 @@ import java.awt.geom.Point2D;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.lang.Thread.sleep;
+
 public class Partida {
 
     private Long id;
@@ -287,10 +289,16 @@ public class Partida {
     }
 
     public Float multAltura(Municipio municipioDefensor) {
-        Float alturaMunicipioDefensor = municipioDefensor.getAltura();
-        var minAltura = this.minAltura();
-        var maxAltura = this.maxAltura();
-        return 1 + (alturaMunicipioDefensor - minAltura) / (2 * (maxAltura - minAltura));
+        try {
+            sleep(1000); //TODO Cachear para no tener que asfixiar a la API
+            Float alturaMunicipioDefensor = municipioDefensor.getAltura();
+            var minAltura = this.minAltura();
+            var maxAltura = this.maxAltura();
+            return 1 + (alturaMunicipioDefensor - minAltura) / (2 * (maxAltura - minAltura));
+        }
+        catch (Exception e){
+            throw new RuntimeException();
+        }
     }
 
 }

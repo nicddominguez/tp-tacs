@@ -25,7 +25,6 @@ class EspecializacionTest {
     @Mock
     Partida partida;
 
-
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
@@ -41,7 +40,7 @@ class EspecializacionTest {
     void producirEnDefensa() {
         municipio.setEspecializacion(defensa);
         municipio.producir();
-        assertEquals(13, municipio.getCantGauchos());
+        assertEquals(28, municipio.getCantGauchos());
     }
 
     @Test
@@ -58,7 +57,7 @@ class EspecializacionTest {
     void producirEnProduccion() {
         municipio.setEspecializacion(produccion);
         municipio.producir();
-        assertEquals(19, municipio.getCantGauchos());
+        assertEquals(34, municipio.getCantGauchos());
     }
 
     @Test

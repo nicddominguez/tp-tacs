@@ -58,6 +58,7 @@ class MunicipioTest {
     void atacar() {
         municipioAtacante.setCantGauchos(100);
         municipioDefensor.setCantGauchos(1);
+        when(partida.usuarioEnTurnoActual()).thenReturn(usuario0);
         municipioAtacante.atacar(municipioDefensor);
         assertEquals(49, municipioAtacante.getCantGauchos());
         assertEquals(0, municipioDefensor.getCantGauchos());
@@ -93,9 +94,10 @@ class MunicipioTest {
         municipioAtacante.setCantGauchos(10);
         municipioAtacante.setDuenio(usuario0);
         municipioDefensor.setDuenio(usuario0);
+        when(partida.usuarioEnTurnoActual()).thenReturn(usuario0);
         municipioAtacante.moverGauchos(municipioDefensor, 5);
         assertEquals(5, municipioAtacante.getCantGauchos());
-        assertEquals(5, municipioDefensor.getCantGauchos());
+        assertEquals(20, municipioDefensor.getCantGauchos());
     }
 
     @Test
@@ -103,6 +105,7 @@ class MunicipioTest {
         municipioAtacante.setCantGauchos(10);
         municipioAtacante.setDuenio(usuario0);
         municipioDefensor.setDuenio(usuario0);
+        when(partida.usuarioEnTurnoActual()).thenReturn(usuario0);
         municipioAtacante.moverGauchos(municipioDefensor, 5);
         assertThrows(RuntimeException.class, () -> municipioDefensor.moverGauchos(municipioAtacante, 1));
     }

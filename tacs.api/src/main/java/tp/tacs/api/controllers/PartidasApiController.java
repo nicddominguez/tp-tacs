@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 import tp.tacs.api.daos.MunicipioDao;
 import tp.tacs.api.daos.PartidaDao;
 import tp.tacs.api.daos.UsuarioDao;
+import tp.tacs.api.dominio.partida.Estado;
 import tp.tacs.api.dominio.partida.Partida;
 import tp.tacs.api.dominio.partida.PartidaBuilder;
 import tp.tacs.api.dominio.usuario.Usuario;
@@ -46,7 +47,7 @@ public class PartidasApiController implements PartidasApi {
     @Override
     public ResponseEntity<Void> actualizarEstadoPartida(Long idPartida, @Valid PartidaModel body) {
         Partida partida = this.partidaDao.get(idPartida);
-        var nuevoEstado = estadoDeJuegoMapper.toEntity(body.getEstado());
+        Estado nuevoEstado = estadoDeJuegoMapper.toEntity(body.getEstado());
         partida.setEstado(nuevoEstado);
         return ResponseEntity.ok().build();
     }
@@ -88,13 +89,9 @@ public class PartidasApiController implements PartidasApi {
 
     @Override
     public ResponseEntity<PartidaModel> getPartida(Long idPartida) {
-        try {
-            var partida = this.partidaDao.get(idPartida);
-            var partidaModel = this.partidaMapper.wrap(partida);
-            return ResponseEntity.ok(partidaModel);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+        var partida = this.partidaDao.get(idPartida);
+        var partidaModel = this.partidaMapper.wrap(partida);
+        return ResponseEntity.ok(partidaModel);
     }
 
     @Override

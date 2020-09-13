@@ -8,6 +8,7 @@ import tp.tacs.api.model.EstadoDeJuegoModel;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,31 +16,34 @@ public class PartidaDao implements Dao<Partida> {
 
     private final EstadoDeJuegoMapper estadoDeJuegoMapper = new EstadoDeJuegoMapper();
 
-    private static List<Partida> partidas = new ArrayList<>();
+    private static HashMap<Long, Partida> partidas = new HashMap<>();
+
+    private static Long i = 0L;
 
     public synchronized void limpiar() {
-        PartidaDao.partidas = new ArrayList<>();
+        PartidaDao.partidas = new HashMap<>();
     }
 
     @Override
-    public synchronized Partida get(Long id) {
-        return PartidaDao.partidas.get(Math.toIntExact(id));
+    public Partida get(Long id) {
+        return PartidaDao.partidas.get(id);
     }
 
     @Override
     public synchronized List<Partida> getAll() {
-        return PartidaDao.partidas;
+        return new ArrayList<>(PartidaDao.partidas.values());
     }
 
     @Override
     public synchronized void save(Partida element) {
-        element.setId((long) PartidaDao.partidas.size());
-        PartidaDao.partidas.add(element);
+        element.setId(PartidaDao.i);
+        PartidaDao.partidas.put(element.getId(), element);
+        PartidaDao.i++;
     }
 
     @Override
     public synchronized void delete(Partida element) {
-        PartidaDao.partidas.remove(element);
+        PartidaDao.partidas.remove(element.getId());
     }
 
     public EstadisticasDeJuegoModel estadisticas(Date fechaInicio, Date fechaFin) {
@@ -62,6 +66,7 @@ public class PartidaDao implements Dao<Partida> {
 
     private List<Partida> partidasEntre(Date fechaInicio, Date fechaFin) {
         return PartidaDao.partidas
+                .values()
                 .stream()
                 .filter(partida ->
                         partida.getFechaCreacion().after(fechaInicio) && partida.getFechaCreacion().before(fechaFin))
@@ -79,8 +84,7 @@ public class PartidaDao implements Dao<Partida> {
             } else {
                 return new ArrayList<>(partidasEntre(fechaInicio, fechaFin));
             }
-        }
-        else {
+        } else {
             return this.getAll();
         }
     }

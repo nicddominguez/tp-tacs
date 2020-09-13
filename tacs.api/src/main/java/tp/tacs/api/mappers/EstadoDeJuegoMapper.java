@@ -20,6 +20,6 @@ public class EstadoDeJuegoMapper {
     }
 
     public Estado toEntity(EstadoDeJuegoModel model){
-        return Estado.fromValue(model.toString().toUpperCase());
+        return Estado.fromValue(model.toString());
     }
 }
