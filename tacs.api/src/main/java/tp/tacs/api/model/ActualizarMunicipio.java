@@ -5,63 +5,62 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import tp.tacs.api.model.UsuarioModel;
+import tp.tacs.api.model.ModoDeMunicipioModel;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
- * NuevoJWTModel
+ * ActualizarMunicipio
  */
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-09-14T19:00:38.696940-03:00[America/Buenos_Aires]")
 
 
-public class NuevoJWTModel   {
-  @JsonProperty("usuario")
-  private UsuarioModel usuario = null;
+public class ActualizarMunicipio   {
+  @JsonProperty("modo")
+  private ModoDeMunicipioModel modo = null;
 
-  @JsonProperty("token")
-  private String token = null;
+  @JsonProperty("estaBloqueado")
+  private Boolean estaBloqueado = null;
 
-  public NuevoJWTModel usuario(UsuarioModel usuario) {
-    this.usuario = usuario;
+  public ActualizarMunicipio modo(ModoDeMunicipioModel modo) {
+    this.modo = modo;
     return this;
   }
 
   /**
-   * Get usuario
-   * @return usuario
+   * Get modo
+   * @return modo
   **/
   @ApiModelProperty(value = "")
   
     @Valid
-    public UsuarioModel getUsuario() {
-    return usuario;
+    public ModoDeMunicipioModel getModo() {
+    return modo;
   }
 
-  public void setUsuario(UsuarioModel usuario) {
-    this.usuario = usuario;
+  public void setModo(ModoDeMunicipioModel modo) {
+    this.modo = modo;
   }
 
-  public NuevoJWTModel token(String token) {
-    this.token = token;
+  public ActualizarMunicipio estaBloqueado(Boolean estaBloqueado) {
+    this.estaBloqueado = estaBloqueado;
     return this;
   }
 
   /**
-   * JWT que puede utilizarse para acceder a los recursos protegidos
-   * @return token
+   * Get estaBloqueado
+   * @return estaBloqueado
   **/
-  @ApiModelProperty(required = true, value = "JWT que puede utilizarse para acceder a los recursos protegidos")
-      @NotNull
-
-    public String getToken() {
-    return token;
+  @ApiModelProperty(value = "")
+  
+    public Boolean isEstaBloqueado() {
+    return estaBloqueado;
   }
 
-  public void setToken(String token) {
-    this.token = token;
+  public void setEstaBloqueado(Boolean estaBloqueado) {
+    this.estaBloqueado = estaBloqueado;
   }
 
 
@@ -73,23 +72,23 @@ public class NuevoJWTModel   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    NuevoJWTModel nuevoJWTModel = (NuevoJWTModel) o;
-    return Objects.equals(this.usuario, nuevoJWTModel.usuario) &&
-        Objects.equals(this.token, nuevoJWTModel.token);
+    ActualizarMunicipio actualizarMunicipio = (ActualizarMunicipio) o;
+    return Objects.equals(this.modo, actualizarMunicipio.modo) &&
+        Objects.equals(this.estaBloqueado, actualizarMunicipio.estaBloqueado);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(usuario, token);
+    return Objects.hash(modo, estaBloqueado);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class NuevoJWTModel {\n");
+    sb.append("class ActualizarMunicipio {\n");
     
-    sb.append("    usuario: ").append(toIndentedString(usuario)).append("\n");
-    sb.append("    token: ").append(toIndentedString(token)).append("\n");
+    sb.append("    modo: ").append(toIndentedString(modo)).append("\n");
+    sb.append("    estaBloqueado: ").append(toIndentedString(estaBloqueado)).append("\n");
     sb.append("}");
     return sb.toString();
   }

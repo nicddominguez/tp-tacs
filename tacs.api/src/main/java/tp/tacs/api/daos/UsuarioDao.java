@@ -1,26 +1,33 @@
 package tp.tacs.api.daos;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import tp.tacs.api.dominio.usuario.Usuario;
 import tp.tacs.api.mappers.UsuarioMapper;
 import tp.tacs.api.model.EstadisticasDeUsuarioModel;
 
+import javax.annotation.PostConstruct;
 import java.util.*;
 
 @Component
 public class UsuarioDao implements Dao<Usuario> {
+    private Map<Long, Usuario> usuarios;
 
-    private static final Map<Long, Usuario> usuarios = new HashMap<>();
+    @Autowired
+    private UsuarioMapper usuarioMapper;
 
-    private final UsuarioMapper usuarioMapper = new UsuarioMapper();
+    @PostConstruct
+    private void postConstruct() {
+        usuarios = new HashMap<>();
+    }
 
     @Override
     public synchronized Usuario get(Long id) {
-        return UsuarioDao.usuarios.get(id);
+        return usuarios.get(id);
     }
 
     public synchronized Usuario getByGoogleId(String googleId) {
-        return UsuarioDao.usuarios
+        return usuarios
                 .values()
                 .stream()
                 .filter(usuario -> usuario.getGoogleId().equals(googleId))
@@ -29,7 +36,7 @@ public class UsuarioDao implements Dao<Usuario> {
     }
 
     public synchronized Usuario getByUsername(String username) {
-        return UsuarioDao.usuarios
+        return usuarios
                 .values()
                 .stream()
                 .filter(usuario -> usuario.getNombre().equals(username))
@@ -39,17 +46,17 @@ public class UsuarioDao implements Dao<Usuario> {
 
     @Override
     public synchronized List<Usuario> getAll() {
-        return new ArrayList<>(UsuarioDao.usuarios.values());
+        return new ArrayList<>(usuarios.values());
     }
 
     @Override
     public synchronized void save(Usuario element) {
-        UsuarioDao.usuarios.put(element.getId(), element);
+        usuarios.put(element.getId(), element);
     }
 
     @Override
     public synchronized void delete(Usuario element) {
-        UsuarioDao.usuarios.remove(element.getId());
+        usuarios.remove(element.getId());
     }
 
     public synchronized List<Usuario> getSegunIds(List<Long> idsUsuarios) {
@@ -69,7 +76,7 @@ public class UsuarioDao implements Dao<Usuario> {
 
     public synchronized List<EstadisticasDeUsuarioModel> scoreBoard() {
         List<EstadisticasDeUsuarioModel> estadisticasDeUsuarioModels = new ArrayList<>();
-        UsuarioDao.usuarios
+        usuarios
                 .keySet()
                 .forEach(idUsuario -> estadisticasDeUsuarioModels.add(this.estadisticas(idUsuario)));
         return estadisticasDeUsuarioModels;

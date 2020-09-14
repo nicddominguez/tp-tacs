@@ -1,5 +1,6 @@
 package tp.tacs.api.controllers;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import tp.tacs.api.daos.UsuarioDao;
@@ -15,8 +16,8 @@ import java.util.stream.Collectors;
 
 @RestController
 public class UsuariosApiController implements UsuariosApi {
-
-    private Utils utils = new Utils();
+    @Autowired
+    private Utils utils;
     private UsuarioDao usuarioDao = new UsuarioDao();
     private UsuarioMapper usuarioMapper = new UsuarioMapper();
 

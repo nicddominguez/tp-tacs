@@ -5,6 +5,7 @@
  */
 package tp.tacs.api.controllers;
 
+import tp.tacs.api.model.ActualizarMunicipio;
 import tp.tacs.api.model.AtacarMunicipioBody;
 import tp.tacs.api.model.AtacarMunicipioResponse;
 import tp.tacs.api.model.CrearPartidaBody;
@@ -13,7 +14,6 @@ import tp.tacs.api.model.EstadoDeJuegoModel;
 import tp.tacs.api.model.ListarPartidasResponse;
 import tp.tacs.api.model.MoverGauchosBody;
 import tp.tacs.api.model.MoverGauchosResponse;
-import tp.tacs.api.model.MunicipioEnJuegoModel;
 import tp.tacs.api.model.PartidaModel;
 import tp.tacs.api.model.SimularAtacarMunicipioBody;
 import tp.tacs.api.model.SimularAtacarMunicipioResponse;
@@ -34,7 +34,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.util.List;
 import java.util.Map;
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-09-10T19:10:01.693073800-03:00[America/Buenos_Aires]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-09-14T19:00:38.696940-03:00[America/Buenos_Aires]")
 @Api(value = "partidas", description = "the partidas API")
 public interface PartidasApi {
 
@@ -63,7 +63,7 @@ public interface PartidasApi {
         method = RequestMethod.PATCH)
     ResponseEntity<Void> actualizarMunicipio(@ApiParam(value = "",required=true) @PathVariable("idPartida") Long idPartida
 ,@ApiParam(value = "",required=true) @PathVariable("idMunicipio") Long idMunicipio
-,@ApiParam(value = ""  )  @Valid @RequestBody MunicipioEnJuegoModel body
+,@ApiParam(value = ""  )  @Valid @RequestBody ActualizarMunicipio body
 );
 
 

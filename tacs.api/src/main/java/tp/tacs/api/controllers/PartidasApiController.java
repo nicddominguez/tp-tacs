@@ -59,10 +59,11 @@ public class PartidasApiController implements PartidasApi {
     }
 
     @Override
-    public ResponseEntity<Void> actualizarMunicipio(Long idPartida, Long idMunicipio, @Valid MunicipioEnJuegoModel body) {
+    public ResponseEntity<Void> actualizarMunicipio(Long idPartida, Long idMunicipio, @Valid ActualizarMunicipio body) {
         var municipioAActualizar = municipioDao.get(idMunicipio);
         var nuevaEspecializacion = modoDeMunicipioMapper.toEntity(body.getModo());
         municipioAActualizar.setEspecializacion(nuevaEspecializacion);
+        //municipioAActualizar.estaBloqueado(body.isEstaBloqueado());
         return ResponseEntity.ok().build();
     }
 

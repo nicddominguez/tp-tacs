@@ -1,6 +1,7 @@
 package tp.tacs.api.dominio.municipio;
 
 import com.google.common.collect.Lists;
+import lombok.Builder;
 import tp.tacs.api.daos.MunicipioDao;
 import tp.tacs.api.dominio.partida.Estado;
 import tp.tacs.api.dominio.partida.Partida;
@@ -10,10 +11,11 @@ import tp.tacs.api.handler.PartidaException;
 import tp.tacs.api.http.externalApis.ExternalApis;
 
 import java.util.ArrayList;
-
+@Builder
 public class Municipio {
 
     private Long id;
+    @Builder.Default
     private String idMunicipioReal = "2";
     private Integer cantGauchos = 15;
     private boolean bloqueado = false;
