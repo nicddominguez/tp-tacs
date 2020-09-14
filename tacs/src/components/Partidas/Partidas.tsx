@@ -183,17 +183,52 @@ class Partidas extends React.Component<Props, State> {
         this.state.pageSize,
         this.state.page
       )
-      .then((listarPartidasResponse) =>
-        this.setState({ partidas: listarPartidasResponse.partidas })
-      );
+      .then((listarPartidasResponse) => {
+        this.setState({ partidas: listarPartidasResponse.partidas });
+      })
+      .catch(console.error);
   }
 
   handlePrimerOrden = (event: React.ChangeEvent<{ value: unknown }>) => {
-    this.setState({ primerOrden: event.target.value as string });
+    const primerOrden = event.target.value as string;
+    this.setState({ primerOrden: primerOrden });
+    const orden =
+      primerOrden +
+      (this.state.segundoOrden ? "," + this.state.segundoOrden : "");
+    this.partidasApi
+      .listarPartidas(
+        this.state.fechaInicio?.toDateString(),
+        this.state.fechaFin?.toDateString(),
+        this.state.estado,
+        orden,
+        this.state.pageSize,
+        this.state.page
+      )
+      .then((listarPartidasResponse) => {
+        this.setState({ partidas: listarPartidasResponse.partidas });
+      })
+      .catch(console.error);
   };
 
   handleSegundoOrden = (event: React.ChangeEvent<{ value: unknown }>) => {
     this.setState({ segundoOrden: event.target.value as string });
+    const segundoOrden = event.target.value as string;
+    const orden = this.state.primerOrden
+      ? this.state.primerOrden + (segundoOrden ? "," + segundoOrden : "")
+      : undefined;
+    this.partidasApi
+      .listarPartidas(
+        this.state.fechaInicio?.toDateString(),
+        this.state.fechaFin?.toDateString(),
+        this.state.estado,
+        orden,
+        this.state.pageSize,
+        this.state.page
+      )
+      .then((listarPartidasResponse) => {
+        this.setState({ partidas: listarPartidasResponse.partidas });
+      })
+      .catch(console.error);
   };
 
   handleFechaInicio = (
