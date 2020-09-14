@@ -235,14 +235,50 @@ class Partidas extends React.Component<Props, State> {
     date: MaterialUiPickersDate,
     value?: string | null | undefined
   ) => {
-    this.setState({ fechaInicio: date as Date });
+    const fechaInicio = date as Date;
+    this.setState({ fechaInicio: fechaInicio });
+    const orden = this.state.primerOrden
+      ? this.state.primerOrden +
+        (this.state.segundoOrden ? "," + this.state.segundoOrden : "")
+      : undefined;
+    this.partidasApi
+      .listarPartidas(
+        fechaInicio.toISOString(),
+        this.state.fechaFin?.toISOString(),
+        this.state.estado,
+        orden,
+        this.state.pageSize,
+        this.state.page
+      )
+      .then((listarPartidasResponse) => {
+        this.setState({ partidas: listarPartidasResponse.partidas });
+      })
+      .catch(console.error);
   };
 
   handleFechaFin = (
     date: MaterialUiPickersDate,
     value?: string | null | undefined
   ) => {
-    this.setState({ fechaFin: date as Date });
+    const fechaFin = date as Date;
+    this.setState({ fechaFin: fechaFin });
+    const orden = this.state.primerOrden
+      ? this.state.primerOrden +
+        (this.state.segundoOrden ? "," + this.state.segundoOrden : "")
+      : undefined;
+    this.partidasApi
+      .listarPartidas(
+        this.state.fechaInicio?.toISOString(),
+        fechaFin.toISOString(),
+        this.state.estado,
+        orden,
+        this.state.pageSize,
+        this.state.page
+      )
+      .then((listarPartidasResponse) => {
+        this.setState({ partidas: listarPartidasResponse.partidas });
+      })
+      .catch(console.error);
   };
 
   handleEstado = (event: React.ChangeEvent<{ value: unknown }>) => {
@@ -324,10 +360,10 @@ class Partidas extends React.Component<Props, State> {
                   <KeyboardDatePicker
                     disableToolbar
                     variant="inline"
-                    format="MM/dd/yyyy"
+                    format="dd/MM/yyyy"
                     margin="normal"
-                    id="fecha-desde"
-                    label="Fecha desde"
+                    id="fecha-inicio"
+                    label="Fecha inicio"
                     value={this.state.fechaInicio}
                     onChange={this.handleFechaInicio}
                     KeyboardButtonProps={{
@@ -337,10 +373,10 @@ class Partidas extends React.Component<Props, State> {
                   <KeyboardDatePicker
                     disableToolbar
                     variant="inline"
-                    format="MM/dd/yyyy"
+                    format="dd/MM/yyyy"
                     margin="normal"
-                    id="fecha-hasta"
-                    label="Fecha hasta"
+                    id="fecha-fin"
+                    label="Fecha fin"
                     value={this.state.fechaFin}
                     onChange={this.handleFechaFin}
                     KeyboardButtonProps={{

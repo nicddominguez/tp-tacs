@@ -1345,11 +1345,11 @@ export const PartidasApiFetchParamCreator = function (configuration?: Configurat
             // authentication bearerAuth required
 
             if (fechaInicio !== undefined) {
-                localVarQueryParameter['fechaInicio'] = (fechaInicio as any).toISOString();
+                localVarQueryParameter['fechaInicio'] = fechaInicio;
             }
 
             if (fechaFin !== undefined) {
-                localVarQueryParameter['fechaFin'] = (fechaFin as any).toISOString();
+                localVarQueryParameter['fechaFin'] = fechaFin;
             }
 
             if (estado !== undefined) {
