@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import tp.tacs.api.daos.MunicipioDao;
 import tp.tacs.api.dominio.partida.Partida;
 import tp.tacs.api.dominio.usuario.Usuario;
+import tp.tacs.api.handler.MunicipioException;
 import tp.tacs.api.http.externalApis.ExternalApis;
 
 import java.util.ArrayList;
@@ -146,10 +147,10 @@ public class Municipio {
 
     public void atacar(Municipio municipio) {
         if (this.partida.usuarioEnTurnoActual() != this.duenio) {
-            throw new RuntimeException("No es el turno del dueño del municipio. No puede atacar.");
+            throw new MunicipioException("No es el turno del dueño del municipio. No puede atacar.");
         }
         if (this.mismoDuenio(municipio)) {
-            throw new RuntimeException("No puede atacar a sus propios municipios");
+            throw new MunicipioException("No puede atacar a sus propios municipios");
         }
         Integer gauchosAtacantesFinal = gauchosAtacantesFinal(municipio);
         Integer gauchosDefensoresFinal = gauchosDefensoresFinal(municipio);
@@ -174,16 +175,16 @@ public class Municipio {
 
     public void moverGauchos(Municipio municipio, Integer cantidad) {
         if (this.partida.usuarioEnTurnoActual() != this.duenio) {
-            throw new RuntimeException("No es el turno del dueño del municipio. No puede mover gauchos.");
+            throw new MunicipioException("No es el turno del dueño del municipio. No puede mover gauchos.");
         }
         if (!this.mismoDuenio(municipio)) {
-            throw new RuntimeException("Debe ser el duenio del municipio para poder mover gauchos");
+            throw new MunicipioException("Debe ser el duenio del municipio para poder mover gauchos");
         }
         if (this.estaBloqueado()) {
-            throw new RuntimeException("Un municipio bloqueado no puede mover gauchos");
+            throw new MunicipioException("Un municipio bloqueado no puede mover gauchos");
         }
         if (cantidad > this.cantGauchos || cantidad < 0) {
-            throw new RuntimeException("Cantidad Erronea");
+            throw new MunicipioException("Cantidad Erronea");
         }
         this.sacarGauchos(cantidad);
         municipio.agregarGauchos(cantidad);

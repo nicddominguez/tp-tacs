@@ -7,6 +7,7 @@ import org.mockito.MockitoAnnotations;
 import tp.tacs.api.dominio.partida.ModoRapido;
 import tp.tacs.api.dominio.partida.Partida;
 import tp.tacs.api.dominio.usuario.Usuario;
+import tp.tacs.api.handler.MunicipioException;
 import tp.tacs.api.http.externalApis.ExternalApis;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -68,7 +69,7 @@ class MunicipioTest {
     void noSePuedeAtacarATusPropiosMunicipios() {
         municipioAtacante.setDuenio(usuario0);
         municipioDefensor.setDuenio(usuario0);
-        assertThrows(RuntimeException.class, () -> municipioAtacante.atacar(municipioDefensor));
+        assertThrows(MunicipioException.class, () -> municipioAtacante.atacar(municipioDefensor));
     }
 
     @Test
@@ -107,7 +108,7 @@ class MunicipioTest {
         municipioDefensor.setDuenio(usuario0);
         when(partida.usuarioEnTurnoActual()).thenReturn(usuario0);
         municipioAtacante.moverGauchos(municipioDefensor, 5);
-        assertThrows(RuntimeException.class, () -> municipioDefensor.moverGauchos(municipioAtacante, 1));
+        assertThrows(MunicipioException.class, () -> municipioDefensor.moverGauchos(municipioAtacante, 1));
     }
 
     @Test
@@ -115,7 +116,7 @@ class MunicipioTest {
         municipioAtacante.setCantGauchos(10);
         municipioAtacante.setDuenio(usuario0);
         municipioDefensor.setDuenio(usuario0);
-        assertThrows(RuntimeException.class, () -> municipioAtacante.moverGauchos(municipioDefensor, 100));
+        assertThrows(MunicipioException.class, () -> municipioAtacante.moverGauchos(municipioDefensor, 100));
     }
 
     @Test
@@ -123,7 +124,7 @@ class MunicipioTest {
         municipioAtacante.setCantGauchos(10);
         municipioAtacante.setDuenio(usuario0);
         municipioDefensor.setDuenio(usuario1);
-        assertThrows(RuntimeException.class, () -> municipioAtacante.moverGauchos(municipioDefensor, 5));
+        assertThrows(MunicipioException.class, () -> municipioAtacante.moverGauchos(municipioDefensor, 5));
     }
 
     @Test
