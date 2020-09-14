@@ -244,8 +244,27 @@ class Partidas extends React.Component<Props, State> {
   ) => {
     this.setState({ fechaFin: date as Date });
   };
+
   handleEstado = (event: React.ChangeEvent<{ value: unknown }>) => {
-    this.setState({ estado: event.target.value as EstadoDeJuegoModel });
+    const estado = event.target.value as EstadoDeJuegoModel;
+    this.setState({ estado: estado });
+    const orden = this.state.primerOrden
+      ? this.state.primerOrden +
+        (this.state.segundoOrden ? "," + this.state.segundoOrden : "")
+      : undefined;
+    this.partidasApi
+      .listarPartidas(
+        this.state.fechaInicio?.toDateString(),
+        this.state.fechaFin?.toDateString(),
+        estado,
+        orden,
+        this.state.pageSize,
+        this.state.page
+      )
+      .then((listarPartidasResponse) => {
+        this.setState({ partidas: listarPartidasResponse.partidas });
+      })
+      .catch(console.error);
   };
 
   handlePage = (
