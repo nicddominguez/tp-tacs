@@ -2,9 +2,11 @@ package tp.tacs.api.dominio.municipio;
 
 import com.google.common.collect.Lists;
 import tp.tacs.api.daos.MunicipioDao;
+import tp.tacs.api.dominio.partida.Estado;
 import tp.tacs.api.dominio.partida.Partida;
 import tp.tacs.api.dominio.usuario.Usuario;
 import tp.tacs.api.handler.MunicipioException;
+import tp.tacs.api.handler.PartidaException;
 import tp.tacs.api.http.externalApis.ExternalApis;
 
 import java.util.ArrayList;
@@ -37,7 +39,7 @@ public class Municipio {
     }
 
     public void setCantGauchos(Integer cantGauchos) {
-        this.cantGauchos = cantGauchos;
+        this.cantGauchos = Math.max(cantGauchos, 0);
     }
 
     public boolean estaBloqueado() {
@@ -145,10 +147,17 @@ public class Municipio {
                 / (multAltura * multDefensa));
     }
 
-    public void atacar(Municipio municipio) {
-        if (this.partida.usuarioEnTurnoActual() != this.duenio) {
-            throw new MunicipioException("No es el turno del dueño del municipio. No puede atacar.");
+    public void validarAccion(String accion) {
+        if (!this.partida.getEstado().equals(Estado.EN_CURSO)) {
+            throw new PartidaException("La partida no está en curso. No se pudo " + accion);
         }
+        if (this.partida.usuarioEnTurnoActual() != this.duenio) {
+            throw new MunicipioException("No es el turno del dueño del municipio.");
+        }
+    }
+
+    public void atacar(Municipio municipio) {
+        this.validarAccion("atacar");
         if (this.mismoDuenio(municipio)) {
             throw new MunicipioException("No puede atacar a sus propios municipios");
         }
@@ -174,9 +183,7 @@ public class Municipio {
     }
 
     public void moverGauchos(Municipio municipio, Integer cantidad) {
-        if (this.partida.usuarioEnTurnoActual() != this.duenio) {
-            throw new MunicipioException("No es el turno del dueño del municipio. No puede mover gauchos.");
-        }
+        this.validarAccion("mover");
         if (!this.mismoDuenio(municipio)) {
             throw new MunicipioException("Debe ser el duenio del municipio para poder mover gauchos");
         }

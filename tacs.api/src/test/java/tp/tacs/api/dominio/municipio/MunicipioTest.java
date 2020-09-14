@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import tp.tacs.api.dominio.partida.Estado;
 import tp.tacs.api.dominio.partida.ModoRapido;
 import tp.tacs.api.dominio.partida.Partida;
 import tp.tacs.api.dominio.usuario.Usuario;
@@ -39,6 +40,7 @@ class MunicipioTest {
         municipioDefensor.setRepoMunicipios(repoMunicipios);
 
         doReturn(modoFacil).when(partida).getModoDeJuego();
+        doReturn(Estado.EN_CURSO).when(partida).getEstado();
         doReturn(1.25f).when(partida).multAltura(municipioDefensor);
         doReturn(0.5f).when(partida).multDist(municipioAtacante, municipioDefensor);
         municipioAtacante.setPartida(partida);

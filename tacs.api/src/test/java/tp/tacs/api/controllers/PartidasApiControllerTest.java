@@ -143,7 +143,7 @@ class PartidasApiControllerTest {
         assertEquals(usuarioA, municipioA.getDuenio());
         assertEquals(usuarioB, municipioD.getDuenio());
 
-        assertEquals(11L, response.getBody().getMunicipioAtacante().getGauchos());
+        assertEquals(15L, response.getBody().getMunicipioAtacante().getGauchos());
         assertEquals(13L, municipioAtacadoModel.getGauchos());
         assertNotNull(municipioAtacadoModel.getModo());
         assertNotNull(municipioAtacadoModel.getAltura());
