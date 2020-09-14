@@ -4,6 +4,7 @@ import com.google.common.collect.Sets;
 import tp.tacs.api.daos.PartidaDao;
 import tp.tacs.api.dominio.municipio.Municipio;
 import tp.tacs.api.dominio.usuario.Usuario;
+import tp.tacs.api.handler.PartidaException;
 
 import java.awt.geom.Point2D;
 import java.util.*;
@@ -30,7 +31,7 @@ public class Partida {
 
     public Partida(List<Usuario> jugadores, Estado estado, String provincia,
                    List<Municipio> municipios, ModoDeJuego modoDeJuego, Date fechaCreacion) {
-            this.constructor(jugadores, estado, provincia, municipios, modoDeJuego, fechaCreacion);
+        this.constructor(jugadores, estado, provincia, municipios, modoDeJuego, fechaCreacion);
     }
 
     public Partida(PartidaDao partidaDao, List<Usuario> jugadores, Estado estado, String provincia,
@@ -40,7 +41,7 @@ public class Partida {
     }
 
     private void constructor(List<Usuario> jugadores, Estado estado, String provincia,
-                             List<Municipio> municipios, ModoDeJuego modoDeJuego, Date fechaCreacion){
+                             List<Municipio> municipios, ModoDeJuego modoDeJuego, Date fechaCreacion) {
         this.jugadores = jugadores;
         this.estado = estado;
         this.provincia = provincia;
@@ -53,6 +54,7 @@ public class Partida {
         this.calcularDistancias();
         this.partidaDao.save(this);
     }
+
     //TODO: recalcular cuando los datos esten dirty
     private void calcularAlturas() {
         this.minAltura = (float) this.municipios.stream()
@@ -167,7 +169,7 @@ public class Partida {
         if (indice >= 0) {
             this.setUsuarioJugandoIndiceLista(indice);
         } else {
-            throw new RuntimeException("No se pudo asignar el turno al usuario: no forma parte de la partida");
+            throw new PartidaException("No se pudo asignar el turno al usuario: no forma parte de la partida");
         }
     }
 
@@ -201,7 +203,7 @@ public class Partida {
         if (this.estaEnCurso()) {
             this.manejarPasajeDeTurno();
         } else
-            throw new RuntimeException("No se puede pasar el turno de una partida que no este en curso");
+            throw new PartidaException("No se puede pasar el turno de una partida que no este en curso");
 
     }
 
@@ -307,7 +309,7 @@ public class Partida {
             var maxAltura = this.maxAltura();
             return 1 + (alturaMunicipioDefensor - minAltura) / (2 * (maxAltura - minAltura));
         } catch (Exception e) {
-            throw new RuntimeException();
+            throw new PartidaException();
         }
     }
 

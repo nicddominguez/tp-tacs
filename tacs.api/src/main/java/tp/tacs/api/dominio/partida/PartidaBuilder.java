@@ -2,6 +2,7 @@ package tp.tacs.api.dominio.partida;
 
 import tp.tacs.api.dominio.municipio.Municipio;
 import tp.tacs.api.dominio.usuario.Usuario;
+import tp.tacs.api.handler.PartidaException;
 import tp.tacs.api.http.externalApis.ExternalApis;
 
 import java.util.*;
@@ -14,7 +15,9 @@ public class PartidaBuilder {
     private ModoDeJuego modoDeJuego = new ModoRapido();
     private Date fechaCreacion = new GregorianCalendar(2019, Calendar.FEBRUARY, 11).getTime(); //TODO
     private ExternalApis repoMunicipios = ExternalApis.instance();
-    public PartidaBuilder() {}
+
+    public PartidaBuilder() {
+    }
 
     public PartidaBuilder(String idProvincia) {
         this.idProvincia = idProvincia;
@@ -67,11 +70,11 @@ public class PartidaBuilder {
 
     public void validarAtributos() {
         if (this.participantes == null) {
-            throw new RuntimeException("No se puede instanciar una partida sin participantes");
+            throw new PartidaException("No se puede instanciar una partida sin participantes");
         }
 
         if (this.municipios.isEmpty()) {
-            throw new RuntimeException("No se puede instanciar una partida sin municipios");
+            throw new PartidaException("No se puede instanciar una partida sin municipios");
         }
     }
 }
