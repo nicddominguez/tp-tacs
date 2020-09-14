@@ -3,6 +3,7 @@ package tp.tacs.api.http.externalApis;
 import tp.tacs.api.dominio.municipio.Municipio;
 import tp.tacs.api.dominio.municipio.RepoMunicipios;
 import tp.tacs.api.http.HttpClientConnector;
+import tp.tacs.api.http.exception.HttpErrorException;
 import tp.tacs.api.http.externalApis.models.MunicipiosApi;
 import tp.tacs.api.http.externalApis.models.Provincias;
 import tp.tacs.api.http.externalApis.models.TopoResult;
@@ -44,7 +45,7 @@ public class ExternalApis implements RepoMunicipios {
             MunicipiosApi municipiosApi = connector.get(url, MunicipiosApi.class);
             return geoRefWrapper.wrapList(municipiosApi.getMunicipios());
         } catch (Exception e) {
-            throw new RuntimeException();
+            throw new HttpErrorException();
         }
     }
 
@@ -56,7 +57,7 @@ public class ExternalApis implements RepoMunicipios {
             MunicipiosApi municipiosApi = connector.get(url, MunicipiosApi.class);
             return municipiosApi.getMunicipios().get(0).getNombre();
         } catch (InterruptedException e) {
-            throw new RuntimeException(e.getMessage());
+            throw new HttpErrorException(e.getMessage());
         }
 
     }
@@ -68,7 +69,7 @@ public class ExternalApis implements RepoMunicipios {
             String url = String.format("%s&campos=centroide.lat&id=%s", geoRefMunicipioBaseUrlEstandar, idMunicipio);
             return connector.get(url, MunicipiosApi.class).getMunicipios().get(0).getCentroide_lat().doubleValue();
         } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
+            throw new HttpErrorException(e.getMessage());
         }
     }
 
@@ -79,7 +80,7 @@ public class ExternalApis implements RepoMunicipios {
             String url = String.format("%s&campos=centroide.lon&id=%s", geoRefMunicipioBaseUrlEstandar, idMunicipio);
             return connector.get(url, MunicipiosApi.class).getMunicipios().get(0).getCentroide_lon().doubleValue();
         } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
+            throw new HttpErrorException(e.getMessage());
         }
     }
 
@@ -91,7 +92,7 @@ public class ExternalApis implements RepoMunicipios {
             String url = String.format("%s%s", topoBaseUrl, coordenadas);
             return connector.get(url, TopoResult.class).getResults().get(0).getElevation().floatValue();
         } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
+            throw new HttpErrorException(e.getMessage());
         }
     }
 
@@ -107,7 +108,7 @@ public class ExternalApis implements RepoMunicipios {
             String url = String.format("%s&campos=centroide.lat,centroide.lon&id=%s", geoRefMunicipioBaseUrlEstandar, idMunicipio);
             return connector.get(url, MunicipiosApi.class).getMunicipios().get(0).coordenadasParaTopo();
         } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
+            throw new HttpErrorException(e.getMessage());
         }
     }
 
@@ -118,7 +119,7 @@ public class ExternalApis implements RepoMunicipios {
             Provincias provincias = connector.get(geoRefProvinciabaseUrlEstandar, Provincias.class);
             return provinciaWrapper.wrapList(provincias.getProvincias());
         } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
+            throw new HttpErrorException(e.getMessage());
         }
     }
 }
