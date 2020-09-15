@@ -4,6 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import tp.tacs.api.model.ListarUsuariosResponse;
 import tp.tacs.api.model.UsuarioModel;
+import tp.tacs.api.utils.Utils;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -24,14 +25,13 @@ public class UsuariosApiController implements UsuariosApi {
         usuarioModels.add(new UsuarioModel().id(1L).nombreDeUsuario("Nico2"));
         usuarioModels.add(new UsuarioModel().id(1L).nombreDeUsuario("Juan"));
 
-        Long start = pagina * tamanioPagina;
-        Long end = start + tamanioPagina;
+        Utils utils = new Utils();
 
-        if(start > usuarioModels.size() || end > usuarioModels.size() || start < 0 || end <= 0)
+        List<UsuarioModel> listaPaginada = utils.obtenerListaPaginada(pagina, tamanioPagina, usuarioModels);
+
+        if(listaPaginada == null)
             return ResponseEntity.notFound().build();
 
-        List<UsuarioModel> usuariosPaginados = usuarioModels.subList(start.intValue(), end.intValue());
-
-        return ResponseEntity.ok(new ListarUsuariosResponse().usuarios(usuariosPaginados));
+        return ResponseEntity.ok(new ListarUsuariosResponse().usuarios(listaPaginada));
     }
 }
