@@ -1,4 +1,5 @@
 import DateFnsUtils from "@date-io/date-fns";
+import Button from "@material-ui/core/Button";
 import Collapse from "@material-ui/core/Collapse";
 import Container from "@material-ui/core/Container";
 import FormControl from "@material-ui/core/FormControl";
@@ -146,6 +147,9 @@ const useStyles = (theme: Theme) =>
     chip: {
       margin: 2,
     },
+    margin: {
+      margin: theme.spacing(1),
+    },
   });
 interface Props {
   classes: any;
@@ -254,6 +258,17 @@ class Partidas extends React.Component<Props, State> {
     this.listarPartidas();
   };
 
+  handleRemoverFiltrar = async (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    await this.setState({
+      fechaInicio: undefined,
+      fechaFin: undefined,
+      estado: undefined,
+    });
+    this.listarPartidas();
+  };
+
   render() {
     const classes = this.props.classes;
     return (
@@ -262,7 +277,17 @@ class Partidas extends React.Component<Props, State> {
           {/* TODO: Hacer que xs sea 12 para mobile */}
           <Grid item xs={6}>
             <Paper className={classes.paper}>
-              <Typography variant="h6">Ordenar</Typography>
+              <Grid container justify="space-between" alignItems="center">
+                <Typography variant="h6">Ordenar</Typography>
+                <Button
+                  size="small"
+                  variant="contained"
+                  className={classes.margin}
+                  onClick={this.handleRemoverOrdenar}
+                >
+                  Remover
+                </Button>
+              </Grid>
               <FormControl className={classes.formControl}>
                 <InputLabel id="primer-orden-label">Primero por</InputLabel>
                 <Select
@@ -291,7 +316,17 @@ class Partidas extends React.Component<Props, State> {
           </Grid>
           <Grid item xs={6}>
             <Paper className={classes.paper}>
-              <Typography variant="h6">Filtrar</Typography>
+              <Grid container justify="space-between" alignItems="center">
+                <Typography variant="h6">Filtrar</Typography>
+                <Button
+                  size="small"
+                  variant="contained"
+                  className={classes.margin}
+                  onClick={this.handleRemoverFiltrar}
+                >
+                  Remover
+                </Button>
+              </Grid>
               <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <Grid container justify="space-around">
                   <KeyboardDatePicker
