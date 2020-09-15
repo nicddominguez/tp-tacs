@@ -10,12 +10,20 @@ import Step from "@material-ui/core/Step";
 import StepContent from "@material-ui/core/StepContent";
 import StepLabel from "@material-ui/core/StepLabel";
 import Stepper from "@material-ui/core/Stepper";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import { createStyles, Theme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import {withStyles} from '@material-ui/core/styles'
+import { withStyles } from '@material-ui/core/styles'
 import { default as React } from "react";
-import { ProvinciaModel } from "api/api";
-import { WololoProvinciasApiClient } from "api/client";
+import { ProvinciaModel, UsuarioModel, CrearPartidaBody } from "api/api";
+import { WololoProvinciasApiClient, WololoUsuariosApiClient, WololoPartidasApiClient } from "api/client";
+import Paper from "@material-ui/core/Paper"
+import List from "@material-ui/core/List"
+import ListItem from "@material-ui/core/ListItem"
+import ListItemIcon from "@material-ui/core/ListItemIcon"
+import ListItemText from "@material-ui/core/ListItemText"
+import Cancel from "@material-ui/icons/Cancel"
+import Add from "@material-ui/icons/Add"
+import TextField from "@material-ui/core/TextField";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -43,7 +51,7 @@ const styles = (theme: Theme) =>
       width: 42,
     },
   }
-);
+  );
 
 const stepNames = [
   "Seleccionar una provincia",
@@ -92,18 +100,18 @@ class SelectorProvincia extends React.Component<SelectorProvinciasProps, Selecto
   render() {
     return (
       <FormControl className={this.classes.formControl}>
-      <InputLabel id="provincia-label">Provincia</InputLabel>
-      <Select
-        labelId="provincia-label"
-        id="provincia"
-        onChange={this.handleSelectChange}
-        value={this.state.idProvincia}
-      >
-        {this.props.provincias.map(provincia => (
-          <MenuItem key={provincia.id} value={provincia.id}>{provincia.nombre}</MenuItem>
-        ))}
-      </Select>
-    </FormControl>
+        <InputLabel id="provincia-label">Provincia</InputLabel>
+        <Select
+          labelId="provincia-label"
+          id="provincia"
+          onChange={this.handleSelectChange}
+          value={this.state.idProvincia}
+        >
+          {this.props.provincias.map(provincia => (
+            <MenuItem key={provincia.id} value={provincia.id}>{provincia.nombre}</MenuItem>
+          ))}
+        </Select>
+      </FormControl>
     )
   }
 
@@ -165,37 +173,37 @@ class SelectorCantidadMunicipios extends React.Component<SelectorCantidadMunicip
   render() {
     return (
       <div className={this.classes.rootSlider}>
-      <Typography id="input-slider" gutterBottom>
-        Cantidad de municipios
+        <Typography id="input-slider" gutterBottom>
+          Cantidad de municipios
       </Typography>
-      <Grid container spacing={2} alignItems="center">
-        <Grid item xs>
-          <Slider
-            value={typeof this.state.cantidadMunicipios === "number" ? this.state.cantidadMunicipios : 12}
-            onChange={this.handleSliderChange}
-            aria-labelledby="input-slider"
-            min={12}
-            max={50}
-          />
+        <Grid container spacing={2} alignItems="center">
+          <Grid item xs>
+            <Slider
+              value={typeof this.state.cantidadMunicipios === "number" ? this.state.cantidadMunicipios : 12}
+              onChange={this.handleSliderChange}
+              aria-labelledby="input-slider"
+              min={12}
+              max={50}
+            />
+          </Grid>
+          <Grid item>
+            <Input
+              className={this.classes.input}
+              value={typeof this.state.cantidadMunicipios === "number" ? this.state.cantidadMunicipios : 12}
+              margin="dense"
+              onChange={this.handleInputChange}
+              onBlur={this.handleBlur}
+              inputProps={{
+                step: 1,
+                min: 12,
+                max: 100,
+                type: "number",
+                "aria-labelledby": "input-slider",
+              }}
+            />
+          </Grid>
         </Grid>
-        <Grid item>
-          <Input
-            className={this.classes.input}
-            value={typeof this.state.cantidadMunicipios === "number" ? this.state.cantidadMunicipios : 12}
-            margin="dense"
-            onChange={this.handleInputChange}
-            onBlur={this.handleBlur}
-            inputProps={{
-              step: 1,
-              min: 12,
-              max: 100,
-              type: "number",
-              "aria-labelledby": "input-slider",
-            }}
-          />
-        </Grid>
-      </Grid>
-    </div>
+      </div>
     )
   }
 
@@ -205,12 +213,166 @@ class SelectorCantidadMunicipios extends React.Component<SelectorCantidadMunicip
 const SelectorCantidadMunicipiosStyled = withStyles(styles)(SelectorCantidadMunicipios);
 
 
+interface SelectorUsuarioProps {
+  classes?: any
+  onChange: (usuarios: Array<UsuarioModel>) => void
+}
+
+
+interface SelectorUsuarioState {
+  listadoUsuarios: Array<UsuarioModel>
+  usuariosSeleccionados: Array<UsuarioModel>
+  filtro: string
+}
+
+
+class SelectorUsuarios extends React.Component<SelectorUsuarioProps, SelectorUsuarioState> {
+
+  usuariosApiClient: WololoUsuariosApiClient
+
+  constructor(props: SelectorUsuarioProps) {
+    super(props);
+
+    this.usuariosApiClient = new WololoUsuariosApiClient();
+
+    this.state = {
+      listadoUsuarios: [],
+      usuariosSeleccionados: [],
+      filtro: ""
+    };
+
+    this.onChangeFilter = this.onChangeFilter.bind(this);
+    this.handleRemoveUser = this.handleRemoveUser.bind(this);
+    this.handleAddUser = this.handleAddUser.bind(this);
+    this.buscar = this.buscar.bind(this);
+  }
+
+  onChangeFilter(event: React.ChangeEvent<HTMLInputElement>) {
+    this.setState({
+      filtro: event.target.value
+    });
+  }
+
+  handleRemoveUser(usuarioARemover: UsuarioModel) {
+    return () => {
+      const nuevosUsuariosSeleccionados = this.state
+        .usuariosSeleccionados
+        .filter(usuario => usuario.id !== usuarioARemover.id);
+      this.setState(prevState => {
+        return {
+          usuariosSeleccionados: nuevosUsuariosSeleccionados
+        }
+      });
+      this.props.onChange(nuevosUsuariosSeleccionados);
+    }
+  }
+
+  handleAddUser(usuarioAAgregar: UsuarioModel) {
+    return () => {
+      const oldIndex = this.state.usuariosSeleccionados.indexOf(usuarioAAgregar);
+      const nuevosUsuariosSeleccionados = [...this.state.usuariosSeleccionados];
+
+      if (oldIndex === -1) {
+        nuevosUsuariosSeleccionados.push(usuarioAAgregar);
+      }
+
+      this.setState({
+        usuariosSeleccionados: nuevosUsuariosSeleccionados
+      });
+      this.props.onChange(nuevosUsuariosSeleccionados);
+    }
+  }
+
+  buscar() {
+    this.usuariosApiClient.listarUsuarios(this.state.filtro, 6)
+      .then(response => {
+        this.setState({
+          listadoUsuarios: response.usuarios || []
+        });
+      })
+      .catch(console.error);
+  }
+
+  renderUsuariosSeleccionados() {
+    return (
+      <Paper>
+        <List dense component="nav" role="list">
+          <ListItem key={-1}>
+            <ListItemText id="listheader" primary="Jugadores" primaryTypographyProps={{ variant: 'h6' }} />
+          </ListItem>
+          {this.state.usuariosSeleccionados.map((usuario: UsuarioModel) =>
+            <ListItem key={usuario.id} role="listitem" button >
+              <ListItemText id={`${usuario.id}-${usuario.nombreDeUsuario}`} primary={usuario.nombreDeUsuario} />
+              <ListItemIcon onClick={this.handleRemoveUser(usuario)}>
+                <Cancel />
+              </ListItemIcon>
+            </ListItem>
+          )}
+          <ListItem />
+        </List>
+      </Paper>
+    )
+  }
+
+  renderListadoUsuarios() {
+    return (
+      <Paper>
+        <List dense component="nav" role="list">
+          <ListItem key={-1}>
+            <ListItemText id="listheader" primary="Usuarios" primaryTypographyProps={{ variant: 'h6' }} />
+          </ListItem>
+          {this.state.listadoUsuarios.map((usuario: UsuarioModel) =>
+            <ListItem key={usuario.id} role="listitem" button >
+              <ListItemText id={`${usuario.id}-${usuario.nombreDeUsuario}`} primary={usuario.nombreDeUsuario} />
+              <ListItemIcon onClick={this.handleAddUser(usuario)}>
+                <Add />
+              </ListItemIcon>
+            </ListItem>
+          )}
+          <ListItem />
+        </List>
+      </Paper>
+    )
+  }
+
+  render() {
+    return (
+      <div>
+        <TextField
+          label="Filtro"
+          value={this.state.filtro}
+          onChange={this.onChangeFilter}
+        />
+        <Button
+          color="primary"
+          onClick={this.buscar}
+        >
+          Buscar
+          </Button>
+        <Grid container spacing={2} className={this.props.classes.root}>
+          <Grid item>
+            {this.renderListadoUsuarios()}
+          </Grid>
+          <Grid item>{this.renderUsuariosSeleccionados()}</Grid>
+        </Grid>
+      </div>
+
+    )
+  }
+
+}
+
+
+const SelectorUsuariosStyled = withStyles(styles)(SelectorUsuarios);
+
+
 interface NuevaPartidaStepperState {
   activeStep: number
   idProvincia: number
   provincias: Array<ProvinciaModel>
   cantidadMunicipios: number | string | Array<number | string>
   modoDeJuego: string
+  usuariosSeleccionados: Array<UsuarioModel>
 }
 
 
@@ -222,19 +384,23 @@ interface NuevaPartidaStepperProps {
 export class NuevaPartidaStepper extends React.Component<NuevaPartidaStepperProps, NuevaPartidaStepperState> {
 
   provinciasApiClient: WololoProvinciasApiClient
+  partidasApiClient: WololoPartidasApiClient
   classes: any
 
   constructor(props: NuevaPartidaStepperProps) {
     super(props);
     this.classes = props.classes;
     this.provinciasApiClient = new WololoProvinciasApiClient();
+    this.partidasApiClient = new WololoPartidasApiClient();
+    this
 
     this.state = {
       activeStep: 0,
       idProvincia: 1,
       provincias: [],
       cantidadMunicipios: 30,
-      modoDeJuego: ""
+      modoDeJuego: "",
+      usuariosSeleccionados: []
     };
 
     this.setProvincias = this.setProvincias.bind(this);
@@ -242,6 +408,8 @@ export class NuevaPartidaStepper extends React.Component<NuevaPartidaStepperProp
     this.handleNext = this.handleNext.bind(this);
     this.setIdProvincia = this.setIdProvincia.bind(this);
     this.setCantidadMunicipios = this.setCantidadMunicipios.bind(this);
+    this.setUsuariosSeleccionados = this.setUsuariosSeleccionados.bind(this);
+    this.handleModoDeJuego = this.handleModoDeJuego.bind(this);
   }
 
   setProvincias(provincias: Array<ProvinciaModel>) {
@@ -252,10 +420,10 @@ export class NuevaPartidaStepper extends React.Component<NuevaPartidaStepperProp
 
   componentDidMount() {
     this.provinciasApiClient.listarProvincias(23)
-        .then(response => {
-          this.setProvincias(response.provincias || []);
-        })
-        .catch(console.error);
+      .then(response => {
+        this.setProvincias(response.provincias || []);
+      })
+      .catch(console.error);
   }
 
   handleNext() {
@@ -272,6 +440,9 @@ export class NuevaPartidaStepper extends React.Component<NuevaPartidaStepperProp
         activeStep: prevState.activeStep - 1
       }
     });
+    if (this.state.activeStep === stepNames.length - 1) {
+      this.crearPartida();
+    }
   }
 
   setIdProvincia(id: number) {
@@ -290,6 +461,21 @@ export class NuevaPartidaStepper extends React.Component<NuevaPartidaStepperProp
     this.setState({
       modoDeJuego: event.target.value as string
     });
+  }
+
+  setUsuariosSeleccionados(usuarios: Array<UsuarioModel>) {
+    this.setState({
+      usuariosSeleccionados: usuarios
+    });
+  }
+
+  crearPartida() {
+    const body: CrearPartidaBody = {
+      cantidadMunicipios: this.state.cantidadMunicipios,
+      idJugadores: this.state.usuariosSeleccionados.map(usuario => usuario.id),
+      idProvincia: this.state.idProvincia,
+      modoDeJuego: this.state.modoDeJuego
+    }
   }
 
   renderActiveStep() {
@@ -317,7 +503,7 @@ export class NuevaPartidaStepper extends React.Component<NuevaPartidaStepperProp
               labelId="modoDeJuego-label"
               id="modoDeJuego"
               value={this.state.modoDeJuego}
-              onChange={handleModoDeJuego}
+              onChange={this.handleModoDeJuego}
             >
               <MenuItem value={"RAPIDO"}>Rápido</MenuItem>
               <MenuItem value={"NORMAL"}>Normal</MenuItem>
@@ -326,7 +512,11 @@ export class NuevaPartidaStepper extends React.Component<NuevaPartidaStepperProp
           </FormControl>
         );
       case 3:
-        return "Buscando jugadores...";
+        return (
+          <SelectorUsuariosStyled
+            onChange={this.setUsuariosSeleccionados}
+          />
+        );
       default:
         return "Unknown step";
     }
@@ -335,36 +525,36 @@ export class NuevaPartidaStepper extends React.Component<NuevaPartidaStepperProp
   render() {
     return (
       <div className={this.classes.root}>
-      <Stepper activeStep={this.state.activeStep} orientation="vertical">
-        {stepNames.map((label, index) => (
-          <Step key={label}>
-            <StepLabel>{label}</StepLabel>
-            <StepContent>
-              <Typography>{this.renderActiveStep()}</Typography>
-              <div className={this.classes.actionsContainer}>
-                <div>
-                  <Button
-                    disabled={this.state.activeStep === 0}
-                    onClick={this.handleBack}
-                    className={this.classes.button}
-                  >
-                    Back
+        <Stepper activeStep={this.state.activeStep} orientation="vertical">
+          {stepNames.map((label, index) => (
+            <Step key={label}>
+              <StepLabel>{label}</StepLabel>
+              <StepContent>
+                <Typography>{this.renderActiveStep()}</Typography>
+                <div className={this.classes.actionsContainer}>
+                  <div>
+                    <Button
+                      disabled={this.state.activeStep === 0}
+                      onClick={this.handleBack}
+                      className={this.classes.button}
+                    >
+                      Back
                   </Button>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={this.handleNext}
-                    className={this.classes.button}
-                  >
-                    {this.state.activeStep === stepNames.length - 1 ? "Finish" : "Next"}
-                  </Button>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={this.handleNext}
+                      className={this.classes.button}
+                    >
+                      {this.state.activeStep === stepNames.length - 1 ? "Finish" : "Next"}
+                    </Button>
+                  </div>
                 </div>
-              </div>
-            </StepContent>
-          </Step>
-        ))}
-      </Stepper>
-    </div>
+              </StepContent>
+            </Step>
+          ))}
+        </Stepper>
+      </div>
     )
   }
 
