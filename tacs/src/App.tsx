@@ -1,9 +1,9 @@
-import LoginTemplateSideBar from "components/Login/LoginTemplateSideBar";
+import LoginTemplateSideBar from "./components/Login/LoginTemplateSideBar";
 import React from "react";
 import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
-import Dashboard from "components/Dashboard/Dashboard";
-import { BaseWololoApiClient } from "api/client";
-import { UsuarioModel } from "api";
+import Dashboard from "./components/Dashboard/Dashboard";
+import { BaseWololoApiClient } from "./api/client";
+import { UsuarioModel } from "./api/api";
 
 export default function App() {
 
@@ -30,7 +30,7 @@ export default function App() {
             currentUser={currentUser} />
         </Route>
       </Switch>
-      {isLoggedIn ? <Redirect to="/app" /> : <Redirect to="/login" />}
+      {isLoggedIn ? <Redirect to="/app/partidas" /> : <Redirect to="/login" />}
     </Router>
   );
 }

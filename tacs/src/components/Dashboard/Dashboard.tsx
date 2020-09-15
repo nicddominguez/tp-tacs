@@ -16,9 +16,9 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import clsx from "clsx";
 import React from "react";
 import { Link, Route } from "react-router-dom";
-import { dashboardRoutes as routes } from "components/Routes/DashboardRoutes";
-import { WololoAuthApiClient } from "api/client";
-import { UsuarioModel } from "api/api";
+import { dashboardRoutes as routes } from "../Routes/DashboardRoutes";
+import { WololoAuthApiClient } from "../../api/client";
+import { UsuarioModel } from "../../api/api";
 
 const drawerWidth = 240;
 
