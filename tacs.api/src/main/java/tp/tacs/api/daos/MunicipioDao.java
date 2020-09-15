@@ -3,36 +3,39 @@ package tp.tacs.api.daos;
 import org.springframework.stereotype.Component;
 import tp.tacs.api.dominio.municipio.Municipio;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
+
 @Component
 public class MunicipioDao implements Dao<Municipio> {
 
-    private static final Map<Long, Municipio> municipios = new HashMap<>();
+    private List<Municipio> municipios;
 
-    private static Long i = 0L;
-
-    @Override
-    public synchronized Municipio get(Long id) {
-        return MunicipioDao.municipios.get(id);
+    @PostConstruct
+    public void postConstruct() {
+        municipios = new ArrayList<>();
     }
 
     @Override
-    public synchronized List<Municipio> getAll() {
-        return new ArrayList<>(MunicipioDao.municipios.values());
+    public Municipio get(Long id) {
+        return municipios.stream().filter(municipio -> municipio.getId().equals(id)).collect(Collectors.toList()).get(0);
     }
 
     @Override
-    public synchronized void save(Municipio element) {
-        element.setId(MunicipioDao.i);
-        MunicipioDao.municipios.put(element.getId(), element);
-        MunicipioDao.i++;
+    public List<Municipio> getAll() {
+        return municipios;
     }
 
     @Override
-    public synchronized void delete(Municipio element) {
-        MunicipioDao.municipios.remove(element.getId());
+    public void save(Municipio element) {
+        municipios.add(element);
+    }
+
+    @Override
+    public void delete(Municipio element) {
+        municipios = municipios.stream().filter(municipio -> !municipio.getId().equals(element.getId()))
+                .collect(Collectors.toList());
     }
 }

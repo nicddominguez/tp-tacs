@@ -1,5 +1,6 @@
 package tp.tacs.api.controllers;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import tp.tacs.api.daos.PartidaDao;
@@ -16,19 +17,12 @@ import java.util.List;
 @RestController
 public class AdminApiController implements AdminApi {
 
-    private Utils utils = new Utils();
-
-    private PartidaDao partidaDao = new PartidaDao();
-
-    private UsuarioDao usuarioDao = new UsuarioDao();
-
-    public void setPartidaDao(PartidaDao partidaDao) {
-        this.partidaDao = partidaDao;
-    }
-
-    public void setUsuarioDao(UsuarioDao usuarioDao) {
-        this.usuarioDao = usuarioDao;
-    }
+    @Autowired
+    private Utils utils;
+    @Autowired
+    private PartidaDao partidaDao;
+    @Autowired
+    private UsuarioDao usuarioDao;
 
     @Override
     public ResponseEntity<EstadisticasDeJuegoModel> getEstadisticas(@Valid Date fechaInicio, @Valid Date fechaFin) {

@@ -1,5 +1,6 @@
 package tp.tacs.api.http.externalApis;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import tp.tacs.api.dominio.municipio.Municipio;
 import tp.tacs.api.dominio.municipio.RepoMunicipios;
@@ -18,25 +19,17 @@ import static java.lang.Thread.sleep;
 @Component
 public class ExternalApis implements RepoMunicipios {
 
-    private static ExternalApis instancia;
+    @Autowired
     private HttpClientConnector connector;
+    @Autowired
     private GeorefMapper geoRefWrapper;
+    @Autowired
     private ProvinciaMapper provinciaWrapper;
 
     private String geoRefMunicipioBaseUrlBasico = "https://apis.datos.gob.ar/georef/api/municipios?campos=basico&aplanar=true";
     private String geoRefMunicipioBaseUrlEstandar = "https://apis.datos.gob.ar/georef/api/municipios?aplanar=true";
     private String geoRefProvinciabaseUrlEstandar = "https://apis.datos.gob.ar/georef/api/provincias?aplanar=true";
     private String topoBaseUrl = "https://api.opentopodata.org/v1/srtm90m?locations=";
-
-    public static ExternalApis instance() {
-        if (instancia == null) {
-            instancia = new ExternalApis();
-            instancia.connector = HttpClientConnector.instance();
-            instancia.geoRefWrapper = new GeorefMapper();
-            instancia.provinciaWrapper = new ProvinciaMapper();
-        }
-        return instancia;
-    }
 
     @Override
     public List<Municipio> getMunicipios(String idProvincia, Integer cantidad) {

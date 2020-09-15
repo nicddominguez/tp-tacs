@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import tp.tacs.api.daos.MunicipioDao;
 import tp.tacs.api.daos.PartidaDao;
-import tp.tacs.api.daos.UsuarioDao;
 import tp.tacs.api.dominio.municipio.AtaqueMunicipiosResponse;
 import tp.tacs.api.dominio.partida.Estado;
 import tp.tacs.api.dominio.partida.Partida;
@@ -14,7 +13,7 @@ import tp.tacs.api.dominio.partida.PartidaBuilder;
 import tp.tacs.api.dominio.usuario.Usuario;
 import tp.tacs.api.mappers.*;
 import tp.tacs.api.model.*;
-import tp.tacs.api.requerimientos.Models.ReqAtacarModel;
+import tp.tacs.api.requerimientos.models.ReqAtacarModel;
 import tp.tacs.api.requerimientos.ReqAtacar;
 import tp.tacs.api.utils.Utils;
 
@@ -24,38 +23,44 @@ import java.util.Date;
 
 @RestController
 public class PartidasApiController implements PartidasApi {
+    /**
+     * Requerimientos
+     */
+    @Autowired
+    private ReqAtacar reqAtacar;
+    @Autowired
+    private Utils utils;
 
-    private PartidaMapper partidaMapper = new PartidaMapper();
+    /**
+     * Mappers
+     */
+    @Autowired
+    private PartidaMapper partidaMapper;
+    @Autowired
+    private MunicipioEnJuegoMapper municipioEnJuegoMapper;
+    @Autowired
+    private EstadoDeJuegoMapper estadoDeJuegoMapper;
+    @Autowired
+    private ModoDeMunicipioMapper modoDeMunicipioMapper;
+    @Autowired
+    private ModoDeJuegoMapper modoDeJuegoMapper;
 
-    private MunicipioEnJuegoMapper municipioEnJuegoMapper = new MunicipioEnJuegoMapper();
-
-    private EstadoDeJuegoMapper estadoDeJuegoMapper = new EstadoDeJuegoMapper();
-
-    private ModoDeMunicipioMapper modoDeMunicipioMapper = new ModoDeMunicipioMapper();
-
-    private ModoDeJuegoMapper modoDeJuegoMapper = new ModoDeJuegoMapper();
-
-    private PartidaDao partidaDao = new PartidaDao();
-
-    private MunicipioDao municipioDao = new MunicipioDao();
-
-    UsuarioDao usuarioDao = new UsuarioDao();
+    /**
+     * Daos
+     */
+    @Autowired
+    private PartidaDao partidaDao;
+    @Autowired
+    private MunicipioDao municipioDao;
 
     private Usuario usuarioA = new Usuario(1L, "as@gmailc.om", "nd");
     private Usuario usuarioD = new Usuario(2L, "as@gmailc.om", "ndd");
-
-    public void setUsuarioDao(UsuarioDao usuarioDao) {
-        this.usuarioDao = usuarioDao;
-    }
 
     public void setPartidaBuilder(PartidaBuilder partidaBuilder) {
         this.partidaBuilder = partidaBuilder;
     }
 
     private PartidaBuilder partidaBuilder = new PartidaBuilder();
-
-    @Autowired
-    private ReqAtacar reqAtacar;
 
     @Override
     public ResponseEntity<Void> actualizarEstadoPartida(Long idPartida, @Valid PartidaModel body) {
@@ -94,8 +99,9 @@ public class PartidasApiController implements PartidasApi {
         partidaBuilder
                 .setIdProvincia(body.getIdProvincia().toString())
                 .setCantMunicipios(Math.toIntExact(body.getCantidadMunicipios()))
-//                .setParticipantes(this.usuarioDao.getSegunIds(body.getIdJugadores())) //Implementación reL
-                .setParticipantes(Arrays.asList(usuarioA, usuarioD)) //TODO cambiar por la implementación real cuando se puedan crear usaurios desde alguna ruta
+                //                .setParticipantes(this.usuarioDao.getSegunIds(body.getIdJugadores())) //Implementación reL
+                .setParticipantes(
+                        Arrays.asList(usuarioA, usuarioD)) //TODO cambiar por la implementación real cuando se puedan crear usaurios desde alguna ruta
                 .setModoDeJuego(modoDeJuegoMapper.toEntity(body.getModoDeJuego()))
                 .constriur();
         return new ResponseEntity<>(HttpStatus.CREATED);
@@ -110,12 +116,11 @@ public class PartidasApiController implements PartidasApi {
 
     @Override
     public ResponseEntity<ListarPartidasResponse> listarPartidas(@Valid Date fechaInicio,
-                                                                 @Valid Date fechaFin,
-                                                                 @Valid EstadoDeJuegoModel estado,
-                                                                 @Valid String ordenarPor,
-                                                                 @Valid Long tamanioPagina,
-                                                                 @Valid Long pagina) {
-        Utils utils = new Utils();
+            @Valid Date fechaFin,
+            @Valid EstadoDeJuegoModel estado,
+            @Valid String ordenarPor,
+            @Valid Long tamanioPagina,
+            @Valid Long pagina) {
 
         var partidas = this.partidaDao.getPartidasFiltradas(fechaInicio, fechaFin, estado);
         var partidaModels = partidaMapper.partidasParaListar(partidas);

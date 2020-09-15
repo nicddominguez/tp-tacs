@@ -1,6 +1,9 @@
 package tp.tacs.api.dominio.partida;
 
 import com.google.common.collect.Sets;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 import tp.tacs.api.daos.PartidaDao;
 import tp.tacs.api.dominio.municipio.AtaqueMunicipiosResponse;
 import tp.tacs.api.dominio.municipio.Municipio;
@@ -13,14 +16,19 @@ import java.util.stream.Collectors;
 
 import static java.lang.Thread.sleep;
 
+@Builder
+@Getter
+@Setter
 public class Partida {
 
     private Long id;
-    private List<Usuario> jugadores = new ArrayList<>();
+    private List<Long> jugadoresIds;
+    @Builder.Default
     private Integer usuarioJugandoIndiceLista = 0;
     private Estado estado;
-    private String provincia;
-    private List<Municipio> municipios = new ArrayList<>();
+    private String nombreProvincia;
+    private String idProvincia;
+    private List<Long> municipios;
     private ModoDeJuego modoDeJuego;
     private Date fechaCreacion;
     private Usuario ganador;
@@ -28,137 +36,13 @@ public class Partida {
     private Float maxAltura;
     private Float maxDist;
     private Float minDist;
-    private PartidaDao partidaDao = new PartidaDao();
-
-    public Partida(List<Usuario> jugadores, Estado estado, String provincia,
-                   List<Municipio> municipios, ModoDeJuego modoDeJuego, Date fechaCreacion) {
-        this.constructor(jugadores, estado, provincia, municipios, modoDeJuego, fechaCreacion);
-    }
-
-    public Partida(PartidaDao partidaDao, List<Usuario> jugadores, Estado estado, String provincia,
-                   List<Municipio> municipios, ModoDeJuego modoDeJuego, Date fechaCreacion) {
-        this.partidaDao = partidaDao;
-        this.constructor(jugadores, estado, provincia, municipios, modoDeJuego, fechaCreacion);
-    }
-
-    private void constructor(List<Usuario> jugadores, Estado estado, String provincia,
-                             List<Municipio> municipios, ModoDeJuego modoDeJuego, Date fechaCreacion) {
-        this.jugadores = jugadores;
-        this.estado = estado;
-        this.provincia = provincia;
-        this.municipios = municipios;
-        this.municipios.forEach(municipio -> municipio.setPartida(this));
-        this.modoDeJuego = modoDeJuego;
-        this.fechaCreacion = fechaCreacion;
-        this.repartirMunicipios();
-        this.calcularAlturas();
-        this.calcularDistancias();
-        this.partidaDao.save(this);
-    }
-
-    //TODO: recalcular cuando los datos esten dirty
-    private void calcularAlturas() {
-        this.minAltura = (float) this.municipios.stream()
-                .mapToDouble(Municipio::getAltura)
-                .min()
-                .orElseThrow(NoSuchElementException::new);
-
-        this.maxAltura = (float) this.municipios.stream()
-                .mapToDouble(Municipio::getAltura)
-                .max()
-                .orElseThrow(NoSuchElementException::new);
-
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public List<Usuario> getJugadores() {
-        return jugadores;
-    }
-
-    public void setJugadores(List<Usuario> jugadores) {
-        this.jugadores = jugadores;
-    }
-
-    public Integer getUsuarioJugandoIndiceLista() {
-        return usuarioJugandoIndiceLista;
-    }
 
     public void setUsuarioJugandoIndiceLista(Integer usuarioJugandoIndiceLista) {
         this.usuarioJugandoIndiceLista = usuarioJugandoIndiceLista;
     }
 
-    public Estado getEstado() {
-        return estado;
-    }
-
-    public void setEstado(Estado estado) {
-        this.estado = estado;
-    }
-
-    public String getProvincia() {
-        return provincia;
-    }
-
-    public void setProvincia(String provincia) {
-        this.provincia = provincia;
-    }
-
-    public List<Municipio> getMunicipios() {
-        return municipios;
-    }
-
-    public void setMunicipios(List<Municipio> municipios) {
-        this.municipios = municipios;
-        this.municipios.forEach(municipio -> municipio.setPartida(this));
-    }
-
-    public ModoDeJuego getModoDeJuego() {
-        return modoDeJuego;
-    }
-
-    public void setModoDeJuego(ModoDeJuego modoDeJuego) {
-        this.modoDeJuego = modoDeJuego;
-    }
-
-    public Date getFechaCreacion() {
-        return fechaCreacion;
-    }
-
-    public void setFechaCreacion(Date fechaCreacion) {
-        this.fechaCreacion = fechaCreacion;
-    }
-
-    public Usuario getGanador() {
-        return ganador;
-    }
-
-    public void setGanador(Usuario ganador) {
-        this.ganador = ganador;
-    }
-
-    public void repartirMunicipios() {
-        Integer cantidadInicial = (int) Math.floor((double) municipios.size() / jugadores.size());
-
-        jugadores.forEach(usuario -> {
-            for (int i = 0; i < cantidadInicial; i++) {
-                municipios.stream()
-                        .filter(Municipio::estaBacante)
-                        .findAny()
-                        .ifPresent(municipio -> municipio.setDuenio(usuario));
-            }
-        });
-
-    }
-
     private void asignarProximoTurno() {
-        if (this.usuarioJugandoIndiceLista < this.jugadores.size() - 1) {
+        if (this.usuarioJugandoIndiceLista < jugadoresIds.size() - 1) {
             this.usuarioJugandoIndiceLista++;
         } else {
             this.usuarioJugandoIndiceLista = 0;
@@ -166,7 +50,7 @@ public class Partida {
     }
 
     public void asignarProximoTurnoA(Usuario usuario) {
-        var indice = jugadores.indexOf(usuario);
+        var indice = jugadoresIds.indexOf(usuario.getId());
         if (indice >= 0) {
             this.setUsuarioJugandoIndiceLista(indice);
         } else {
@@ -174,8 +58,8 @@ public class Partida {
         }
     }
 
-    public Usuario usuarioEnTurnoActual() {
-        return this.jugadores.get(this.usuarioJugandoIndiceLista);
+    public Long idUsuarioEnTurnoActual() {
+        return jugadoresIds.get(usuarioJugandoIndiceLista);
     }
 
     private void desBloquearMunicipios() {
@@ -292,14 +176,6 @@ public class Partida {
         this.estado = Estado.CANCELADA;
     }
 
-    public Float minAltura() {
-        return this.minAltura;
-    }
-
-    public Float maxAltura() {
-        return this.maxAltura;
-    }
-
     public void calcularDistancias() {
         HashSet<Float> distancias = distanciasTotales();
         this.maxDist = distancias
@@ -311,14 +187,6 @@ public class Partida {
                 .min(Float::compareTo)
                 .orElseThrow(NoSuchElementException::new);
 
-    }
-
-    public Float maxDist() {
-        return this.maxDist;
-    }
-
-    public Float minDist() {
-        return this.minDist;
     }
 
     private HashSet<Float> distanciasTotales() {

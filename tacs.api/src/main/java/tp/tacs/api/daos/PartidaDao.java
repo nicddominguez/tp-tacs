@@ -1,5 +1,6 @@
 package tp.tacs.api.daos;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import tp.tacs.api.dominio.partida.Estado;
 import tp.tacs.api.dominio.partida.Partida;
@@ -7,56 +8,56 @@ import tp.tacs.api.mappers.EstadoDeJuegoMapper;
 import tp.tacs.api.model.EstadisticasDeJuegoModel;
 import tp.tacs.api.model.EstadoDeJuegoModel;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
+
 @Component
 public class PartidaDao implements Dao<Partida> {
 
-    private final EstadoDeJuegoMapper estadoDeJuegoMapper = new EstadoDeJuegoMapper();
+    @Autowired
+    private EstadoDeJuegoMapper estadoDeJuegoMapper;
 
-    private static HashMap<Long, Partida> partidas = new HashMap<>();
+    private List<Partida> partidas;
 
-    private static Long i = 0L;
+    @PostConstruct
+    public void postConstruct() {
+        partidas = new ArrayList<>();
+    }
 
-    public synchronized void limpiar() {
-        PartidaDao.partidas = new HashMap<>();
-        PartidaDao.i = 0L;
+    public void limpiar() {
+        partidas = new ArrayList<>();
     }
 
     @Override
     public Partida get(Long id) {
-        return PartidaDao.partidas.get(id);
+        return partidas.stream().filter(partida -> partida.getId().equals(id)).collect(Collectors.toList()).get(0);
     }
 
     @Override
-    public synchronized List<Partida> getAll() {
-        return new ArrayList<>(PartidaDao.partidas.values());
+    public List<Partida> getAll() {
+        return partidas;
     }
 
     @Override
-    public synchronized void save(Partida element) {
-        element.setId(PartidaDao.i);
-        PartidaDao.partidas.put(element.getId(), element);
-        PartidaDao.i++;
+    public void save(Partida element) {
+        partidas.add(element);
     }
 
     @Override
-    public synchronized void delete(Partida element) {
-        PartidaDao.partidas.remove(element.getId());
+    public void delete(Partida element) {
+        //remove(element.getId());
+        partidas = partidas.stream().filter(partida -> !partida.getId().equals(element.getId()))
+                .collect(Collectors.toList());
     }
 
     public EstadisticasDeJuegoModel estadisticas(Date fechaInicio, Date fechaFin) {
         List<Partida> partidas = partidasEntre(fechaInicio, fechaFin);
-
         Long partidasCreadas = (long) partidas.size();
-
         Long partidasEnCurso = partidas.stream().filter(partida -> partida.getEstado().equals(Estado.EN_CURSO)).count();
-
         Long partidasTerminadas = partidas.stream().filter(partida -> partida.getEstado().equals(Estado.TERMINADA)).count();
-
         Long partidasCanceladas = partidas.stream().filter(partida -> partida.getEstado().equals(Estado.CANCELADA)).count();
 
         return new EstadisticasDeJuegoModel()
@@ -67,11 +68,7 @@ public class PartidaDao implements Dao<Partida> {
     }
 
     private List<Partida> partidasEntre(Date fechaInicio, Date fechaFin) {
-        return PartidaDao.partidas
-                .values()
-                .stream()
-                .filter(partida ->
-                        partida.getFechaCreacion().after(fechaInicio) && partida.getFechaCreacion().before(fechaFin))
+        return partidas.stream().filter(partida -> partida.getFechaCreacion().after(fechaInicio) && partida.getFechaCreacion().before(fechaFin))
                 .collect(Collectors.toList());
     }
 
@@ -84,7 +81,7 @@ public class PartidaDao implements Dao<Partida> {
                         .filter(partida -> partida.getEstado().equals(estadoDeJuego))
                         .collect(Collectors.toList());
             } else {
-                return new ArrayList<>(partidasEntre(fechaInicio, fechaFin));
+                return partidasEntre(fechaInicio, fechaFin);
             }
         } else {
             return this.getAll();

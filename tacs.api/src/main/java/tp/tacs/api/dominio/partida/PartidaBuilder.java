@@ -14,7 +14,6 @@ public class PartidaBuilder {
     private List<Municipio> municipios = new ArrayList<>();
     private ModoDeJuego modoDeJuego = new ModoRapido();
     private Date fechaCreacion = new GregorianCalendar(2019, Calendar.FEBRUARY, 11).getTime(); //TODO
-    private ExternalApis repoMunicipios = ExternalApis.instance();
 
     public PartidaBuilder() {
     }

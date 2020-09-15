@@ -11,6 +11,7 @@ import java.util.*;
 
 @Component
 public class UsuarioDao implements Dao<Usuario> {
+
     private Map<Long, Usuario> usuarios;
 
     @Autowired
@@ -22,11 +23,11 @@ public class UsuarioDao implements Dao<Usuario> {
     }
 
     @Override
-    public synchronized Usuario get(Long id) {
+    public Usuario get(Long id) {
         return usuarios.get(id);
     }
 
-    public synchronized Usuario getByGoogleId(String googleId) {
+    public Usuario getByGoogleId(String googleId) {
         return usuarios
                 .values()
                 .stream()
@@ -35,7 +36,7 @@ public class UsuarioDao implements Dao<Usuario> {
                 .orElse(null);
     }
 
-    public synchronized Usuario getByUsername(String username) {
+    public Usuario getByUsername(String username) {
         return usuarios
                 .values()
                 .stream()
@@ -45,27 +46,27 @@ public class UsuarioDao implements Dao<Usuario> {
     }
 
     @Override
-    public synchronized List<Usuario> getAll() {
+    public List<Usuario> getAll() {
         return new ArrayList<>(usuarios.values());
     }
 
     @Override
-    public synchronized void save(Usuario element) {
+    public void save(Usuario element) {
         usuarios.put(element.getId(), element);
     }
 
     @Override
-    public synchronized void delete(Usuario element) {
+    public void delete(Usuario element) {
         usuarios.remove(element.getId());
     }
 
-    public synchronized List<Usuario> getSegunIds(List<Long> idsUsuarios) {
+    public List<Usuario> getSegunIds(List<Long> idsUsuarios) {
         List<Usuario> usuarios = new ArrayList<>();
         idsUsuarios.forEach(id -> usuarios.add(this.get(id)));
         return usuarios;
     }
 
-    public synchronized EstadisticasDeUsuarioModel estadisticas(Long idUsuario) {
+    public EstadisticasDeUsuarioModel estadisticas(Long idUsuario) {
         Usuario usuario = this.get(idUsuario);
         return new EstadisticasDeUsuarioModel()
                 .usuario(this.usuarioMapper.wrap(usuario))
@@ -74,11 +75,9 @@ public class UsuarioDao implements Dao<Usuario> {
                 .rachaActual(usuario.getRachaActual());
     }
 
-    public synchronized List<EstadisticasDeUsuarioModel> scoreBoard() {
+    public List<EstadisticasDeUsuarioModel> scoreBoard() {
         List<EstadisticasDeUsuarioModel> estadisticasDeUsuarioModels = new ArrayList<>();
-        usuarios
-                .keySet()
-                .forEach(idUsuario -> estadisticasDeUsuarioModels.add(this.estadisticas(idUsuario)));
+        usuarios.keySet().forEach(idUsuario -> estadisticasDeUsuarioModels.add(this.estadisticas(idUsuario)));
         return estadisticasDeUsuarioModels;
     }
 

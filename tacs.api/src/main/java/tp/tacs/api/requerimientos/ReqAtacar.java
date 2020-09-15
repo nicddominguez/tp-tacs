@@ -7,7 +7,7 @@ import tp.tacs.api.daos.PartidaDao;
 import tp.tacs.api.dominio.municipio.AtaqueMunicipiosResponse;
 import tp.tacs.api.dominio.municipio.Municipio;
 import tp.tacs.api.dominio.partida.Partida;
-import tp.tacs.api.requerimientos.Models.ReqAtacarModel;
+import tp.tacs.api.requerimientos.models.ReqAtacarModel;
 
 @Component
 public class ReqAtacar extends Requerimiento<ReqAtacarModel, AtaqueMunicipiosResponse> {

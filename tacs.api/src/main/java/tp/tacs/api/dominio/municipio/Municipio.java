@@ -5,47 +5,44 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import tp.tacs.api.daos.MunicipioDao;
-import tp.tacs.api.dominio.partida.Estado;
 import tp.tacs.api.dominio.partida.Partida;
 import tp.tacs.api.dominio.usuario.Usuario;
 import tp.tacs.api.handler.MunicipioException;
-import tp.tacs.api.handler.PartidaException;
-import tp.tacs.api.http.externalApis.ExternalApis;
 
 import java.util.ArrayList;
+
 @Builder
 @Getter
 @Setter
 public class Municipio {
-
     private Long id;
-    @Builder.Default
-    private String idMunicipioReal = "2";
+    private String nombre;
+    private String externalApiId;
     @Builder.Default
     private Integer cantGauchos = 15;
     @Builder.Default
     private boolean bloqueado = false;
     @Builder.Default
     private Especializacion especializacion = new Produccion();
-    private Partida partida;
     private Usuario duenio;
 
     public Municipio() {
         new MunicipioDao().save(this);
     }
+
     public String getNombre() {
-        return this.repoMunicipios.getNombre(this.idMunicipioReal);
+        return this.repoMunicipios.getNombre(this.externalApiId);
     }
+
     public Double getLatitud() {
         //        sleep(1000);
-        return this.repoMunicipios.getLatitud(this.idMunicipioReal);
+        return this.repoMunicipios.getLatitud(this.externalApiId);
     }
 
     public Double getLongitud() {
         //        sleep(1000);
-        return this.repoMunicipios.getLongitud(this.idMunicipioReal);
+        return this.repoMunicipios.getLongitud(this.externalApiId);
     }
-
 
     public void setCantGauchos(Integer cantGauchos) {
         this.cantGauchos = Math.max(cantGauchos, 0);
@@ -72,11 +69,11 @@ public class Municipio {
     }
 
     public Float getAltura() {
-        return this.repoMunicipios.getAltura(this.idMunicipioReal);
+        return this.repoMunicipios.getAltura(this.externalApiId);
     }
 
     public String getPathImagen() {
-        return this.repoMunicipios.getPathImagen(this.idMunicipioReal);
+        return this.repoMunicipios.getPathImagen(this.externalApiId);
     }
 
     public void producir() {

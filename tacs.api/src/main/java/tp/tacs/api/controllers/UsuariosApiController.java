@@ -16,18 +16,18 @@ import java.util.stream.Collectors;
 
 @RestController
 public class UsuariosApiController implements UsuariosApi {
+
     @Autowired
     private Utils utils;
-    private UsuarioDao usuarioDao = new UsuarioDao();
-    private UsuarioMapper usuarioMapper = new UsuarioMapper();
-
-    public void setUsuarioDao(UsuarioDao usuarioDao) {
-        this.usuarioDao = usuarioDao;
-    }
+    @Autowired
+    private UsuarioDao usuarioDao;
+    @Autowired
+    private UsuarioMapper usuarioMapper;
 
     @Override
     public ResponseEntity<ListarUsuariosResponse> listarUsuarios(@Valid String filter, @Valid Long tamanioPagina, @Valid Long pagina) {
-        List<Usuario> usuarios = this.usuarioDao.getAll();
+        // asbtraer en un req
+        List<Usuario> usuarios = usuarioDao.getAll();
         if (filter != null) {
             usuarios = usuarios.stream().filter(usuario -> usuario.mismoNombre(filter)).collect(Collectors.toList());
         }

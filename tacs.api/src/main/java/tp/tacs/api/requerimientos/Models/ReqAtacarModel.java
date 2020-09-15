@@ -1,4 +1,4 @@
-package tp.tacs.api.requerimientos.Models;
+package tp.tacs.api.requerimientos.models;
 
 import lombok.Builder;
 import lombok.Getter;

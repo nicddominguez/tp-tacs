@@ -1,24 +1,23 @@
 package tp.tacs.api.http;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import tp.tacs.api.http.exception.HttpErrorException;
 
 import java.util.Map;
 
+@Component
 public class HttpClientConnector {
 
-    private static HttpClientConnector instancia;
     private RestTemplate restTemplate;
 
-    public static HttpClientConnector instance() {
-        if (instancia == null) {
-            instancia = new HttpClientConnector();
-            instancia.restTemplate = new RestTemplate();
-        }
-        return instancia;
+    @Bean
+    private void restTemplate(){
+        restTemplate = new RestTemplate();
     }
 
     public <T> T get(String url, Class<T> clazz) {

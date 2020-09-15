@@ -1,16 +1,15 @@
 package tp.tacs.api.mappers;
 
+import org.springframework.stereotype.Component;
 import tp.tacs.api.dominio.municipio.Municipio;
 import tp.tacs.api.http.externalApis.models.MunicipioApi;
 
+@Component
 public class GeorefMapper extends AbstractMapper<MunicipioApi, Municipio> {
-
 
     @Override
     protected Municipio wrapModel(MunicipioApi model) {
-        Municipio municipio = new Municipio();
-        municipio.setIdMunicipioReal(model.getId());
-        return municipio;
+        return Municipio.builder().nombre(model.getNombre()).externalApiId(model.getId()).build();
     }
 
     @Override
