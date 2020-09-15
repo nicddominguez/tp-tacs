@@ -187,7 +187,9 @@ class Partidas extends React.Component<Props, State> {
         fechaInicio?.toDateString(),
         fechaFin?.toDateString(),
         estado,
-        primerOrden + (segundoOrden ? "," + segundoOrden : ""),
+        primerOrden
+          ? primerOrden + (segundoOrden ? "," + segundoOrden : "")
+          : undefined,
         pageSize,
         page
       )
@@ -290,13 +292,33 @@ class Partidas extends React.Component<Props, State> {
     newPage: number
   ) => {
     this.setState({ page: newPage });
+    this.listarPartidas(
+      this.state.fechaInicio,
+      this.state.fechaFin,
+      this.state.estado,
+      this.state.primerOrden,
+      this.state.segundoOrden,
+      this.state.pageSize,
+      newPage
+    );
   };
 
   handlePageSize = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    this.setState({ pageSize: parseInt(event.target.value, 10) });
-    this.setState({ page: 0 });
+    const pageSize = parseInt(event.target.value, 10);
+    const newPage = 0;
+    this.setState({ pageSize: pageSize });
+    this.setState({ page: newPage });
+    this.listarPartidas(
+      this.state.fechaInicio,
+      this.state.fechaFin,
+      this.state.estado,
+      this.state.primerOrden,
+      this.state.segundoOrden,
+      pageSize,
+      newPage
+    );
   };
 
   render() {
