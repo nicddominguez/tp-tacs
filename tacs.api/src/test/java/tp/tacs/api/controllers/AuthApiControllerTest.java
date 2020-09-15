@@ -20,16 +20,5 @@ class AuthApiControllerTest {
     public void before() {
         MockitoAnnotations.initMocks(this);
     }
-
-    @Test
-    void logIn() {
-        ResponseEntity<NuevoJWTModel> response = authApiController.logIn(new GoogleAuthModel().idToken("miidtokenpiola"));
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-    }
-
-    @Test
-    void singUp() {
-        ResponseEntity<NuevoJWTModel> response = authApiController.singUp(new GoogleAuthModel().idToken("miidtokenpiola"));
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-    }
+    
 }

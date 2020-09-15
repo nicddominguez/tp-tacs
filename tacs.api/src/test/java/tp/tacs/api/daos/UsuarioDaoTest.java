@@ -20,7 +20,7 @@ public class UsuarioDaoTest {
 
     @Test
     public void getNull() {
-        Assert.assertNull(dao.get(1L));
+        Assert.assertNull(dao.get(3L));
     }
 
     @Test
