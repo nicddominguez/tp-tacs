@@ -173,25 +173,18 @@ class Partidas extends React.Component<Props, State> {
     };
   }
 
-  listarPartidas = (
-    fechaInicio?: Date,
-    fechaFin?: Date,
-    estado?: EstadoDeJuegoModel,
-    primerOrden?: string,
-    segundoOrden?: string,
-    pageSize?: number,
-    page?: number
-  ) => {
+  listarPartidas = () => {
     this.partidasApi
       .listarPartidas(
-        fechaInicio?.toDateString(),
-        fechaFin?.toDateString(),
-        estado,
-        primerOrden
-          ? primerOrden + (segundoOrden ? "," + segundoOrden : "")
+        this.state.fechaInicio?.toDateString(),
+        this.state.fechaFin?.toDateString(),
+        this.state.estado,
+        this.state.primerOrden
+          ? this.state.primerOrden +
+              (this.state.segundoOrden ? "," + this.state.segundoOrden : "")
           : undefined,
-        pageSize,
-        page
+        this.state.pageSize,
+        this.state.page
       )
       .then((listarPartidasResponse) => {
         this.setState({ partidas: listarPartidasResponse.partidas });
@@ -200,125 +193,65 @@ class Partidas extends React.Component<Props, State> {
   };
 
   componentDidMount() {
-    this.listarPartidas(
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      this.state.pageSize,
-      this.state.page
-    );
+    this.listarPartidas();
   }
 
-  handlePrimerOrden = (event: React.ChangeEvent<{ value: unknown }>) => {
+  handlePrimerOrden = async (event: React.ChangeEvent<{ value: unknown }>) => {
     const primerOrden = event.target.value as string;
-    this.setState({ primerOrden: primerOrden });
-    this.listarPartidas(
-      this.state.fechaInicio,
-      this.state.fechaFin,
-      this.state.estado,
-      primerOrden,
-      this.state.segundoOrden,
-      this.state.pageSize,
-      this.state.page
-    );
+    await this.setState({ primerOrden: primerOrden });
+    this.listarPartidas();
   };
 
-  handleSegundoOrden = (event: React.ChangeEvent<{ value: unknown }>) => {
-    const segundoOrden = event.target.value as string;
-    this.setState({ segundoOrden: segundoOrden });
-    this.listarPartidas(
-      this.state.fechaInicio,
-      this.state.fechaFin,
-      this.state.estado,
-      this.state.primerOrden,
-      segundoOrden,
-      this.state.pageSize,
-      this.state.page
-    );
+  handleSegundoOrden = async (event: React.ChangeEvent<{ value: unknown }>) => {
+    await this.setState({ segundoOrden: event.target.value as string });
+    this.listarPartidas();
   };
 
-  handleFechaInicio = (
+  handleFechaInicio = async (
     date: MaterialUiPickersDate,
     value?: string | null | undefined
   ) => {
-    const fechaInicio = date as Date;
-    this.setState({ fechaInicio: fechaInicio });
-    this.listarPartidas(
-      fechaInicio,
-      this.state.fechaFin,
-      this.state.estado,
-      this.state.primerOrden,
-      this.state.segundoOrden,
-      this.state.pageSize,
-      this.state.page
-    );
+    await this.setState({ fechaInicio: date as Date });
+    this.listarPartidas();
   };
 
-  handleFechaFin = (
+  handleFechaFin = async (
     date: MaterialUiPickersDate,
     value?: string | null | undefined
   ) => {
-    const fechaFin = date as Date;
-    this.setState({ fechaFin: fechaFin });
-    this.listarPartidas(
-      this.state.fechaInicio,
-      fechaFin,
-      this.state.estado,
-      this.state.primerOrden,
-      this.state.segundoOrden,
-      this.state.pageSize,
-      this.state.page
-    );
+    await this.setState({ fechaFin: date as Date });
+    this.listarPartidas();
   };
 
-  handleEstado = (event: React.ChangeEvent<{ value: unknown }>) => {
-    const estado = event.target.value as EstadoDeJuegoModel;
-    this.setState({ estado: estado });
-    this.listarPartidas(
-      this.state.fechaInicio,
-      this.state.fechaFin,
-      estado,
-      this.state.primerOrden,
-      this.state.segundoOrden,
-      this.state.pageSize,
-      this.state.page
-    );
+  handleEstado = async (event: React.ChangeEvent<{ value: unknown }>) => {
+    await this.setState({ estado: event.target.value as EstadoDeJuegoModel });
+    this.listarPartidas();
   };
 
-  handlePage = (
+  handlePage = async (
     event: React.MouseEvent<HTMLButtonElement> | null,
     newPage: number
   ) => {
-    this.setState({ page: newPage });
-    this.listarPartidas(
-      this.state.fechaInicio,
-      this.state.fechaFin,
-      this.state.estado,
-      this.state.primerOrden,
-      this.state.segundoOrden,
-      this.state.pageSize,
-      newPage
-    );
+    await this.setState({ page: newPage });
+    this.listarPartidas();
   };
 
-  handlePageSize = (
+  handlePageSize = async (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    const pageSize = parseInt(event.target.value, 10);
-    const newPage = 0;
-    this.setState({ pageSize: pageSize });
-    this.setState({ page: newPage });
-    this.listarPartidas(
-      this.state.fechaInicio,
-      this.state.fechaFin,
-      this.state.estado,
-      this.state.primerOrden,
-      this.state.segundoOrden,
-      pageSize,
-      newPage
-    );
+    await this.setState({ pageSize: parseInt(event.target.value, 10) });
+    await this.setState({ page: 0 });
+    this.listarPartidas();
+  };
+
+  handleRemoverOrdenar = async (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    await this.setState({
+      primerOrden: undefined,
+      segundoOrden: undefined,
+    });
+    this.listarPartidas();
   };
 
   render() {
