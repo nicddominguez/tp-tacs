@@ -4,11 +4,9 @@ import tp.tacs.api.dominio.partida.Partida;
 
 public interface Especializacion {
 
-    void producir(Municipio municipio);
-
     Float multDefensa(Partida partida);
 
-    Integer nivelDeProduccion(Municipio municipio);
+    Integer nivelDeProduccion(float multiplicador);
 
     String getNombreAMostrar();
 }

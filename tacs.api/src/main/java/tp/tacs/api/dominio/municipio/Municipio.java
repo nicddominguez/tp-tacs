@@ -19,6 +19,7 @@ public class Municipio {
     @Builder.Default
     private Especializacion especializacion = new Produccion();
     private Usuario duenio;
+    private Integer ultimaProduccion;
 
 
     public void setCantGauchos(Integer cantGauchos) {
@@ -42,10 +43,6 @@ public class Municipio {
 
     public Boolean estaBacante() {
         return duenio == null;
-    }
-
-    public void producir() {
-        this.especializacion.producir(this);
     }
 
     public boolean esDe(Long userId) {

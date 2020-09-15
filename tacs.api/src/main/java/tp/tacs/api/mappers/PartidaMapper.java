@@ -1,6 +1,8 @@
 package tp.tacs.api.mappers;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import tp.tacs.api.daos.UsuarioDao;
 import tp.tacs.api.dominio.partida.Partida;
 import tp.tacs.api.model.PartidaModel;
 
@@ -9,14 +11,16 @@ import java.util.stream.Collectors;
 
 @Component
 public class PartidaMapper extends AbstractMapper<Partida, PartidaModel> {
-
-    private UsuarioMapper usuarioMapper = new UsuarioMapper();
-
-    private EstadoDeJuegoMapper estadoDeJuegoMapper = new EstadoDeJuegoMapper();
-
-    private ModoDeJuegoMapper modoDeJuegoMapper = new ModoDeJuegoMapper();
-
-    private DatosDeJuegoMapper datosDeJuegoMapper = new DatosDeJuegoMapper();
+    @Autowired
+    private UsuarioMapper usuarioMapper;
+    @Autowired
+    private EstadoDeJuegoMapper estadoDeJuegoMapper;
+    @Autowired
+    private ModoDeJuegoMapper modoDeJuegoMapper;
+    @Autowired
+    private DatosDeJuegoMapper datosDeJuegoMapper;
+    @Autowired
+    private UsuarioDao usuarioDao;
 
     @Override
     protected PartidaModel wrapModel(Partida partida) {
@@ -29,7 +33,7 @@ public class PartidaMapper extends AbstractMapper<Partida, PartidaModel> {
     }
 
     public PartidaModel partidaBasica(Partida partida) {
-        var jugadores = usuarioMapper.wrapList(partida.getJugadores());
+        var jugadores = usuarioMapper.wrapList(usuarioDao.getByIds(partida.getJugadoresIds()));
         return new PartidaModel()
                 .jugadores(jugadores)
                 .estado(estadoDeJuegoMapper.toModel(partida.getEstado()))
