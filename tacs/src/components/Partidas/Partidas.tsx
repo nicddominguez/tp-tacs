@@ -173,36 +173,23 @@ class Partidas extends React.Component<Props, State> {
     };
   }
 
-  componentDidMount() {
+  listarPartidas = (
+    fechaInicio?: Date,
+    fechaFin?: Date,
+    estado?: EstadoDeJuegoModel,
+    primerOrden?: string,
+    segundoOrden?: string,
+    pageSize?: number,
+    page?: number
+  ) => {
     this.partidasApi
       .listarPartidas(
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        this.state.pageSize,
-        this.state.page
-      )
-      .then((listarPartidasResponse) => {
-        this.setState({ partidas: listarPartidasResponse.partidas });
-      })
-      .catch(console.error);
-  }
-
-  handlePrimerOrden = (event: React.ChangeEvent<{ value: unknown }>) => {
-    const primerOrden = event.target.value as string;
-    this.setState({ primerOrden: primerOrden });
-    const orden =
-      primerOrden +
-      (this.state.segundoOrden ? "," + this.state.segundoOrden : "");
-    this.partidasApi
-      .listarPartidas(
-        this.state.fechaInicio?.toDateString(),
-        this.state.fechaFin?.toDateString(),
-        this.state.estado,
-        orden,
-        this.state.pageSize,
-        this.state.page
+        fechaInicio?.toDateString(),
+        fechaFin?.toDateString(),
+        estado,
+        primerOrden + (segundoOrden ? "," + segundoOrden : ""),
+        pageSize,
+        page
       )
       .then((listarPartidasResponse) => {
         this.setState({ partidas: listarPartidasResponse.partidas });
@@ -210,25 +197,44 @@ class Partidas extends React.Component<Props, State> {
       .catch(console.error);
   };
 
+  componentDidMount() {
+    this.listarPartidas(
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      this.state.pageSize,
+      this.state.page
+    );
+  }
+
+  handlePrimerOrden = (event: React.ChangeEvent<{ value: unknown }>) => {
+    const primerOrden = event.target.value as string;
+    this.setState({ primerOrden: primerOrden });
+    this.listarPartidas(
+      this.state.fechaInicio,
+      this.state.fechaFin,
+      this.state.estado,
+      primerOrden,
+      this.state.segundoOrden,
+      this.state.pageSize,
+      this.state.page
+    );
+  };
+
   handleSegundoOrden = (event: React.ChangeEvent<{ value: unknown }>) => {
-    this.setState({ segundoOrden: event.target.value as string });
     const segundoOrden = event.target.value as string;
-    const orden = this.state.primerOrden
-      ? this.state.primerOrden + (segundoOrden ? "," + segundoOrden : "")
-      : undefined;
-    this.partidasApi
-      .listarPartidas(
-        this.state.fechaInicio?.toDateString(),
-        this.state.fechaFin?.toDateString(),
-        this.state.estado,
-        orden,
-        this.state.pageSize,
-        this.state.page
-      )
-      .then((listarPartidasResponse) => {
-        this.setState({ partidas: listarPartidasResponse.partidas });
-      })
-      .catch(console.error);
+    this.setState({ segundoOrden: segundoOrden });
+    this.listarPartidas(
+      this.state.fechaInicio,
+      this.state.fechaFin,
+      this.state.estado,
+      this.state.primerOrden,
+      segundoOrden,
+      this.state.pageSize,
+      this.state.page
+    );
   };
 
   handleFechaInicio = (
@@ -237,23 +243,15 @@ class Partidas extends React.Component<Props, State> {
   ) => {
     const fechaInicio = date as Date;
     this.setState({ fechaInicio: fechaInicio });
-    const orden = this.state.primerOrden
-      ? this.state.primerOrden +
-        (this.state.segundoOrden ? "," + this.state.segundoOrden : "")
-      : undefined;
-    this.partidasApi
-      .listarPartidas(
-        fechaInicio.toISOString(),
-        this.state.fechaFin?.toISOString(),
-        this.state.estado,
-        orden,
-        this.state.pageSize,
-        this.state.page
-      )
-      .then((listarPartidasResponse) => {
-        this.setState({ partidas: listarPartidasResponse.partidas });
-      })
-      .catch(console.error);
+    this.listarPartidas(
+      fechaInicio,
+      this.state.fechaFin,
+      this.state.estado,
+      this.state.primerOrden,
+      this.state.segundoOrden,
+      this.state.pageSize,
+      this.state.page
+    );
   };
 
   handleFechaFin = (
@@ -262,45 +260,29 @@ class Partidas extends React.Component<Props, State> {
   ) => {
     const fechaFin = date as Date;
     this.setState({ fechaFin: fechaFin });
-    const orden = this.state.primerOrden
-      ? this.state.primerOrden +
-        (this.state.segundoOrden ? "," + this.state.segundoOrden : "")
-      : undefined;
-    this.partidasApi
-      .listarPartidas(
-        this.state.fechaInicio?.toISOString(),
-        fechaFin.toISOString(),
-        this.state.estado,
-        orden,
-        this.state.pageSize,
-        this.state.page
-      )
-      .then((listarPartidasResponse) => {
-        this.setState({ partidas: listarPartidasResponse.partidas });
-      })
-      .catch(console.error);
+    this.listarPartidas(
+      this.state.fechaInicio,
+      fechaFin,
+      this.state.estado,
+      this.state.primerOrden,
+      this.state.segundoOrden,
+      this.state.pageSize,
+      this.state.page
+    );
   };
 
   handleEstado = (event: React.ChangeEvent<{ value: unknown }>) => {
     const estado = event.target.value as EstadoDeJuegoModel;
     this.setState({ estado: estado });
-    const orden = this.state.primerOrden
-      ? this.state.primerOrden +
-        (this.state.segundoOrden ? "," + this.state.segundoOrden : "")
-      : undefined;
-    this.partidasApi
-      .listarPartidas(
-        this.state.fechaInicio?.toDateString(),
-        this.state.fechaFin?.toDateString(),
-        estado,
-        orden,
-        this.state.pageSize,
-        this.state.page
-      )
-      .then((listarPartidasResponse) => {
-        this.setState({ partidas: listarPartidasResponse.partidas });
-      })
-      .catch(console.error);
+    this.listarPartidas(
+      this.state.fechaInicio,
+      this.state.fechaFin,
+      estado,
+      this.state.primerOrden,
+      this.state.segundoOrden,
+      this.state.pageSize,
+      this.state.page
+    );
   };
 
   handlePage = (
