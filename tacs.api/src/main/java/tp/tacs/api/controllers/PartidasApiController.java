@@ -1,17 +1,21 @@
 package tp.tacs.api.controllers;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import tp.tacs.api.daos.MunicipioDao;
 import tp.tacs.api.daos.PartidaDao;
 import tp.tacs.api.daos.UsuarioDao;
+import tp.tacs.api.dominio.municipio.AtaqueMunicipiosResponse;
 import tp.tacs.api.dominio.partida.Estado;
 import tp.tacs.api.dominio.partida.Partida;
 import tp.tacs.api.dominio.partida.PartidaBuilder;
 import tp.tacs.api.dominio.usuario.Usuario;
 import tp.tacs.api.mappers.*;
 import tp.tacs.api.model.*;
+import tp.tacs.api.requerimientos.Models.ReqAtacarModel;
+import tp.tacs.api.requerimientos.ReqAtacar;
 import tp.tacs.api.utils.Utils;
 
 import javax.validation.Valid;
@@ -50,6 +54,9 @@ public class PartidasApiController implements PartidasApi {
 
     private PartidaBuilder partidaBuilder = new PartidaBuilder();
 
+    @Autowired
+    private ReqAtacar reqAtacar;
+
     @Override
     public ResponseEntity<Void> actualizarEstadoPartida(Long idPartida, @Valid PartidaModel body) {
         Partida partida = this.partidaDao.get(idPartida);
@@ -69,17 +76,16 @@ public class PartidasApiController implements PartidasApi {
 
     @Override
     public ResponseEntity<AtacarMunicipioResponse> atacarMunicipio(Long idPartida, @Valid AtacarMunicipioBody body) {
-        var municipioAtacante = municipioDao.get(body.getIdMunicipioAtacante());
-        var municipioObjetivo = municipioDao.get(body.getIdMunicipioObjetivo());
-
-        municipioAtacante.atacar(municipioObjetivo);
-
-        var municipioAtacanteModel = municipioEnJuegoMapper.wrap(municipioAtacante);
-        var municipioObjetivoModel = municipioEnJuegoMapper.wrap(municipioObjetivo);
+        ReqAtacarModel reqAtacarModel = ReqAtacarModel.builder()
+                .idPartida(idPartida)
+                .idMunicipioAtacante(body.getIdMunicipioAtacante())
+                .idMunicipioDefensor(body.getIdMunicipioObjetivo())
+                .build();
+        AtaqueMunicipiosResponse ataqueMunicipiosResponse = reqAtacar.run(reqAtacarModel);
 
         var response = new AtacarMunicipioResponse()
-                .municipioAtacado(municipioObjetivoModel)
-                .municipioAtacante(municipioAtacanteModel);
+                .municipioAtacado(municipioEnJuegoMapper.wrap(ataqueMunicipiosResponse.getMunicipioDefensor()))
+                .municipioAtacante(municipioEnJuegoMapper.wrap(ataqueMunicipiosResponse.getMunicipioAtacante()));
         return ResponseEntity.ok(response);
     }
 

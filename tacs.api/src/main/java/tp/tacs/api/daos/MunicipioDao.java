@@ -1,12 +1,13 @@
 package tp.tacs.api.daos;
 
+import org.springframework.stereotype.Component;
 import tp.tacs.api.dominio.municipio.Municipio;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+@Component
 public class MunicipioDao implements Dao<Municipio> {
 
     private static final Map<Long, Municipio> municipios = new HashMap<>();

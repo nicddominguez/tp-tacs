@@ -1,5 +1,6 @@
 package tp.tacs.api.http.externalApis;
 
+import org.springframework.stereotype.Component;
 import tp.tacs.api.dominio.municipio.Municipio;
 import tp.tacs.api.dominio.municipio.RepoMunicipios;
 import tp.tacs.api.http.HttpClientConnector;
@@ -14,7 +15,7 @@ import tp.tacs.api.model.ProvinciaModel;
 import java.util.List;
 
 import static java.lang.Thread.sleep;
-
+@Component
 public class ExternalApis implements RepoMunicipios {
 
     private static ExternalApis instancia;

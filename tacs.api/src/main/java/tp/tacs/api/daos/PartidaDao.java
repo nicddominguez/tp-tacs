@@ -1,5 +1,6 @@
 package tp.tacs.api.daos;
 
+import org.springframework.stereotype.Component;
 import tp.tacs.api.dominio.partida.Estado;
 import tp.tacs.api.dominio.partida.Partida;
 import tp.tacs.api.mappers.EstadoDeJuegoMapper;
@@ -11,7 +12,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
-
+@Component
 public class PartidaDao implements Dao<Partida> {
 
     private final EstadoDeJuegoMapper estadoDeJuegoMapper = new EstadoDeJuegoMapper();

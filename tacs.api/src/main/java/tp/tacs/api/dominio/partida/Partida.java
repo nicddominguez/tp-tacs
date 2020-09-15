@@ -2,6 +2,7 @@ package tp.tacs.api.dominio.partida;
 
 import com.google.common.collect.Sets;
 import tp.tacs.api.daos.PartidaDao;
+import tp.tacs.api.dominio.municipio.AtaqueMunicipiosResponse;
 import tp.tacs.api.dominio.municipio.Municipio;
 import tp.tacs.api.dominio.usuario.Usuario;
 import tp.tacs.api.handler.PartidaException;
@@ -205,6 +206,58 @@ public class Partida {
         } else
             throw new PartidaException("No se puede pasar el turno de una partida que no este en curso");
 
+    }
+
+    public void validarAccion(String accion, Usuario duenio) {
+        if (!this.getEstado().equals(Estado.EN_CURSO)) {
+            throw new PartidaException("La partida no está en curso. No se pudo " + accion);
+        }
+        if (usuarioEnTurnoActual().getId() != duenio.getId()) {
+            throw new PartidaException("No es el turno del dueño del municipio.");
+        }
+    }
+
+    public AtaqueMunicipiosResponse atacar(Municipio municipioAtacante, Municipio municipioDefensor) {
+        validarAccion("atacar", municipioAtacante.getDuenio());
+        if (mismoDuenio(municipioAtacante, municipioDefensor)) {
+            throw new PartidaException("No puede atacar a sus propios municipios");
+        }
+        Integer gauchosAtacantesFinal = gauchosAtacantesFinal(municipioAtacante, municipioDefensor);
+        Integer gauchosDefensoresFinal = gauchosDefensoresFinal(municipioAtacante, municipioDefensor);
+
+        municipioAtacante.setCantGauchos(gauchosAtacantesFinal);
+        municipioDefensor.setCantGauchos(gauchosDefensoresFinal);
+        if (gauchosDefensoresFinal <= 0) {
+            municipioDefensor.setCantGauchos(0);
+            municipioDefensor.setDuenio(municipioAtacante.getDuenio());
+        }
+        pasarTurno();
+        return AtaqueMunicipiosResponse.builder()
+                .municipioAtacante(municipioAtacante)
+                .municipioDefensor(municipioDefensor)
+                .build();
+    }
+    private Integer gauchosAtacantesFinal(Municipio municipioAtacante, Municipio municipioDefensor) {
+        var multDist = this.multDist(municipioAtacante, municipioDefensor);
+        var multAltura = this.multAltura(municipioDefensor);
+        var multDefensa = municipioDefensor.getEspecializacion().multDefensa(this);
+
+        return (int) Math.floor(municipioAtacante.getCantGauchos() * multDist - municipioDefensor.getCantGauchos() * multAltura * multDefensa);
+    }
+
+    private Integer gauchosDefensoresFinal(Municipio municipioAtacante, Municipio municipioDefensor) {
+        var multAltura = this.multAltura(municipioDefensor);
+        var multDefensa = municipioDefensor.getEspecializacion().multDefensa(this);
+        var multDist = this.multDist(municipioAtacante, municipioDefensor);
+        var gauchosDefensores = municipioDefensor.getCantGauchos();
+
+        return (int) Math.round(Math.ceil(
+                (gauchosDefensores * multAltura * multDefensa) - (municipioAtacante.getCantGauchos() * multDist))
+                / (multAltura * multDefensa));
+    }
+
+    private boolean mismoDuenio(Municipio municipio1, Municipio municipio2) {
+        return  municipio1.getDuenio().getId() == municipio2.getDuenio().getId();
     }
 
     public Usuario usuarioConMasMunicipios() {
