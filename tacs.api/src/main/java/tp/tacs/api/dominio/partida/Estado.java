@@ -1,8 +1,5 @@
 package tp.tacs.api.dominio.partida;
 
-import com.fasterxml.jackson.annotation.JsonValue;
-import tp.tacs.api.model.EstadoDeJuegoModel;
-
 import java.util.Arrays;
 
 public enum Estado {

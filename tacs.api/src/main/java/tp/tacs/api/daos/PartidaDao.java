@@ -48,9 +48,13 @@ public class PartidaDao implements Dao<Partida> {
 
     @Override
     public void delete(Partida element) {
-        //remove(element.getId());
         partidas = partidas.stream().filter(partida -> !partida.getId().equals(element.getId()))
                 .collect(Collectors.toList());
+    }
+
+    public void update(Partida partida){
+        delete(partida);
+        save(partida);
     }
 
     public EstadisticasDeJuegoModel estadisticas(Date fechaInicio, Date fechaFin) {

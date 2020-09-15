@@ -7,63 +7,53 @@ import tp.tacs.api.mappers.UsuarioMapper;
 import tp.tacs.api.model.EstadisticasDeUsuarioModel;
 
 import javax.annotation.PostConstruct;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class UsuarioDao implements Dao<Usuario> {
 
-    private Map<Long, Usuario> usuarios;
+    private List<Usuario> usuarios;
 
     @Autowired
     private UsuarioMapper usuarioMapper;
 
     @PostConstruct
     private void postConstruct() {
-        usuarios = new HashMap<>();
+        usuarios = new ArrayList<>();
     }
 
     @Override
     public Usuario get(Long id) {
-        return usuarios.get(id);
+        return usuarios.stream().filter(usuario -> usuario.getId().equals(id)).findFirst().orElse(null);
     }
 
     public Usuario getByGoogleId(String googleId) {
-        return usuarios
-                .values()
-                .stream()
-                .filter(usuario -> usuario.getGoogleId().equals(googleId))
-                .findFirst()
-                .orElse(null);
+        return usuarios.stream().filter(usuario -> usuario.getGoogleId().equals(googleId)).findFirst().orElse(null);
     }
 
     public Usuario getByUsername(String username) {
-        return usuarios
-                .values()
-                .stream()
-                .filter(usuario -> usuario.getNombre().equals(username))
-                .findFirst()
-                .orElse(null);
+        return usuarios.stream().filter(usuario -> usuario.getNombre().equals(username)).findFirst().orElse(null);
     }
 
     @Override
     public List<Usuario> getAll() {
-        return new ArrayList<>(usuarios.values());
+        return usuarios;
     }
 
     @Override
     public void save(Usuario element) {
-        usuarios.put(element.getId(), element);
+        usuarios.add(element);
     }
 
     @Override
     public void delete(Usuario element) {
-        usuarios.remove(element.getId());
+        usuarios = usuarios.stream().filter(usuario -> !usuario.getId().equals(element.getId())).collect(Collectors.toList());
     }
 
-    public List<Usuario> getSegunIds(List<Long> idsUsuarios) {
-        List<Usuario> usuarios = new ArrayList<>();
-        idsUsuarios.forEach(id -> usuarios.add(this.get(id)));
-        return usuarios;
+    public List<Usuario> getByIds(List<Long> idsUsuarios) {
+        return usuarios.stream().filter(municipio -> idsUsuarios.contains(municipio.getId())).collect(Collectors.toList());
     }
 
     public EstadisticasDeUsuarioModel estadisticas(Long idUsuario) {
@@ -77,7 +67,7 @@ public class UsuarioDao implements Dao<Usuario> {
 
     public List<EstadisticasDeUsuarioModel> scoreBoard() {
         List<EstadisticasDeUsuarioModel> estadisticasDeUsuarioModels = new ArrayList<>();
-        usuarios.keySet().forEach(idUsuario -> estadisticasDeUsuarioModels.add(this.estadisticas(idUsuario)));
+        usuarios.forEach(idUsuario -> estadisticasDeUsuarioModels.add(estadisticas(idUsuario.getId())));
         return estadisticasDeUsuarioModels;
     }
 

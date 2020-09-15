@@ -38,4 +38,8 @@ public class MunicipioDao implements Dao<Municipio> {
         municipios = municipios.stream().filter(municipio -> !municipio.getId().equals(element.getId()))
                 .collect(Collectors.toList());
     }
+
+    public List<Municipio> getByIds(List<Long> ids){
+        return municipios.stream().filter(municipio -> ids.contains(municipio.getId())).collect(Collectors.toList());
+    }
 }

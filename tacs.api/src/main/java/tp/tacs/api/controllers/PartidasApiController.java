@@ -6,19 +6,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import tp.tacs.api.daos.MunicipioDao;
 import tp.tacs.api.daos.PartidaDao;
-import tp.tacs.api.dominio.municipio.AtaqueMunicipiosResponse;
-import tp.tacs.api.dominio.partida.Estado;
+import tp.tacs.api.requerimientos.models.AtaqueMunicipiosResponse;
 import tp.tacs.api.dominio.partida.Partida;
-import tp.tacs.api.dominio.partida.PartidaBuilder;
 import tp.tacs.api.dominio.usuario.Usuario;
 import tp.tacs.api.mappers.*;
 import tp.tacs.api.model.*;
+import tp.tacs.api.requerimientos.controller.*;
+import tp.tacs.api.requerimientos.models.ReqActualizarEstadoPartidaRequest;
 import tp.tacs.api.requerimientos.models.ReqAtacarModel;
-import tp.tacs.api.requerimientos.ReqAtacar;
+import tp.tacs.api.requerimientos.models.ReqMoverGauchosModel;
+import tp.tacs.api.requerimientos.models.ReqSimularAtacarMunicipioRequest;
 import tp.tacs.api.utils.Utils;
 
 import javax.validation.Valid;
-import java.util.Arrays;
 import java.util.Date;
 
 @RestController
@@ -28,6 +28,14 @@ public class PartidasApiController implements PartidasApi {
      */
     @Autowired
     private ReqAtacar reqAtacar;
+    @Autowired
+    private ReqInicializarPartida reqInicializarPartida;
+    @Autowired
+    private ReqActualizarEstadoPartida reqActualizarEstadoPartida;
+    @Autowired
+    private ReqObtenerPartidaPorId reqObtenerPartidaPorId;
+    @Autowired
+    private ReqSimularAtacarMunicipio reqSimularAtacarMunicipio;
     @Autowired
     private Utils utils;
 
@@ -43,8 +51,7 @@ public class PartidasApiController implements PartidasApi {
     @Autowired
     private ModoDeMunicipioMapper modoDeMunicipioMapper;
     @Autowired
-    private ModoDeJuegoMapper modoDeJuegoMapper;
-
+    private ReqMoverGauchos reqMoverGauchos;
     /**
      * Daos
      */
@@ -56,17 +63,11 @@ public class PartidasApiController implements PartidasApi {
     private Usuario usuarioA = new Usuario(1L, "as@gmailc.om", "nd");
     private Usuario usuarioD = new Usuario(2L, "as@gmailc.om", "ndd");
 
-    public void setPartidaBuilder(PartidaBuilder partidaBuilder) {
-        this.partidaBuilder = partidaBuilder;
-    }
-
-    private PartidaBuilder partidaBuilder = new PartidaBuilder();
-
     @Override
     public ResponseEntity<Void> actualizarEstadoPartida(Long idPartida, @Valid PartidaModel body) {
-        Partida partida = this.partidaDao.get(idPartida);
-        Estado nuevoEstado = estadoDeJuegoMapper.toEntity(body.getEstado());
-        partida.setEstado(nuevoEstado);
+        ReqActualizarEstadoPartidaRequest request = ReqActualizarEstadoPartidaRequest.builder().estado(estadoDeJuegoMapper.toEntity(body.getEstado()))
+                .idPartida(idPartida).build();
+        reqActualizarEstadoPartida.run(request);
         return ResponseEntity.ok().build();
     }
 
@@ -96,22 +97,14 @@ public class PartidasApiController implements PartidasApi {
 
     @Override
     public ResponseEntity<Void> crearPartida(@Valid CrearPartidaBody body) {
-        partidaBuilder
-                .setIdProvincia(body.getIdProvincia().toString())
-                .setCantMunicipios(Math.toIntExact(body.getCantidadMunicipios()))
-                //                .setParticipantes(this.usuarioDao.getSegunIds(body.getIdJugadores())) //Implementación reL
-                .setParticipantes(
-                        Arrays.asList(usuarioA, usuarioD)) //TODO cambiar por la implementación real cuando se puedan crear usaurios desde alguna ruta
-                .setModoDeJuego(modoDeJuegoMapper.toEntity(body.getModoDeJuego()))
-                .constriur();
+        reqInicializarPartida.run(body);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @Override
     public ResponseEntity<PartidaModel> getPartida(Long idPartida) {
-        var partida = this.partidaDao.get(idPartida);
-        var partidaModel = this.partidaMapper.wrap(partida);
-        return ResponseEntity.ok(partidaModel);
+        Partida partida = reqObtenerPartidaPorId.run(idPartida);
+        return ResponseEntity.ok(partidaMapper.wrap(partida));
     }
 
     @Override
@@ -131,31 +124,18 @@ public class PartidasApiController implements PartidasApi {
 
     @Override
     public ResponseEntity<MoverGauchosResponse> moverGauchos(Long idPartida, @Valid MoverGauchosBody body) {
-        var idMunicipioOrigen = body.getIdMunicipioOrigen();
-        var idMunicipioDestino = body.getIdMunicipioDestino();
-        var municipioOrigen = municipioDao.get(idMunicipioOrigen);
-        var municipioDestino = municipioDao.get(idMunicipioDestino);
-
-        municipioOrigen.moverGauchos(municipioDestino, Math.toIntExact(body.getCantidad()));
-
-        var municipioOrigenModel = municipioEnJuegoMapper.wrap(municipioOrigen);
-        var municipioDestinoModel = municipioEnJuegoMapper.wrap(municipioDestino);
-
-        var moverGauchosResponse = new MoverGauchosResponse()
-                .municipioOrigen(municipioOrigenModel)
-                .municipioDestino(municipioDestinoModel);
-        return ResponseEntity.ok(moverGauchosResponse);
+        ReqMoverGauchosModel request = ReqMoverGauchosModel.builder().cantidad(body.getCantidad())
+                .idMunicipioDestino(body.getIdMunicipioDestino())
+                .idMunicipioOrigen(body.getIdMunicipioOrigen()).idPartida(idPartida).build();
+        return ResponseEntity.ok(reqMoverGauchos.run(request));
     }
 
     @Override
     public ResponseEntity<SimularAtacarMunicipioResponse> simularAtacarMunicipio(Long idPartida, @Valid SimularAtacarMunicipioBody body) {
-        var municipioAtacante = municipioDao.get(body.getIdMunicipioAtacante());
-        var municipioAtacado = municipioDao.get(body.getIdMunicipioObjetivo());
-
-        var resultadoAtaque = municipioAtacante.ataqueExitoso(municipioAtacado);
-
-        var response = new SimularAtacarMunicipioResponse().exitoso(resultadoAtaque);
-        return ResponseEntity.ok(response);
+        ReqSimularAtacarMunicipioRequest request = ReqSimularAtacarMunicipioRequest.builder().idMunicipioAtacante(body.getIdMunicipioAtacante())
+                .idMunicipioObjectivo(
+                        body.getIdMunicipioObjetivo()).idPartida(idPartida).build();
+        return ResponseEntity.ok(reqSimularAtacarMunicipio.run(request));
     }
 
 }

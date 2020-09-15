@@ -10,6 +10,20 @@ public class Produccion implements Especializacion {
         municipio.agregarGauchos(cantGauchos);
     }
 
+    /**@Autwired
+     * ExternalApi
+     * MunicipioDao
+     * PArtidaDao
+     * producir(PartidaId, MunicipioId){
+     *     var minAltura = municipio.getPartida().minAltura(); Lo saca de partida dao
+ *         var maxAltura = municipio.getPartida().maxAltura(); Lo saca de partida dao
+     *
+ *         municipio.agregarGauchos(cantGauchos);
+     *     agreagarGauchos
+     *     municipioDao.save()
+     * }
+     */
+
     @Override
     public Float multDefensa(Partida partida) {
         return partida.getModoDeJuego().getMultDefEnProduccion();

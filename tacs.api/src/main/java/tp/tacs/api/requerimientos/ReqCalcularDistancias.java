@@ -8,15 +8,12 @@ import tp.tacs.api.http.externalApis.ExternalApis;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.stream.Collectors;
-import java.util.stream.DoubleStream;
-import java.util.stream.Stream;
 
 @Component
-public class ReqCalcularDistancias extends Requerimiento<Partida,Partida>{
+public class ReqCalcularDistancias extends AbstractRequerimiento<Partida,Partida> {
     @Autowired
     private ExternalApis externalApis;
 

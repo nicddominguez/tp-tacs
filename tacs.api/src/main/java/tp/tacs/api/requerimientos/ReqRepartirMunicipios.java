@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class ReqRepartirMunicipios extends Requerimiento<ReqRepartirMunicipiosModel, Partida> {
+public class ReqRepartirMunicipios extends AbstractRequerimiento<ReqRepartirMunicipiosModel, Partida> {
     @Autowired
     private ExternalApis externalApis;
     @Autowired

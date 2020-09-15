@@ -1,5 +1,6 @@
 package tp.tacs.api.http.externalApis;
 
+import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import tp.tacs.api.dominio.municipio.Municipio;
@@ -13,9 +14,11 @@ import tp.tacs.api.mappers.GeorefMapper;
 import tp.tacs.api.mappers.ProvinciaMapper;
 import tp.tacs.api.model.ProvinciaModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.Thread.sleep;
+
 @Component
 public class ExternalApis implements RepoMunicipios {
 
@@ -104,6 +107,10 @@ public class ExternalApis implements RepoMunicipios {
         } catch (Exception e) {
             throw new HttpErrorException(e.getMessage());
         }
+    }
+
+    public ArrayList<Double> getCoordenadasArray(String idMunicipio) {
+        return Lists.newArrayList(getLatitud(idMunicipio), this.getLongitud(idMunicipio));
     }
 
     @Override

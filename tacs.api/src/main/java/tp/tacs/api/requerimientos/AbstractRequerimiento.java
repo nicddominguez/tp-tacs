@@ -1,6 +1,6 @@
 package tp.tacs.api.requerimientos;
 
-public abstract class Requerimiento <T, Y>{
+public abstract class AbstractRequerimiento<T, Y>{
 
         protected abstract Y execute(T request);
 
