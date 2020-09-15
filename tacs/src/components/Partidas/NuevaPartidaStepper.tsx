@@ -14,8 +14,8 @@ import { createStyles, Theme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from '@material-ui/core/styles'
 import { default as React } from "react";
-import { ProvinciaModel, UsuarioModel, CrearPartidaBody } from "api/api";
-import { WololoProvinciasApiClient, WololoUsuariosApiClient, WololoPartidasApiClient } from "api/client";
+import { ProvinciaModel, UsuarioModel, CrearPartidaBody, ModoDeJuegoModel } from "../../api/api";
+import { WololoProvinciasApiClient, WololoUsuariosApiClient, WololoPartidasApiClient } from "../../api/client";
 import Paper from "@material-ui/core/Paper"
 import List from "@material-ui/core/List"
 import ListItem from "@material-ui/core/ListItem"
@@ -56,6 +56,7 @@ const styles = (theme: Theme) =>
 const stepNames = [
   "Seleccionar una provincia",
   "Seleccionar cantidad de municipios",
+  "Seleccionar modo de juego",
   "Buscar jugadores",
 ];
 
@@ -392,7 +393,6 @@ export class NuevaPartidaStepper extends React.Component<NuevaPartidaStepperProp
     this.classes = props.classes;
     this.provinciasApiClient = new WololoProvinciasApiClient();
     this.partidasApiClient = new WololoPartidasApiClient();
-    this
 
     this.state = {
       activeStep: 0,
@@ -410,6 +410,8 @@ export class NuevaPartidaStepper extends React.Component<NuevaPartidaStepperProp
     this.setCantidadMunicipios = this.setCantidadMunicipios.bind(this);
     this.setUsuariosSeleccionados = this.setUsuariosSeleccionados.bind(this);
     this.handleModoDeJuego = this.handleModoDeJuego.bind(this);
+    this.handleFinish = this.handleFinish.bind(this);
+    this.crearPartida = this.crearPartida.bind(this);
   }
 
   setProvincias(provincias: Array<ProvinciaModel>) {
@@ -469,13 +471,20 @@ export class NuevaPartidaStepper extends React.Component<NuevaPartidaStepperProp
     });
   }
 
+  handleFinish() {
+    this.crearPartida();
+  }
+
   crearPartida() {
     const body: CrearPartidaBody = {
-      cantidadMunicipios: this.state.cantidadMunicipios,
+      cantidadMunicipios: this.state.cantidadMunicipios as number,
       idJugadores: this.state.usuariosSeleccionados.map(usuario => usuario.id),
       idProvincia: this.state.idProvincia,
-      modoDeJuego: this.state.modoDeJuego
+      modoDeJuego: this.state.modoDeJuego as unknown as ModoDeJuegoModel
     }
+    this.partidasApiClient.crearPartida(body)
+      .then(response => console.log('Partida creada'))
+      .catch(console.error);
   }
 
   renderActiveStep() {
@@ -539,15 +548,26 @@ export class NuevaPartidaStepper extends React.Component<NuevaPartidaStepperProp
                       className={this.classes.button}
                     >
                       Back
-                  </Button>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={this.handleNext}
-                      className={this.classes.button}
-                    >
-                      {this.state.activeStep === stepNames.length - 1 ? "Finish" : "Next"}
                     </Button>
+                    {this.state.activeStep !== stepNames.length - 1 ?
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={this.handleNext}
+                        className={this.classes.button}
+                      >
+                        Siguiente
+                      </Button>
+                      :
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={this.handleFinish}
+                        className={this.classes.button}
+                      >
+                        Crear
+                      </Button>
+                    }
                   </div>
                 </div>
               </StepContent>
