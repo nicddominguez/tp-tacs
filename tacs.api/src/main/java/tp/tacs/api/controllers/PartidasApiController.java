@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import tp.tacs.api.daos.MunicipioDao;
 import tp.tacs.api.daos.PartidaDao;
+import tp.tacs.api.daos.UsuarioDao;
 import tp.tacs.api.requerimientos.models.AtaqueMunicipiosResponse;
 import tp.tacs.api.dominio.partida.Partida;
 import tp.tacs.api.dominio.usuario.Usuario;
@@ -18,6 +19,7 @@ import tp.tacs.api.requerimientos.models.ReqMoverGauchosModel;
 import tp.tacs.api.requerimientos.models.ReqSimularAtacarMunicipioRequest;
 import tp.tacs.api.utils.Utils;
 
+import javax.annotation.PostConstruct;
 import javax.validation.Valid;
 import java.util.Date;
 
@@ -59,9 +61,16 @@ public class PartidasApiController implements PartidasApi {
     private PartidaDao partidaDao;
     @Autowired
     private MunicipioDao municipioDao;
+    @Autowired
+    private UsuarioDao usuarioDao;
 
-    private Usuario usuarioA = new Usuario(1L, "as@gmailc.om", "nd");
-    private Usuario usuarioD = new Usuario(2L, "as@gmailc.om", "ndd");
+    private Usuario usuarioA = Usuario.builder().nombre("Juan").id(1L).mail("juan@gmail.com").build();
+    private Usuario usuarioD = Usuario.builder().nombre("Nico").id(2L).mail("as@gmailc.om").build();
+    @PostConstruct
+    public void postConstruct(){
+        usuarioDao.save(usuarioA);
+        usuarioDao.save(usuarioD);
+    }
 
     @Override
     public ResponseEntity<Void> actualizarEstadoPartida(Long idPartida, @Valid PartidaModel body) {

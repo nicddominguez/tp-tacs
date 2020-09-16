@@ -3,6 +3,8 @@ package tp.tacs.api.requerimientos;
 import com.google.common.collect.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import tp.tacs.api.daos.MunicipioDao;
+import tp.tacs.api.dominio.municipio.Municipio;
 import tp.tacs.api.dominio.partida.Partida;
 import tp.tacs.api.http.externalApis.ExternalApis;
 
@@ -16,7 +18,8 @@ import java.util.stream.Collectors;
 public class ReqCalcularDistancias extends AbstractRequerimiento<Partida,Partida> {
     @Autowired
     private ExternalApis externalApis;
-
+    @Autowired
+    private MunicipioDao municipioDao;
     @Override protected Partida execute(Partida request) {
         HashSet<Float> distancias = distanciasTotales(request);
         request.setMaxDist(distancias.stream().max(Float::compareTo).get());
@@ -27,16 +30,19 @@ public class ReqCalcularDistancias extends AbstractRequerimiento<Partida,Partida
     private HashSet<Float> distanciasTotales(Partida partida) {
         var coordenadas = partida.getMunicipios()
                 .stream()
-                .map(id -> externalApis.getCoordenadas(id.toString()))
-                .collect(Collectors.toSet());
+                .map(id -> {
+                    Municipio municipio = municipioDao.get(id);
+                    return externalApis.getCoordenadas(municipio.getExternalApiId());
+                }).collect(Collectors.toSet());
 
         var combinaciones = Sets.combinations(coordenadas, 2);
 
         var distancias = new HashSet<Float>();
-        combinaciones.forEach(combinacion -> {
+        combinaciones.forEach(combinacion -> { // todo preguntar que onda esto
             var list = new ArrayList<>(combinacion);
-            var list0 = new ArrayList<>(Collections.singleton(Double.valueOf(list.get(0))));
-            var list1 = new ArrayList<>(Collections.singleton(Double.valueOf(list.get(0))));
+            var cooredenada = list.get(0).split(",");
+            var list0 = new ArrayList<>(Collections.singleton(Double.valueOf(cooredenada[0])));
+            var list1 = new ArrayList<>(Collections.singleton(Double.valueOf(cooredenada[1])));
             var distancia = distanciaEntre(list0, list1);
             distancias.add(distancia);
         });
