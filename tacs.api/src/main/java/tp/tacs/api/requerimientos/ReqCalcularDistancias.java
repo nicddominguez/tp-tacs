@@ -10,16 +10,18 @@ import tp.tacs.api.http.externalApis.ExternalApis;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.stream.Collectors;
 
 @Component
-public class ReqCalcularDistancias extends AbstractRequerimiento<Partida,Partida> {
+public class ReqCalcularDistancias extends AbstractRequerimiento<Partida, Partida> {
     @Autowired
     private ExternalApis externalApis;
     @Autowired
     private MunicipioDao municipioDao;
+
     @Override protected Partida execute(Partida request) {
         HashSet<Float> distancias = distanciasTotales(request);
         request.setMaxDist(distancias.stream().max(Float::compareTo).get());
@@ -32,18 +34,19 @@ public class ReqCalcularDistancias extends AbstractRequerimiento<Partida,Partida
                 .stream()
                 .map(id -> {
                     Municipio municipio = municipioDao.get(id);
-                    return externalApis.getCoordenadas(municipio.getExternalApiId());
+                    var a = Arrays
+                            .asList(externalApis.getCoordenadas(municipio.getExternalApiId()).split(","))
+                            .stream().map(v -> Double.valueOf(v))
+                            .collect(Collectors.toList());
+                    var coordenadasString = new ArrayList<>(a);
+                    return coordenadasString;
                 }).collect(Collectors.toSet());
-
         var combinaciones = Sets.combinations(coordenadas, 2);
 
         var distancias = new HashSet<Float>();
-        combinaciones.forEach(combinacion -> { // todo preguntar que onda esto
+        combinaciones.forEach(combinacion -> {
             var list = new ArrayList<>(combinacion);
-            var cooredenada = list.get(0).split(",");
-            var list0 = new ArrayList<>(Collections.singleton(Double.valueOf(cooredenada[0])));
-            var list1 = new ArrayList<>(Collections.singleton(Double.valueOf(cooredenada[1])));
-            var distancia = distanciaEntre(list0, list1);
+            var distancia = distanciaEntre(list.get(0), list.get(1));
             distancias.add(distancia);
         });
         return distancias;
@@ -55,3 +58,4 @@ public class ReqCalcularDistancias extends AbstractRequerimiento<Partida,Partida
                 coordenadasHasta.get(0), coordenadasHasta.get(1));
     }
 }
+
