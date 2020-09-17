@@ -20,16 +20,16 @@ public class MunicipioEnJuegoMapper extends AbstractMapper<Municipio, MunicipioE
     @Override
     protected MunicipioEnJuegoModel wrapModel(Municipio model) {
         return new MunicipioEnJuegoModel()
-                .altura((long) Double.parseDouble(externalApis.getAltura(model.getExternalApiId()).toString()))
+                .altura(model.getAltura().longValue())
                 .duenio(usuarioMapper.wrap(model.getDuenio()))
                 .estaBloqueado(model.estaBloqueado())
                 .gauchos(model.getCantGauchos().longValue())
                 .modo(modoDeMunicipioMapper.toModel(model.getEspecializacion()))
                 .id(model.getId())
                 .nombre(model.getNombre())
-                .produccionDeGauchos(model.getUltimaProduccion().longValue())
+                .produccionDeGauchos(model.getNivelDeProduccion().longValue())
                 //.puntosDeDefensa(model.getEspecializacion().multDefensa(model.getPartida()).longValue())
-                .ubicacion(coordenadasMapper.toModel(externalApis.getLatitud(model.getExternalApiId()), externalApis.getLongitud(model.getExternalApiId())))
+                .ubicacion(coordenadasMapper.toModel(model.getLatitud(), model.getLongitud()))
                 .urlImagen(externalApis.getPathImagen(model.getExternalApiId()));
     }
 

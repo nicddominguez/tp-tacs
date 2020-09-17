@@ -16,14 +16,18 @@ public class ServicioMunicipio {
     private ExternalApis externalApis;
 
     public Municipio producir(Partida partida, Municipio municipio) {
+        this.actualizarNivelProduccion(municipio, partida);
+        municipio.agregarGauchos(municipio.getNivelDeProduccion());
+        return municipio;
+    }
+
+    public void actualizarNivelProduccion(Municipio municipio, Partida partida) { //TODO el multiplicador podría calcualrse una sola vez al iniciar la partida
         var minAltura = partida.getMinAltura();
         var maxAltura = partida.getMaxAltura();
-        float multiplicador = 1 - (externalApis.getAltura(municipio.getExternalApiId()) - minAltura)
+        float multiplicador = 1 - (municipio.getAltura() - minAltura)
                 / (2 * (maxAltura - minAltura));
         int cantGauchos = municipio.getEspecializacion().nivelDeProduccion(multiplicador);
-        municipio.setUltimaProduccion(cantGauchos);
-        municipio.agregarGauchos(cantGauchos);
-        return municipio;
+        municipio.setNivelDeProduccion(cantGauchos);
     }
 
     public void actualizarMunicipio(Municipio municipio, Especializacion especializacion){
