@@ -12,8 +12,8 @@ public class GeorefMapper extends AbstractMapper<MunicipioApi, Municipio> {
         return Municipio.builder()
                 .nombre(model.getNombre())
                 .externalApiId(model.getId())
-                .latitud(model.getCentroide_lat().doubleValue())
-                .longitud(model.getCentroide_lon().doubleValue())
+                .latitud(model.getCentroide_lat() != null ? model.getCentroide_lat().doubleValue() : null)
+                .longitud(model.getCentroide_lon() != null ? model.getCentroide_lon().doubleValue() : null)
                 .build();
     }
 

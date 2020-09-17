@@ -2,7 +2,7 @@ package tp.tacs.api.requerimientos;
 
 import com.google.common.collect.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import tp.tacs.api.daos.MunicipioDao;
 import tp.tacs.api.daos.PartidaDao;
 import tp.tacs.api.daos.UsuarioDao;
@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
 import java.util.stream.Stream;
 
-@Component
+@Service
 public class ServicioPartida {
     @Autowired
     private ExternalApis externalApis;

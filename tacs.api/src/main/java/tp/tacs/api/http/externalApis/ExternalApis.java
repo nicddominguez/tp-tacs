@@ -39,7 +39,7 @@ public class ExternalApis implements RepoMunicipios {
             String url = geoRefMunicipioBaseUrlBasico + "&provincia=" + idProvincia + "&max=" + cantidad;
             var municipiosApi = connector.get(url, MunicipiosApi.class);
             var municipiosBase = geoRefWrapper.wrapList(municipiosApi.getMunicipios());
-            municipiosBase.forEach(municipio -> municipio.setAltura(this.getAltura(municipio.getId().toString()))); //TODO cambiar el ForEach para pedirle todo de una
+            municipiosBase.forEach(municipio -> municipio.setAltura(this.getAltura(municipio.getExternalApiId()))); //TODO cambiar el ForEach para pedirle todo de una
             return municipiosBase;
         } catch (Exception e) {
             throw new HttpErrorException();

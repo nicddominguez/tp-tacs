@@ -1,7 +1,7 @@
 package tp.tacs.api.requerimientos;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 import tp.tacs.api.daos.PartidaDao;
 import tp.tacs.api.daos.UsuarioDao;
 import tp.tacs.api.model.EstadisticasDeJuegoModel;
@@ -11,7 +11,7 @@ import tp.tacs.api.utils.Utils;
 import java.util.Date;
 import java.util.List;
 
-@Controller
+@Service
 public class ServicioAdmin {
     @Autowired
     private Utils utils;
