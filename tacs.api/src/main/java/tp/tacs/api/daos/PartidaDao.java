@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import tp.tacs.api.dominio.partida.Estado;
 import tp.tacs.api.dominio.partida.Partida;
+import tp.tacs.api.dominio.partida.PartidaSinInfo;
 import tp.tacs.api.mappers.EstadoDeJuegoMapper;
+import tp.tacs.api.mappers.PartidaSinInfoPartidaMapper;
 import tp.tacs.api.model.EstadisticasDeJuegoModel;
 import tp.tacs.api.model.EstadoDeJuegoModel;
 
@@ -19,6 +21,8 @@ public class PartidaDao implements Dao<Partida> {
 
     @Autowired
     private EstadoDeJuegoMapper estadoDeJuegoMapper;
+    @Autowired
+    private PartidaSinInfoPartidaMapper partidaSinInfoPartidaMapper;
 
     private List<Partida> partidas;
     private Long partidaId;
@@ -41,6 +45,10 @@ public class PartidaDao implements Dao<Partida> {
     @Override
     public List<Partida> getAll() {
         return partidas;
+    }
+
+    public List<PartidaSinInfo> getAllSinInfo() {
+        return partidas.stream().map(partida -> partidaSinInfoPartidaMapper.unwrap(partida)).collect(Collectors.toList());
     }
 
     @Override
@@ -84,19 +92,27 @@ public class PartidaDao implements Dao<Partida> {
                 .collect(Collectors.toList());
     }
 
-    public List<Partida> getPartidasFiltradas(Date fechaInicio, Date fechaFin, EstadoDeJuegoModel estado) {
+    private List<PartidaSinInfo> partidasSinInfoEntre(Date fechaInicio, Date fechaFin) {
+        return partidas
+                .stream()
+                .filter(partida -> partida.getFechaCreacion().after(fechaInicio) && partida.getFechaCreacion().before(fechaFin))
+                .map(partida -> partidaSinInfoPartidaMapper.unwrap(partida))
+                .collect(Collectors.toList());
+    }
+
+    public List<PartidaSinInfo> getPartidasFiltradas(Date fechaInicio, Date fechaFin, EstadoDeJuegoModel estado) {
         if (fechaInicio != null || fechaFin != null) { //TODO
             if (estado != null) {
                 var estadoDeJuego = estadoDeJuegoMapper.toEntity(estado);
-                return partidasEntre(fechaInicio, fechaFin)
+                return partidasSinInfoEntre(fechaInicio, fechaFin)
                         .stream()
                         .filter(partida -> partida.getEstado().equals(estadoDeJuego))
                         .collect(Collectors.toList());
             } else {
-                return partidasEntre(fechaInicio, fechaFin);
+                return partidasSinInfoEntre(fechaInicio, fechaFin);
             }
         } else {
-            return this.getAll();
+            return this.getAllSinInfo();
         }
     }
 }
