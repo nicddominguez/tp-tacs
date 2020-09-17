@@ -37,6 +37,6 @@ public class Usuario {
     }
 
     public boolean mismoNombre(String nombre) {
-        return this.nombre == nombre;
+        return this.nombre.equals(nombre);
     }
 }

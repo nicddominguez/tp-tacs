@@ -68,11 +68,6 @@ public class PartidaDao implements Dao<Partida> {
                 .collect(Collectors.toList());
     }
 
-    public void update(Partida partida) {
-        delete(partida);
-        save(partida);
-    }
-
     public EstadisticasDeJuegoModel estadisticas(Date fechaInicio, Date fechaFin) {
         List<Partida> partidas = partidasEntre(fechaInicio, fechaFin);
         Long partidasCreadas = (long) partidas.size();
@@ -101,7 +96,7 @@ public class PartidaDao implements Dao<Partida> {
     }
 
     public List<PartidaSinInfo> getPartidasFiltradas(Date fechaInicio, Date fechaFin, EstadoDeJuegoModel estado) {
-        if (fechaInicio != null || fechaFin != null) { //TODO
+        if (fechaInicio != null && fechaFin != null) { //TODO
             if (estado != null) {
                 var estadoDeJuego = estadoDeJuegoMapper.toEntity(estado);
                 return partidasSinInfoEntre(fechaInicio, fechaFin)

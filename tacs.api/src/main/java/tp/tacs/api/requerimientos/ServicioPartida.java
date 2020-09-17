@@ -56,15 +56,12 @@ public class ServicioPartida {
         Usuario ganador = usuarioConMasMunicipios(request);
         ganador.aumentarPartidasGanadas();
         ganador.aumentarRachaActual();
-        usuarioDao.save(ganador);
         request.getJugadoresIds().forEach(jugadorId -> {
             Usuario usuario = usuarioDao.get(jugadorId);
             usuario.aumentarPartidasJugadas();
             if (!usuario.getId().equals(ganador.getId()))
                 usuario.reiniciarRacha();
-            usuarioDao.save(usuario);
         });
-        partidaDao.save(request);
     }
 
     public Usuario usuarioConMasMunicipios(Partida partida) {
@@ -91,9 +88,7 @@ public class ServicioPartida {
                 municipios.stream()
                         .filter(Municipio::estaBacante)
                         .findAny()
-                        .ifPresent(municipio -> {
-                            municipio.setDuenio(jugador);
-                        });
+                        .ifPresent(municipio -> municipio.setDuenio(jugador));
             }
         });
 
@@ -113,7 +108,7 @@ public class ServicioPartida {
     }
 
     public Boolean hayGanador(Partida request) {
-        List<Municipio> municipios = municipioDao.getByIds(request.getJugadoresIds());
+        List<Municipio> municipios = municipioDao.getByIds(request.getMunicipios());
         return request.getJugadoresIds().stream().anyMatch(juagadorId -> esDuenioDeTodo(juagadorId, municipios));
     }
 
@@ -125,8 +120,7 @@ public class ServicioPartida {
         List<Municipio> municipios = municipioDao.getByIds(partida.getMunicipios());
         municipios.forEach(municipio -> {
             municipio.desbloquear();
-            Municipio municipioProducido = servicioMunicipio.producir(partida, municipio);
-            municipioDao.save(municipioProducido);
+            servicioMunicipio.producir(municipio);
         });
     }
 
@@ -210,8 +204,8 @@ public class ServicioPartida {
             Municipio municipio1 = municipioDao.get(municipio);
             return municipio1.getAltura();
         });
-        DoubleStream doubleStreamMax = alturas.get().mapToDouble(value -> value.doubleValue());
-        DoubleStream doubleStreamMin = alturas.get().mapToDouble(value -> value.doubleValue());
+        DoubleStream doubleStreamMax = alturas.get().mapToDouble(Float::doubleValue);
+        DoubleStream doubleStreamMin = alturas.get().mapToDouble(Float::doubleValue);
         partida.setMaxAltura((float) doubleStreamMax.max().getAsDouble());
         partida.setMinAltura((float) doubleStreamMin.min().getAsDouble());
     }
@@ -233,8 +227,6 @@ public class ServicioPartida {
     public MoverGauchosResponse moverGauchos(Municipio municipioOrigen, Municipio municipioDestino, Integer cantidad) {
         municipioOrigen.sacarGauchos(cantidad);
         municipioDestino.agregarGauchos(cantidad);
-        municipioDao.save(municipioDestino);
-        municipioDao.save(municipioOrigen);
         MunicipioEnJuegoModel municipioOrigenModel = municipioEnJuegoMapper.wrap(municipioOrigen);
         MunicipioEnJuegoModel municipioDestinoModel = municipioEnJuegoMapper.wrap(municipioDestino);
         return new MoverGauchosResponse()
@@ -242,7 +234,7 @@ public class ServicioPartida {
                 .municipioDestino(municipioDestinoModel);
     }
 
-    public Partida inicializar(CrearPartidaBody request) {
+    public void inicializar(CrearPartidaBody request) {
         Partida partida = Partida.builder()
                 .estado(Estado.EN_CURSO)
                 .jugadoresIds(request.getIdJugadores())
@@ -265,7 +257,6 @@ public class ServicioPartida {
 
         this.repartirMunicipios(partida, municipiosDeLaPartida);
         partidaDao.save(partida);
-        return partida;
     }
 
     public void atacar(Partida partida, Municipio municipioAtacante, Municipio municipioAtacado) {
@@ -286,7 +277,6 @@ public class ServicioPartida {
 
     public void actualizarEstadoPartida(Partida partida, Estado estado) {
         partida.setEstado(estado);
-        partidaDao.update(partida);
     }
 
 }

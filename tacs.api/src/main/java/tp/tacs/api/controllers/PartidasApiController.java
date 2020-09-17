@@ -87,16 +87,21 @@ public class PartidasApiController implements PartidasApi {
 
     @Override
     public ResponseEntity<AtacarMunicipioResponse> atacarMunicipio(Long idPartida, @Valid AtacarMunicipioBody body) {
-        var partida = partidaDao.get(idPartida);
-        var municipioAtacante = municipioDao.get(body.getIdMunicipioAtacante());
-        var municipioAtacado = municipioDao.get(body.getIdMunicipioObjetivo());
+        try {
+            var partida = partidaDao.get(idPartida);
 
-        servicioPartida.atacar(partida, municipioAtacante, municipioAtacado);
+            var municipioAtacante = municipioDao.get(body.getIdMunicipioAtacante());
+            var municipioAtacado = municipioDao.get(body.getIdMunicipioObjetivo());
 
-        var response = new AtacarMunicipioResponse()
-                .municipioAtacado(municipioEnJuegoMapper.wrap(municipioAtacado))
-                .municipioAtacante(municipioEnJuegoMapper.wrap(municipioAtacante));
-        return ResponseEntity.ok(response);
+            servicioPartida.atacar(partida, municipioAtacante, municipioAtacado);
+
+            var response = new AtacarMunicipioResponse()
+                    .municipioAtacado(municipioEnJuegoMapper.wrap(municipioAtacado))
+                    .municipioAtacante(municipioEnJuegoMapper.wrap(municipioAtacante));
+            return ResponseEntity.ok(response);
+        } catch (IndexOutOfBoundsException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @Override
@@ -123,6 +128,7 @@ public class PartidasApiController implements PartidasApi {
                                                                  @Valid Long tamanioPagina,
                                                                  @Valid Long pagina) {
 
+        System.out.println(fechaFin);
         var partidas = this.partidaDao.getPartidasFiltradas(fechaInicio, fechaFin, estado);
         var partidaModels = partidaSinInfoMapper.partidasParaListar(partidas);
         var listaPaginada = utils.obtenerListaPaginada(pagina, tamanioPagina, partidaModels);
@@ -132,7 +138,12 @@ public class PartidasApiController implements PartidasApi {
 
     @Override
     public ResponseEntity<PartidaModel> getPartida(Long idPartida) {
-        Partida partida = servicioPartida.obtenerPartidaPorId(idPartida);
+        Partida partida;
+        try {
+            partida = servicioPartida.obtenerPartidaPorId(idPartida);
+        } catch (IndexOutOfBoundsException e) {
+            return ResponseEntity.notFound().build();
+        }
         return ResponseEntity.ok(partidaMapper.wrap(partida));
     }
 
