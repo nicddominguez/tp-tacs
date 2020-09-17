@@ -3,6 +3,7 @@ package tp.tacs.api.dominio.municipio;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import tp.tacs.api.dominio.partida.Partida;
 import tp.tacs.api.dominio.usuario.Usuario;
 
 @Builder
@@ -50,4 +51,18 @@ public class Municipio {
     public boolean esDe(Long userId) {
         return duenio.getId().equals(userId);
     }
+
+    public String coordenadasParaTopo(){
+        return String.format("%s,%s",this.getLongitud().toString(),this.getLongitud().toString());
+    }
+
+    public void actualizarNivelProduccion(Partida partida) {
+        var minAltura = partida.getMinAltura();
+        var maxAltura = partida.getMaxAltura();
+        float multiplicador = 1 - (this.getAltura() - minAltura)
+                / (2 * (maxAltura - minAltura));
+        int cantGauchos = this.getEspecializacion().nivelDeProduccion(multiplicador);
+        this.setNivelDeProduccion(cantGauchos);
+    }
+
 }

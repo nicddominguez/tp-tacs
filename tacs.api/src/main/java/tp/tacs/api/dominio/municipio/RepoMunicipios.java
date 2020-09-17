@@ -10,8 +10,6 @@ public interface RepoMunicipios {
 
     String getPathImagen(String idMunicipio);
 
-    String getCoordenadas(String idMunicipio);
-
     List<ProvinciaModel> getProvincias();
 }
 

@@ -34,22 +34,17 @@ public class ExternalApis implements RepoMunicipios {
 
     @Override
     public List<Municipio> getMunicipios(String idProvincia, Integer cantidad) {
-        try {
-            sleep(200);
-            String url = geoRefMunicipioBaseUrlBasico + "&provincia=" + idProvincia + "&max=" + cantidad;
-            var municipiosApi = connector.get(url, MunicipiosApi.class);
-            var municipiosBase = geoRefWrapper.wrapList(municipiosApi.getMunicipios());
-            municipiosBase.forEach(municipio -> municipio.setAltura(this.getAltura(municipio.getId().toString()))); //TODO cambiar el ForEach para pedirle todo de una
-            return municipiosBase;
-        } catch (Exception e) {
-            throw new HttpErrorException();
-        }
+        String url = geoRefMunicipioBaseUrlEstandar + "&provincia=" + idProvincia + "&max=" + cantidad;
+        var municipiosApi = connector.get(url, MunicipiosApi.class);
+        var municipiosBase = geoRefWrapper.wrapList(municipiosApi.getMunicipios());
+        municipiosBase.forEach(municipio -> municipio.setAltura(100f)); //TODO cambiar el ForEach para pedirle todo de una
+        return municipiosBase;
     }
 
-    private Float getAltura(String idMunicipio) {
+    private Float getAltura(Municipio municipio) {
         try {
-            sleep(200);
-            String coordenadas = getCoordenadas(idMunicipio);
+            sleep(1000);
+            String coordenadas = municipio.coordenadasParaTopo();
             String url = String.format("%s%s", topoBaseUrl, coordenadas);
             return connector.get(url, TopoResult.class).getResults().get(0).getElevation().floatValue();
         } catch (Exception e) {
@@ -60,17 +55,6 @@ public class ExternalApis implements RepoMunicipios {
     @Override
     public String getPathImagen(String idMunicipio) {
         return null;
-    }
-
-    @Override
-    public String getCoordenadas(String idMunicipio) {
-        try {
-            sleep(200);
-            String url = String.format("%s&campos=centroide.lat,centroide.lon&id=%s", geoRefMunicipioBaseUrlEstandar, idMunicipio);
-            return connector.get(url, MunicipiosApi.class).getMunicipios().get(0).coordenadasParaTopo();
-        } catch (Exception e) {
-            throw new HttpErrorException(e.getMessage());
-        }
     }
 
     @Override
