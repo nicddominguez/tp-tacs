@@ -1,10 +1,8 @@
 package tp.tacs.api.dominio.municipio;
 
-import tp.tacs.api.dominio.partida.Partida;
+public interface Especializacion { //TODO hacer que el multDefensa dependa del modo de juego, como estaba antes.
 
-public interface Especializacion {
-
-    Float multDefensa(Partida partida);
+    Float multDefensa();
 
     Integer nivelDeProduccion(float multiplicador);
 

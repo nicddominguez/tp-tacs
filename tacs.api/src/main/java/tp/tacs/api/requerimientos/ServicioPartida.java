@@ -152,7 +152,7 @@ public class ServicioPartida {
 
     public Integer gauchosDefensoresFinales(Partida partida, Municipio municipioAtacante, Municipio municipioAtacado) {
         Float multAltura = this.multAltura(partida, municipioAtacado);
-        Float multDefensa = municipioAtacado.getEspecializacion().multDefensa(partida);
+        Float multDefensa = municipioAtacado.getEspecializacion().multDefensa();
         Float multDist = this.multDistancia(partida, municipioAtacante, municipioAtacado);
         Integer cantGauchosAtacado = municipioAtacado.getCantGauchos();
         Integer cantGauchosAtacante = municipioAtacante.getCantGauchos();
@@ -163,7 +163,7 @@ public class ServicioPartida {
     public Integer gauchosAtacantesFinales(Partida partida, Municipio municipioAtacante, Municipio municipioAtacado) {
         var multDist = this.multDistancia(partida, municipioAtacante, municipioAtacado);
         var multAltura = this.calcularMultAlturaMunicipio(partida, municipioAtacante);
-        var multDefensa = municipioAtacado.getEspecializacion().multDefensa(partida);
+        var multDefensa = municipioAtacado.getEspecializacion().multDefensa();
         return (int) Math
                 .floor(municipioAtacante.getCantGauchos() * multDist - municipioAtacado.getCantGauchos() * multAltura * multDefensa);
     }
