@@ -14,8 +14,8 @@ import tp.tacs.api.mappers.ModoDeMunicipioMapper;
 import tp.tacs.api.mappers.MunicipioEnJuegoMapper;
 import tp.tacs.api.mappers.PartidaMapper;
 import tp.tacs.api.model.*;
+import tp.tacs.api.requerimientos.ServicioMunicipio;
 import tp.tacs.api.requerimientos.ServicioPartida;
-import tp.tacs.api.requerimientos.models.*;
 import tp.tacs.api.utils.Utils;
 
 import javax.annotation.PostConstruct;
@@ -27,6 +27,8 @@ public class PartidasApiController implements PartidasApi {
 
     @Autowired
     private ServicioPartida servicioPartida;
+    @Autowired
+    private ServicioMunicipio servicioMunicipio;
 
     @Autowired
     private Utils utils;
@@ -52,47 +54,13 @@ public class PartidasApiController implements PartidasApi {
     @Autowired
     private UsuarioDao usuarioDao;
 
-    private Usuario usuarioA = Usuario.builder().nombre("Juan").id(1L).mail("juan@gmail.com").build();
-    private Usuario usuarioD = Usuario.builder().nombre("Nico").id(2L).mail("as@gmailc.om").build();
+    private final Usuario usuarioA = Usuario.builder().nombre("Juan").id(1L).mail("juan@gmail.com").build();
+    private final Usuario usuarioD = Usuario.builder().nombre("Nico").id(2L).mail("as@gmailc.om").build();
+
     @PostConstruct
-    public void postConstruct(){
+    public void postConstruct() {
         usuarioDao.save(usuarioA);
         usuarioDao.save(usuarioD);
-    }
-
-    @Override
-    public ResponseEntity<Void> actualizarEstadoPartida(Long idPartida, @Valid PartidaModel body) {
-        var request = ReqActualizarEstadoPartidaRequest
-                .builder()
-                .estado(estadoDeJuegoMapper.toEntity(body.getEstado()))
-                .idPartida(idPartida)
-                .build();
-        servicioPartida.actualizarEstadoPartida(request);
-        return ResponseEntity.ok().build();
-    }
-
-    @Override
-    public ResponseEntity<Void> actualizarMunicipio(Long idPartida, Long idMunicipio, @Valid ActualizarMunicipio body) {
-        var municipioAActualizar = municipioDao.get(idMunicipio);
-        var nuevaEspecializacion = modoDeMunicipioMapper.toEntity(body.getModo());
-        municipioAActualizar.setEspecializacion(nuevaEspecializacion);
-        //municipioAActualizar.estaBloqueado(body.isEstaBloqueado());
-        return ResponseEntity.ok().build();
-    }
-
-    @Override
-    public ResponseEntity<AtacarMunicipioResponse> atacarMunicipio(Long idPartida, @Valid AtacarMunicipioBody body) {
-        ReqAtacarModel reqAtacarModel = ReqAtacarModel.builder()
-                .idPartida(idPartida)
-                .idMunicipioAtacante(body.getIdMunicipioAtacante())
-                .idMunicipioDefensor(body.getIdMunicipioObjetivo())
-                .build();
-        AtaqueMunicipiosResponse ataqueMunicipiosResponse = servicioPartida.atacar(reqAtacarModel);
-
-        var response = new AtacarMunicipioResponse()
-                .municipioAtacado(municipioEnJuegoMapper.wrap(ataqueMunicipiosResponse.getMunicipioDefensor()))
-                .municipioAtacante(municipioEnJuegoMapper.wrap(ataqueMunicipiosResponse.getMunicipioAtacante()));
-        return ResponseEntity.ok(response);
     }
 
     @Override
@@ -102,18 +70,59 @@ public class PartidasApiController implements PartidasApi {
     }
 
     @Override
-    public ResponseEntity<PartidaModel> getPartida(Long idPartida) {
-        Partida partida = servicioPartida.obtenerPartidaPorId(idPartida);
-        return ResponseEntity.ok(partidaMapper.wrap(partida));
+    public ResponseEntity<Void> actualizarEstadoPartida(Long idPartida, @Valid PartidaModel body) {
+        var partida = partidaDao.get(idPartida);
+        var estado = estadoDeJuegoMapper.toEntity(body.getEstado());
+        servicioPartida.actualizarEstadoPartida(partida, estado);
+        return ResponseEntity.ok().build();
+    }
+
+    @Override
+    public ResponseEntity<Void> actualizarMunicipio(Long idPartida, Long idMunicipio, @Valid ActualizarMunicipio body) {
+        var municipioAActualizar = municipioDao.get(idMunicipio);
+        var nuevaEspecializacion = modoDeMunicipioMapper.toEntity(body.getModo());
+        this.servicioMunicipio.actualizarMunicipio(municipioAActualizar, nuevaEspecializacion);
+        //municipioAActualizar.estaBloqueado(body.isEstaBloqueado());
+        return ResponseEntity.ok().build();
+    }
+
+    @Override
+    public ResponseEntity<AtacarMunicipioResponse> atacarMunicipio(Long idPartida, @Valid AtacarMunicipioBody body) {
+        var partida = partidaDao.get(idPartida);
+        var municipioAtacante = municipioDao.get(body.getIdMunicipioAtacante());
+        var municipioAtacado = municipioDao.get(body.getIdMunicipioObjetivo());
+
+        servicioPartida.atacar(partida, municipioAtacado, municipioAtacado);
+
+        var response = new AtacarMunicipioResponse()
+                .municipioAtacado(municipioEnJuegoMapper.wrap(municipioAtacado))
+                .municipioAtacante(municipioEnJuegoMapper.wrap(municipioAtacante));
+        return ResponseEntity.ok(response);
+    }
+
+    @Override
+    public ResponseEntity<MoverGauchosResponse> moverGauchos(Long idPartida, @Valid MoverGauchosBody body) {
+        var municipioOrigen = municipioDao.get(body.getIdMunicipioOrigen());
+        var municipioDestino = municipioDao.get(body.getIdMunicipioDestino());
+        var cantidad = Math.toIntExact(body.getCantidad());
+        return ResponseEntity.ok(servicioPartida.moverGauchos(municipioOrigen, municipioDestino, cantidad));
+    }
+
+    @Override
+    public ResponseEntity<SimularAtacarMunicipioResponse> simularAtacarMunicipio(Long idPartida, @Valid SimularAtacarMunicipioBody body) {
+        var partida = partidaDao.get(idPartida);
+        var municipioAtacante = municipioDao.get(body.getIdMunicipioAtacante());
+        var municipioAtacado = municipioDao.get(body.getIdMunicipioObjetivo());
+        return ResponseEntity.ok(servicioPartida.simularAtacarMunicipio(partida, municipioAtacante, municipioAtacado));
     }
 
     @Override
     public ResponseEntity<ListarPartidasResponse> listarPartidas(@Valid Date fechaInicio,
-            @Valid Date fechaFin,
-            @Valid EstadoDeJuegoModel estado,
-            @Valid String ordenarPor,
-            @Valid Long tamanioPagina,
-            @Valid Long pagina) {
+                                                                 @Valid Date fechaFin,
+                                                                 @Valid EstadoDeJuegoModel estado,
+                                                                 @Valid String ordenarPor,
+                                                                 @Valid Long tamanioPagina,
+                                                                 @Valid Long pagina) {
 
         var partidas = this.partidaDao.getPartidasFiltradas(fechaInicio, fechaFin, estado);
         var partidaModels = partidaMapper.partidasParaListar(partidas);
@@ -123,20 +132,9 @@ public class PartidasApiController implements PartidasApi {
     }
 
     @Override
-    public ResponseEntity<MoverGauchosResponse> moverGauchos(Long idPartida, @Valid MoverGauchosBody body) {
-        ReqMoverGauchosModel request = ReqMoverGauchosModel.builder()
-                .cantidad(body.getCantidad())
-                .idMunicipioDestino(body.getIdMunicipioDestino())
-                .idMunicipioOrigen(body.getIdMunicipioOrigen()).idPartida(idPartida).build();
-        return ResponseEntity.ok(servicioPartida.moverGauchos(request));
-    }
-
-    @Override
-    public ResponseEntity<SimularAtacarMunicipioResponse> simularAtacarMunicipio(Long idPartida, @Valid SimularAtacarMunicipioBody body) {
-        ReqSimularAtacarMunicipioRequest request = ReqSimularAtacarMunicipioRequest.builder().idMunicipioAtacante(body.getIdMunicipioAtacante())
-                .idMunicipioObjectivo(
-                        body.getIdMunicipioObjetivo()).idPartida(idPartida).build();
-        return ResponseEntity.ok(servicioPartida.simularAtacarMunicipio(request));
+    public ResponseEntity<PartidaModel> getPartida(Long idPartida) {
+        Partida partida = servicioPartida.obtenerPartidaPorId(idPartida);
+        return ResponseEntity.ok(partidaMapper.wrap(partida));
     }
 
 }

@@ -20,7 +20,7 @@ public class MunicipioEnJuegoMapper extends AbstractMapper<Municipio, MunicipioE
     @Override
     protected MunicipioEnJuegoModel wrapModel(Municipio model) {
         return new MunicipioEnJuegoModel()
-                .altura(Long.valueOf(externalApis.getAltura(model.getExternalApiId()).toString()))
+                .altura((long) Double.parseDouble(externalApis.getAltura(model.getExternalApiId()).toString()))
                 .duenio(usuarioMapper.wrap(model.getDuenio()))
                 .estaBloqueado(model.estaBloqueado())
                 .gauchos(model.getCantGauchos().longValue())

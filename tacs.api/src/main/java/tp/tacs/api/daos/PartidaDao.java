@@ -21,10 +21,12 @@ public class PartidaDao implements Dao<Partida> {
     private EstadoDeJuegoMapper estadoDeJuegoMapper;
 
     private List<Partida> partidas;
+    private Long partidaId;
 
     @PostConstruct
     public void postConstruct() {
         partidas = new ArrayList<>();
+        partidaId = 0L;
     }
 
     public void limpiar() {
@@ -43,7 +45,13 @@ public class PartidaDao implements Dao<Partida> {
 
     @Override
     public void save(Partida element) {
+        asignarId(element);
         partidas.add(element);
+    }
+
+    private synchronized void asignarId(Partida municipio) {
+        municipio.setId(partidaId);
+        partidaId++;
     }
 
     @Override
@@ -52,7 +60,7 @@ public class PartidaDao implements Dao<Partida> {
                 .collect(Collectors.toList());
     }
 
-    public void update(Partida partida){
+    public void update(Partida partida) {
         delete(partida);
         save(partida);
     }

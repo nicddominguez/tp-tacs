@@ -18,7 +18,6 @@ import tp.tacs.api.model.CrearPartidaBody;
 import tp.tacs.api.model.MoverGauchosResponse;
 import tp.tacs.api.model.MunicipioEnJuegoModel;
 import tp.tacs.api.model.SimularAtacarMunicipioResponse;
-import tp.tacs.api.requerimientos.models.ReqProducirModel;
 
 import java.awt.geom.Point2D;
 import java.util.*;
@@ -42,11 +41,11 @@ public class ServicioPartida {
     @Autowired
     private MunicipioEnJuegoMapper municipioEnJuegoMapper;
 
-    public void validarAccion(tp.tacs.api.requerimientos.models.ReqValidarAccionModel request) {
-        if (!request.getPartida().getEstado().equals(Estado.EN_CURSO)) {
-            throw new PartidaException("La partida no está en curso. No se pudo " + request.getAccion());
+    public void validarAccion(String accion, Partida partida, Usuario duenio) {
+        if (!partida.getEstado().equals(Estado.EN_CURSO)) {
+            throw new PartidaException("La partida no está en curso. No se pudo " + accion);
         }
-        if (request.getPartida().idUsuarioEnTurnoActual() != request.getDuenio().getId()) {
+        if (!partida.idUsuarioEnTurnoActual().equals(duenio.getId())) {
             throw new PartidaException("No es el turno del dueño del municipio.");
         }
     }
@@ -80,13 +79,14 @@ public class ServicioPartida {
                 .getKey();
     }
 
-    public Partida repartirMunicipios(tp.tacs.api.requerimientos.models.ReqRepartirMunicipiosModel request) {
-        var cantidad = Math.floor(request.getCantidadMunicipios() / request.getPartida().getJugadoresIds().size());
-        List<Municipio> municipios = externalApis.getMunicipios(request.getPartida().getIdProvincia(), request.getCantidadMunicipios().intValue());
+    public Partida repartirMunicipios(Partida partida, Integer cantidadMunicipiosPartida) { //TODO ver si es necesario pasarle la cant de mun por parámetros o si se puede sacar de partida
+        var idsJugadores = partida.getJugadoresIds();
+        var cantidadMunicipiosPorJugador = (int) Math.floor((double) cantidadMunicipiosPartida / idsJugadores.size());
+        List<Municipio> municipios = externalApis.getMunicipios(partida.getIdProvincia(), cantidadMunicipiosPartida);
 
-        request.getPartida().getJugadoresIds().forEach(id -> {
+        idsJugadores.forEach(id -> {
             Usuario jugador = usuarioDao.get(id);
-            for (int i = 0; i < cantidad; i++) {
+            for (int i = 0; i < cantidadMunicipiosPorJugador; i++) {
                 municipios.stream()
                         .filter(Municipio::estaBacante)
                         .findAny()
@@ -96,8 +96,8 @@ public class ServicioPartida {
                         });
             }
         });
-        request.getPartida().setMunicipios(municipios.stream().map(Municipio::getId).collect(Collectors.toList()));
-        return request.getPartida();
+        partida.setMunicipios(municipios.stream().map(Municipio::getId).collect(Collectors.toList()));
+        return partida;
     }
 
     public void pasarTurno(Partida request) {
@@ -122,66 +122,60 @@ public class ServicioPartida {
         return municipios.stream().allMatch(municipio -> municipio.esDe(userId));
     }
 
-    public void desbloquearYProducirMunicipios(Partida request) {
-        List<Municipio> municipios = municipioDao.getByIds(request.getMunicipios());
+    public void desbloquearYProducirMunicipios(Partida partida) {
+        List<Municipio> municipios = municipioDao.getByIds(partida.getMunicipios());
         municipios.forEach(municipio -> {
             municipio.desbloquear();
-            Municipio municipioProducido = servicioMunicipio.producir(ReqProducirModel.builder().municipio(municipio).partida(request).build());
+            Municipio municipioProducido = servicioMunicipio.producir(partida, municipio);
             municipioDao.save(municipioProducido);
         });
     }
 
-    public Float distanciaEntre(tp.tacs.api.requerimientos.models.DosMunicipiosModel request) {
-        ArrayList<Double> coordenadas1 = externalApis.getCoordenadasArray(request.getMunicipioAtacante().getExternalApiId());
-        ArrayList<Double> coordenadas2 = externalApis.getCoordenadasArray(request.getMunicipioDefensor().getExternalApiId());
+    public Float distanciaEntre(Municipio unMunicipio, Municipio otroMunicipio) {
+        ArrayList<Double> coordenadas1 = externalApis.getCoordenadasArray(unMunicipio.getExternalApiId());
+        ArrayList<Double> coordenadas2 = externalApis.getCoordenadasArray(otroMunicipio.getExternalApiId());
         return (float) Point2D.distance(coordenadas1.get(0), coordenadas1.get(1), coordenadas2.get(0), coordenadas2.get(1));
     }
 
-    public Float multDistancia(tp.tacs.api.requerimientos.models.PartidaConMunicipios request) {
-        Float distancia = this.distanciaEntre(
-                tp.tacs.api.requerimientos.models.DosMunicipiosModel.builder()
-                        .municipioDefensor(request.getMunicipioDefensor())
-                        .municipioAtacante(request.getMunicipioAtacante())
-                        .build());
-        Float maxDist = request.getPartida().getMaxDist();
-        Float minDist = request.getPartida().getMinDist();
+    public Float multDistancia(Partida partida, Municipio municipioAtacante, Municipio municipioAtacado) {
+        Float distancia = this.distanciaEntre(municipioAtacante, municipioAtacado);
+        Float maxDist = partida.getMaxDist();
+        Float minDist = partida.getMinDist();
         return 1 - (distancia - minDist) / (2 * (maxDist - minDist));
     }
 
-    public Float multAltura(tp.tacs.api.requerimientos.models.PartidaConMunicipio request) {
-        Float altura = externalApis.getAltura(request.getMunicipio().getExternalApiId());
-        Float minAltura = request.getPartida().getMinAltura();
-        Float maxAltura = request.getPartida().getMaxAltura();
+    public Float multAltura(Partida partida, Municipio municipio) {
+        Float altura = externalApis.getAltura(municipio.getExternalApiId());
+        Float minAltura = partida.getMinAltura();
+        Float maxAltura = partida.getMaxAltura();
         return 1 + (altura - minAltura) / (2 * (maxAltura - minAltura));
     }
 
-    public Integer gauchosDefensoresFinales(tp.tacs.api.requerimientos.models.PartidaConMunicipios request) {
-        Float multAltura = this.multAltura(tp.tacs.api.requerimientos.models.PartidaConMunicipio.builder().partida(request.getPartida()).municipio(request.getMunicipioDefensor()).build());
-        Float multDefensa = request.getMunicipioDefensor().getEspecializacion().multDefensa(request.getPartida());
-        Float multDist = this.multDistancia(request);
-        Integer cantGauchosDefensor = request.getMunicipioDefensor().getCantGauchos();
-        Integer cantGauchosAtacante = request.getMunicipioAtacante().getCantGauchos();
-        return (int) Math.round(Math.ceil((cantGauchosDefensor * multAltura * multDefensa) - (cantGauchosAtacante * multDist))
+    public Integer gauchosDefensoresFinales(Partida partida, Municipio municipioAtacante, Municipio municipioAtacado) {
+        Float multAltura = this.multAltura(partida, municipioAtacado);
+        Float multDefensa = municipioAtacado.getEspecializacion().multDefensa(partida);
+        Float multDist = this.multDistancia(partida, municipioAtacante, municipioAtacado);
+        Integer cantGauchosAtacado = municipioAtacado.getCantGauchos();
+        Integer cantGauchosAtacante = municipioAtacante.getCantGauchos();
+        return (int) Math.round(Math.ceil((cantGauchosAtacado * multAltura * multDefensa) - (cantGauchosAtacante * multDist))
                 / (multAltura * multDefensa));
     }
 
-    public Integer gauchosAtacantesFinales(tp.tacs.api.requerimientos.models.PartidaConMunicipios request) {
-        var multDist = this.multDistancia(request);
-        var multAltura = this.calcularMultAlturaMunicipio
-                (tp.tacs.api.requerimientos.models.PartidaConMunicipio.builder().municipio(request.getMunicipioAtacante()).partida(request.getPartida()).build());
-        var multDefensa = request.getMunicipioDefensor().getEspecializacion().multDefensa(request.getPartida());
+    public Integer gauchosAtacantesFinales(Partida partida, Municipio municipioAtacante, Municipio municipioAtacado) {
+        var multDist = this.multDistancia(partida, municipioAtacante, municipioAtacado);
+        var multAltura = this.calcularMultAlturaMunicipio(partida, municipioAtacante);
+        var multDefensa = municipioAtacado.getEspecializacion().multDefensa(partida);
         return (int) Math
-                .floor(request.getMunicipioAtacante().getCantGauchos() * multDist - request.getMunicipioDefensor().getCantGauchos() * multAltura * multDefensa);
+                .floor(municipioAtacante.getCantGauchos() * multDist - municipioAtacado.getCantGauchos() * multAltura * multDefensa);
     }
 
-    public Float calcularMultAlturaMunicipio(tp.tacs.api.requerimientos.models.PartidaConMunicipio request) {
-        Float altura = externalApis.getAltura(request.getMunicipio().getExternalApiId());
-        Partida partida = request.getPartida();
+    public Float calcularMultAlturaMunicipio(Partida partida, Municipio municipio) {
+        Float altura = externalApis.getAltura(municipio.getExternalApiId());
         return 1 + (altura - partida.getMinAltura()) / (2 * (partida.getMaxAltura() - partida.getMinAltura()));
     }
 
-    public void distintoDuenio(tp.tacs.api.requerimientos.models.DosMunicipiosModel request) {
-        if (request.getMunicipioAtacante().getDuenio().getId().equals(request.getMunicipioDefensor().getId()))
+    public void distintoDuenio(Municipio unMunicipio, Municipio otroMunucipio) {
+        if (unMunicipio.getDuenio().getId().equals(otroMunucipio.getDuenio().getId()))
             throw new PartidaException("El duenio del municipio atacante no puede ser igual al del defensor");
     }
 
@@ -233,18 +227,13 @@ public class ServicioPartida {
         return request;
     }
 
-    public void actualizarMunicipioPerdedor(tp.tacs.api.requerimientos.models.PartidaConMunicipios request) {
-        request.getMunicipioDefensor().setCantGauchos(0);
-        request.getMunicipioDefensor().setDuenio(request.getMunicipioAtacante().getDuenio());
+    public void actualizarMunicipioPerdedor(Municipio municipioAtacante, Municipio municipioAtacado) {
+        municipioAtacado.setCantGauchos(0);
+        municipioAtacado.setDuenio(municipioAtacante.getDuenio());
     }
 
-    public SimularAtacarMunicipioResponse simularAtacarMunicipio(tp.tacs.api.requerimientos.models.ReqSimularAtacarMunicipioRequest request) {
-        var municipioAtacante = municipioDao.get(request.getIdMunicipioAtacante());
-        var municipioAtacado = municipioDao.get(request.getIdMunicipioObjectivo());
-        var partida = partidaDao.get(request.getIdPartida());
-        tp.tacs.api.requerimientos.models.PartidaConMunicipios preRequest = tp.tacs.api.requerimientos.models.PartidaConMunicipios.builder().municipioAtacante(municipioAtacante).municipioDefensor(municipioAtacado)
-                .partida(partida).build();
-        Integer gauchosFinales = this.gauchosDefensoresFinales(preRequest);
+    public SimularAtacarMunicipioResponse simularAtacarMunicipio(Partida partida, Municipio municipioAtacante, Municipio municipioAtacado) {
+        Integer gauchosFinales = this.gauchosDefensoresFinales(partida, municipioAtacante, municipioAtacado);
         return new SimularAtacarMunicipioResponse().exitoso(gauchosFinales <= 0);
     }
 
@@ -252,10 +241,7 @@ public class ServicioPartida {
         return partidaDao.get(request);
     }
 
-    public MoverGauchosResponse moverGauchos(tp.tacs.api.requerimientos.models.ReqMoverGauchosModel request) {
-        Municipio municipioOrigen = municipioDao.get(request.getIdMunicipioOrigen());
-        Municipio municipioDestino = municipioDao.get(request.getIdMunicipioDestino());
-        var cantidad = Math.toIntExact(request.getCantidad());
+    public MoverGauchosResponse moverGauchos(Municipio municipioOrigen, Municipio municipioDestino, Integer cantidad) {
         municipioOrigen.sacarGauchos(cantidad);
         municipioDestino.agregarGauchos(cantidad);
         municipioDao.save(municipioDestino);
@@ -275,48 +261,32 @@ public class ServicioPartida {
                 .modoDeJuego(new ModoRapido())
                 .fechaCreacion(new Date())
                 .build();
-        tp.tacs.api.requerimientos.models.ReqRepartirMunicipiosModel partidaConMunicipiosRequest = tp.tacs.api.requerimientos.models.ReqRepartirMunicipiosModel.builder()
-                .partida(partida)
-                .cantidadMunicipios(request.getCantidadMunicipios())
-                .build();
 
-        Partida partidaConMunicipios = this.repartirMunicipios(partidaConMunicipiosRequest);
+        Partida partidaConMunicipios = this.repartirMunicipios(partida, Math.toIntExact(request.getCantidadMunicipios()));
         Partida partidaConAlturas = this.calcularAlturas(partidaConMunicipios);
         Partida partidaConDistancias = this.calcularDistancias(partidaConAlturas);
         partidaDao.save(partidaConDistancias);
         return partidaConDistancias;
     }
 
-    public tp.tacs.api.requerimientos.models.AtaqueMunicipiosResponse atacar(tp.tacs.api.requerimientos.models.ReqAtacarModel request) {
-        Municipio municipioAtacante = municipioDao.get(request.getIdMunicipioAtacante());
-        Municipio municipioDefensor = municipioDao.get(request.getIdMunicipioDefensor());
-        Partida partida = partidaDao.get(request.getIdPartida());
-        tp.tacs.api.requerimientos.models.ReqValidarAccionModel validarRequest = tp.tacs.api.requerimientos.models.ReqValidarAccionModel.builder().accion("atacar").duenio(municipioAtacante.getDuenio()).partida(partida)
-                .build();
-        this.validarAccion(validarRequest);
-        tp.tacs.api.requerimientos.models.DosMunicipiosModel distintoDuenioRequest = tp.tacs.api.requerimientos.models.DosMunicipiosModel.builder().municipioAtacante(municipioAtacante)
-                .municipioDefensor(municipioDefensor).build();
-        this.distintoDuenio(distintoDuenioRequest);
+    public void atacar(Partida partida, Municipio municipioAtacante, Municipio municipioAtacado) {
 
-        tp.tacs.api.requerimientos.models.PartidaConMunicipios partidaConMunicipios = tp.tacs.api.requerimientos.models.PartidaConMunicipios.builder().municipioAtacante(municipioAtacante)
-                .municipioDefensor(municipioDefensor).partida(partida).build();
+        this.validarAccion("atacar", partida, municipioAtacante.getDuenio());
+        this.distintoDuenio(municipioAtacante, municipioAtacado);
 
-        Integer gauchosAtacantesFinal = this.gauchosAtacantesFinales(partidaConMunicipios);
+        Integer gauchosAtacantesFinal = this.gauchosAtacantesFinales(partida, municipioAtacante, municipioAtacado);
         municipioAtacante.setCantGauchos(gauchosAtacantesFinal);
-        Integer gauchosDefensoresFinal = this.gauchosDefensoresFinales(partidaConMunicipios);
-        municipioDefensor.setCantGauchos(gauchosDefensoresFinal);
+        Integer gauchosDefensoresFinal = this.gauchosDefensoresFinales(partida, municipioAtacante, municipioAtacado);
+        municipioAtacado.setCantGauchos(gauchosDefensoresFinal);
 
         if (gauchosDefensoresFinal <= 0) {
-            this.actualizarMunicipioPerdedor(partidaConMunicipios);
+            this.actualizarMunicipioPerdedor(municipioAtacante, municipioAtacado);
         }
-        this.pasarTurno(partidaConMunicipios.getPartida());
-        return tp.tacs.api.requerimientos.models.AtaqueMunicipiosResponse.builder().municipioAtacante(partidaConMunicipios.getMunicipioAtacante())
-                .municipioDefensor(partidaConMunicipios.getMunicipioDefensor()).build();
+        this.pasarTurno(partida);
     }
 
-    public void actualizarEstadoPartida(tp.tacs.api.requerimientos.models.ReqActualizarEstadoPartidaRequest request) {
-        Partida partida = partidaDao.get(request.getIdPartida());
-        partida.setEstado(request.getEstado());
+    public void actualizarEstadoPartida(Partida partida, Estado estado) {
+        partida.setEstado(estado);
         partidaDao.update(partida);
     }
 

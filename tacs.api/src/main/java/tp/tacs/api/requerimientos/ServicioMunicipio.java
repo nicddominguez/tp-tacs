@@ -2,24 +2,29 @@ package tp.tacs.api.requerimientos;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import tp.tacs.api.dominio.municipio.Especializacion;
 import tp.tacs.api.dominio.municipio.Municipio;
+import tp.tacs.api.dominio.partida.Partida;
 import tp.tacs.api.http.externalApis.ExternalApis;
-import tp.tacs.api.requerimientos.models.ReqProducirModel;
 
 @Controller
 public class ServicioMunicipio {
     @Autowired
     private ExternalApis externalApis;
 
-    public Municipio producir(ReqProducirModel request) {
-        var minAltura = request.getPartida().getMinAltura();
-        var maxAltura = request.getPartida().getMaxAltura();
-        float multiplicador = 1 - (externalApis.getAltura(request.getMunicipio().getExternalApiId()) - minAltura)
+    public Municipio producir(Partida partida, Municipio municipio) {
+        var minAltura = partida.getMinAltura();
+        var maxAltura = partida.getMaxAltura();
+        float multiplicador = 1 - (externalApis.getAltura(municipio.getExternalApiId()) - minAltura)
                 / (2 * (maxAltura - minAltura));
-        int cantGauchos = request.getMunicipio().getEspecializacion().nivelDeProduccion(multiplicador);
-        request.getMunicipio().setUltimaProduccion(cantGauchos);
-        request.getMunicipio().agregarGauchos(cantGauchos);
-        return request.getMunicipio();
+        int cantGauchos = municipio.getEspecializacion().nivelDeProduccion(multiplicador);
+        municipio.setUltimaProduccion(cantGauchos);
+        municipio.agregarGauchos(cantGauchos);
+        return municipio;
+    }
+
+    public void actualizarMunicipio(Municipio municipio, Especializacion especializacion){
+        municipio.setEspecializacion(especializacion);
     }
 
 }
