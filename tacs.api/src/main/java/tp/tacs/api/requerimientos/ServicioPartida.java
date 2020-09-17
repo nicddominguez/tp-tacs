@@ -246,6 +246,7 @@ public class ServicioPartida {
         Partida partida = Partida.builder()
                 .estado(Estado.EN_CURSO)
                 .jugadoresIds(request.getIdJugadores())
+                .nombreProvincia(externalApis.getNombreProvinicas(request.getIdProvincia()).getNombre())
                 .idProvincia(request.getIdProvincia().toString())
                 .modoDeJuego(new ModoRapido())
                 .fechaCreacion(new Date())

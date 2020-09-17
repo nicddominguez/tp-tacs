@@ -81,7 +81,7 @@ public class PartidasApiController implements PartidasApi {
         var municipioAActualizar = municipioDao.get(idMunicipio);
         var nuevaEspecializacion = modoDeMunicipioMapper.toEntity(body.getModo());
         this.servicioMunicipio.actualizarMunicipio(municipioAActualizar, nuevaEspecializacion);
-        //municipioAActualizar.estaBloqueado(body.isEstaBloqueado());
+        municipioAActualizar.setBloqueado(body.isEstaBloqueado());
         return ResponseEntity.ok().build();
     }
 

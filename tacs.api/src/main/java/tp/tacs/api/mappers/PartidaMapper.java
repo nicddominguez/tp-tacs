@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import tp.tacs.api.daos.UsuarioDao;
 import tp.tacs.api.dominio.partida.Partida;
+import tp.tacs.api.http.externalApis.models.Provincia;
 import tp.tacs.api.model.PartidaModel;
 
 import java.util.List;
@@ -21,6 +22,8 @@ public class PartidaMapper extends AbstractMapper<Partida, PartidaModel> {
     private DatosDeJuegoMapper datosDeJuegoMapper;
     @Autowired
     private UsuarioDao usuarioDao;
+    @Autowired
+    private ProvinciaMapper provinciaMapper;
 
     @Override
     protected PartidaModel wrapModel(Partida partida) {
@@ -34,13 +37,16 @@ public class PartidaMapper extends AbstractMapper<Partida, PartidaModel> {
 
     public PartidaModel partidaBasica(Partida partida) {
         var jugadores = usuarioMapper.wrapList(usuarioDao.getByIds(partida.getJugadoresIds()));
+        var provincia = new Provincia();
+        provincia.setId(partida.getIdProvincia());
+        provincia.setNombre(partida.getNombreProvincia());
         return new PartidaModel()
                 .jugadores(jugadores)
                 .estado(estadoDeJuegoMapper.toModel(partida.getEstado()))
                 .cantidadMunicipios((long) partida.getMunicipios().size())
                 .fecha(partida.getFechaCreacion())
                 .modoDeJuego(modoDeJuegoMapper.toModel(partida.getModoDeJuego()))
-//                .provincia(provinciaMapper.wrapModel(model.getProvincia())) //todo revisar modelo
+                .provincia(provinciaMapper.wrapModel(provincia)) //todo revisar modelo
                 .id(partida.getId());
     }
 
