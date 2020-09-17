@@ -91,7 +91,7 @@ public class PartidasApiController implements PartidasApi {
         var municipioAtacante = municipioDao.get(body.getIdMunicipioAtacante());
         var municipioAtacado = municipioDao.get(body.getIdMunicipioObjetivo());
 
-        servicioPartida.atacar(partida, municipioAtacado, municipioAtacado);
+        servicioPartida.atacar(partida, municipioAtacante, municipioAtacado);
 
         var response = new AtacarMunicipioResponse()
                 .municipioAtacado(municipioEnJuegoMapper.wrap(municipioAtacado))
