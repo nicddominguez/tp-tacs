@@ -6,6 +6,9 @@ import tp.tacs.api.dominio.municipio.Especializacion;
 import tp.tacs.api.dominio.municipio.Municipio;
 import tp.tacs.api.dominio.partida.Partida;
 import tp.tacs.api.http.externalApis.ExternalApis;
+import tp.tacs.api.model.ProvinciaModel;
+
+import java.util.List;
 
 @Controller
 public class ServicioMunicipio {
@@ -13,18 +16,25 @@ public class ServicioMunicipio {
     private ExternalApis externalApis;
 
     public Municipio producir(Partida partida, Municipio municipio) {
+        this.actualizarNivelProduccion(municipio, partida);
+        municipio.agregarGauchos(municipio.getNivelDeProduccion());
+        return municipio;
+    }
+
+    public void actualizarNivelProduccion(Municipio municipio, Partida partida) { //TODO el multiplicador podría calcualrse una sola vez al iniciar la partida
         var minAltura = partida.getMinAltura();
         var maxAltura = partida.getMaxAltura();
-        float multiplicador = 1 - (externalApis.getAltura(municipio.getExternalApiId()) - minAltura)
+        float multiplicador = 1 - (municipio.getAltura() - minAltura)
                 / (2 * (maxAltura - minAltura));
         int cantGauchos = municipio.getEspecializacion().nivelDeProduccion(multiplicador);
-        municipio.setUltimaProduccion(cantGauchos);
-        municipio.agregarGauchos(cantGauchos);
-        return municipio;
+        municipio.setNivelDeProduccion(cantGauchos);
     }
 
     public void actualizarMunicipio(Municipio municipio, Especializacion especializacion){
         municipio.setEspecializacion(especializacion);
     }
 
+    public List<ProvinciaModel> provincias() {
+        return this.externalApis.getProvincias();
+    }
 }
