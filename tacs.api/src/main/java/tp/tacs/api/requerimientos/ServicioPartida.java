@@ -18,7 +18,7 @@ import tp.tacs.api.model.CrearPartidaBody;
 import tp.tacs.api.model.MoverGauchosResponse;
 import tp.tacs.api.model.MunicipioEnJuegoModel;
 import tp.tacs.api.model.SimularAtacarMunicipioResponse;
-import tp.tacs.api.requerimientos.Models.ReqProducirModel;
+import tp.tacs.api.requerimientos.models.ReqProducirModel;
 
 import java.awt.geom.Point2D;
 import java.util.*;

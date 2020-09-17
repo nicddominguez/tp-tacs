@@ -7,16 +7,15 @@ import org.springframework.web.bind.annotation.RestController;
 import tp.tacs.api.daos.MunicipioDao;
 import tp.tacs.api.daos.PartidaDao;
 import tp.tacs.api.daos.UsuarioDao;
-import tp.tacs.api.requerimientos.models.AtaqueMunicipiosResponse;
 import tp.tacs.api.dominio.partida.Partida;
 import tp.tacs.api.dominio.usuario.Usuario;
-import tp.tacs.api.mappers.*;
+import tp.tacs.api.mappers.EstadoDeJuegoMapper;
+import tp.tacs.api.mappers.ModoDeMunicipioMapper;
+import tp.tacs.api.mappers.MunicipioEnJuegoMapper;
+import tp.tacs.api.mappers.PartidaMapper;
 import tp.tacs.api.model.*;
-import tp.tacs.api.requerimientos.controller.*;
-import tp.tacs.api.requerimientos.models.ReqActualizarEstadoPartidaRequest;
-import tp.tacs.api.requerimientos.models.ReqAtacarModel;
-import tp.tacs.api.requerimientos.models.ReqMoverGauchosModel;
-import tp.tacs.api.requerimientos.models.ReqSimularAtacarMunicipioRequest;
+import tp.tacs.api.requerimientos.ServicioPartida;
+import tp.tacs.api.requerimientos.models.*;
 import tp.tacs.api.utils.Utils;
 
 import javax.annotation.PostConstruct;
@@ -25,19 +24,10 @@ import java.util.Date;
 
 @RestController
 public class PartidasApiController implements PartidasApi {
-    /**
-     * Requerimientos
-     */
+
     @Autowired
-    private ReqAtacar reqAtacar;
-    @Autowired
-    private ReqInicializarPartida reqInicializarPartida;
-    @Autowired
-    private ReqActualizarEstadoPartida reqActualizarEstadoPartida;
-    @Autowired
-    private ReqObtenerPartidaPorId reqObtenerPartidaPorId;
-    @Autowired
-    private ReqSimularAtacarMunicipio reqSimularAtacarMunicipio;
+    private ServicioPartida servicioPartida;
+
     @Autowired
     private Utils utils;
 
@@ -52,8 +42,6 @@ public class PartidasApiController implements PartidasApi {
     private EstadoDeJuegoMapper estadoDeJuegoMapper;
     @Autowired
     private ModoDeMunicipioMapper modoDeMunicipioMapper;
-    @Autowired
-    private ReqMoverGauchos reqMoverGauchos;
     /**
      * Daos
      */
@@ -74,9 +62,12 @@ public class PartidasApiController implements PartidasApi {
 
     @Override
     public ResponseEntity<Void> actualizarEstadoPartida(Long idPartida, @Valid PartidaModel body) {
-        ReqActualizarEstadoPartidaRequest request = ReqActualizarEstadoPartidaRequest.builder().estado(estadoDeJuegoMapper.toEntity(body.getEstado()))
-                .idPartida(idPartida).build();
-        reqActualizarEstadoPartida.run(request);
+        var request = ReqActualizarEstadoPartidaRequest
+                .builder()
+                .estado(estadoDeJuegoMapper.toEntity(body.getEstado()))
+                .idPartida(idPartida)
+                .build();
+        servicioPartida.actualizarEstadoPartida(request);
         return ResponseEntity.ok().build();
     }
 
@@ -96,7 +87,7 @@ public class PartidasApiController implements PartidasApi {
                 .idMunicipioAtacante(body.getIdMunicipioAtacante())
                 .idMunicipioDefensor(body.getIdMunicipioObjetivo())
                 .build();
-        AtaqueMunicipiosResponse ataqueMunicipiosResponse = reqAtacar.run(reqAtacarModel);
+        AtaqueMunicipiosResponse ataqueMunicipiosResponse = servicioPartida.atacar(reqAtacarModel);
 
         var response = new AtacarMunicipioResponse()
                 .municipioAtacado(municipioEnJuegoMapper.wrap(ataqueMunicipiosResponse.getMunicipioDefensor()))
@@ -106,13 +97,13 @@ public class PartidasApiController implements PartidasApi {
 
     @Override
     public ResponseEntity<Void> crearPartida(@Valid CrearPartidaBody body) {
-        reqInicializarPartida.run(body);
+        servicioPartida.inicializar(body);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @Override
     public ResponseEntity<PartidaModel> getPartida(Long idPartida) {
-        Partida partida = reqObtenerPartidaPorId.run(idPartida);
+        Partida partida = servicioPartida.obtenerPartidaPorId(idPartida);
         return ResponseEntity.ok(partidaMapper.wrap(partida));
     }
 
@@ -133,10 +124,11 @@ public class PartidasApiController implements PartidasApi {
 
     @Override
     public ResponseEntity<MoverGauchosResponse> moverGauchos(Long idPartida, @Valid MoverGauchosBody body) {
-        ReqMoverGauchosModel request = ReqMoverGauchosModel.builder().cantidad(body.getCantidad())
+        ReqMoverGauchosModel request = ReqMoverGauchosModel.builder()
+                .cantidad(body.getCantidad())
                 .idMunicipioDestino(body.getIdMunicipioDestino())
                 .idMunicipioOrigen(body.getIdMunicipioOrigen()).idPartida(idPartida).build();
-        return ResponseEntity.ok(reqMoverGauchos.run(request));
+        return ResponseEntity.ok(servicioPartida.moverGauchos(request));
     }
 
     @Override
@@ -144,7 +136,7 @@ public class PartidasApiController implements PartidasApi {
         ReqSimularAtacarMunicipioRequest request = ReqSimularAtacarMunicipioRequest.builder().idMunicipioAtacante(body.getIdMunicipioAtacante())
                 .idMunicipioObjectivo(
                         body.getIdMunicipioObjetivo()).idPartida(idPartida).build();
-        return ResponseEntity.ok(reqSimularAtacarMunicipio.run(request));
+        return ResponseEntity.ok(servicioPartida.simularAtacarMunicipio(request));
     }
 
 }
