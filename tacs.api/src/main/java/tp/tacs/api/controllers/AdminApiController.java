@@ -12,6 +12,7 @@ import tp.tacs.api.utils.Utils;
 
 import javax.validation.Valid;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 @RestController
@@ -26,6 +27,11 @@ public class AdminApiController implements AdminApi {
 
     @Override
     public ResponseEntity<EstadisticasDeJuegoModel> getEstadisticas(@Valid Date fechaInicio, @Valid Date fechaFin) {
+
+        if (fechaInicio == null || fechaFin == null) {
+            fechaInicio = new GregorianCalendar(2014, 2, 11).getTime();
+            fechaFin = new GregorianCalendar(2077, 2, 11).getTime();
+        }
         return ResponseEntity.ok(this.partidaDao.estadisticas(fechaInicio, fechaFin));
     }
 
