@@ -26,15 +26,12 @@ public class UsuariosApiController implements UsuariosApi {
 
     @Override
     public ResponseEntity<ListarUsuariosResponse> listarUsuarios(@Valid String filter, @Valid Long tamanioPagina, @Valid Long pagina) {
-        // asbtraer en un req
         List<Usuario> usuarios = usuarioDao.getAll();
         if (filter != null) {
             usuarios = usuarios.stream().filter(usuario -> usuario.mismoNombre(filter)).collect(Collectors.toList());
         }
         List<UsuarioModel> usuarioModels = usuarioMapper.wrapList(usuarios);
-
         List<UsuarioModel> listaPaginada = utils.obtenerListaPaginada(pagina, tamanioPagina, usuarioModels);
-
         return ResponseEntity.ok(new ListarUsuariosResponse().usuarios(listaPaginada));
     }
 }

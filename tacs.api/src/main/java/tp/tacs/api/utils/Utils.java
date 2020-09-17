@@ -2,7 +2,10 @@ package tp.tacs.api.utils;
 
 import org.springframework.stereotype.Component;
 
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 @Component
@@ -20,5 +23,12 @@ public class Utils {
         }
 
         return lista.subList(start.intValue(), end.intValue());
+    }
+
+    public GregorianCalendar obtenerGregorian(Date dia){
+        var localDia = dia.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
+        return new GregorianCalendar(localDia.getYear(),localDia.getMonthValue(),localDia.getDayOfMonth());
     }
 }
