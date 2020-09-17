@@ -6,6 +6,9 @@ import tp.tacs.api.dominio.municipio.Especializacion;
 import tp.tacs.api.dominio.municipio.Municipio;
 import tp.tacs.api.dominio.partida.Partida;
 import tp.tacs.api.http.externalApis.ExternalApis;
+import tp.tacs.api.model.ProvinciaModel;
+
+import java.util.List;
 
 @Controller
 public class ServicioMunicipio {
@@ -27,4 +30,7 @@ public class ServicioMunicipio {
         municipio.setEspecializacion(especializacion);
     }
 
+    public List<ProvinciaModel> provincias() {
+        return this.externalApis.getProvincias();
+    }
 }
