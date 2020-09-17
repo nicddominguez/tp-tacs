@@ -1,5 +1,6 @@
 package tp.tacs.api.requerimientos;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -79,13 +80,13 @@ public class ServicioPartida {
                 .getKey();
     }
 
-    public Partida repartirMunicipios(Partida partida, List<Municipio> municipios) {
+    public void repartirMunicipios(Partida partida, List<Municipio> municipios) {
         var idsJugadores = partida.getJugadoresIds();
         var cantidadMunicipiosPartida = partida.getMunicipios().size();
         var cantidadMunicipiosPorJugador = (int) Math.floor((double) cantidadMunicipiosPartida / idsJugadores.size());
+        var usuarios = idsJugadores.stream().map(id -> usuarioDao.get(id));
 
-        idsJugadores.forEach(id -> {
-            Usuario jugador = usuarioDao.get(id);
+        usuarios.forEach(jugador -> {
             for (int i = 0; i < cantidadMunicipiosPorJugador; i++) {
                 municipios.stream()
                         .filter(Municipio::estaBacante)
@@ -96,9 +97,6 @@ public class ServicioPartida {
             }
         });
 
-        municipios.forEach(municipio -> municipioDao.save(municipio));
-        partida.setMunicipios(municipios.stream().map(Municipio::getId).collect(Collectors.toList()));
-        return partida;
     }
 
     public void pasarTurno(Partida request) {
@@ -187,17 +185,9 @@ public class ServicioPartida {
     }
 
     private HashSet<Float> distanciasTotales(Partida partida) {
-        var coordenadas = partida.getMunicipios()
-                .stream()
-                .map(id -> {
-                    Municipio municipio = municipioDao.get(id);
-                    var a = Arrays
-                            .asList(externalApis.getCoordenadas(municipio.getExternalApiId()).split(","))
-                            .stream().map(v -> Double.valueOf(v))
-                            .collect(Collectors.toList());
-                    var coordenadasString = new ArrayList<>(a);
-                    return coordenadasString;
-                }).collect(Collectors.toSet());
+        var municipios = partida.getMunicipios().stream().map(id -> municipioDao.get(id));
+        var coordenadas = municipios.map(municipio ->
+                Lists.newArrayList(municipio.getLatitud(), municipio.getLongitud())).collect(Collectors.toSet());
         var combinaciones = Sets.combinations(coordenadas, 2);
 
         var distancias = new HashSet<Float>();
@@ -262,13 +252,17 @@ public class ServicioPartida {
                 .build();
 
         var cantidadMunicipiosPartida = Math.toIntExact(request.getCantidadMunicipios());
-        var municipiosDeLaPartida = externalApis.getMunicipios(partida.getIdProvincia(), cantidadMunicipiosPartida);
-        partida.setMunicipios(municipiosDeLaPartida.stream().map(Municipio::getId).collect(Collectors.toList()));
 
-        this.repartirMunicipios(partida, municipiosDeLaPartida);
+        var municipiosDeLaPartida = externalApis.getMunicipios(partida.getIdProvincia(), cantidadMunicipiosPartida);
+        municipiosDeLaPartida.forEach(municipio -> municipioDao.save(municipio));
+
+        partida.setMunicipios(municipiosDeLaPartida.stream().map(Municipio::getId).collect(Collectors.toList()));
         this.calcularAlturas(partida);
         this.calcularDistancias(partida);
-//        this.calcularMultiplicadorProduccionGauchos(partida); TODO: traer el metodo que esta en servicioMunicipio
+
+        municipiosDeLaPartida.forEach(municipio -> municipio.actualizarNivelProduccion(partida));
+
+        this.repartirMunicipios(partida, municipiosDeLaPartida);
         partidaDao.save(partida);
         return partida;
     }
