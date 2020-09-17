@@ -79,10 +79,10 @@ public class ServicioPartida {
                 .getKey();
     }
 
-    public Partida repartirMunicipios(Partida partida, Integer cantidadMunicipiosPartida) { //TODO ver si es necesario pasarle la cant de mun por parámetros o si se puede sacar de partida
+    public Partida repartirMunicipios(Partida partida, List<Municipio> municipios) {
         var idsJugadores = partida.getJugadoresIds();
+        var cantidadMunicipiosPartida = partida.getMunicipios().size();
         var cantidadMunicipiosPorJugador = (int) Math.floor((double) cantidadMunicipiosPartida / idsJugadores.size());
-        List<Municipio> municipios = externalApis.getMunicipios(partida.getIdProvincia(), cantidadMunicipiosPartida);
 
         idsJugadores.forEach(id -> {
             Usuario jugador = usuarioDao.get(id);
@@ -92,10 +92,11 @@ public class ServicioPartida {
                         .findAny()
                         .ifPresent(municipio -> {
                             municipio.setDuenio(jugador);
-                            municipioDao.save(municipio);
                         });
             }
         });
+
+        municipios.forEach(municipio -> municipioDao.save(municipio));
         partida.setMunicipios(municipios.stream().map(Municipio::getId).collect(Collectors.toList()));
         return partida;
     }
@@ -132,9 +133,9 @@ public class ServicioPartida {
     }
 
     public Float distanciaEntre(Municipio unMunicipio, Municipio otroMunicipio) {
-        ArrayList<Double> coordenadas1 = externalApis.getCoordenadasArray(unMunicipio.getExternalApiId());
-        ArrayList<Double> coordenadas2 = externalApis.getCoordenadasArray(otroMunicipio.getExternalApiId());
-        return (float) Point2D.distance(coordenadas1.get(0), coordenadas1.get(1), coordenadas2.get(0), coordenadas2.get(1));
+        return (float) Point2D.distance(
+                unMunicipio.getLatitud(), unMunicipio.getLongitud(),
+                otroMunicipio.getLatitud(), otroMunicipio.getLongitud());
     }
 
     public Float multDistancia(Partida partida, Municipio municipioAtacante, Municipio municipioAtacado) {
@@ -145,7 +146,7 @@ public class ServicioPartida {
     }
 
     public Float multAltura(Partida partida, Municipio municipio) {
-        Float altura = externalApis.getAltura(municipio.getExternalApiId());
+        Float altura = municipio.getAltura();
         Float minAltura = partida.getMinAltura();
         Float maxAltura = partida.getMaxAltura();
         return 1 + (altura - minAltura) / (2 * (maxAltura - minAltura));
@@ -170,7 +171,7 @@ public class ServicioPartida {
     }
 
     public Float calcularMultAlturaMunicipio(Partida partida, Municipio municipio) {
-        Float altura = externalApis.getAltura(municipio.getExternalApiId());
+        Float altura = municipio.getAltura();
         return 1 + (altura - partida.getMinAltura()) / (2 * (partida.getMaxAltura() - partida.getMinAltura()));
     }
 
@@ -179,11 +180,10 @@ public class ServicioPartida {
             throw new PartidaException("El duenio del municipio atacante no puede ser igual al del defensor");
     }
 
-    public Partida calcularDistancias(Partida request) {
-        HashSet<Float> distancias = distanciasTotales(request);
-        request.setMaxDist(distancias.stream().max(Float::compareTo).get());
-        request.setMinDist(distancias.stream().min(Float::compareTo).get());
-        return request;
+    public void calcularDistancias(Partida partida) {
+        HashSet<Float> distancias = distanciasTotales(partida);
+        partida.setMaxDist(distancias.stream().max(Float::compareTo).get());
+        partida.setMinDist(distancias.stream().min(Float::compareTo).get());
     }
 
     private HashSet<Float> distanciasTotales(Partida partida) {
@@ -215,16 +215,15 @@ public class ServicioPartida {
                 coordenadasHasta.get(0), coordenadasHasta.get(1));
     }
 
-    public Partida calcularAlturas(Partida request) {
-        Supplier<Stream<Float>> alturas = () -> request.getMunicipios().stream().map(municipio -> {
+    public void calcularAlturas(Partida partida) {
+        Supplier<Stream<Float>> alturas = () -> partida.getMunicipios().stream().map(municipio -> {
             Municipio municipio1 = municipioDao.get(municipio);
-            return externalApis.getAltura(municipio1.getExternalApiId());
+            return municipio1.getAltura();
         });
         DoubleStream doubleStreamMax = alturas.get().mapToDouble(value -> value.doubleValue());
         DoubleStream doubleStreamMin = alturas.get().mapToDouble(value -> value.doubleValue());
-        request.setMaxAltura((float) doubleStreamMax.max().getAsDouble());
-        request.setMinAltura((float) doubleStreamMin.min().getAsDouble());
-        return request;
+        partida.setMaxAltura((float) doubleStreamMax.max().getAsDouble());
+        partida.setMinAltura((float) doubleStreamMin.min().getAsDouble());
     }
 
     public void actualizarMunicipioPerdedor(Municipio municipioAtacante, Municipio municipioAtacado) {
@@ -262,11 +261,16 @@ public class ServicioPartida {
                 .fechaCreacion(new Date())
                 .build();
 
-        Partida partidaConMunicipios = this.repartirMunicipios(partida, Math.toIntExact(request.getCantidadMunicipios()));
-        Partida partidaConAlturas = this.calcularAlturas(partidaConMunicipios);
-        Partida partidaConDistancias = this.calcularDistancias(partidaConAlturas);
-        partidaDao.save(partidaConDistancias);
-        return partidaConDistancias;
+        var cantidadMunicipiosPartida = Math.toIntExact(request.getCantidadMunicipios());
+        var municipiosDeLaPartida = externalApis.getMunicipios(partida.getIdProvincia(), cantidadMunicipiosPartida);
+        partida.setMunicipios(municipiosDeLaPartida.stream().map(Municipio::getId).collect(Collectors.toList()));
+
+        this.repartirMunicipios(partida, municipiosDeLaPartida);
+        this.calcularAlturas(partida);
+        this.calcularDistancias(partida);
+//        this.calcularMultiplicadorProduccionGauchos(partida); TODO: traer el metodo que esta en servicioMunicipio
+        partidaDao.save(partida);
+        return partida;
     }
 
     public void atacar(Partida partida, Municipio municipioAtacante, Municipio municipioAtacado) {

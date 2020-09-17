@@ -9,10 +9,7 @@ import tp.tacs.api.daos.PartidaDao;
 import tp.tacs.api.daos.UsuarioDao;
 import tp.tacs.api.dominio.partida.Partida;
 import tp.tacs.api.dominio.usuario.Usuario;
-import tp.tacs.api.mappers.EstadoDeJuegoMapper;
-import tp.tacs.api.mappers.ModoDeMunicipioMapper;
-import tp.tacs.api.mappers.MunicipioEnJuegoMapper;
-import tp.tacs.api.mappers.PartidaMapper;
+import tp.tacs.api.mappers.*;
 import tp.tacs.api.model.*;
 import tp.tacs.api.requerimientos.ServicioMunicipio;
 import tp.tacs.api.requerimientos.ServicioPartida;
@@ -38,6 +35,8 @@ public class PartidasApiController implements PartidasApi {
      */
     @Autowired
     private PartidaMapper partidaMapper;
+    @Autowired
+    private PartidaSinInfoMapper partidaSinInfoMapper;
     @Autowired
     private MunicipioEnJuegoMapper municipioEnJuegoMapper;
     @Autowired
@@ -125,7 +124,7 @@ public class PartidasApiController implements PartidasApi {
                                                                  @Valid Long pagina) {
 
         var partidas = this.partidaDao.getPartidasFiltradas(fechaInicio, fechaFin, estado);
-        var partidaModels = partidaMapper.partidasParaListar(partidas);
+        var partidaModels = partidaSinInfoMapper.partidasParaListar(partidas);
         var listaPaginada = utils.obtenerListaPaginada(pagina, tamanioPagina, partidaModels);
         var response = new ListarPartidasResponse().partidas(listaPaginada);
         return ResponseEntity.ok(response);

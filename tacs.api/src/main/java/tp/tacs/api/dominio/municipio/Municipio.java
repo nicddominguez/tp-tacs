@@ -19,8 +19,10 @@ public class Municipio {
     @Builder.Default
     private Especializacion especializacion = new Produccion();
     private Usuario duenio;
-    private Integer ultimaProduccion;
-
+    private Integer nivelDeProduccion;
+    private Double latitud;
+    private Double longitud;
+    private Float altura;
 
     public void setCantGauchos(Integer cantGauchos) {
         this.cantGauchos = Math.max(cantGauchos, 0);

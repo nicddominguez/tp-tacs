@@ -9,7 +9,12 @@ public class GeorefMapper extends AbstractMapper<MunicipioApi, Municipio> {
 
     @Override
     protected Municipio wrapModel(MunicipioApi model) {
-        return Municipio.builder().nombre(model.getNombre()).externalApiId(model.getId()).build();
+        return Municipio.builder()
+                .nombre(model.getNombre())
+                .externalApiId(model.getId())
+                .latitud(model.getCentroide_lat().doubleValue())
+                .longitud(model.getCentroide_lon().doubleValue())
+                .build();
     }
 
     @Override
