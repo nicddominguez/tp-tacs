@@ -1,0 +1,29 @@
+{
+  "properties": [
+    {
+      "name": "security.jwt.secret",
+      "type": "java.lang.String",
+      "description": "Secreto para la firma de JWTs"
+    },
+    {
+      "name": "security.jwt.issuer",
+      "type": "java.lang.String",
+      "description": "Issuer para los JWTs firmados"
+    },
+    {
+      "name": "security.google.clientId",
+      "type": "java.lang.String",
+      "description": "Client Id de OAuth2 de nuestra aplicación registrado en Google"
+    },
+    {
+      "name": "security.rutas.permitidas",
+      "type": "java.lang.String",
+      "description": "Rutas que no requieren autenticación"
+    },
+    {
+      "name": "security.rutas.administrativas",
+      "type": "java.lang.String",
+      "description": "Rutas para las cuales se necesitan permisos de administrador"
+    }
+  ]
+}

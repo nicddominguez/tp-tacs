@@ -52,15 +52,6 @@ public class PartidasApiController implements PartidasApi {
     @Autowired
     private UsuarioDao usuarioDao;
 
-    private final Usuario usuarioA = Usuario.builder().nombre("Juan").id(1L).mail("juan@gmail.com").build();
-    private final Usuario usuarioD = Usuario.builder().nombre("Nico").id(2L).mail("as@gmailc.om").build();
-
-    @PostConstruct
-    public void postConstruct() {
-        usuarioDao.save(usuarioA);
-        usuarioDao.save(usuarioD);
-    }
-
     @Override
     public ResponseEntity<Void> actualizarEstadoPartida(Long idPartida, @Valid PartidaModel body) {
         var partida = partidaDao.get(idPartida);
