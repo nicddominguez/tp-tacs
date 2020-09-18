@@ -315,7 +315,35 @@ paths:
                   partidas:
                     type: array
                     items:
-                      $ref: '#/components/schemas/PartidaModel'
+                      type: object
+                      title: partidaSinInfoModel
+                      properties:
+                        id:
+                          type: integer
+                          format: int64
+                          description: Id de la partida
+                        provincia:
+                          $ref: '#/components/schemas/ProvinciaModel'
+                        cantidadMunicipios:
+                          type: integer
+                          format: int64
+                          description: Cantidad de municipios que se usan
+                        estado:
+                          $ref: '#/components/schemas/EstadoDeJuegoModel'
+                        jugadores:
+                          type: array
+                          description: Usuarios que juegan esta partida
+                          items:
+                            $ref: '#/components/schemas/UsuarioModel'
+                        modoDeJuego:
+                          $ref: '#/components/schemas/ModoDeJuegoModel'
+                        fecha:
+                          type: string
+                          format: date
+                          description: Fecha de inicio de la partida
+                        idGanador:
+                          type: string
+                          description: Id del usuario ganador
         400:
           description: Bad request
         403:
@@ -488,7 +516,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/MunicipioEnJuegoModel'
+              type: object
+              title: actualizarMunicipio
+              properties:
+                modo:
+                  $ref: '#/components/schemas/ModoDeMunicipioModel'
+                estaBloqueado:
+                  type: boolean
       responses:
         200:
           description: Success

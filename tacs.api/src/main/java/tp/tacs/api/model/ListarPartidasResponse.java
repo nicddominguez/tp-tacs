@@ -7,7 +7,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
 import java.util.List;
-import tp.tacs.api.model.PartidaModel;
+import tp.tacs.api.model.PartidaSinInfoModel;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
@@ -16,22 +16,22 @@ import javax.validation.constraints.*;
  * ListarPartidasResponse
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-09-05T20:37:59.553716700-03:00[America/Buenos_Aires]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-09-17T12:33:52.369403200-03:00[America/Buenos_Aires]")
 
 
 public class ListarPartidasResponse   {
   @JsonProperty("partidas")
   @Valid
-  private List<PartidaModel> partidas = null;
+  private List<PartidaSinInfoModel> partidas = null;
 
-  public ListarPartidasResponse partidas(List<PartidaModel> partidas) {
+  public ListarPartidasResponse partidas(List<PartidaSinInfoModel> partidas) {
     this.partidas = partidas;
     return this;
   }
 
-  public ListarPartidasResponse addPartidasItem(PartidaModel partidasItem) {
+  public ListarPartidasResponse addPartidasItem(PartidaSinInfoModel partidasItem) {
     if (this.partidas == null) {
-      this.partidas = new ArrayList<PartidaModel>();
+      this.partidas = new ArrayList<PartidaSinInfoModel>();
     }
     this.partidas.add(partidasItem);
     return this;
@@ -43,11 +43,11 @@ public class ListarPartidasResponse   {
   **/
   @ApiModelProperty(value = "")
       @Valid
-    public List<PartidaModel> getPartidas() {
+    public List<PartidaSinInfoModel> getPartidas() {
     return partidas;
   }
 
-  public void setPartidas(List<PartidaModel> partidas) {
+  public void setPartidas(List<PartidaSinInfoModel> partidas) {
     this.partidas = partidas;
   }
 
