@@ -27,7 +27,6 @@ public class ExternalApis implements RepoMunicipios {
     @Autowired
     private ProvinciaMapper provinciaWrapper;
 
-    private String geoRefMunicipioBaseUrlBasico = "https://apis.datos.gob.ar/georef/api/municipios?campos=basico&aplanar=true";
     private String geoRefMunicipioBaseUrlEstandar = "https://apis.datos.gob.ar/georef/api/municipios?aplanar=true";
     private String geoRefProvinciabaseUrlEstandar = "https://apis.datos.gob.ar/georef/api/provincias?aplanar=true";
     private String geoRefProvinciaNombre = "https://apis.datos.gob.ar/georef/api/provincias?aplanar=true&id=";
@@ -54,7 +53,7 @@ public class ExternalApis implements RepoMunicipios {
 
     @Override
     public String getPathImagen(String idMunicipio) {
-        return null;
+        return "https://cdn.pixabay.com/photo/2020/02/16/19/41/horses-4854601_960_720.jpg";
     }
 
     @Override
