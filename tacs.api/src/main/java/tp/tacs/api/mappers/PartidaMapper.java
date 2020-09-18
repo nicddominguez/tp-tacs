@@ -46,7 +46,7 @@ public class PartidaMapper extends AbstractMapper<Partida, PartidaModel> {
                 .cantidadMunicipios((long) partida.getMunicipios().size())
                 .fecha(partida.getFechaCreacion())
                 .modoDeJuego(modoDeJuegoMapper.toModel(partida.getModoDeJuego()))
-                .provincia(provinciaMapper.wrapModel(provincia)) //todo revisar modelo
+                .provincia(provinciaMapper.wrapModel(provincia))
                 .id(partida.getId());
     }
 

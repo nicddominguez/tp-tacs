@@ -79,18 +79,14 @@ public class ServicioPartida {
 
     public void repartirMunicipios(Partida partida, List<Municipio> municipios) {
         var idsJugadores = partida.getJugadoresIds();
-        var cantidadMunicipiosPartida = partida.getMunicipios().size();
-        var cantidadMunicipiosPorJugador = (int) Math.floor((double) cantidadMunicipiosPartida / idsJugadores.size());
-        var usuarios = idsJugadores.stream().map(id -> usuarioDao.get(id));
+        var usuarios = idsJugadores.stream().map(id -> usuarioDao.get(id)).collect(Collectors.toList());
 
-        usuarios.forEach(jugador -> {
-            for (int i = 0; i < cantidadMunicipiosPorJugador; i++) {
-                municipios.stream()
-                        .filter(Municipio::estaBacante)
-                        .findAny()
-                        .ifPresent(municipio -> municipio.setDuenio(jugador));
-            }
-        });
+        var i = 0;
+        for (Municipio municipio : municipios) {
+            System.out.println(i%usuarios.size());
+            municipio.setDuenio(usuarios.get(i%usuarios.size()));
+            i++;
+        }
 
     }
 
