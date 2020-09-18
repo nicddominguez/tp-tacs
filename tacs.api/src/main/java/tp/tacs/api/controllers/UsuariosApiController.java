@@ -11,6 +11,7 @@ import tp.tacs.api.model.UsuarioModel;
 import tp.tacs.api.utils.Utils;
 
 import javax.validation.Valid;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,6 +32,7 @@ public class UsuariosApiController implements UsuariosApi {
             usuarios = usuarios.stream().filter(usuario -> usuario.mismoNombre(filter)).collect(Collectors.toList());
         }
         List<UsuarioModel> usuarioModels = usuarioMapper.wrapList(usuarios);
+        usuarioModels.sort(Comparator.comparing(UsuarioModel::getNombreDeUsuario));
         List<UsuarioModel> listaPaginada = utils.obtenerListaPaginada(pagina, tamanioPagina, usuarioModels);
         return ResponseEntity.ok(new ListarUsuariosResponse().usuarios(listaPaginada));
     }

@@ -1,12 +1,14 @@
 package tp.tacs.api.controllers;
 
+import com.google.common.base.Splitter;
+import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import tp.tacs.api.daos.MunicipioDao;
 import tp.tacs.api.daos.PartidaDao;
-import tp.tacs.api.daos.UsuarioDao;
 import tp.tacs.api.dominio.partida.Partida;
+import tp.tacs.api.handler.PartidaException;
 import tp.tacs.api.mappers.*;
 import tp.tacs.api.model.*;
 import tp.tacs.api.servicios.ServicioMunicipio;
@@ -14,7 +16,9 @@ import tp.tacs.api.servicios.ServicioPartida;
 import tp.tacs.api.utils.Utils;
 
 import javax.validation.Valid;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.stream.Collectors;
 
 @RestController
 public class PartidasApiController implements PartidasApi {
@@ -47,10 +51,9 @@ public class PartidasApiController implements PartidasApi {
     private PartidaDao partidaDao;
     @Autowired
     private MunicipioDao municipioDao;
-    @Autowired
-    private UsuarioDao usuarioDao;
 
-    @Override public ResponseEntity<Void> actualizarEstadoPartida(Long idPartida, @Valid ActualizarEstadoPartida body) {
+    @Override
+    public ResponseEntity<Void> actualizarEstadoPartida(Long idPartida, @Valid ActualizarEstadoPartida body) {
         var partida = partidaDao.get(idPartida);
         var estado = estadoDeJuegoMapper.toEntity(body.getEstado());
         servicioPartida.actualizarEstadoPartida(partida, estado);
@@ -85,10 +88,16 @@ public class PartidasApiController implements PartidasApi {
         }
     }
 
-    @Override public ResponseEntity<PartidaModel> crearPartida(@Valid CrearPartidaBody body) {
-        Partida partida = servicioPartida.inicializar(body);
-        PartidaModel response = partidaMapper.wrap(partida);
-        return ResponseEntity.ok(response);
+    @Override
+    public ResponseEntity<PartidaModel> crearPartida(@Valid CrearPartidaBody body) {
+        Partida partida;
+        try {
+            partida = servicioPartida.inicializar(body);
+            PartidaModel response = partidaMapper.wrap(partida);
+            return ResponseEntity.ok(response);
+        } catch (PartidaException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @Override
@@ -118,13 +127,33 @@ public class PartidasApiController implements PartidasApi {
         return ResponseEntity.ok(partidaMapper.wrap(partida));
     }
 
-    @Override public ResponseEntity<ListarPartidasResponse> listarPartidas(@Valid Date fechaInicio, @Valid Date fechaFin,
-            @Valid EstadoDeJuegoModel estado, @Valid String ordenarPor, @Valid Long tamanioPagina, @Valid Long pagina) {
+    @Override
+    public ResponseEntity<ListarPartidasResponse> listarPartidas(@Valid Date fechaInicio, @Valid Date fechaFin,
+                                                                 @Valid EstadoDeJuegoModel estado, @Valid String ordenarPor, @Valid Long tamanioPagina, @Valid Long pagina) {
         var partidas = this.partidaDao.getPartidasFiltradas(fechaInicio, fechaFin, estado);
         var partidaModels = partidaSinInfoMapper.partidasParaListar(partidas);
+
+        //TODO recibir si ordenar DESC o ASC
+        if (ordenarPor != null) {
+            var ordenes = Lists.reverse(Splitter.on(",").trimResults().splitToList(ordenarPor));
+            var comparadores = ordenes.stream().map(this::transformarEnComparador).collect(Collectors.toList());
+            comparadores.forEach(partidaModels::sort);
+        }
+
         var listaPaginada = utils.obtenerListaPaginada(pagina, tamanioPagina, partidaModels);
         var response = new ListarPartidasResponse().partidas(listaPaginada);
         return ResponseEntity.ok(response);
     }
 
+    public Comparator<PartidaSinInfoModel> transformarEnComparador(String orden) {
+        switch (orden) {
+            case "fecha":
+                return Comparator.comparing(PartidaSinInfoModel::getFecha);
+            case "estado":
+                return Comparator.comparing(PartidaSinInfoModel::getEstado);
+            default:
+                throw new RuntimeException("Orden no permitido");
+        }
+    }
 }
+

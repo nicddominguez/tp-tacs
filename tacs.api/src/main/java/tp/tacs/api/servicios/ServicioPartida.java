@@ -230,10 +230,17 @@ public class ServicioPartida {
     }
 
     public Partida inicializar(CrearPartidaBody request) {
+        String nombreProvincia;
+        try{
+            nombreProvincia = externalApis.getNombreProvinicas(request.getIdProvincia()).getNombre();
+        }
+        catch (IndexOutOfBoundsException e){
+            throw new PartidaException("No se pudo crear la partida: No existe provincia con ese id");
+        }
         Partida partida = Partida.builder()
                 .estado(Estado.EN_CURSO)
                 .jugadoresIds(request.getIdJugadores())
-                .nombreProvincia(externalApis.getNombreProvinicas(request.getIdProvincia()).getNombre())
+                .nombreProvincia(nombreProvincia)
                 .idProvincia(request.getIdProvincia().toString())
                 .modoDeJuego(new ModoRapido())
                 .fechaCreacion(new Date())
