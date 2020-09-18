@@ -1,6 +1,5 @@
 package tp.tacs.api.http.externalApis.models;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 

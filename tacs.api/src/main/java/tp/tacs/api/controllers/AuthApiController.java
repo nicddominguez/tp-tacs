@@ -3,12 +3,10 @@ package tp.tacs.api.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 import tp.tacs.api.daos.UsuarioDao;
 import tp.tacs.api.dominio.usuario.Usuario;
+import tp.tacs.api.exceptions.GoogleIdTokenFaltante;
 import tp.tacs.api.exceptions.UsuarioDesconocido;
 import tp.tacs.api.mappers.UsuarioMapper;
 import tp.tacs.api.model.GoogleAuthModel;
@@ -16,11 +14,8 @@ import tp.tacs.api.model.NuevoJWTModel;
 import tp.tacs.api.model.RefreshAccessTokenBody;
 import tp.tacs.api.security.GoogleIdTokenService;
 import tp.tacs.api.security.JWTTokenService;
-import tp.tacs.api.exceptions.GoogleIdTokenFaltante;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -64,7 +59,6 @@ public class AuthApiController implements AuthApi {
                 usuario.getNombre(),
                 usuario.getIsAdmin()
         );
-
         return model.refreshToken(nuevoRefreshToken);
     }
 

@@ -1,19 +1,19 @@
 package tp.tacs.api.model;
 
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import tp.tacs.api.model.UsuarioModel;
 import org.springframework.validation.annotation.Validated;
+
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+import java.util.Objects;
 
 /**
  * NuevoJWTModel
  */
 @Validated
+
+
 public class NuevoJWTModel   {
   @JsonProperty("usuario")
   private UsuarioModel usuario = null;
@@ -75,7 +75,7 @@ public class NuevoJWTModel   {
    * @return refreshToken
   **/
   @ApiModelProperty(value = "Token de refresh para generar un nuevo token de acceso")
-
+  
     public String getRefreshToken() {
     return refreshToken;
   }
@@ -108,7 +108,7 @@ public class NuevoJWTModel   {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class NuevoJWTModel {\n");
-
+    
     sb.append("    usuario: ").append(toIndentedString(usuario)).append("\n");
     sb.append("    token: ").append(toIndentedString(token)).append("\n");
     sb.append("    refreshToken: ").append(toIndentedString(refreshToken)).append("\n");

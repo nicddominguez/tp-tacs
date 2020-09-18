@@ -7,14 +7,12 @@ import tp.tacs.api.daos.MunicipioDao;
 import tp.tacs.api.daos.PartidaDao;
 import tp.tacs.api.daos.UsuarioDao;
 import tp.tacs.api.dominio.partida.Partida;
-import tp.tacs.api.dominio.usuario.Usuario;
 import tp.tacs.api.mappers.*;
 import tp.tacs.api.model.*;
 import tp.tacs.api.requerimientos.ServicioMunicipio;
 import tp.tacs.api.requerimientos.ServicioPartida;
 import tp.tacs.api.utils.Utils;
 
-import javax.annotation.PostConstruct;
 import javax.validation.Valid;
 import java.util.Date;
 
@@ -52,8 +50,7 @@ public class PartidasApiController implements PartidasApi {
     @Autowired
     private UsuarioDao usuarioDao;
 
-    @Override
-    public ResponseEntity<Void> actualizarEstadoPartida(Long idPartida, @Valid PartidaModel body) {
+    @Override public ResponseEntity<Void> actualizarEstadoPartida(Long idPartida, @Valid ActualizarEstadoPartida body) {
         var partida = partidaDao.get(idPartida);
         var estado = estadoDeJuegoMapper.toEntity(body.getEstado());
         servicioPartida.actualizarEstadoPartida(partida, estado);

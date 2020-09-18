@@ -460,7 +460,11 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PartidaModel'
+              type: object
+              title: actualizarEstadoPartida
+              properties:
+                estado:
+                  $ref: '#/components/schemas/EstadoDeJuegoModel'
       responses:
         200:
           description: Success

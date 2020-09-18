@@ -4,8 +4,6 @@ import org.springframework.stereotype.Component;
 import tp.tacs.api.dominio.partida.Partida;
 import tp.tacs.api.dominio.partida.PartidaSinInfo;
 
-import javax.servlet.http.Part;
-
 @Component
 public class PartidaSinInfoPartidaMapper extends AbstractMapper<PartidaSinInfo, Partida> {
     @Override

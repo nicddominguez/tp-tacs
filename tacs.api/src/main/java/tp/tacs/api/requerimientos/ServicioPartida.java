@@ -83,7 +83,6 @@ public class ServicioPartida {
 
         var i = 0;
         for (Municipio municipio : municipios) {
-            System.out.println(i%usuarios.size());
             municipio.setDuenio(usuarios.get(i%usuarios.size()));
             i++;
         }
