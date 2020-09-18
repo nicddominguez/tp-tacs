@@ -1,9 +1,0 @@
-security:
-  jwt:
-    secret: ${JWT_SECRET:secret}
-    issuer: Grupo3
-  google:
-    clientId: ${GOOGLE_OAUTH_CLIENT_ID:secret}
-  rutas:
-    permitidas: "/auth/**"
-    administrativas: "/admin/**"
