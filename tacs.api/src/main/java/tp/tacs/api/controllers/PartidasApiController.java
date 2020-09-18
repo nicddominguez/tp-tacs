@@ -9,8 +9,8 @@ import tp.tacs.api.daos.UsuarioDao;
 import tp.tacs.api.dominio.partida.Partida;
 import tp.tacs.api.mappers.*;
 import tp.tacs.api.model.*;
-import tp.tacs.api.requerimientos.ServicioMunicipio;
-import tp.tacs.api.requerimientos.ServicioPartida;
+import tp.tacs.api.servicios.ServicioMunicipio;
+import tp.tacs.api.servicios.ServicioPartida;
 import tp.tacs.api.utils.Utils;
 
 import javax.validation.Valid;

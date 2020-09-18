@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import tp.tacs.api.model.ListarProvinciasResponse;
 import tp.tacs.api.model.ProvinciaModel;
-import tp.tacs.api.requerimientos.ServicioMunicipio;
+import tp.tacs.api.servicios.ServicioMunicipio;
 import tp.tacs.api.utils.Utils;
 
 import javax.validation.Valid;

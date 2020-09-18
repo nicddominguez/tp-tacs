@@ -1,4 +1,4 @@
-package tp.tacs.api.requerimientos;
+package tp.tacs.api.servicios;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
