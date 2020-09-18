@@ -30,7 +30,7 @@ import {
   MuiPickersUtilsProvider,
 } from "@material-ui/pickers";
 import { MaterialUiPickersDate } from "@material-ui/pickers/typings/date";
-import { EstadoDeJuegoModel, PartidaModel } from "api";
+import { EstadoDeJuegoModel, PartidaSinInfoModel } from "api";
 import { WololoPartidasApiClient } from "api/client";
 import "date-fns";
 import React from "react";
@@ -64,7 +64,7 @@ const MenuProps = {
   },
 };
 
-function Row(props: { partida: PartidaModel }) {
+function Row(props: { partida: PartidaSinInfoModel }) {
   const { partida } = props;
   const [open, setOpen] = React.useState(false);
   const classes = useRowStyles();
@@ -84,7 +84,7 @@ function Row(props: { partida: PartidaModel }) {
         <TableCell scope="row">{partida.id}</TableCell>
         <TableCell align="center">{partida.fecha}</TableCell>
         <TableCell align="center">{partida.estado}</TableCell>
-        <TableCell align="center">{partida.provincia.nombre}</TableCell>
+        <TableCell align="center">{partida.provincia?.nombre}</TableCell>
         <TableCell align="center">{partida.modoDeJuego}</TableCell>
       </TableRow>
       <TableRow>
@@ -97,7 +97,7 @@ function Row(props: { partida: PartidaModel }) {
               <Grid item xs={6}>
                 <Typography variant="body1" gutterBottom>
                   <div>Jugadores</div>
-                  {partida.jugadores.map((jugador) => (
+                  {partida.jugadores?.map((jugador) => (
                     <div className={classes.subDetalle}>
                       <Typography variant="body1">
                         {jugador.nombreDeUsuario}
@@ -161,7 +161,7 @@ interface State {
   fechaInicio?: Date;
   fechaFin?: Date;
   estado?: EstadoDeJuegoModel;
-  partidas?: PartidaModel[];
+  partidas?: PartidaSinInfoModel[];
   page: number;
   pageSize: number;
 }
