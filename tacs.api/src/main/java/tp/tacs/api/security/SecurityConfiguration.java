@@ -31,27 +31,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         this.jwtTokenService = jwtTokenService;
     }
 
-    @Bean
-    public CorsFilter corsFilter() {
-        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        final CorsConfiguration config = new CorsConfiguration();
-        config.setAllowCredentials(true);
-        // Don't do this in production, use a proper list  of allowed origins
-        config.setAllowedOrigins(Collections.singletonList("*"));
-        config.setAllowedHeaders(Arrays.asList("Origin", "Content-Type", "Accept"));
-        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "OPTIONS", "DELETE", "PATCH"));
-        source.registerCorsConfiguration("/**", config);
-        return new CorsFilter(source);
-    }
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and().authorizeRequests().antMatchers(rutasPermitidas).permitAll()
+                .and().authorizeRequests().antMatchers(this.rutasPermitidas).permitAll()
                 .antMatchers("/**/*.{js,html,css}", "/", "/app", "/login").permitAll()
-                .and().authorizeRequests().antMatchers(rutasAdministrativas).hasRole("ADMIN")
+                .and().authorizeRequests().antMatchers(this.rutasAdministrativas).hasRole("ADMIN")
                 .and().authorizeRequests()
                 .anyRequest().authenticated()
                 .and().addFilterBefore(
