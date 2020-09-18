@@ -180,8 +180,8 @@ class Partidas extends React.Component<Props, State> {
   listarPartidas = () => {
     this.partidasApi
       .listarPartidas(
-        this.state.fechaInicio?.toDateString(),
-        this.state.fechaFin?.toDateString(),
+        this.state.fechaInicio?.toISOString(),
+        this.state.fechaFin?.toISOString(),
         this.state.estado,
         this.state.primerOrden
           ? this.state.primerOrden +
@@ -200,73 +200,79 @@ class Partidas extends React.Component<Props, State> {
     this.listarPartidas();
   }
 
-  handlePrimerOrden = async (event: React.ChangeEvent<{ value: unknown }>) => {
+  handlePrimerOrden = (event: React.ChangeEvent<{ value: unknown }>) => {
     const primerOrden = event.target.value as string;
-    await this.setState({ primerOrden: primerOrden });
-    this.listarPartidas();
+    this.setState({ primerOrden: primerOrden }, this.listarPartidas);
   };
 
-  handleSegundoOrden = async (event: React.ChangeEvent<{ value: unknown }>) => {
-    await this.setState({ segundoOrden: event.target.value as string });
-    this.listarPartidas();
+  handleSegundoOrden = (event: React.ChangeEvent<{ value: unknown }>) => {
+    this.setState(
+      { segundoOrden: event.target.value as string },
+      this.listarPartidas
+    );
   };
 
-  handleFechaInicio = async (
+  handleFechaInicio = (
     date: MaterialUiPickersDate,
     value?: string | null | undefined
   ) => {
-    await this.setState({ fechaInicio: date as Date });
-    this.listarPartidas();
+    this.setState({ fechaInicio: date as Date }, this.listarPartidas);
   };
 
-  handleFechaFin = async (
+  handleFechaFin = (
     date: MaterialUiPickersDate,
     value?: string | null | undefined
   ) => {
-    await this.setState({ fechaFin: date as Date });
-    this.listarPartidas();
+    this.setState({ fechaFin: date as Date }, this.listarPartidas);
   };
 
-  handleEstado = async (event: React.ChangeEvent<{ value: unknown }>) => {
-    await this.setState({ estado: event.target.value as EstadoDeJuegoModel });
-    this.listarPartidas();
+  handleEstado = (event: React.ChangeEvent<{ value: unknown }>) => {
+    this.setState(
+      { estado: event.target.value as EstadoDeJuegoModel },
+      this.listarPartidas
+    );
   };
 
-  handlePage = async (
+  handlePage = (
     event: React.MouseEvent<HTMLButtonElement> | null,
     newPage: number
   ) => {
-    await this.setState({ page: newPage });
-    this.listarPartidas();
+    this.setState({ page: newPage }, this.listarPartidas);
   };
 
-  handlePageSize = async (
+  handlePageSize = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    await this.setState({ pageSize: parseInt(event.target.value, 10) });
-    await this.setState({ page: 0 });
-    this.listarPartidas();
+    this.setState(
+      { pageSize: parseInt(event.target.value, 10) },
+      this.listarPartidas
+    );
+    this.setState({ page: 0 });
   };
 
-  handleRemoverOrdenar = async (
+  handleRemoverOrdenar = (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
-    await this.setState({
-      primerOrden: undefined,
-      segundoOrden: undefined,
-    });
-    this.listarPartidas();
+    this.setState(
+      {
+        primerOrden: undefined,
+        segundoOrden: undefined,
+      },
+      this.listarPartidas
+    );
   };
 
-  handleRemoverFiltrar = async (
+  handleRemoverFiltrar = (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
-    await this.setState({
-      fechaInicio: undefined,
-      fechaFin: undefined,
-      estado: undefined,
-    });
-    this.listarPartidas();
+    this.setState(
+      {
+        fechaInicio: undefined,
+        fechaFin: undefined,
+        estado: undefined,
+      },
+      this.listarPartidas
+    );
   };
 
   render() {
@@ -293,7 +299,7 @@ class Partidas extends React.Component<Props, State> {
                 <Select
                   labelId="primer-orden-label"
                   id="primer-orden"
-                  value={this.state.primerOrden}
+                  value={this.state.primerOrden || ""}
                   onChange={this.handlePrimerOrden}
                 >
                   <MenuItem value={"fecha"}>Fecha</MenuItem>
@@ -305,7 +311,7 @@ class Partidas extends React.Component<Props, State> {
                 <Select
                   labelId="segundo-orden-label"
                   id="segundo-orden"
-                  value={this.state.segundoOrden}
+                  value={this.state.segundoOrden || ""}
                   onChange={this.handleSegundoOrden}
                 >
                   <MenuItem value={"fecha"}>Fecha</MenuItem>
@@ -362,7 +368,7 @@ class Partidas extends React.Component<Props, State> {
                 <Select
                   labelId="estado-label"
                   id="estado"
-                  value={this.state.estado}
+                  value={this.state.estado || ""}
                   onChange={this.handleEstado}
                 >
                   <MenuItem value={EstadoDeJuegoModel.EnProgreso}>
