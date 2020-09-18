@@ -223,7 +223,7 @@ interface SelectorUsuarioProps {
 interface SelectorUsuarioState {
   listadoUsuarios: Array<UsuarioModel>
   usuariosSeleccionados: Array<UsuarioModel>
-  filtro: string
+  filtro?: string
 }
 
 
@@ -239,7 +239,7 @@ class SelectorUsuarios extends React.Component<SelectorUsuarioProps, SelectorUsu
     this.state = {
       listadoUsuarios: [],
       usuariosSeleccionados: [],
-      filtro: ""
+      filtro: undefined
     };
 
     this.onChangeFilter = this.onChangeFilter.bind(this);
@@ -287,7 +287,6 @@ class SelectorUsuarios extends React.Component<SelectorUsuarioProps, SelectorUsu
   buscar() {
     this.usuariosApiClient.listarUsuarios(this.state.filtro, 6)
       .then(response => {
-        console.log(response);
         this.setState({
           listadoUsuarios: response.usuarios || []
         });
