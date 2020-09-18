@@ -775,8 +775,8 @@ components:
           format: int64
           description: Cantidad de gauchos en el municipio
         puntosDeDefensa:
-          type: integer
-          format: int64
+          type: number
+          format: float
         produccionDeGauchos:
           type: integer
           format: int64
@@ -796,12 +796,12 @@ components:
       description: Par de coordenadas en el mundo.
       properties:
         lat:
-          type: integer
-          format: int64
+          type: number
+          format: float
           description: Latitud
         lon:
-          type: integer
-          format: int64
+          type: number
+          format: float
           description: Longitud
     ModoDeMunicipioModel:
       type: string

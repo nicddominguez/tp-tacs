@@ -28,7 +28,7 @@ public class MunicipioEnJuegoMapper extends AbstractMapper<Municipio, MunicipioE
                 .id(model.getId())
                 .nombre(model.getNombre())
                 .produccionDeGauchos(model.getNivelDeProduccion().longValue())
-                .puntosDeDefensa(model.getEspecializacion().multDefensa().longValue())
+                .puntosDeDefensa(model.getEspecializacion().multDefensa().floatValue())
                 .ubicacion(coordenadasMapper.toModel(model.getLatitud(), model.getLongitud()))
                 .urlImagen(externalApis.getPathImagen(model.getExternalApiId()));
     }

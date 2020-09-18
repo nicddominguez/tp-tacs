@@ -7,6 +7,6 @@ import tp.tacs.api.model.CoordenadasModel;
 public class CoordenadasMapper {
 
     public CoordenadasModel toModel(Double latitud, Double longitud){
-        return new CoordenadasModel().lat(latitud.longValue()).lon(longitud.longValue());
+        return new CoordenadasModel().lat(latitud.floatValue()).lon(longitud.floatValue());
     }
 }

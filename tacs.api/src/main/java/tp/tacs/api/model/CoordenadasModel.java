@@ -17,12 +17,12 @@ import java.util.Objects;
 
 public class CoordenadasModel   {
   @JsonProperty("lat")
-  private Long lat = null;
+  private Float lat = null;
 
   @JsonProperty("lon")
-  private Long lon = null;
+  private Float lon = null;
 
-  public CoordenadasModel lat(Long lat) {
+  public CoordenadasModel lat(Float lat) {
     this.lat = lat;
     return this;
   }
@@ -34,15 +34,15 @@ public class CoordenadasModel   {
   @ApiModelProperty(required = true, value = "Latitud")
       @NotNull
 
-    public Long getLat() {
+    public Float getLat() {
     return lat;
   }
 
-  public void setLat(Long lat) {
+  public void setLat(Float lat) {
     this.lat = lat;
   }
 
-  public CoordenadasModel lon(Long lon) {
+  public CoordenadasModel lon(Float lon) {
     this.lon = lon;
     return this;
   }
@@ -54,11 +54,11 @@ public class CoordenadasModel   {
   @ApiModelProperty(required = true, value = "Longitud")
       @NotNull
 
-    public Long getLon() {
+    public Float getLon() {
     return lon;
   }
 
-  public void setLon(Long lon) {
+  public void setLon(Float lon) {
     this.lon = lon;
   }
 

@@ -1,12 +1,16 @@
 package tp.tacs.api.model;
 
+import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import tp.tacs.api.model.CoordenadasModel;
+import tp.tacs.api.model.ModoDeMunicipioModel;
+import tp.tacs.api.model.UsuarioModel;
 import org.springframework.validation.annotation.Validated;
-
 import javax.validation.Valid;
-import java.util.Objects;
+import javax.validation.constraints.*;
 
 /**
  * Municipio en juego.
@@ -35,7 +39,7 @@ public class MunicipioEnJuegoModel   {
   private Long gauchos = null;
 
   @JsonProperty("puntosDeDefensa")
-  private Long puntosDeDefensa = null;
+  private Float puntosDeDefensa = null;
 
   @JsonProperty("produccionDeGauchos")
   private Long produccionDeGauchos = null;
@@ -165,7 +169,7 @@ public class MunicipioEnJuegoModel   {
     this.gauchos = gauchos;
   }
 
-  public MunicipioEnJuegoModel puntosDeDefensa(Long puntosDeDefensa) {
+  public MunicipioEnJuegoModel puntosDeDefensa(Float puntosDeDefensa) {
     this.puntosDeDefensa = puntosDeDefensa;
     return this;
   }
@@ -176,11 +180,11 @@ public class MunicipioEnJuegoModel   {
   **/
   @ApiModelProperty(value = "")
   
-    public Long getPuntosDeDefensa() {
+    public Float getPuntosDeDefensa() {
     return puntosDeDefensa;
   }
 
-  public void setPuntosDeDefensa(Long puntosDeDefensa) {
+  public void setPuntosDeDefensa(Float puntosDeDefensa) {
     this.puntosDeDefensa = puntosDeDefensa;
   }
 
