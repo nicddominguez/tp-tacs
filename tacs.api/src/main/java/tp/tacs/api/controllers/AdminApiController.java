@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 import tp.tacs.api.model.EstadisticasDeJuegoModel;
 import tp.tacs.api.model.EstadisticasDeUsuarioModel;
 import tp.tacs.api.model.ScoreboardResponse;
-import tp.tacs.api.requerimientos.ServicioAdmin;
+import tp.tacs.api.servicios.ServicioAdmin;
 
 import javax.validation.Valid;
 import java.util.Date;
