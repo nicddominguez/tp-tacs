@@ -29,7 +29,6 @@ public class HttpClientConnector {
         try {
             return new RestTemplate().exchange(url, HttpMethod.GET, entity, clazz).getBody();
         } catch (Exception ex) {
-            System.out.println(ex.getStackTrace());
             throw new HttpErrorException(ex.getMessage());
         }
     }
@@ -45,7 +44,7 @@ public class HttpClientConnector {
         }
     }
 
-    public String GGet(String url) throws IOException, InterruptedException {
+    public String get(String url) throws IOException, InterruptedException {
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
                 .uri(URI.create(url))

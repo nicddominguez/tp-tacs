@@ -1,7 +1,6 @@
 package tp.tacs.api.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import tp.tacs.api.daos.MunicipioDao;
@@ -63,12 +62,6 @@ public class PartidasApiController implements PartidasApi {
     }
 
     @Override
-    public ResponseEntity<Void> crearPartida(@Valid CrearPartidaBody body) {
-        servicioPartida.inicializar(body);
-        return new ResponseEntity<>(HttpStatus.CREATED);
-    }
-
-    @Override
     public ResponseEntity<Void> actualizarEstadoPartida(Long idPartida, @Valid PartidaModel body) {
         var partida = partidaDao.get(idPartida);
         var estado = estadoDeJuegoMapper.toEntity(body.getEstado());
@@ -104,6 +97,12 @@ public class PartidasApiController implements PartidasApi {
         }
     }
 
+    @Override public ResponseEntity<PartidaModel> crearPartida(@Valid CrearPartidaBody body) {
+        Partida partida = servicioPartida.inicializar(body);
+        PartidaModel response = partidaMapper.wrap(partida);
+        return ResponseEntity.ok(response);
+    }
+
     @Override
     public ResponseEntity<MoverGauchosResponse> moverGauchos(Long idPartida, @Valid MoverGauchosBody body) {
         var municipioOrigen = municipioDao.get(body.getIdMunicipioOrigen());
@@ -121,22 +120,6 @@ public class PartidasApiController implements PartidasApi {
     }
 
     @Override
-    public ResponseEntity<ListarPartidasResponse> listarPartidas(@Valid Date fechaInicio,
-                                                                 @Valid Date fechaFin,
-                                                                 @Valid EstadoDeJuegoModel estado,
-                                                                 @Valid String ordenarPor,
-                                                                 @Valid Long tamanioPagina,
-                                                                 @Valid Long pagina) {
-
-        System.out.println(fechaFin);
-        var partidas = this.partidaDao.getPartidasFiltradas(fechaInicio, fechaFin, estado);
-        var partidaModels = partidaSinInfoMapper.partidasParaListar(partidas);
-        var listaPaginada = utils.obtenerListaPaginada(pagina, tamanioPagina, partidaModels);
-        var response = new ListarPartidasResponse().partidas(listaPaginada);
-        return ResponseEntity.ok(response);
-    }
-
-    @Override
     public ResponseEntity<PartidaModel> getPartida(Long idPartida) {
         Partida partida;
         try {
@@ -145,6 +128,15 @@ public class PartidasApiController implements PartidasApi {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(partidaMapper.wrap(partida));
+    }
+
+    @Override public ResponseEntity<ListarPartidasResponse> listarPartidas(@Valid Date fechaInicio, @Valid Date fechaFin,
+            @Valid EstadoDeJuegoModel estado, @Valid String ordenarPor, @Valid Long tamanioPagina, @Valid Long pagina) {
+        var partidas = this.partidaDao.getPartidasFiltradas(fechaInicio, fechaFin, estado);
+        var partidaModels = partidaSinInfoMapper.partidasParaListar(partidas);
+        var listaPaginada = utils.obtenerListaPaginada(pagina, tamanioPagina, partidaModels);
+        var response = new ListarPartidasResponse().partidas(listaPaginada);
+        return ResponseEntity.ok(response);
     }
 
 }

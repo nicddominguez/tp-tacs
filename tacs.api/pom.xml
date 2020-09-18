@@ -110,6 +110,7 @@
 							<configOptions>
 								<interfaceOnly>true</interfaceOnly>
 								<dateLibrary>java11</dateLibrary>
+								<hideGenerationTimestamp>true</hideGenerationTimestamp>
 							</configOptions>
 							<modelPackage>${project.groupId}.tacs.api.model</modelPackage>
 							<apiPackage>${project.groupId}.tacs.api.controllers</apiPackage>

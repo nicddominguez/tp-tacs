@@ -34,7 +34,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.util.List;
 import java.util.Map;
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-09-17T12:33:52.369403200-03:00[America/Buenos_Aires]")
 @Api(value = "partidas", description = "the partidas API")
 public interface PartidasApi {
 
@@ -82,17 +81,18 @@ public interface PartidasApi {
 );
 
 
-    @ApiOperation(value = "Crear una nueva partida", nickname = "crearPartida", notes = "", authorizations = {
+    @ApiOperation(value = "Crear una nueva partida", nickname = "crearPartida", notes = "", response = PartidaModel.class, authorizations = {
         @Authorization(value = "bearerAuth")    }, tags={ "Partidas", })
     @ApiResponses(value = { 
-        @ApiResponse(code = 201, message = "Created"),
+        @ApiResponse(code = 201, message = "Created", response = PartidaModel.class),
         @ApiResponse(code = 400, message = "Bad Request"),
         @ApiResponse(code = 403, message = "Forbidden"),
         @ApiResponse(code = 404, message = "Not found") })
     @RequestMapping(value = "/partidas",
+        produces = { "application/json" }, 
         consumes = { "application/json" },
         method = RequestMethod.POST)
-    ResponseEntity<Void> crearPartida(@ApiParam(value = ""  )  @Valid @RequestBody CrearPartidaBody body
+    ResponseEntity<PartidaModel> crearPartida(@ApiParam(value = ""  )  @Valid @RequestBody CrearPartidaBody body
 );
 
 

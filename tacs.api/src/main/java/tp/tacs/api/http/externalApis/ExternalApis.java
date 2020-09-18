@@ -45,7 +45,7 @@ public class ExternalApis implements RepoMunicipios {
         String coordenadas = municipios.stream().map(municipio -> municipio.coordenadasParaTopo())
                 .reduce("", (coord1, coord2) -> coord1 + "%7C" + coord2);
         String url = String.format("%s%s", topoBaseUrl, coordenadas);
-        List<TopoData> results = new Gson().fromJson(connector.GGet(url), TopoResult.class).getResults();
+        List<TopoData> results = new Gson().fromJson(connector.get(url), TopoResult.class).getResults();
         for (int i = 0; i < results.size(); i++) {
             municipios.get(i).setAltura(results.get(i).getElevation().floatValue());
         }

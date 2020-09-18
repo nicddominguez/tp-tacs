@@ -234,7 +234,7 @@ public class ServicioPartida {
                 .municipioDestino(municipioDestinoModel);
     }
 
-    public void inicializar(CrearPartidaBody request) {
+    public Partida inicializar(CrearPartidaBody request) {
         Partida partida = Partida.builder()
                 .estado(Estado.EN_CURSO)
                 .jugadoresIds(request.getIdJugadores())
@@ -257,6 +257,7 @@ public class ServicioPartida {
 
         this.repartirMunicipios(partida, municipiosDeLaPartida);
         partidaDao.save(partida);
+        return partida;
     }
 
     public void atacar(Partida partida, Municipio municipioAtacante, Municipio municipioAtacado) {
