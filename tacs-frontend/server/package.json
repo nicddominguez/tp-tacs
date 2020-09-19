@@ -1,0 +1,22 @@
+{
+  "name": "tacs-frontend-server",
+  "version": "0.1.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mesaglio/tp-tacs.git"
+  },
+  "author": "Grupo 3",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mesaglio/tp-tacs/issues"
+  },
+  "homepage": "https://github.com/mesaglio/tp-tacs#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
