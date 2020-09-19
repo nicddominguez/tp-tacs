@@ -8,6 +8,7 @@ import tp.tacs.api.dominio.usuario.Usuario;
 import tp.tacs.api.mappers.UsuarioMapper;
 import tp.tacs.api.model.ListarUsuariosResponse;
 import tp.tacs.api.model.UsuarioModel;
+import tp.tacs.api.servicios.ServicioUsuario;
 import tp.tacs.api.utils.Utils;
 
 import javax.validation.Valid;
@@ -21,13 +22,13 @@ public class UsuariosApiController implements UsuariosApi {
     @Autowired
     private Utils utils;
     @Autowired
-    private UsuarioDao usuarioDao;
+    private ServicioUsuario servicioUsuario;
     @Autowired
     private UsuarioMapper usuarioMapper;
 
     @Override
     public ResponseEntity<ListarUsuariosResponse> listarUsuarios(@Valid String filter, @Valid Long tamanioPagina, @Valid Long pagina) {
-        List<Usuario> usuarios = usuarioDao.getAll();
+        List<Usuario> usuarios = this.servicioUsuario.listarUsuarios();
         if (filter != null) {
             usuarios = usuarios.stream().filter(usuario -> usuario.mismoNombre(filter)).collect(Collectors.toList());
         }
