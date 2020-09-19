@@ -313,6 +313,12 @@ export interface ListarPartidasResponse {
      * @memberof ListarPartidasResponse
      */
     partidas?: Array<PartidaSinInfoModel>;
+    /**
+     * 
+     * @type {number}
+     * @memberof ListarPartidasResponse
+     */
+    cantidadTotalDePartidas?: number;
 }
 /**
  * 
