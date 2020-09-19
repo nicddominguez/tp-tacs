@@ -162,6 +162,7 @@ interface State {
   fechaFin?: Date;
   estado?: EstadoDeJuegoModel;
   partidas?: PartidaSinInfoModel[];
+  cantidadTotalDePartidas?: number;
   page: number;
   pageSize: number;
 }
@@ -191,7 +192,11 @@ class Partidas extends React.Component<Props, State> {
         this.state.page
       )
       .then((listarPartidasResponse) => {
-        this.setState({ partidas: listarPartidasResponse.partidas });
+        this.setState({
+          partidas: listarPartidasResponse.partidas,
+          cantidadTotalDePartidas:
+            listarPartidasResponse.cantidadTotalDePartidas,
+        });
       })
       .catch(console.error);
   };
@@ -405,9 +410,7 @@ class Partidas extends React.Component<Props, State> {
                 <TableFooter>
                   <TableRow>
                     <CustomTablePagination
-                      rowsLength={
-                        this.state.partidas ? this.state.partidas.length : 0
-                      }
+                      rowsLength={this.state.cantidadTotalDePartidas || 0}
                       rowsPerPage={this.state.pageSize}
                       page={this.state.page}
                       onChangePage={this.handlePage}
