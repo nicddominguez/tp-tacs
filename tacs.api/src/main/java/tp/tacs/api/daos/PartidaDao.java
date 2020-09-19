@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Component
 public class PartidaDao implements Dao<Partida> {
@@ -96,18 +97,26 @@ public class PartidaDao implements Dao<Partida> {
     }
 
     public List<PartidaSinInfo> getPartidasFiltradas(Date fechaInicio, Date fechaFin, EstadoDeJuegoModel estado) {
-        if (fechaInicio != null && fechaFin != null) { //TODO
-            if (estado != null) {
-                var estadoDeJuego = estadoDeJuegoMapper.toEntity(estado);
-                return partidasSinInfoEntre(fechaInicio, fechaFin)
-                        .stream()
-                        .filter(partida -> partida.getEstado().equals(estadoDeJuego))
-                        .collect(Collectors.toList());
-            } else {
-                return partidasSinInfoEntre(fechaInicio, fechaFin);
-            }
-        } else {
-            return this.getAllSinInfo();
+        Stream<PartidaSinInfo> partidasFiltradasStream = partidas
+            .stream()
+            .map(partida -> partidaSinInfoPartidaMapper.unwrap(partida));
+
+        if (fechaInicio != null) {
+            partidasFiltradasStream = partidasFiltradasStream
+                .filter(partida -> partida.getFechaCreacion().after(fechaInicio));
         }
+
+        if (fechaFin != null) {
+            partidasFiltradasStream = partidasFiltradasStream
+                .filter(partida -> partida.getFechaCreacion().before(fechaFin));
+        }
+
+        if (estado != null) {
+            var estadoDeJuego = estadoDeJuegoMapper.toEntity(estado);
+            partidasFiltradasStream = partidasFiltradasStream
+                .filter(partida -> partida.getEstado().equals(estadoDeJuego));
+        }
+
+        return partidasFiltradasStream.collect(Collectors.toList());
     }
 }
