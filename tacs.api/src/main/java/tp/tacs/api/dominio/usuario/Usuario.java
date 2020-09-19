@@ -36,7 +36,7 @@ public class Usuario {
         this.rachaActual = 0L;
     }
 
-    public boolean mismoNombre(String nombre) {
-        return this.nombre.equals(nombre);
+    public boolean nombreContiene(String nombre) {
+        return this.nombre.toUpperCase().startsWith(nombre.toUpperCase());
     }
 }

@@ -33,7 +33,7 @@ public class ServicioUsuario {
     public List<Usuario> listarUsuarios(String filter) {
         List<Usuario> usuarios = this.usuarioDao.getAll();
         if (filter != null) {
-            usuarios = usuarios.stream().filter(usuario -> usuario.mismoNombre(filter)).collect(Collectors.toList());
+            usuarios = usuarios.stream().filter(usuario -> usuario.nombreContiene(filter)).collect(Collectors.toList());
         }
         return usuarios;
     }
