@@ -178,11 +178,21 @@ class Partidas extends React.Component<Props, State> {
     };
   }
 
+  dateToStringFormat = (date: Date | undefined) => {
+    return date
+      ? date.getFullYear() +
+          "/" +
+          (date.getMonth() + 1) +
+          "/" +
+          date.getDate()
+      : undefined;
+  };
+
   listarPartidas = () => {
     this.partidasApi
       .listarPartidas(
-        this.state.fechaInicio?.toISOString(),
-        this.state.fechaFin?.toISOString(),
+        this.dateToStringFormat(this.state.fechaInicio),
+        this.dateToStringFormat(this.state.fechaFin),
         this.state.estado,
         this.state.primerOrden
           ? this.state.primerOrden +
