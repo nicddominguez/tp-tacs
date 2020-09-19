@@ -339,6 +339,12 @@ export interface ListarUsuariosResponse {
      * @memberof ListarUsuariosResponse
      */
     usuarios?: Array<UsuarioModel>;
+    /**
+     * 
+     * @type {number}
+     * @memberof ListarUsuariosResponse
+     */
+    cantidadTotalDeUsuarios?: number;
 }
 /**
  * Modo de juego.
