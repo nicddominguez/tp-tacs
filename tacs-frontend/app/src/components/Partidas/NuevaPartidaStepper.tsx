@@ -12,18 +12,28 @@ import StepLabel from "@material-ui/core/StepLabel";
 import Stepper from "@material-ui/core/Stepper";
 import { createStyles, Theme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import { withStyles } from '@material-ui/core/styles'
+import { withStyles } from "@material-ui/core/styles";
 import { default as React } from "react";
-import { ProvinciaModel, UsuarioModel, CrearPartidaBody, ModoDeJuegoModel } from "../../api/api";
-import { WololoProvinciasApiClient, WololoUsuariosApiClient, WololoPartidasApiClient } from "../../api/client";
-import Paper from "@material-ui/core/Paper"
-import List from "@material-ui/core/List"
-import ListItem from "@material-ui/core/ListItem"
-import ListItemIcon from "@material-ui/core/ListItemIcon"
-import ListItemText from "@material-ui/core/ListItemText"
-import Cancel from "@material-ui/icons/Cancel"
-import Add from "@material-ui/icons/Add"
+import {
+  ProvinciaModel,
+  UsuarioModel,
+  CrearPartidaBody,
+  ModoDeJuegoModel,
+} from "../../api/api";
+import {
+  WololoProvinciasApiClient,
+  WololoUsuariosApiClient,
+  WololoPartidasApiClient,
+} from "../../api/client";
+import Paper from "@material-ui/core/Paper";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import Cancel from "@material-ui/icons/Cancel";
+import Add from "@material-ui/icons/Add";
 import TextField from "@material-ui/core/TextField";
+import TablePaginationActions from "./TablePaginationActions";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -50,8 +60,7 @@ const styles = (theme: Theme) =>
     input: {
       width: 42,
     },
-  }
-  );
+  });
 
 const stepNames = [
   "Seleccionar una provincia",
@@ -60,29 +69,29 @@ const stepNames = [
   "Buscar jugadores",
 ];
 
-
 interface SelectorProvinciasProps {
-  provincias: Array<ProvinciaModel>
-  idProvinciaSeleccionada: number
-  onChange: (idProvincia: number) => void
-  classes?: any
+  provincias: Array<ProvinciaModel>;
+  idProvinciaSeleccionada: number;
+  onChange: (idProvincia: number) => void;
+  classes?: any;
 }
 
 interface SelectorProvinciaState {
-  idProvincia: number
+  idProvincia: number;
 }
 
-
-class SelectorProvincia extends React.Component<SelectorProvinciasProps, SelectorProvinciaState> {
-
-  classes: any
+class SelectorProvincia extends React.Component<
+  SelectorProvinciasProps,
+  SelectorProvinciaState
+> {
+  classes: any;
 
   constructor(props: SelectorProvinciasProps) {
     super(props);
     this.classes = this.props.classes;
 
     this.state = {
-      idProvincia: props.idProvinciaSeleccionada
+      idProvincia: props.idProvinciaSeleccionada,
     };
 
     this.handleSelectChange = this.handleSelectChange.bind(this);
@@ -92,7 +101,7 @@ class SelectorProvincia extends React.Component<SelectorProvinciasProps, Selecto
     const idProvincia = event.target.value as number;
     if (idProvincia) {
       this.setState({
-        idProvincia: idProvincia
+        idProvincia: idProvincia,
       });
       this.props.onChange(idProvincia);
     }
@@ -108,36 +117,37 @@ class SelectorProvincia extends React.Component<SelectorProvinciasProps, Selecto
           onChange={this.handleSelectChange}
           value={this.state.idProvincia}
         >
-          {this.props.provincias.map(provincia => (
-            <MenuItem key={provincia.id} value={provincia.id}>{provincia.nombre}</MenuItem>
+          {this.props.provincias.map((provincia) => (
+            <MenuItem key={provincia.id} value={provincia.id}>
+              {provincia.nombre}
+            </MenuItem>
           ))}
         </Select>
       </FormControl>
-    )
+    );
   }
-
 }
 
 const SelectorProvinciaStyled = withStyles(styles)(SelectorProvincia);
 
-
 interface SelectorCantidadMunicipiosProps {
-  cantidadMunicipios: number | string | Array<number | string>
-  onChange: (cantidad: number | string | Array<number | string>) => void
-  classes?: any
+  cantidadMunicipios: number | string | Array<number | string>;
+  onChange: (cantidad: number | string | Array<number | string>) => void;
+  classes?: any;
 }
 
-
-class SelectorCantidadMunicipios extends React.Component<SelectorCantidadMunicipiosProps, { cantidadMunicipios: string | number | (string | number)[] }> {
-
-  classes: any
+class SelectorCantidadMunicipios extends React.Component<
+  SelectorCantidadMunicipiosProps,
+  { cantidadMunicipios: string | number | (string | number)[] }
+> {
+  classes: any;
 
   constructor(props: SelectorCantidadMunicipiosProps) {
     super(props);
     this.classes = this.props.classes;
 
     this.state = {
-      cantidadMunicipios: props.cantidadMunicipios
+      cantidadMunicipios: props.cantidadMunicipios,
     };
 
     this.setCantidadMunicipios = this.setCantidadMunicipios.bind(this);
@@ -148,7 +158,7 @@ class SelectorCantidadMunicipios extends React.Component<SelectorCantidadMunicip
 
   setCantidadMunicipios(newValue: number | number[] | string) {
     this.setState({
-      cantidadMunicipios: newValue
+      cantidadMunicipios: newValue,
     });
     this.props.onChange(newValue);
   }
@@ -176,11 +186,15 @@ class SelectorCantidadMunicipios extends React.Component<SelectorCantidadMunicip
       <div className={this.classes.rootSlider}>
         <Typography id="input-slider" gutterBottom>
           Cantidad de municipios
-      </Typography>
+        </Typography>
         <Grid container spacing={2} alignItems="center">
           <Grid item xs>
             <Slider
-              value={typeof this.state.cantidadMunicipios === "number" ? this.state.cantidadMunicipios : 12}
+              value={
+                typeof this.state.cantidadMunicipios === "number"
+                  ? this.state.cantidadMunicipios
+                  : 12
+              }
               onChange={this.handleSliderChange}
               aria-labelledby="input-slider"
               min={12}
@@ -190,7 +204,11 @@ class SelectorCantidadMunicipios extends React.Component<SelectorCantidadMunicip
           <Grid item>
             <Input
               className={this.classes.input}
-              value={typeof this.state.cantidadMunicipios === "number" ? this.state.cantidadMunicipios : 12}
+              value={
+                typeof this.state.cantidadMunicipios === "number"
+                  ? this.state.cantidadMunicipios
+                  : 12
+              }
               margin="dense"
               onChange={this.handleInputChange}
               onBlur={this.handleBlur}
@@ -205,31 +223,33 @@ class SelectorCantidadMunicipios extends React.Component<SelectorCantidadMunicip
           </Grid>
         </Grid>
       </div>
-    )
+    );
   }
-
 }
 
-
-const SelectorCantidadMunicipiosStyled = withStyles(styles)(SelectorCantidadMunicipios);
-
+const SelectorCantidadMunicipiosStyled = withStyles(styles)(
+  SelectorCantidadMunicipios
+);
 
 interface SelectorUsuarioProps {
-  classes?: any
-  onChange: (usuarios: Array<UsuarioModel>) => void
+  classes?: any;
+  onChange: (usuarios: Array<UsuarioModel>) => void;
 }
-
 
 interface SelectorUsuarioState {
-  listadoUsuarios: Array<UsuarioModel>
-  usuariosSeleccionados: Array<UsuarioModel>
-  filtro?: string
+  listadoUsuarios: Array<UsuarioModel>;
+  cantidadTotalDeUsuarios: number;
+  usuariosSeleccionados: Array<UsuarioModel>;
+  filtro: string;
+  page: number;
+  pageSize: number;
 }
 
-
-class SelectorUsuarios extends React.Component<SelectorUsuarioProps, SelectorUsuarioState> {
-
-  usuariosApiClient: WololoUsuariosApiClient
+class SelectorUsuarios extends React.Component<
+  SelectorUsuarioProps,
+  SelectorUsuarioState
+> {
+  usuariosApiClient: WololoUsuariosApiClient;
 
   constructor(props: SelectorUsuarioProps) {
     super(props);
@@ -238,8 +258,11 @@ class SelectorUsuarios extends React.Component<SelectorUsuarioProps, SelectorUsu
 
     this.state = {
       listadoUsuarios: [],
+      cantidadTotalDeUsuarios: 0,
       usuariosSeleccionados: [],
-      filtro: undefined
+      filtro: "",
+      page: 0,
+      pageSize: 4,
     };
 
     this.onChangeFilter = this.onChangeFilter.bind(this);
@@ -250,27 +273,29 @@ class SelectorUsuarios extends React.Component<SelectorUsuarioProps, SelectorUsu
 
   onChangeFilter(event: React.ChangeEvent<HTMLInputElement>) {
     this.setState({
-      filtro: event.target.value
+      filtro: event.target.value,
     });
   }
 
   handleRemoveUser(usuarioARemover: UsuarioModel) {
     return () => {
-      const nuevosUsuariosSeleccionados = this.state
-        .usuariosSeleccionados
-        .filter(usuario => usuario.id !== usuarioARemover.id);
-      this.setState(prevState => {
+      const nuevosUsuariosSeleccionados = this.state.usuariosSeleccionados.filter(
+        (usuario) => usuario.id !== usuarioARemover.id
+      );
+      this.setState((prevState) => {
         return {
-          usuariosSeleccionados: nuevosUsuariosSeleccionados
-        }
+          usuariosSeleccionados: nuevosUsuariosSeleccionados,
+        };
       });
       this.props.onChange(nuevosUsuariosSeleccionados);
-    }
+    };
   }
 
   handleAddUser(usuarioAAgregar: UsuarioModel) {
     return () => {
-      const oldIndex = this.state.usuariosSeleccionados.indexOf(usuarioAAgregar);
+      const oldIndex = this.state.usuariosSeleccionados.indexOf(
+        usuarioAAgregar
+      );
       const nuevosUsuariosSeleccionados = [...this.state.usuariosSeleccionados];
 
       if (oldIndex === -1) {
@@ -278,17 +303,30 @@ class SelectorUsuarios extends React.Component<SelectorUsuarioProps, SelectorUsu
       }
 
       this.setState({
-        usuariosSeleccionados: nuevosUsuariosSeleccionados
+        usuariosSeleccionados: nuevosUsuariosSeleccionados,
       });
       this.props.onChange(nuevosUsuariosSeleccionados);
-    }
+    };
   }
 
+  handlePage = (
+    event: React.MouseEvent<HTMLButtonElement> | null,
+    newPage: number
+  ) => {
+    this.setState({ page: newPage }, this.buscar);
+  };
+
   buscar() {
-    this.usuariosApiClient.listarUsuarios(this.state.filtro, 6)
-      .then(response => {
+    this.usuariosApiClient
+      .listarUsuarios(
+        this.state.filtro == "" ? undefined : this.state.filtro,
+        this.state.pageSize,
+        this.state.page
+      )
+      .then((response) => {
         this.setState({
-          listadoUsuarios: response.usuarios || []
+          listadoUsuarios: response.usuarios || [],
+          cantidadTotalDeUsuarios: response.cantidadTotalDeUsuarios || 0,
         });
       })
       .catch(console.error);
@@ -299,20 +337,27 @@ class SelectorUsuarios extends React.Component<SelectorUsuarioProps, SelectorUsu
       <Paper>
         <List dense component="nav" role="list">
           <ListItem key={-1}>
-            <ListItemText id="listheader" primary="Jugadores" primaryTypographyProps={{ variant: 'h6' }} />
+            <ListItemText
+              id="listheader"
+              primary="Jugadores"
+              primaryTypographyProps={{ variant: "h6" }}
+            />
           </ListItem>
-          {this.state.usuariosSeleccionados.map((usuario: UsuarioModel) =>
-            <ListItem key={usuario.id} role="listitem" button >
-              <ListItemText id={`${usuario.id}-${usuario.nombreDeUsuario}`} primary={usuario.nombreDeUsuario} />
+          {this.state.usuariosSeleccionados.map((usuario: UsuarioModel) => (
+            <ListItem key={usuario.id} role="listitem" button>
+              <ListItemText
+                id={`${usuario.id}-${usuario.nombreDeUsuario}`}
+                primary={usuario.nombreDeUsuario}
+              />
               <ListItemIcon onClick={this.handleRemoveUser(usuario)}>
                 <Cancel />
               </ListItemIcon>
             </ListItem>
-          )}
+          ))}
           <ListItem />
         </List>
       </Paper>
-    )
+    );
   }
 
   renderListadoUsuarios() {
@@ -320,20 +365,34 @@ class SelectorUsuarios extends React.Component<SelectorUsuarioProps, SelectorUsu
       <Paper>
         <List dense component="nav" role="list">
           <ListItem key={-1}>
-            <ListItemText id="listheader" primary="Usuarios" primaryTypographyProps={{ variant: 'h6' }} />
+            <ListItemText
+              id="listheader"
+              primary="Usuarios"
+              primaryTypographyProps={{ variant: "h6" }}
+            />
           </ListItem>
-          {this.state.listadoUsuarios.map((usuario: UsuarioModel) =>
-            <ListItem key={usuario.id} role="listitem" button >
-              <ListItemText id={`${usuario.id}-${usuario.nombreDeUsuario}`} primary={usuario.nombreDeUsuario} />
+          {this.state.listadoUsuarios.map((usuario: UsuarioModel) => (
+            <ListItem key={usuario.id} role="listitem" button>
+              <ListItemText
+                id={`${usuario.id}-${usuario.nombreDeUsuario}`}
+                primary={usuario.nombreDeUsuario}
+              />
               <ListItemIcon onClick={this.handleAddUser(usuario)}>
                 <Add />
               </ListItemIcon>
             </ListItem>
-          )}
-          <ListItem />
+          ))}
+          <ListItem>
+            <TablePaginationActions
+              count={this.state.cantidadTotalDeUsuarios}
+              page={this.state.page}
+              rowsPerPage={this.state.pageSize}
+              onChangePage={this.handlePage}
+            />
+          </ListItem>
         </List>
       </Paper>
-    )
+    );
   }
 
   render() {
@@ -344,49 +403,40 @@ class SelectorUsuarios extends React.Component<SelectorUsuarioProps, SelectorUsu
           value={this.state.filtro}
           onChange={this.onChangeFilter}
         />
-        <Button
-          color="primary"
-          onClick={this.buscar}
-        >
+        <Button color="primary" onClick={this.buscar}>
           Buscar
-          </Button>
+        </Button>
         <Grid container spacing={2} className={this.props.classes.root}>
-          <Grid item>
-            {this.renderListadoUsuarios()}
-          </Grid>
+          <Grid item>{this.renderListadoUsuarios()}</Grid>
           <Grid item>{this.renderUsuariosSeleccionados()}</Grid>
         </Grid>
       </div>
-
-    )
+    );
   }
-
 }
-
 
 const SelectorUsuariosStyled = withStyles(styles)(SelectorUsuarios);
 
-
 interface NuevaPartidaStepperState {
-  activeStep: number
-  idProvincia: number
-  provincias: Array<ProvinciaModel>
-  cantidadMunicipios: number | string | Array<number | string>
-  modoDeJuego: string
-  usuariosSeleccionados: Array<UsuarioModel>
+  activeStep: number;
+  idProvincia: number;
+  provincias: Array<ProvinciaModel>;
+  cantidadMunicipios: number | string | Array<number | string>;
+  modoDeJuego: string;
+  usuariosSeleccionados: Array<UsuarioModel>;
 }
-
 
 interface NuevaPartidaStepperProps {
-  classes?: any
+  classes?: any;
 }
 
-
-export class NuevaPartidaStepper extends React.Component<NuevaPartidaStepperProps, NuevaPartidaStepperState> {
-
-  provinciasApiClient: WololoProvinciasApiClient
-  partidasApiClient: WololoPartidasApiClient
-  classes: any
+export class NuevaPartidaStepper extends React.Component<
+  NuevaPartidaStepperProps,
+  NuevaPartidaStepperState
+> {
+  provinciasApiClient: WololoProvinciasApiClient;
+  partidasApiClient: WololoPartidasApiClient;
+  classes: any;
 
   constructor(props: NuevaPartidaStepperProps) {
     super(props);
@@ -400,7 +450,7 @@ export class NuevaPartidaStepper extends React.Component<NuevaPartidaStepperProp
       provincias: [],
       cantidadMunicipios: 30,
       modoDeJuego: "",
-      usuariosSeleccionados: []
+      usuariosSeleccionados: [],
     };
 
     this.setProvincias = this.setProvincias.bind(this);
@@ -416,31 +466,32 @@ export class NuevaPartidaStepper extends React.Component<NuevaPartidaStepperProp
 
   setProvincias(provincias: Array<ProvinciaModel>) {
     this.setState({
-      provincias: provincias
+      provincias: provincias,
     });
   }
 
   componentDidMount() {
-    this.provinciasApiClient.listarProvincias(23)
-      .then(response => {
+    this.provinciasApiClient
+      .listarProvincias(23)
+      .then((response) => {
         this.setProvincias(response.provincias || []);
       })
       .catch(console.error);
   }
 
   handleNext() {
-    this.setState(prevState => {
+    this.setState((prevState) => {
       return {
-        activeStep: prevState.activeStep + 1
-      }
+        activeStep: prevState.activeStep + 1,
+      };
     });
   }
 
   handleBack() {
-    this.setState(prevState => {
+    this.setState((prevState) => {
       return {
-        activeStep: prevState.activeStep - 1
-      }
+        activeStep: prevState.activeStep - 1,
+      };
     });
     if (this.state.activeStep === stepNames.length - 1) {
       this.crearPartida();
@@ -449,25 +500,25 @@ export class NuevaPartidaStepper extends React.Component<NuevaPartidaStepperProp
 
   setIdProvincia(id: number) {
     this.setState({
-      idProvincia: id
+      idProvincia: id,
     });
   }
 
   setCantidadMunicipios(cantidad: number | string | Array<number | string>) {
     this.setState({
-      cantidadMunicipios: cantidad
-    })
+      cantidadMunicipios: cantidad,
+    });
   }
 
   handleModoDeJuego(event: React.ChangeEvent<{ value: unknown }>) {
     this.setState({
-      modoDeJuego: event.target.value as string
+      modoDeJuego: event.target.value as string,
     });
   }
 
   setUsuariosSeleccionados(usuarios: Array<UsuarioModel>) {
     this.setState({
-      usuariosSeleccionados: usuarios
+      usuariosSeleccionados: usuarios,
     });
   }
 
@@ -478,12 +529,15 @@ export class NuevaPartidaStepper extends React.Component<NuevaPartidaStepperProp
   crearPartida() {
     const body: CrearPartidaBody = {
       cantidadMunicipios: this.state.cantidadMunicipios as number,
-      idJugadores: this.state.usuariosSeleccionados.map(usuario => usuario.id),
+      idJugadores: this.state.usuariosSeleccionados.map(
+        (usuario) => usuario.id
+      ),
       idProvincia: this.state.idProvincia,
-      modoDeJuego: this.state.modoDeJuego as unknown as ModoDeJuegoModel
-    }
-    this.partidasApiClient.crearPartida(body)
-      .then(response => console.log('Partida creada'))
+      modoDeJuego: (this.state.modoDeJuego as unknown) as ModoDeJuegoModel,
+    };
+    this.partidasApiClient
+      .crearPartida(body)
+      .then((response) => console.log("Partida creada"))
       .catch(console.error);
   }
 
@@ -522,9 +576,7 @@ export class NuevaPartidaStepper extends React.Component<NuevaPartidaStepperProp
         );
       case 3:
         return (
-          <SelectorUsuariosStyled
-            onChange={this.setUsuariosSeleccionados}
-          />
+          <SelectorUsuariosStyled onChange={this.setUsuariosSeleccionados} />
         );
       default:
         return "Unknown step";
@@ -549,7 +601,7 @@ export class NuevaPartidaStepper extends React.Component<NuevaPartidaStepperProp
                     >
                       Back
                     </Button>
-                    {this.state.activeStep !== stepNames.length - 1 ?
+                    {this.state.activeStep !== stepNames.length - 1 ? (
                       <Button
                         variant="contained"
                         color="primary"
@@ -558,7 +610,7 @@ export class NuevaPartidaStepper extends React.Component<NuevaPartidaStepperProp
                       >
                         Siguiente
                       </Button>
-                      :
+                    ) : (
                       <Button
                         variant="contained"
                         color="primary"
@@ -567,7 +619,7 @@ export class NuevaPartidaStepper extends React.Component<NuevaPartidaStepperProp
                       >
                         Crear
                       </Button>
-                    }
+                    )}
                   </div>
                 </div>
               </StepContent>
@@ -575,10 +627,8 @@ export class NuevaPartidaStepper extends React.Component<NuevaPartidaStepperProp
           ))}
         </Stepper>
       </div>
-    )
+    );
   }
-
 }
-
 
 export default withStyles(styles)(NuevaPartidaStepper);
