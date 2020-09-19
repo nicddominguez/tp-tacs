@@ -106,6 +106,7 @@
 							<goal>generate</goal>
 						</goals>
 						<configuration>
+							<skip>${skipGenerateCode}</skip>
 							<inputSpec>${project.basedir}/src/main/resources/swagger/api.yaml</inputSpec>
 							<output>${project.basedir}</output>
 							<language>spring</language>
@@ -126,6 +127,31 @@
 			</plugin><!--	END SWAGGER-GENERATOR	-->
 		</plugins>
 	</build>
+
+	<profiles>
+		<profile>
+			<id>default</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<skipGenerateCode>true</skipGenerateCode>
+			</properties>
+		</profile>
+		<profile>
+			<id>generate-code</id>
+			<activation>
+				<property>
+					<name>env</name>
+					<value>dev</value>
+				</property>
+			</activation>
+			<properties>
+				<skipGenerateCode>false</skipGenerateCode>
+			</properties>
+		</profile>
+	</profiles>
+
 
 	<dependencies>
 		<!-- Spring Dependencies -->
