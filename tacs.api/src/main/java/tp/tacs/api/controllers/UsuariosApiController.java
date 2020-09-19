@@ -34,6 +34,9 @@ public class UsuariosApiController implements UsuariosApi {
         List<UsuarioModel> usuarioModels = usuarioMapper.wrapList(usuarios);
         usuarioModels.sort(Comparator.comparing(UsuarioModel::getNombreDeUsuario));
         List<UsuarioModel> listaPaginada = utils.obtenerListaPaginada(pagina, tamanioPagina, usuarioModels);
-        return ResponseEntity.ok(new ListarUsuariosResponse().usuarios(listaPaginada));
+
+        Long cantidadTotalDeUsuarios = Long.valueOf(usuarios.size());
+
+        return ResponseEntity.ok(new ListarUsuariosResponse().usuarios(listaPaginada).cantidadTotalDeUsuarios(cantidadTotalDeUsuarios));
     }
 }
