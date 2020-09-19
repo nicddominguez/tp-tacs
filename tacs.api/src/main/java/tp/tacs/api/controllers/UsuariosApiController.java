@@ -30,6 +30,7 @@ public class UsuariosApiController implements UsuariosApi {
     public ResponseEntity<ListarUsuariosResponse> listarUsuarios(@Valid String filter, @Valid Long tamanioPagina, @Valid Long pagina) {
         List<Usuario> usuarios = this.servicioUsuario.listarUsuarios(filter);
         List<UsuarioModel> usuarioModels = usuarioMapper.wrapList(usuarios);
+        //TODO: el ordenado lo deberia hacer la db (la logiaga deberia estar en el dao)
         usuarioModels.sort(Comparator.comparing(UsuarioModel::getNombreDeUsuario));
         List<UsuarioModel> listaPaginada = utils.obtenerListaPaginada(pagina, tamanioPagina, usuarioModels);
 

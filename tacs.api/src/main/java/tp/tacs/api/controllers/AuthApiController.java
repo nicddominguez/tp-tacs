@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
-import tp.tacs.api.daos.UsuarioDao;
 import tp.tacs.api.dominio.usuario.Usuario;
 import tp.tacs.api.exceptions.GoogleIdTokenFaltante;
 import tp.tacs.api.exceptions.UsuarioDesconocido;
@@ -14,52 +13,35 @@ import tp.tacs.api.model.NuevoJWTModel;
 import tp.tacs.api.model.RefreshAccessTokenBody;
 import tp.tacs.api.security.GoogleIdTokenService;
 import tp.tacs.api.security.JWTTokenService;
+import tp.tacs.api.servicios.ServicioUsuario;
 
 import javax.validation.Valid;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
 public class AuthApiController implements AuthApi {
 
     private final JWTTokenService jwtTokenService;
     private final GoogleIdTokenService googleIdTokenService;
-    private final UsuarioDao usuarioDao;
     private final UsuarioMapper usuarioMapper;
-
-    // TODO: El id del usuario debería generarlo UsuarioDao cuando se almacena en la DB.
-    //  Implementarlo así ahora rompería el branch de dominio. Will do por ahora.
-    private final AtomicLong nextUserId = new AtomicLong(0L);
+    private final ServicioUsuario servicioUsuario;
 
     @Autowired
-    public AuthApiController(JWTTokenService jwtTokenService,
-                             GoogleIdTokenService googleIdTokenService,
-                             UsuarioDao usuarioDao,
-                             UsuarioMapper usuarioMapper) {
+    public AuthApiController(JWTTokenService jwtTokenService, GoogleIdTokenService googleIdTokenService, UsuarioMapper usuarioMapper, ServicioUsuario servicioUsuario) {
         this.jwtTokenService = jwtTokenService;
         this.googleIdTokenService = googleIdTokenService;
-        this.usuarioDao = usuarioDao;
         this.usuarioMapper = usuarioMapper;
+        this.servicioUsuario = servicioUsuario;
     }
 
     private NuevoJWTModel generarJwtParaUsuario(Usuario usuario) {
-        var nuevoJwt = this.jwtTokenService.createToken(
-                usuario.getId(),
-                usuario.getNombre(),
-                usuario.getIsAdmin()
-        );
         return new NuevoJWTModel()
-                .token(nuevoJwt)
+                .token(this.servicioUsuario.generarJwtParaUsuario(usuario))
                 .usuario(this.usuarioMapper.wrap(usuario));
     }
 
     private NuevoJWTModel agregarRefreshToken(Usuario usuario, NuevoJWTModel model) {
-        var nuevoRefreshToken = this.jwtTokenService.createRefreshToken(
-                usuario.getId(),
-                usuario.getNombre(),
-                usuario.getIsAdmin()
-        );
-        return model.refreshToken(nuevoRefreshToken);
+        return model.refreshToken(this.servicioUsuario.generarRefreshToken(usuario));
     }
 
     @Override
@@ -71,9 +53,8 @@ public class AuthApiController implements AuthApi {
         var idToken = this.googleIdTokenService.verifyToken(idTokenString);
         var googleId = this.googleIdTokenService.extractGoogleId(idToken);
 
-        var usuario =
-                Optional.ofNullable(this.usuarioDao.getByGoogleId(googleId))
-                        .orElseThrow(() -> new UsuarioDesconocido("Intentó iniciar sesión un usuario desconocido"));
+        var usuario = this.servicioUsuario.getByGoogleId(googleId)
+                .orElseThrow(() -> new UsuarioDesconocido("Intentó iniciar sesión un usuario desconocido"));
 
         var response = this.generarJwtParaUsuario(usuario);
         response = this.agregarRefreshToken(usuario, response);
@@ -87,26 +68,7 @@ public class AuthApiController implements AuthApi {
                 Optional.ofNullable(body.getIdToken())
                         .orElseThrow(() -> new GoogleIdTokenFaltante("Google Id token necesario para loguearse"));
 
-        var idToken = this.googleIdTokenService.verifyToken(idTokenString);
-
-        var name = this.googleIdTokenService.extractUserName(idToken);
-        var email = this.googleIdTokenService.extractEmail(idToken);
-        var googleId = this.googleIdTokenService.extractGoogleId(idToken);
-
-        var usuario = Optional.ofNullable(this.usuarioDao.getByGoogleId(googleId))
-                .orElseGet(() -> {
-                    // El usuario no existe, lo creamos
-                    var userId = this.nextUserId.getAndIncrement();
-                    var nuevoUsuario = Usuario.builder()
-                            .id(userId)
-                            .mail(email)
-                            .nombre(name)
-                            .googleId(googleId)
-                            .isAdmin(true)
-                            .build();
-                    this.usuarioDao.save(nuevoUsuario);
-                    return nuevoUsuario;
-                });
+        var usuario = this.servicioUsuario.crearUsuario(idTokenString);
 
         var response = this.generarJwtParaUsuario(usuario);
         response = this.agregarRefreshToken(usuario, response);
@@ -120,12 +82,12 @@ public class AuthApiController implements AuthApi {
         var maybeAuthorization = Optional.ofNullable(refreshToken)
                 .flatMap(this.jwtTokenService::validateToken);
 
-        if(maybeAuthorization.isEmpty()) {
+        if (maybeAuthorization.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
         var username = (String) maybeAuthorization.get().getPrincipal();
-        var usuario = Optional.ofNullable(this.usuarioDao.getByUsername(username))
+        var usuario = this.servicioUsuario.getByUsername(username)
                 .orElseThrow(() -> new UsuarioDesconocido("Usuario desconocido"));
 
         var response = this.generarJwtParaUsuario(usuario);
