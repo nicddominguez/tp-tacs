@@ -28,10 +28,7 @@ public class UsuariosApiController implements UsuariosApi {
 
     @Override
     public ResponseEntity<ListarUsuariosResponse> listarUsuarios(@Valid String filter, @Valid Long tamanioPagina, @Valid Long pagina) {
-        List<Usuario> usuarios = this.servicioUsuario.listarUsuarios();
-        if (filter != null) {
-            usuarios = usuarios.stream().filter(usuario -> usuario.mismoNombre(filter)).collect(Collectors.toList());
-        }
+        List<Usuario> usuarios = this.servicioUsuario.listarUsuarios(filter);
         List<UsuarioModel> usuarioModels = usuarioMapper.wrapList(usuarios);
         usuarioModels.sort(Comparator.comparing(UsuarioModel::getNombreDeUsuario));
         List<UsuarioModel> listaPaginada = utils.obtenerListaPaginada(pagina, tamanioPagina, usuarioModels);
