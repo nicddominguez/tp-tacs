@@ -34,7 +34,6 @@ export default function NuevaPartidaDrawer({ open, toggleDrawer }: Props) {
       <div
         className={clsx(classes.list, [classes.fullList])}
         role="presentation"
-        onKeyDown={toggleDrawer(false)}
       >
         <NuevaPartidaStepper></NuevaPartidaStepper>
         <Divider />
