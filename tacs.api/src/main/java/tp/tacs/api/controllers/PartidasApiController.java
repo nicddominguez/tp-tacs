@@ -141,7 +141,10 @@ public class PartidasApiController implements PartidasApi {
         }
 
         var listaPaginada = utils.obtenerListaPaginada(pagina, tamanioPagina, partidaModels);
-        var response = new ListarPartidasResponse().partidas(listaPaginada);
+        var cantidadTotalDePartidas = Long.valueOf(partidas.size());
+        
+        var response = new ListarPartidasResponse().partidas(listaPaginada).cantidadTotalDePartidas(cantidadTotalDePartidas);
+
         return ResponseEntity.ok(response);
     }
 

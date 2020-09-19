@@ -23,6 +23,10 @@ public class ListarPartidasResponse   {
   @Valid
   private List<PartidaSinInfoModel> partidas = null;
 
+  @JsonProperty("cantidadTotalDePartidas")
+  @Valid
+  private Long cantidadTotalDePartidas = null;
+
   public ListarPartidasResponse partidas(List<PartidaSinInfoModel> partidas) {
     this.partidas = partidas;
     return this;
@@ -50,6 +54,25 @@ public class ListarPartidasResponse   {
     this.partidas = partidas;
   }
 
+  public ListarPartidasResponse cantidadTotalDePartidas(Long cantidadTotalDePartidas) {
+    this.cantidadTotalDePartidas = cantidadTotalDePartidas;
+    return this;
+  }
+
+  /**
+   * Get cantidadTotalDePartidas
+   * @return cantidadTotalDePartidas
+  **/
+  @ApiModelProperty(value = "")
+      @Valid
+    public Long getCantidadTotalDePartidas() {
+    return cantidadTotalDePartidas;
+  }
+
+  public void setCantidadTotalDePartidas(Long cantidadTotalDePartidas) {
+    this.cantidadTotalDePartidas = cantidadTotalDePartidas;
+  }
+
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -60,7 +83,8 @@ public class ListarPartidasResponse   {
       return false;
     }
     ListarPartidasResponse listarPartidasResponse = (ListarPartidasResponse) o;
-    return Objects.equals(this.partidas, listarPartidasResponse.partidas);
+    return Objects.equals(this.partidas, listarPartidasResponse.partidas) &&
+        Objects.equals(this.cantidadTotalDePartidas, listarPartidasResponse.cantidadTotalDePartidas);
   }
 
   @Override
@@ -74,6 +98,7 @@ public class ListarPartidasResponse   {
     sb.append("class ListarPartidasResponse {\n");
     
     sb.append("    partidas: ").append(toIndentedString(partidas)).append("\n");
+    sb.append("    cantidadTotalDePartidas: ").append(toIndentedString(cantidadTotalDePartidas)).append("\n");
     sb.append("}");
     return sb.toString();
   }
