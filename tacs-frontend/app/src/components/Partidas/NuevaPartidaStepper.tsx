@@ -422,7 +422,7 @@ interface NuevaPartidaStepperState {
   idProvincia: number;
   provincias: Array<ProvinciaModel>;
   cantidadMunicipios: number | string | Array<number | string>;
-  modoDeJuego: string;
+  modoDeJuego: ModoDeJuegoModel;
   usuariosSeleccionados: Array<UsuarioModel>;
 }
 
@@ -446,10 +446,10 @@ export class NuevaPartidaStepper extends React.Component<
 
     this.state = {
       activeStep: 0,
-      idProvincia: 1,
+      idProvincia: 6,
       provincias: [],
       cantidadMunicipios: 30,
-      modoDeJuego: "",
+      modoDeJuego: ModoDeJuegoModel.Normal,
       usuariosSeleccionados: [],
     };
 
@@ -512,7 +512,7 @@ export class NuevaPartidaStepper extends React.Component<
 
   handleModoDeJuego(event: React.ChangeEvent<{ value: unknown }>) {
     this.setState({
-      modoDeJuego: event.target.value as string,
+      modoDeJuego: event.target.value as ModoDeJuegoModel,
     });
   }
 
@@ -533,7 +533,7 @@ export class NuevaPartidaStepper extends React.Component<
         (usuario) => usuario.id
       ),
       idProvincia: this.state.idProvincia,
-      modoDeJuego: (this.state.modoDeJuego as unknown) as ModoDeJuegoModel,
+      modoDeJuego: this.state.modoDeJuego,
     };
     this.partidasApiClient
       .crearPartida(body)
@@ -568,9 +568,9 @@ export class NuevaPartidaStepper extends React.Component<
               value={this.state.modoDeJuego}
               onChange={this.handleModoDeJuego}
             >
-              <MenuItem value={"RAPIDO"}>Rápido</MenuItem>
-              <MenuItem value={"NORMAL"}>Normal</MenuItem>
-              <MenuItem value={"EXTENDIDO"}>Extendido</MenuItem>
+              <MenuItem value={ModoDeJuegoModel.Rapido}>Rápido</MenuItem>
+              <MenuItem value={ModoDeJuegoModel.Normal}>Normal</MenuItem>
+              <MenuItem value={ModoDeJuegoModel.Extendido}>Extendido</MenuItem>
             </Select>
           </FormControl>
         );
