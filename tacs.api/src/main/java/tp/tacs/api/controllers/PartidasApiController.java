@@ -3,10 +3,12 @@ package tp.tacs.api.controllers;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import tp.tacs.api.daos.MunicipioDao;
 import tp.tacs.api.daos.PartidaDao;
+import tp.tacs.api.daos.UsuarioDao;
 import tp.tacs.api.dominio.partida.Partida;
 import tp.tacs.api.handler.PartidaException;
 import tp.tacs.api.mappers.*;
@@ -51,6 +53,8 @@ public class PartidasApiController implements PartidasApi {
     private PartidaDao partidaDao;
     @Autowired
     private MunicipioDao municipioDao;
+    @Autowired
+    private UsuarioDao usuarioDao;
 
     @Override
     public ResponseEntity<Void> actualizarEstadoPartida(Long idPartida, @Valid ActualizarEstadoPartida body) {
@@ -90,13 +94,25 @@ public class PartidasApiController implements PartidasApi {
 
     @Override
     public ResponseEntity<PartidaModel> crearPartida(@Valid CrearPartidaBody body) {
+        if (body.getIdJugadores().isEmpty())
+            return new ResponseEntity("No se puede crear una partida sin usuarios", HttpStatus.BAD_REQUEST);
+        if (body.getCantidadMunicipios() <= 0)
+            return new ResponseEntity("No se puede crear una partida con 0 municipios o menos.", HttpStatus.BAD_REQUEST);
+        if (body.getModoDeJuego() == null)
+            return new ResponseEntity("Modo de juego incorrecto", HttpStatus.BAD_REQUEST);
+        //validar que los usuarios existan
+        for (var id : body.getIdJugadores()) {
+            if (usuarioDao.get(id) == null) {
+                return ResponseEntity.badRequest().build();
+            }
+        }
         Partida partida;
         try {
             partida = servicioPartida.inicializar(body);
             PartidaModel response = partidaMapper.wrap(partida);
             return ResponseEntity.ok(response);
         } catch (PartidaException e) {
-            return ResponseEntity.notFound().build();
+            return new ResponseEntity(e.getMessage(),HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -105,7 +121,13 @@ public class PartidasApiController implements PartidasApi {
         var municipioOrigen = municipioDao.get(body.getIdMunicipioOrigen());
         var municipioDestino = municipioDao.get(body.getIdMunicipioDestino());
         var cantidad = Math.toIntExact(body.getCantidad());
-        return ResponseEntity.ok(servicioPartida.moverGauchos(municipioOrigen, municipioDestino, cantidad));
+        MoverGauchosResponse response;
+        try {
+            response = servicioPartida.moverGauchos(municipioOrigen, municipioDestino, cantidad);
+        } catch (PartidaException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        return ResponseEntity.ok(response);
     }
 
     @Override
@@ -129,7 +151,7 @@ public class PartidasApiController implements PartidasApi {
 
     @Override
     public ResponseEntity<ListarPartidasResponse> listarPartidas(@Valid Date fechaInicio, @Valid Date fechaFin,
-                                                                 @Valid EstadoDeJuegoModel estado, @Valid String ordenarPor, @Valid Long tamanioPagina, @Valid Long pagina) {
+            @Valid EstadoDeJuegoModel estado, @Valid String ordenarPor, @Valid Long tamanioPagina, @Valid Long pagina) {
         var partidas = this.partidaDao.getPartidasFiltradas(fechaInicio, fechaFin, estado);
         var partidaModels = partidaSinInfoMapper.partidasParaListar(partidas);
 
@@ -142,7 +164,7 @@ public class PartidasApiController implements PartidasApi {
 
         var listaPaginada = utils.obtenerListaPaginada(pagina, tamanioPagina, partidaModels);
         var cantidadTotalDePartidas = Long.valueOf(partidas.size());
-        
+
         var response = new ListarPartidasResponse().partidas(listaPaginada).cantidadTotalDePartidas(cantidadTotalDePartidas);
 
         return ResponseEntity.ok(response);
@@ -150,12 +172,12 @@ public class PartidasApiController implements PartidasApi {
 
     public Comparator<PartidaSinInfoModel> transformarEnComparador(String orden) {
         switch (orden) {
-            case "fecha":
-                return Comparator.comparing(PartidaSinInfoModel::getFecha);
-            case "estado":
-                return Comparator.comparing(PartidaSinInfoModel::getEstado);
-            default:
-                throw new RuntimeException("Orden no permitido");
+        case "fecha":
+            return Comparator.comparing(PartidaSinInfoModel::getFecha);
+        case "estado":
+            return Comparator.comparing(PartidaSinInfoModel::getEstado);
+        default:
+            throw new RuntimeException("Orden no permitido");
         }
     }
 }

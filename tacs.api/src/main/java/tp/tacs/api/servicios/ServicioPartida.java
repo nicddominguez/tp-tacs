@@ -220,6 +220,8 @@ public class ServicioPartida {
     }
 
     public MoverGauchosResponse moverGauchos(Municipio municipioOrigen, Municipio municipioDestino, Integer cantidad) {
+        if (cantidad > municipioOrigen.getCantGauchos())
+            throw new PartidaException("La cantidad de gauchos a mover no puede ser menor a la que posee el municipio origen.");
         municipioOrigen.sacarGauchos(cantidad);
         municipioDestino.agregarGauchos(cantidad);
         MunicipioEnJuegoModel municipioOrigenModel = municipioEnJuegoMapper.wrap(municipioOrigen);

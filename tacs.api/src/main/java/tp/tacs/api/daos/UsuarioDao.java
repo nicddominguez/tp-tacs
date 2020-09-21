@@ -22,6 +22,14 @@ public class UsuarioDao implements Dao<Usuario> {
     @PostConstruct
     private void postConstruct() {
         usuarios = new ArrayList<>();
+        Usuario nico = Usuario.builder().rachaActual(0L).partidasJugadas(0L).partidasGanadas(0L).isAdmin(false).googleId("").nombre("Nico").id(90L).mail("asd@gmail.com").build();
+        Usuario juan = Usuario.builder().rachaActual(0L).partidasJugadas(0L).partidasGanadas(0L).isAdmin(false).googleId("").nombre("Juan").id(91L).mail("asd@gmail.com").build();
+        Usuario alejo = Usuario.builder().rachaActual(0L).partidasJugadas(0L).partidasGanadas(0L).isAdmin(false).googleId("").nombre("Alejo").id(92L).mail("asd@gmail.com").build();
+        Usuario pablo = Usuario.builder().rachaActual(0L).partidasJugadas(0L).partidasGanadas(0L).isAdmin(false).googleId("").nombre("Pablo").id(93L).mail("asd@gmail.com").build();
+        usuarios.add(nico);
+        usuarios.add(juan);
+        usuarios.add(alejo);
+        usuarios.add(pablo);
     }
 
     @Override
