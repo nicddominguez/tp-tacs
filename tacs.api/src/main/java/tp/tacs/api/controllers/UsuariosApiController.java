@@ -3,7 +3,6 @@ package tp.tacs.api.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
-import tp.tacs.api.daos.UsuarioDao;
 import tp.tacs.api.dominio.usuario.Usuario;
 import tp.tacs.api.mappers.UsuarioMapper;
 import tp.tacs.api.model.ListarUsuariosResponse;
@@ -14,7 +13,6 @@ import tp.tacs.api.utils.Utils;
 import javax.validation.Valid;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 public class UsuariosApiController implements UsuariosApi {
@@ -36,6 +34,6 @@ public class UsuariosApiController implements UsuariosApi {
 
         Long cantidadTotalDeUsuarios = Long.valueOf(usuarios.size());
 
-        return ResponseEntity.ok(new ListarUsuariosResponse().usuarios(listaPaginada));
+        return ResponseEntity.ok(new ListarUsuariosResponse().usuarios(listaPaginada).cantidadTotalDeUsuarios(cantidadTotalDeUsuarios));
     }
 }

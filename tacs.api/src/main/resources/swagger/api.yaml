@@ -231,6 +231,9 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/UsuarioModel'
+                  cantidadTotalDeUsuarios:
+                    type: integer
+                    format: int64
         400:
           description: Bad request
         403:
