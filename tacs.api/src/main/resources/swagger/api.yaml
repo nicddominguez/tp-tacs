@@ -371,6 +371,9 @@ paths:
                         idGanador:
                           type: string
                           description: Id del usuario ganador
+                  cantidadTotalDePartidas:
+                    type: integer
+                    format: int64
         400:
           description: Bad request
         403:

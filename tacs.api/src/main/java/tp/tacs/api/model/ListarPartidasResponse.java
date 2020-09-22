@@ -1,16 +1,13 @@
 package tp.tacs.api.model;
 
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.springframework.validation.annotation.Validated;
+
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
-import tp.tacs.api.model.PartidaSinInfoModel;
-import org.springframework.validation.annotation.Validated;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+import java.util.Objects;
 
 /**
  * ListarPartidasResponse
@@ -22,6 +19,9 @@ public class ListarPartidasResponse   {
   @JsonProperty("partidas")
   @Valid
   private List<PartidaSinInfoModel> partidas = null;
+
+  @JsonProperty("cantidadTotalDePartidas")
+  private Long cantidadTotalDePartidas = null;
 
   public ListarPartidasResponse partidas(List<PartidaSinInfoModel> partidas) {
     this.partidas = partidas;
@@ -50,6 +50,25 @@ public class ListarPartidasResponse   {
     this.partidas = partidas;
   }
 
+  public ListarPartidasResponse cantidadTotalDePartidas(Long cantidadTotalDePartidas) {
+    this.cantidadTotalDePartidas = cantidadTotalDePartidas;
+    return this;
+  }
+
+  /**
+   * Get cantidadTotalDePartidas
+   * @return cantidadTotalDePartidas
+  **/
+  @ApiModelProperty(value = "")
+  
+    public Long getCantidadTotalDePartidas() {
+    return cantidadTotalDePartidas;
+  }
+
+  public void setCantidadTotalDePartidas(Long cantidadTotalDePartidas) {
+    this.cantidadTotalDePartidas = cantidadTotalDePartidas;
+  }
+
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -60,12 +79,13 @@ public class ListarPartidasResponse   {
       return false;
     }
     ListarPartidasResponse listarPartidasResponse = (ListarPartidasResponse) o;
-    return Objects.equals(this.partidas, listarPartidasResponse.partidas);
+    return Objects.equals(this.partidas, listarPartidasResponse.partidas) &&
+        Objects.equals(this.cantidadTotalDePartidas, listarPartidasResponse.cantidadTotalDePartidas);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(partidas);
+    return Objects.hash(partidas, cantidadTotalDePartidas);
   }
 
   @Override
@@ -74,6 +94,7 @@ public class ListarPartidasResponse   {
     sb.append("class ListarPartidasResponse {\n");
     
     sb.append("    partidas: ").append(toIndentedString(partidas)).append("\n");
+    sb.append("    cantidadTotalDePartidas: ").append(toIndentedString(cantidadTotalDePartidas)).append("\n");
     sb.append("}");
     return sb.toString();
   }
