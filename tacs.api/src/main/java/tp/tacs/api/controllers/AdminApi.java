@@ -70,5 +70,14 @@ public interface AdminApi {
 ,@ApiParam(value = "", defaultValue = "0") @Valid @RequestParam(value = "pagina", required = false, defaultValue="0") Long pagina
 );
 
+
+    @ApiOperation(value = "Pasar de turno", nickname = "pasarTurnoAdmin", notes = "", tags={ "Admin", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "Success") })
+    @RequestMapping(value = "/admin/pasarTurno/{idPartida}",
+        method = RequestMethod.POST)
+    ResponseEntity<Void> pasarTurnoAdmin(@ApiParam(value = "",required=true) @PathVariable("idPartida") Long idPartida
+);
+
 }
 
