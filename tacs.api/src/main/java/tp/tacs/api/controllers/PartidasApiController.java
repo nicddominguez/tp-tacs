@@ -160,12 +160,9 @@ public class PartidasApiController implements PartidasApi {
 
     @Override
     public ResponseEntity<PartidaModel> getPartida(Long idPartida) {
-        Partida partida;
-        try {
-            partida = servicioPartida.obtenerPartidaPorId(idPartida);
-        } catch (IndexOutOfBoundsException e) {
+        var partida = servicioPartida.obtenerPartidaPorId(idPartida);
+        if (partida == null)
             return ResponseEntity.notFound().build();
-        }
         return ResponseEntity.ok(partidaMapper.wrap(partida));
     }
 
