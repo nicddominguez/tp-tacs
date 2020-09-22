@@ -143,7 +143,7 @@ public class PartidasApiController implements PartidasApi {
             return ResponseEntity.status(404).build();
 
         Usuario usuarioRequest = usuarioDao.getByUsername(usernameRequest);
-        if(partida.idUsuarioEnTurnoActual() == usuarioRequest.getId())
+        if(partida.idUsuarioEnTurnoActual() != usuarioRequest.getId())
             return ResponseEntity.status(403).build();
 
         servicioPartida.pasarTurno(partida);
