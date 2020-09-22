@@ -609,6 +609,28 @@ paths:
           description: Bad request
         404:
           description: Not found
+  /partidas/{idPartida}/turnos:
+    post:
+      tags:
+        - Partidas
+      summary: Pasar de turno
+      operationId: pasarTurno
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: idPartida
+          schema:
+            type: integer
+            format: int64
+          required: true
+      responses:
+        200:
+          description: Success
+        403:
+          description: Forbidden
+        404:
+          description: Not found
   /partidas/{idPartida}/ataques/simulaciones:
     post:
       tags:

@@ -22,10 +22,6 @@ public class ListarUsuariosResponse   {
   @JsonProperty("usuarios")
   @Valid
   private List<UsuarioModel> usuarios = null;
-  
-  @JsonProperty("cantidadTotalDeUsuarios")
-  @Valid
-  private Long cantidadTotalDeUsuarios = null;
 
   public ListarUsuariosResponse usuarios(List<UsuarioModel> usuarios) {
     this.usuarios = usuarios;
@@ -54,25 +50,6 @@ public class ListarUsuariosResponse   {
     this.usuarios = usuarios;
   }
 
-  public ListarUsuariosResponse cantidadTotalDeUsuarios(Long cantidadTotalDeUsuarios) {
-    this.cantidadTotalDeUsuarios = cantidadTotalDeUsuarios;
-    return this;
-  }
-
-  /**
-   * Get cantidadTotalDeUsuarios
-   * @return cantidadTotalDeUsuarios
-  **/
-  @ApiModelProperty(value = "")
-  
-    @Valid
-    public Long getCantidadTotalDeUsuarios() {
-    return cantidadTotalDeUsuarios;
-  }
-
-  public void setCantidadTotalDeUsuarios(Long cantidadTotalDeUsuarios) {
-    this.cantidadTotalDeUsuarios = cantidadTotalDeUsuarios;
-  }
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -83,13 +60,12 @@ public class ListarUsuariosResponse   {
       return false;
     }
     ListarUsuariosResponse listarUsuariosResponse = (ListarUsuariosResponse) o;
-    return Objects.equals(this.usuarios, listarUsuariosResponse.usuarios) &&
-        Objects.equals(this.cantidadTotalDeUsuarios, listarUsuariosResponse.cantidadTotalDeUsuarios);
+    return Objects.equals(this.usuarios, listarUsuariosResponse.usuarios);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(usuarios, cantidadTotalDeUsuarios);
+    return Objects.hash(usuarios);
   }
 
   @Override
@@ -98,7 +74,6 @@ public class ListarUsuariosResponse   {
     sb.append("class ListarUsuariosResponse {\n");
     
     sb.append("    usuarios: ").append(toIndentedString(usuarios)).append("\n");
-    sb.append("    cantidadTotalDeUsuarios: ").append(toIndentedString(cantidadTotalDeUsuarios)).append("\n");
     sb.append("}");
     return sb.toString();
   }

@@ -30,6 +30,7 @@ public class UsuarioDao implements Dao<Usuario> {
         usuarios.add(juan);
         usuarios.add(alejo);
         usuarios.add(pablo);
+
     }
 
     @Override

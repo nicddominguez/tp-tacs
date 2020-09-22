@@ -90,6 +90,7 @@ public class ServicioPartida {
     }
 
     public void pasarTurno(Partida request) {
+
         if (Estado.EN_CURSO.equals(request.getEstado())) {
             if (this.hayGanador(request)) {
                 this.terminarPartida(request);
@@ -277,7 +278,6 @@ public class ServicioPartida {
         if (gauchosDefensoresFinal <= 0) {
             this.actualizarMunicipioPerdedor(municipioAtacante, municipioAtacado);
         }
-        this.pasarTurno(partida);
     }
 
     public void actualizarEstadoPartida(Partida partida, Estado estado) {

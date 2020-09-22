@@ -5,11 +5,13 @@ import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RestController;
 import tp.tacs.api.daos.MunicipioDao;
 import tp.tacs.api.daos.PartidaDao;
 import tp.tacs.api.daos.UsuarioDao;
 import tp.tacs.api.dominio.partida.Partida;
+import tp.tacs.api.dominio.usuario.Usuario;
 import tp.tacs.api.handler.PartidaException;
 import tp.tacs.api.mappers.*;
 import tp.tacs.api.model.*;
@@ -131,6 +133,24 @@ public class PartidasApiController implements PartidasApi {
     }
 
     @Override
+    public ResponseEntity<Void> pasarTurno(Long idPartida) {
+        String usernameRequest = obtenerUsername();
+        if(usernameRequest == null)
+            return ResponseEntity.status(401).build();
+
+        Partida partida = partidaDao.get(idPartida);
+        if(partida == null)
+            return ResponseEntity.status(404).build();
+
+        Usuario usuarioRequest = usuarioDao.getByUsername(usernameRequest);
+        if(partida.idUsuarioEnTurnoActual() == usuarioRequest.getId())
+            return ResponseEntity.status(403).build();
+
+        servicioPartida.pasarTurno(partida);
+        return ResponseEntity.ok().build();
+    }
+
+    @Override
     public ResponseEntity<SimularAtacarMunicipioResponse> simularAtacarMunicipio(Long idPartida, @Valid SimularAtacarMunicipioBody body) {
         var partida = partidaDao.get(idPartida);
         var municipioAtacante = municipioDao.get(body.getIdMunicipioAtacante());
@@ -165,7 +185,7 @@ public class PartidasApiController implements PartidasApi {
         var listaPaginada = utils.obtenerListaPaginada(pagina, tamanioPagina, partidaModels);
         var cantidadTotalDePartidas = Long.valueOf(partidas.size());
 
-        var response = new ListarPartidasResponse().partidas(listaPaginada).cantidadTotalDePartidas(cantidadTotalDePartidas);
+        var response = new ListarPartidasResponse().partidas(listaPaginada);
 
         return ResponseEntity.ok(response);
     }
@@ -179,6 +199,11 @@ public class PartidasApiController implements PartidasApi {
         default:
             throw new RuntimeException("Orden no permitido");
         }
+    }
+
+    private String obtenerUsername(){
+        var authorization = SecurityContextHolder.getContext().getAuthentication();
+        return (String) authorization.getPrincipal();
     }
 }
 

@@ -143,6 +143,18 @@ public interface PartidasApi {
 );
 
 
+    @ApiOperation(value = "Pasar de turno", nickname = "pasarTurno", notes = "", authorizations = {
+        @Authorization(value = "bearerAuth")    }, tags={ "Partidas", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "Success"),
+        @ApiResponse(code = 403, message = "Forbidden"),
+        @ApiResponse(code = 404, message = "Not found") })
+    @RequestMapping(value = "/partidas/{idPartida}/turnos",
+        method = RequestMethod.POST)
+    ResponseEntity<Void> pasarTurno(@ApiParam(value = "",required=true) @PathVariable("idPartida") Long idPartida
+);
+
+
     @ApiOperation(value = "Ataca a un municipio", nickname = "simularAtacarMunicipio", notes = "", response = SimularAtacarMunicipioResponse.class, authorizations = {
         @Authorization(value = "bearerAuth")    }, tags={ "Partidas", })
     @ApiResponses(value = { 

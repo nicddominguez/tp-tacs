@@ -36,6 +36,6 @@ public class UsuariosApiController implements UsuariosApi {
 
         Long cantidadTotalDeUsuarios = Long.valueOf(usuarios.size());
 
-        return ResponseEntity.ok(new ListarUsuariosResponse().usuarios(listaPaginada).cantidadTotalDeUsuarios(cantidadTotalDeUsuarios));
+        return ResponseEntity.ok(new ListarUsuariosResponse().usuarios(listaPaginada));
     }
 }
