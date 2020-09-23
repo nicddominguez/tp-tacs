@@ -79,5 +79,14 @@ public interface AdminApi {
     ResponseEntity<Void> pasarTurnoAdmin(@ApiParam(value = "",required=true) @PathVariable("idPartida") Long idPartida
 );
 
+    @ApiOperation(value = "Obtener JWT por id de usuario", nickname = "obtenerJwtUsuario", notes = "", tags={ "Admin", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "Success") })
+        @ApiResponse(code = 400, message = "Bad request")
+    @RequestMapping(value = "/admin/token/{idUsuario}",
+        method = RequestMethod.GET)
+    ResponseEntity<String> obtenerJwtUsuario(@ApiParam(value = "",required=true) @PathVariable("idUsuario") Long idUsuario
+);
+
 }
 

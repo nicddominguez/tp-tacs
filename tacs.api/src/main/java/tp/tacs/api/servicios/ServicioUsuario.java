@@ -54,6 +54,11 @@ public class ServicioUsuario {
         );
     }
 
+    public String generarJwtParaUsuarioPorId(Long id) {
+        Usuario usuario = this.usuarioDao.get(id);
+        return this.generarJwtParaUsuario(usuario);
+    }
+
     public Optional<Usuario> getByUsername(String username) {
         return Optional.ofNullable(this.usuarioDao.getByUsername(username));
     }
