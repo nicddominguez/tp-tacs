@@ -223,6 +223,12 @@ export class WololoPartidasApiClient extends BaseWololoApiClient {
         )
     }
 
+    public async getPartida(idPartida: number) {
+        return this.doAuthenticatedRequest(
+            async (options) => this.partidasApi.getPartida(idPartida, options)
+        );
+    }
+
     public async crearPartida(body: CrearPartidaBody) {
         return this.doAuthenticatedRequest(
             async (options) => this.partidasApi.crearPartida(body, options)
