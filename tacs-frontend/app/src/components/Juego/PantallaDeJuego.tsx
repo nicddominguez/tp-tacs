@@ -1,7 +1,7 @@
 import React from 'react';
 import GameMap from './GameMap';
 import { GeoJsonObject } from 'geojson';
-import { PartidaModel, MunicipioEnJuegoModel } from 'api';
+import { PartidaModel, MunicipioEnJuegoModel, PartidaSinInfoModel, DatosDeJuegoModel } from 'api';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -10,6 +10,8 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import Button from '@material-ui/core/Button';
 import Snackbar from '@material-ui/core/Snackbar';
 import Slider from '@material-ui/core/Slider';
+import { getMapData } from '../../api/maps';
+import { WololoPartidasApiClient } from 'api/client';
 
 enum EstadoJuego {
   SELECCION = 'SELECCION',
@@ -18,7 +20,8 @@ enum EstadoJuego {
 }
 
 export interface PantallaDeJuegoProps {
-  partida?: PartidaModel,
+  partidaSinInfo?: PartidaSinInfoModel
+  partida?: PartidaModel
   mapData: GeoJsonObject | Array<GeoJsonObject>
 }
 
@@ -31,8 +34,11 @@ interface PantallaDeJuegoState {
   municipioSeleccionado?: MunicipioEnJuegoModel
   municipioObjetivo?: MunicipioEnJuegoModel
   cantidadGauchosAMover?: number
+  mapData?: GeoJsonObject | Array<GeoJsonObject> | undefined
+  infoPartida?: DatosDeJuegoModel
 }
 
+const partidasApiClient = new WololoPartidasApiClient();
 
 export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProps, PantallaDeJuegoState> {
 
@@ -46,7 +52,8 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
       snackbarOpen: false,
       estadoJuego: EstadoJuego.SELECCION,
       onClickMunicipio: this.seleccionarMunicipio,
-      cantidadGauchosAMover: 1
+      cantidadGauchosAMover: 1,
+      mapData: undefined
     };
 
     this.handleDialogClose = this.handleDialogClose.bind(this);
@@ -58,6 +65,27 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
     this.organizarDesplazamientoGauchos = this.organizarDesplazamientoGauchos.bind(this);
     this.solicitarDesplazamientoGauchos = this.solicitarDesplazamientoGauchos.bind(this);
     this.confirmarDesplazamientoGauchos = this.confirmarDesplazamientoGauchos.bind(this);
+  }
+
+  componentDidMount() {
+    if(this.props.partidaSinInfo?.id !== undefined && this.props.partidaSinInfo?.provincia?.id) {
+      getMapData(this.props.partidaSinInfo?.provincia.id)
+        .then(mapData => {
+          console.log(mapData);
+          if(mapData) {
+            this.setState({
+              mapData: mapData
+            })
+          }
+        });
+      partidasApiClient.getPartida(this.props.partidaSinInfo?.id)
+        .then(partida => {
+          this.setState({
+            infoPartida: partida.informacionDeJuego
+          })
+        })
+        .catch(console.error);
+    }
   }
 
   handleSnackbarClose() {
@@ -225,12 +253,12 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
   render() {
     return (
       <div>
-        <GameMap
-          mapData={this.props.mapData}
+        {this.state.mapData && this.state.infoPartida && <GameMap
+          mapData={this.state.mapData}
           jugadores={this.props.partida?.jugadores}
-          partida={this.props.partida?.informacionDeJuego}
+          datosDeJuego={this.state.infoPartida}
           onClickMunicipio={this.state.onClickMunicipio}
-        />
+        />}
         <Dialog
           open={this.state.dialogOpen}
           onClose={this.handleDialogClose}

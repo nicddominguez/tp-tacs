@@ -11,7 +11,7 @@ export interface GameMapProps {
     mapData?: GeoJsonObject | Array<GeoJsonObject>
     onClickMunicipio?: (municipio: MunicipioEnJuegoModel) => void
     jugadores?: Array<UsuarioModel>
-    partida?: DatosDeJuegoModel
+    datosDeJuego?: DatosDeJuegoModel
 }
 
 interface GameMapState {
@@ -49,7 +49,7 @@ export default class GameMap extends React.Component<GameMapProps, GameMapState>
 
     featureStyle(feature?: Feature<Geometry, any>): PathOptions {
         const nombreMunicipio: string = feature?.properties.nombre;
-        const municipioEnJuego = this.props.partida
+        const municipioEnJuego = this.props.datosDeJuego
             ?.municipios
             ?.find(municipio => municipio.nombre === nombreMunicipio);
         const idDuenio = municipioEnJuego?.duenio?.id;
@@ -69,7 +69,7 @@ export default class GameMap extends React.Component<GameMapProps, GameMapState>
     onClickArea(event: LeafletMouseEvent) {
         const layer = event.target;
         const nombre: string = layer.feature.properties.nombre;
-        this.props.partida
+        this.props.datosDeJuego
             ?.municipios
             ?.filter(municipio => municipio.nombre === nombre)
             .forEach(municipio => {
