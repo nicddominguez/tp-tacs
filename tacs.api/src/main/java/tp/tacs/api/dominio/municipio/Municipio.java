@@ -30,10 +30,10 @@ public class Municipio {
     }
 
     public void agregarGauchos(Integer cantidad){
-        cantGauchos =+ cantidad;
+        this.setCantGauchos(cantGauchos + cantidad);
     }
     public void sacarGauchos(Integer cantidad){
-        cantGauchos =- cantidad;
+        this.setCantGauchos(cantGauchos - cantidad);
     }
 
     public boolean estaBloqueado() {
