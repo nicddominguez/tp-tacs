@@ -6,6 +6,7 @@
 package tp.tacs.api.controllers;
 
 import tp.tacs.api.model.ListarUsuariosResponse;
+import tp.tacs.api.model.UsuarioModel;
 import io.swagger.annotations.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -40,6 +41,19 @@ public interface UsuariosApi {
 ,@ApiParam(value = "", defaultValue = "10") @Valid @RequestParam(value = "tamanioPagina", required = false, defaultValue="10") Long tamanioPagina
 ,@ApiParam(value = "", defaultValue = "0") @Valid @RequestParam(value = "pagina", required = false, defaultValue="0") Long pagina
 );
+
+
+    @ApiOperation(value = "Permite obtener información del usuario logueado", nickname = "obtenerUsuarioLogueado", notes = "", response = UsuarioModel.class, authorizations = {
+        @Authorization(value = "bearerAuth")    }, tags={ "Usuarios", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "Success", response = UsuarioModel.class),
+        @ApiResponse(code = 400, message = "Bad request"),
+        @ApiResponse(code = 403, message = "Forbidden"),
+        @ApiResponse(code = 404, message = "Not found") })
+    @RequestMapping(value = "/usuarios/yo",
+        produces = { "application/json" }, 
+        method = RequestMethod.GET)
+    ResponseEntity<UsuarioModel> obtenerUsuarioLogueado();
 
 }
 
