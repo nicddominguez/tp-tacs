@@ -27,7 +27,7 @@ public class ExternalApis implements RepoMunicipios {
     @Autowired
     private ProvinciaMapper provinciaWrapper;
 
-    private String geoRefMunicipioBaseUrlEstandar = "https://apis.datos.gob.ar/georef/api/municipios?aplanar=true";
+    private String geoRefMunicipioBaseUrlEstandar = "https://apis.datos.gob.ar/georef/api/departamentos?aplanar=true";
     private String geoRefProvinciabaseUrlEstandar = "https://apis.datos.gob.ar/georef/api/provincias?aplanar=true";
     private String geoRefProvinciaNombre = "https://apis.datos.gob.ar/georef/api/provincias?aplanar=true&id=";
     private String topoBaseUrl = "https://api.opentopodata.org/v1/srtm90m?locations=";
@@ -36,7 +36,7 @@ public class ExternalApis implements RepoMunicipios {
     public List<Municipio> getMunicipios(String idProvincia, Integer cantidad) {
         String url = geoRefMunicipioBaseUrlEstandar + "&provincia=" + idProvincia + "&max=" + cantidad;
         var municipiosApi = connector.get(url, MunicipiosApi.class);
-        var municipiosBase = geoRefWrapper.wrapList(municipiosApi.getMunicipios());
+        var municipiosBase = geoRefWrapper.wrapList(municipiosApi.getDepartamentos());
         return getAlturas(municipiosBase);
     }
 
