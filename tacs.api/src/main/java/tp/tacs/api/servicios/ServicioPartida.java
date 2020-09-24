@@ -288,8 +288,7 @@ public class ServicioPartida {
                 .municipioAtacante(municipioEnJuegoMapper.wrap(municipioAtacante));
     }
 
-    public void actualizarEstadoPartida(Long idPartida, Estado estado) {
-        var partida = partidaDao.get(idPartida);
+    public void actualizarEstadoPartida(Partida partida, Estado estado) {
         partida.setEstado(estado);
     }
 
