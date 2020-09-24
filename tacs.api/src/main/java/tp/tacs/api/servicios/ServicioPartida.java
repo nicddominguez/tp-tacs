@@ -203,11 +203,6 @@ public class ServicioPartida {
         partida.setMinAltura((float) doubleStreamMin.min().getAsDouble());
     }
 
-    public void actualizarMunicipioPerdedor(Municipio municipioAtacante, Municipio municipioAtacado) {
-        municipioAtacado.setCantGauchos(0);
-        municipioAtacado.setDuenio(municipioAtacante.getDuenio());
-    }
-
     public SimularAtacarMunicipioResponse simularAtacarMunicipio(Partida partida, Long idMunicipioAtacante, Long idMunicipioAtacado) {
         var municipioAtacante = municipioDao.get(idMunicipioAtacante);
         var municipioAtacado = municipioDao.get(idMunicipioAtacado);
@@ -226,6 +221,7 @@ public class ServicioPartida {
             throw new PartidaException("La cantidad de gauchos a mover no puede ser menor a la que posee el municipio origen.");
         municipioOrigen.sacarGauchos(cantidad);
         municipioDestino.agregarGauchos(cantidad);
+        municipioDestino.bloquear();
         MunicipioEnJuegoModel municipioOrigenModel = municipioEnJuegoMapper.wrap(municipioOrigen);
         MunicipioEnJuegoModel municipioDestinoModel = municipioEnJuegoMapper.wrap(municipioDestino);
         return new MoverGauchosResponse()
@@ -280,7 +276,8 @@ public class ServicioPartida {
         municipioAtacado.setCantGauchos(gauchosDefensoresFinal);
 
         if (gauchosDefensoresFinal <= 0) {
-            this.actualizarMunicipioPerdedor(municipioAtacante, municipioAtacado);
+            municipioAtacado.setDuenio(municipioAtacante.getDuenio());
+            this.moverGauchos(idMunicipioAtacante, idMunicipioAtacado, gauchosAtacantesFinal);
         }
 
         return new AtacarMunicipioResponse()

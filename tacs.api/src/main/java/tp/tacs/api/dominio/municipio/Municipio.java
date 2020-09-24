@@ -40,6 +40,10 @@ public class Municipio {
         return bloqueado;
     }
 
+    public void bloquear() {
+        this.bloqueado = true;
+    }
+
     public void desbloquear() {
         this.bloqueado = false;
     }
