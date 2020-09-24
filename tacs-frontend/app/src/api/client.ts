@@ -170,6 +170,12 @@ export class WololoUsuariosApiClient extends BaseWololoApiClient {
         );
     }
 
+    public async obtenerUsuarioLogueado() {
+        return this.doAuthenticatedRequest(
+            async (options) => this.usuarioApi.obtenerUsuarioLogueado(options)
+        );
+    }
+
 }
 
 
