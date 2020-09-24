@@ -72,9 +72,8 @@ public class PartidasApiController implements PartidasApi {
 
     @Override
     public ResponseEntity<Void> actualizarEstadoPartida(Long idPartida, @Valid ActualizarEstadoPartida body) {
-        var partida = partidaDao.get(idPartida);
         var estado = estadoDeJuegoMapper.toEntity(body.getEstado());
-        servicioPartida.actualizarEstadoPartida(partida, estado);
+        servicioPartida.actualizarEstadoPartida(idPartida, estado);
         return ResponseEntity.ok().build();
     }
 
