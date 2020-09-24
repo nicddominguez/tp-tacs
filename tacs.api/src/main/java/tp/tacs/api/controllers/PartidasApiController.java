@@ -8,13 +8,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RestController;
-import tp.tacs.api.daos.MunicipioDao;
 import tp.tacs.api.daos.PartidaDao;
 import tp.tacs.api.daos.UsuarioDao;
 import tp.tacs.api.dominio.partida.Partida;
 import tp.tacs.api.dominio.usuario.Usuario;
 import tp.tacs.api.handler.PartidaException;
-import tp.tacs.api.mappers.*;
+import tp.tacs.api.mappers.EstadoDeJuegoMapper;
+import tp.tacs.api.mappers.ModoDeMunicipioMapper;
+import tp.tacs.api.mappers.PartidaMapper;
+import tp.tacs.api.mappers.PartidaSinInfoMapper;
 import tp.tacs.api.model.*;
 import tp.tacs.api.servicios.ServicioMunicipio;
 import tp.tacs.api.servicios.ServicioPartida;
@@ -50,8 +52,6 @@ public class PartidasApiController implements PartidasApi {
     @Autowired
     private PartidaSinInfoMapper partidaSinInfoMapper;
     @Autowired
-    private MunicipioEnJuegoMapper municipioEnJuegoMapper;
-    @Autowired
     private EstadoDeJuegoMapper estadoDeJuegoMapper;
     @Autowired
     private ModoDeMunicipioMapper modoDeMunicipioMapper;
@@ -60,8 +60,6 @@ public class PartidasApiController implements PartidasApi {
      */
     @Autowired
     private PartidaDao partidaDao;
-    @Autowired
-    private MunicipioDao municipioDao;
     @Autowired
     private UsuarioDao usuarioDao;
 
@@ -170,6 +168,10 @@ public class PartidasApiController implements PartidasApi {
     @Override
     public ResponseEntity<SimularAtacarMunicipioResponse> simularAtacarMunicipio(Long idPartida, @Valid SimularAtacarMunicipioBody body) {
         var partida = partidaDao.get(idPartida);
+
+        if (partida == null)
+            return ResponseEntity.badRequest().build();
+
         return ResponseEntity.ok(servicioPartida.simularAtacarMunicipio(partida, body.getIdMunicipioAtacante(), body.getIdMunicipioObjetivo()));
     }
 
