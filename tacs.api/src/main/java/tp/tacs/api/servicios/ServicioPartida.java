@@ -211,7 +211,9 @@ public class ServicioPartida {
         municipioAtacado.setDuenio(municipioAtacante.getDuenio());
     }
 
-    public SimularAtacarMunicipioResponse simularAtacarMunicipio(Partida partida, Municipio municipioAtacante, Municipio municipioAtacado) {
+    public SimularAtacarMunicipioResponse simularAtacarMunicipio(Partida partida, Long idMunicipioAtacante, Long idMunicipioAtacado) {
+        var municipioAtacante = municipioDao.get(idMunicipioAtacante);
+        var municipioAtacado = municipioDao.get(idMunicipioAtacado);
         Integer gauchosFinales = this.gauchosDefensoresFinales(partida, municipioAtacante, municipioAtacado);
         return new SimularAtacarMunicipioResponse().exitoso(gauchosFinales <= 0);
     }
@@ -220,7 +222,9 @@ public class ServicioPartida {
         return partidaDao.get(request);
     }
 
-    public MoverGauchosResponse moverGauchos(Municipio municipioOrigen, Municipio municipioDestino, Integer cantidad) {
+    public MoverGauchosResponse moverGauchos(Long idMunicipioOrigen, Long idMunicipioDestino, Integer cantidad) {
+        var municipioOrigen = municipioDao.get(idMunicipioOrigen);
+        var municipioDestino = municipioDao.get(idMunicipioDestino);
         if (cantidad > municipioOrigen.getCantGauchos())
             throw new PartidaException("La cantidad de gauchos a mover no puede ser menor a la que posee el municipio origen.");
         municipioOrigen.sacarGauchos(cantidad);
@@ -265,7 +269,10 @@ public class ServicioPartida {
         return partida;
     }
 
-    public void atacar(Partida partida, Municipio municipioAtacante, Municipio municipioAtacado) {
+    public void atacar(Partida partida, Long idMunicipioAtacante, Long idMunicipioAtacado) {
+
+        var municipioAtacante = municipioDao.get(idMunicipioAtacante);
+        var municipioAtacado = municipioDao.get(idMunicipioAtacado);
 
         this.validarAccion("atacar", partida, municipioAtacante.getDuenio());
         this.distintoDuenio(municipioAtacante, municipioAtacado);

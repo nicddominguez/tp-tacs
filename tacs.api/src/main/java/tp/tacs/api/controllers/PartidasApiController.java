@@ -105,7 +105,7 @@ public class PartidasApiController implements PartidasApi {
             var municipioAtacante = municipioDao.get(body.getIdMunicipioAtacante());
             var municipioAtacado = municipioDao.get(body.getIdMunicipioObjetivo());
 
-            servicioPartida.atacar(partida, municipioAtacante, municipioAtacado);
+            servicioPartida.atacar(partida, body.getIdMunicipioAtacante(), body.getIdMunicipioObjetivo());
 
             var response = new AtacarMunicipioResponse()
                     .municipioAtacado(municipioEnJuegoMapper.wrap(municipioAtacado))
@@ -150,12 +150,10 @@ public class PartidasApiController implements PartidasApi {
         if (!usuarioTienePermisos(partida))
             return new ResponseEntity("El usuario no tiene permisos para mover gauchos en este turno", HttpStatus.FORBIDDEN);
 
-        var municipioOrigen = municipioDao.get(body.getIdMunicipioOrigen());
-        var municipioDestino = municipioDao.get(body.getIdMunicipioDestino());
         var cantidad = Math.toIntExact(body.getCantidad());
         MoverGauchosResponse response;
         try {
-            response = servicioPartida.moverGauchos(municipioOrigen, municipioDestino, cantidad);
+            response = servicioPartida.moverGauchos(body.getIdMunicipioOrigen(), body.getIdMunicipioDestino(), cantidad);
         } catch (PartidaException e) {
             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -179,9 +177,7 @@ public class PartidasApiController implements PartidasApi {
     @Override
     public ResponseEntity<SimularAtacarMunicipioResponse> simularAtacarMunicipio(Long idPartida, @Valid SimularAtacarMunicipioBody body) {
         var partida = partidaDao.get(idPartida);
-        var municipioAtacante = municipioDao.get(body.getIdMunicipioAtacante());
-        var municipioAtacado = municipioDao.get(body.getIdMunicipioObjetivo());
-        return ResponseEntity.ok(servicioPartida.simularAtacarMunicipio(partida, municipioAtacante, municipioAtacado));
+        return ResponseEntity.ok(servicioPartida.simularAtacarMunicipio(partida, body.getIdMunicipioAtacante(), body.getIdMunicipioObjetivo()));
     }
 
     @Override
