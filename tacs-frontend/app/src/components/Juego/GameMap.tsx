@@ -1,17 +1,15 @@
 import React from 'react';
-import ReactDomServer from 'react-dom/server';
 import './map.css';
 import { Feature, Geometry, GeoJsonObject } from 'geojson';
 import { LatLng, Layer, PathOptions, LeafletMouseEvent } from 'leaflet';
 import { Map, GeoJSON, TileLayer } from 'react-leaflet';
-import Chaco from 'assets/maps/chaco';
-import { UsuarioModel, DatosDeJuegoModel, MunicipioEnJuegoModel } from 'api/api';
+import { UsuarioModel, MunicipioEnJuegoModel, PartidaModel } from 'api/api';
 
 export interface GameMapProps {
     mapData?: GeoJsonObject | Array<GeoJsonObject>
     onClickMunicipio?: (municipio: MunicipioEnJuegoModel) => void
-    jugadores?: Array<UsuarioModel>
-    datosDeJuego?: DatosDeJuegoModel
+    partida?: PartidaModel
+    usuarioLogueado?: UsuarioModel
 }
 
 interface GameMapState {
@@ -31,14 +29,14 @@ export default class GameMap extends React.Component<GameMapProps, GameMapState>
         super(props);
 
         let playerColors: { [k: number]: string } = {};
-        this.props.jugadores?.forEach((player, index) => {
+        this.props.partida?.jugadores?.forEach((player, index) => {
             playerColors[player.id] = GAME_MAP_COLORS[index]
         });
 
         this.state = {
-            startLatitude: -25.2137925689732,
-            startLongitude: -61.337579887251,
-            startZoom: 7,
+            startLatitude: -37.1315537735949,
+            startLongitude: -65.4466546606951,
+            startZoom: 5,
             playerColors: playerColors
         }
 
@@ -49,14 +47,14 @@ export default class GameMap extends React.Component<GameMapProps, GameMapState>
 
     featureStyle(feature?: Feature<Geometry, any>): PathOptions {
         const nombreMunicipio: string = feature?.properties.nombre;
-        const municipioEnJuego = this.props.datosDeJuego
+        const municipioEnJuego = this.props.partida?.informacionDeJuego
             ?.municipios
             ?.find(municipio => municipio.nombre === nombreMunicipio);
-        const idDuenio = municipioEnJuego?.duenio?.id;
 
+        const idDuenio = municipioEnJuego?.duenio?.id;
         return {
-            fillColor: idDuenio ? this.state.playerColors[idDuenio] : "grey",
-            fillOpacity: idDuenio ? 0.5 : 0.2
+            fillColor: idDuenio !== undefined ? this.state.playerColors[idDuenio] : "grey",
+            fillOpacity: idDuenio !== undefined ? 0.5 : 0.2
         };
     }
 
@@ -69,7 +67,7 @@ export default class GameMap extends React.Component<GameMapProps, GameMapState>
     onClickArea(event: LeafletMouseEvent) {
         const layer = event.target;
         const nombre: string = layer.feature.properties.nombre;
-        this.props.datosDeJuego
+        this.props.partida?.informacionDeJuego
             ?.municipios
             ?.filter(municipio => municipio.nombre === nombre)
             .forEach(municipio => {
