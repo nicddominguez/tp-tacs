@@ -616,7 +616,7 @@ export class NuevaPartidaStepper extends React.Component<
                         color="primary"
                         onClick={this.handleFinish}
                         className={this.classes.button}
-                        disabled={this.state.usuariosSeleccionados.length === 0}
+                        disabled={this.state.usuariosSeleccionados.length < 2 || this.state.usuariosSeleccionados.length > 4}
                       >
                         Crear
                       </Button>
