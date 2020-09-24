@@ -3,36 +3,35 @@ import FormControl from "@material-ui/core/FormControl";
 import Grid from "@material-ui/core/Grid";
 import Input from "@material-ui/core/Input";
 import InputLabel from "@material-ui/core/InputLabel";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
 import MenuItem from "@material-ui/core/MenuItem";
+import Paper from "@material-ui/core/Paper";
 import Select from "@material-ui/core/Select";
 import Slider from "@material-ui/core/Slider";
 import Step from "@material-ui/core/Step";
 import StepContent from "@material-ui/core/StepContent";
 import StepLabel from "@material-ui/core/StepLabel";
 import Stepper from "@material-ui/core/Stepper";
-import { createStyles, Theme } from "@material-ui/core/styles";
+import { createStyles, Theme, withStyles } from "@material-ui/core/styles";
+import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
-import { withStyles } from "@material-ui/core/styles";
+import Add from "@material-ui/icons/Add";
+import Cancel from "@material-ui/icons/Cancel";
 import { default as React } from "react";
+import { Redirect } from "react-router-dom";
 import {
-  ProvinciaModel,
-  UsuarioModel,
   CrearPartidaBody,
-  ModoDeJuegoModel,
+  ModoDeJuegoModel, ProvinciaModel,
+  UsuarioModel
 } from "../../api/api";
 import {
-  WololoProvinciasApiClient,
-  WololoUsuariosApiClient,
-  WololoPartidasApiClient,
+  WololoPartidasApiClient, WololoProvinciasApiClient,
+  WololoUsuariosApiClient
 } from "../../api/client";
-import Paper from "@material-ui/core/Paper";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import Cancel from "@material-ui/icons/Cancel";
-import Add from "@material-ui/icons/Add";
-import TextField from "@material-ui/core/TextField";
+import CreacionPartidaModal from "./CreacionPartidaModal";
 import TablePaginationActions from "./TablePaginationActions";
 
 const styles = (theme: Theme) =>
@@ -424,6 +423,9 @@ interface NuevaPartidaStepperState {
   cantidadMunicipios: number | string | Array<number | string>;
   modoDeJuego: ModoDeJuegoModel;
   usuariosSeleccionados: Array<UsuarioModel>;
+  creacionFallida: boolean;
+  creacionExitosa: boolean;
+  puedeRedireccionar: boolean;
 }
 
 interface NuevaPartidaStepperProps {
@@ -451,6 +453,9 @@ export class NuevaPartidaStepper extends React.Component<
       cantidadMunicipios: 30,
       modoDeJuego: ModoDeJuegoModel.Normal,
       usuariosSeleccionados: [],
+      creacionFallida: false,
+      creacionExitosa: false,
+      puedeRedireccionar: false,
     };
 
     this.setProvincias = this.setProvincias.bind(this);
@@ -462,6 +467,8 @@ export class NuevaPartidaStepper extends React.Component<
     this.handleModoDeJuego = this.handleModoDeJuego.bind(this);
     this.handleFinish = this.handleFinish.bind(this);
     this.crearPartida = this.crearPartida.bind(this);
+    this.cerrarModalExitoso = this.cerrarModalExitoso.bind(this);
+    this.cerrarModalFallido = this.cerrarModalFallido.bind(this);
   }
 
   setProvincias(provincias: Array<ProvinciaModel>) {
@@ -526,6 +533,14 @@ export class NuevaPartidaStepper extends React.Component<
     this.crearPartida();
   }
 
+  cerrarModalExitoso() {
+    this.setState({ puedeRedireccionar: true });
+  }
+
+  cerrarModalFallido() {
+    this.setState({ creacionFallida: false });
+  }
+
   crearPartida() {
     const body: CrearPartidaBody = {
       cantidadMunicipios: this.state.cantidadMunicipios as number,
@@ -537,8 +552,11 @@ export class NuevaPartidaStepper extends React.Component<
     };
     this.partidasApiClient
       .crearPartida(body)
-      .then((response) => console.log("Partida creada"))
-      .catch(console.error);
+      .then((response) => {
+        console.log("Partida creada");
+        this.setState({ creacionExitosa: true });
+      })
+      .catch((response) => this.setState({ creacionFallida: true }));
   }
 
   renderActiveStep() {
@@ -584,6 +602,9 @@ export class NuevaPartidaStepper extends React.Component<
   }
 
   render() {
+    if (this.state.puedeRedireccionar) {
+      return <Redirect to="/app/partidas" />;
+    }
     return (
       <div className={this.classes.root}>
         <Stepper activeStep={this.state.activeStep} orientation="vertical">
@@ -616,7 +637,10 @@ export class NuevaPartidaStepper extends React.Component<
                         color="primary"
                         onClick={this.handleFinish}
                         className={this.classes.button}
-                        disabled={this.state.usuariosSeleccionados.length < 2 || this.state.usuariosSeleccionados.length > 4}
+                        disabled={
+                          this.state.usuariosSeleccionados.length < 2 ||
+                          this.state.usuariosSeleccionados.length > 4
+                        }
                       >
                         Crear
                       </Button>
@@ -627,6 +651,16 @@ export class NuevaPartidaStepper extends React.Component<
             </Step>
           ))}
         </Stepper>
+        <CreacionPartidaModal
+          message="Creación exitosa!"
+          open={this.state.creacionExitosa}
+          onClose={this.cerrarModalExitoso}
+        />
+        <CreacionPartidaModal
+          message="Algo fallo al crear la partida :("
+          open={this.state.creacionFallida}
+          onClose={this.cerrarModalFallido}
+        />
       </div>
     );
   }
