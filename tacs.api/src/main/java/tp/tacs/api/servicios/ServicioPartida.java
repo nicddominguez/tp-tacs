@@ -15,10 +15,7 @@ import tp.tacs.api.dominio.usuario.Usuario;
 import tp.tacs.api.handler.PartidaException;
 import tp.tacs.api.http.externalApis.ExternalApis;
 import tp.tacs.api.mappers.MunicipioEnJuegoMapper;
-import tp.tacs.api.model.CrearPartidaBody;
-import tp.tacs.api.model.MoverGauchosResponse;
-import tp.tacs.api.model.MunicipioEnJuegoModel;
-import tp.tacs.api.model.SimularAtacarMunicipioResponse;
+import tp.tacs.api.model.*;
 
 import java.awt.geom.Point2D;
 import java.util.*;
@@ -269,7 +266,7 @@ public class ServicioPartida {
         return partida;
     }
 
-    public void atacar(Partida partida, Long idMunicipioAtacante, Long idMunicipioAtacado) {
+    public AtacarMunicipioResponse atacar(Partida partida, Long idMunicipioAtacante, Long idMunicipioAtacado) {
 
         var municipioAtacante = municipioDao.get(idMunicipioAtacante);
         var municipioAtacado = municipioDao.get(idMunicipioAtacado);
@@ -285,6 +282,10 @@ public class ServicioPartida {
         if (gauchosDefensoresFinal <= 0) {
             this.actualizarMunicipioPerdedor(municipioAtacante, municipioAtacado);
         }
+
+        return new AtacarMunicipioResponse()
+                .municipioAtacado(municipioEnJuegoMapper.wrap(municipioAtacado))
+                .municipioAtacante(municipioEnJuegoMapper.wrap(municipioAtacante));
     }
 
     public void actualizarEstadoPartida(Partida partida, Estado estado) {

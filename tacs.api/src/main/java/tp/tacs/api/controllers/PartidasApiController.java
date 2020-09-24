@@ -102,15 +102,10 @@ public class PartidasApiController implements PartidasApi {
 
             if (!usuarioTienePermisos(partida))
                 return new ResponseEntity("El usuario no tiene permisos para atacar en este turno", HttpStatus.FORBIDDEN);
-            var municipioAtacante = municipioDao.get(body.getIdMunicipioAtacante());
-            var municipioAtacado = municipioDao.get(body.getIdMunicipioObjetivo());
 
-            servicioPartida.atacar(partida, body.getIdMunicipioAtacante(), body.getIdMunicipioObjetivo());
-
-            var response = new AtacarMunicipioResponse()
-                    .municipioAtacado(municipioEnJuegoMapper.wrap(municipioAtacado))
-                    .municipioAtacante(municipioEnJuegoMapper.wrap(municipioAtacante));
+            var response = servicioPartida.atacar(partida, body.getIdMunicipioAtacante(), body.getIdMunicipioObjetivo());
             return ResponseEntity.ok(response);
+
         } catch (IndexOutOfBoundsException e) {
             return ResponseEntity.notFound().build();
         }
