@@ -12,13 +12,18 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import MenuIcon from "@material-ui/icons/Menu";
+import Map from "@material-ui/icons/Map";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import clsx from "clsx";
-import React from "react";
-import { Link, Route } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Link, Route, useHistory } from "react-router-dom";
 import { dashboardRoutes as routes } from "../Routes/DashboardRoutes";
-import { WololoAuthApiClient } from "../../api/client";
-import { UsuarioModel } from "../../api/api";
+import { WololoAuthApiClient, WololoUsuariosApiClient } from "../../api/client";
+import { UsuarioModel, PartidaModel, EstadoDeJuegoModel, ModoDeJuegoModel, PartidaSinInfoModel } from "../../api/api";
+import Chaco from "assets/maps/chaco";
+import PantallaDeJuego from "components/Juego/PantallaDeJuego";
+import NuevaPartidaStepper from "components/Partidas/NuevaPartidaStepper";
+import Partidas from "components/Partidas/Partidas";
 
 const drawerWidth = 240;
 
@@ -95,17 +100,28 @@ const useStyles = makeStyles((theme) => ({
 
 export interface DashboardProps {
   flagLoggedOut: () => void;
-  currentUser?: UsuarioModel;
 }
 
 
 const authApiClient = new WololoAuthApiClient();
+const usuariosApiClient = new WololoUsuariosApiClient();
 
 
 export default function Dashboard(props: DashboardProps) {
   const classes = useStyles();
 
   const [open, setOpen] = React.useState(true);
+  const [partidaSinInfo, setPartidaSinInfo] = React.useState(undefined as PartidaSinInfoModel | undefined);
+  const [usuarioLogueado, setUsuarioLogueado] = React.useState(undefined as UsuarioModel | undefined);
+  const history = useHistory();
+
+  useEffect(() => {
+    if(!usuarioLogueado) {
+      usuariosApiClient.obtenerUsuarioLogueado()
+        .then(setUsuarioLogueado)
+        .catch(console.error);
+    }
+  }, []);
 
   const doLogOut = () => {
     authApiClient.logUserOut();
@@ -119,6 +135,11 @@ export default function Dashboard(props: DashboardProps) {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+
+  const jugarPartida = (partida: PartidaSinInfoModel) => {
+    setPartidaSinInfo(partida);
+    history.push('/app/jugar');
+  }
 
   return (
     <div className={classes.root}>
@@ -150,14 +171,14 @@ export default function Dashboard(props: DashboardProps) {
           >
             Wololo Dashboard
           </Typography>
-          {props.currentUser &&
+          {usuarioLogueado &&
           <Typography
             component="h2"
             variant="h6"
             color="inherit"
             noWrap
           >
-            {props.currentUser.nombreDeUsuario}
+            {usuarioLogueado.nombreDeUsuario}
           </Typography>
           }
         </Toolbar>
@@ -195,14 +216,35 @@ export default function Dashboard(props: DashboardProps) {
       </Drawer>
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
-        {routes.map((route) => (
-          <Route
-            key={route.path}
-            path={route.path}
-            exact={route.exact}
-            component={route.main}
+        <Route
+            key="/app/jugar"
+            path="/app/jugar"
+            exact={true}
+            component={() =>
+              <PantallaDeJuego
+                partidaSinInfo={partidaSinInfo}
+                usuarioLogueado={usuarioLogueado}
+              />
+            }
           />
-        ))}
+        <Route
+            key="/app/partidas"
+            path="/app/partidas"
+            exact={false}
+            component={() => <Partidas onClickJugar={jugarPartida} />}
+          />
+        <Route
+            key="/app/nuevaPartida"
+            path="/app/nuevaPartida"
+            exact={true}
+            component={() => <NuevaPartidaStepper />}
+          />
+        <Route
+            key="/app/estadisticas"
+            path="/app/estadisticas"
+            exact={false}
+            component={() => <h2>Estadisticas</h2>}
+          />
       </main>
     </div>
   );

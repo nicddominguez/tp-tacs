@@ -1,7 +1,7 @@
 import React from 'react';
 import GameMap from './GameMap';
 import { GeoJsonObject } from 'geojson';
-import { PartidaModel, MunicipioEnJuegoModel, PartidaSinInfoModel, DatosDeJuegoModel } from 'api';
+import { PartidaModel, MunicipioEnJuegoModel, PartidaSinInfoModel, UsuarioModel, AtacarMunicipioBody, MoverGauchosBody } from 'api';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -21,8 +21,7 @@ enum EstadoJuego {
 
 export interface PantallaDeJuegoProps {
   partidaSinInfo?: PartidaSinInfoModel
-  partida?: PartidaModel
-  mapData: GeoJsonObject | Array<GeoJsonObject>
+  usuarioLogueado?: UsuarioModel
 }
 
 interface PantallaDeJuegoState {
@@ -35,7 +34,7 @@ interface PantallaDeJuegoState {
   municipioObjetivo?: MunicipioEnJuegoModel
   cantidadGauchosAMover?: number
   mapData?: GeoJsonObject | Array<GeoJsonObject> | undefined
-  infoPartida?: DatosDeJuegoModel
+  partidaConInfo?: PartidaModel
 }
 
 const partidasApiClient = new WololoPartidasApiClient();
@@ -81,7 +80,7 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
       partidasApiClient.getPartida(this.props.partidaSinInfo?.id)
         .then(partida => {
           this.setState({
-            infoPartida: partida.informacionDeJuego
+            partidaConInfo: partida
           })
         })
         .catch(console.error);
@@ -106,8 +105,38 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
     });
   }
 
+  actualizarMunicipiosEnPartida(municipiosActualizados: Array<MunicipioEnJuegoModel | undefined>) {
+
+    const partida = this.state.partidaConInfo;
+
+    if(!partida?.informacionDeJuego?.municipios) {
+      return;
+    }
+
+    const municipiosFinales = partida.informacionDeJuego.municipios.map(municipio => {
+      const versionActualizadaDeMunicipio = municipiosActualizados
+        .find(municipioActualizado => municipioActualizado?.id === municipio.id);
+      return versionActualizadaDeMunicipio || municipio;
+    });
+
+    partida.informacionDeJuego.municipios = municipiosFinales;
+
+    this.setState({
+      partidaConInfo: partida
+    });
+
+  }
+
   seleccionarMunicipio(municipioSeleccionado: MunicipioEnJuegoModel) {
-    console.log(municipioSeleccionado);
+    if(municipioSeleccionado.duenio?.id === undefined || this.props.usuarioLogueado?.id === undefined) {
+      return;
+    }
+
+    if(municipioSeleccionado.duenio.id !== this.props.usuarioLogueado.id) {
+      console.log('No se puede seleccionar un municipio que no es mio');
+      return;
+    }
+
     this.setState({
       dialogOpen: true,
       municipioSeleccionado: municipioSeleccionado
@@ -124,6 +153,30 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
   }
 
   solicitarAtaqueAMunicipio(municipioObjetivo: MunicipioEnJuegoModel) {
+    if(municipioObjetivo.duenio?.id === undefined || this.props.usuarioLogueado?.id === undefined) {
+      return;
+    }
+
+    if(municipioObjetivo.duenio.id === this.props.usuarioLogueado.id) {
+      console.log('No se puede atacar a un municipio propio');
+      return;
+    }
+
+    if(!this.state.partidaConInfo) {
+      return;
+    }
+
+    const bodyAtaque: AtacarMunicipioBody = {
+      idMunicipioAtacante: this.state.municipioSeleccionado?.id,
+      idMunicipioObjetivo: municipioObjetivo?.id
+    }
+
+    partidasApiClient.simularAtacarMunicipio(this.state.partidaConInfo.id, bodyAtaque)
+      .then(response => {
+        console.log('Es exitoso?', response.exitoso);
+      })
+      .catch(console.error);
+
     this.setState({
       dialogOpen: true,
       snackbarOpen: false,
@@ -135,15 +188,34 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
   confirmarAtaqueAMunicipio() {
     const municipioOrigen = this.state.municipioSeleccionado;
     const municipioObjetivo = this.state.municipioObjetivo;
-    this.setState({
-      dialogOpen: false,
-      snackbarOpen: true,
-      snackbarMessage: `Atacaste a ${municipioObjetivo?.nombre} desde ${municipioOrigen?.nombre}`,
-      onClickMunicipio: this.seleccionarMunicipio,
-      municipioSeleccionado: undefined,
-      municipioObjetivo: undefined,
-      estadoJuego: EstadoJuego.SELECCION
-    });
+
+    if(!this.state.partidaConInfo) {
+      return;
+    }
+
+    const bodyAtaque: AtacarMunicipioBody = {
+      idMunicipioAtacante: municipioOrigen?.id,
+      idMunicipioObjetivo: municipioObjetivo?.id
+    }
+
+    partidasApiClient.atacarMunicipio(this.state.partidaConInfo.id, bodyAtaque)
+      .then(response => {
+        console.log('RESULTADO')
+        console.log(response.municipioAtacante);
+        console.log(response.municipioAtacado);
+        this.actualizarMunicipiosEnPartida([response.municipioAtacado, response.municipioAtacante]);
+        this.setState({
+          dialogOpen: false,
+          snackbarOpen: true,
+          snackbarMessage: `Atacaste a ${municipioObjetivo?.nombre} desde ${municipioOrigen?.nombre}`,
+          onClickMunicipio: this.seleccionarMunicipio,
+          municipioSeleccionado: undefined,
+          municipioObjetivo: undefined,
+          estadoJuego: EstadoJuego.SELECCION
+        });
+      })
+      .catch(console.error);
+
   }
 
   organizarDesplazamientoGauchos() {
@@ -156,6 +228,16 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
   }
 
   solicitarDesplazamientoGauchos(municipioDestino: MunicipioEnJuegoModel) {
+
+    if(municipioDestino.duenio?.id === undefined || this.props.usuarioLogueado?.id === undefined) {
+      return;
+    }
+
+    if(municipioDestino.duenio.id !== this.props.usuarioLogueado.id) {
+      console.log('No se pueden mover gauchos a un municipio que no es mio');
+      return;
+    }
+
     this.setState({
       dialogOpen: true,
       snackbarOpen: false,
@@ -167,16 +249,32 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
   confirmarDesplazamientoGauchos() {
     const municipioOrigen = this.state.municipioSeleccionado;
     const municipioDestino = this.state.municipioObjetivo;
-    this.setState({
-      dialogOpen: false,
-      snackbarOpen: true,
-      snackbarMessage: `Moviste ${this.state.cantidadGauchosAMover} gauchos a ${municipioDestino?.nombre} desde ${municipioOrigen?.nombre}`,
-      onClickMunicipio: this.seleccionarMunicipio,
-      municipioSeleccionado: undefined,
-      municipioObjetivo: undefined,
-      estadoJuego: EstadoJuego.SELECCION,
-      cantidadGauchosAMover: 1
-    });
+
+    if(!this.state.partidaConInfo) {
+      return;
+    }
+
+    const bodyMovimiento: MoverGauchosBody = {
+      cantidad: this.state.cantidadGauchosAMover,
+      idMunicipioOrigen: municipioOrigen?.id,
+      idMunicipioDestino: municipioDestino?.id
+    }
+
+    partidasApiClient.moverGauchos(this.state.partidaConInfo.id, bodyMovimiento)
+      .then(response => {
+        this.actualizarMunicipiosEnPartida([response.municipioDestino, response.municipioOrigen]);
+        this.setState({
+          dialogOpen: false,
+          snackbarOpen: true,
+          snackbarMessage: `Moviste ${this.state.cantidadGauchosAMover} gauchos a ${municipioDestino?.nombre} desde ${municipioOrigen?.nombre}`,
+          onClickMunicipio: this.seleccionarMunicipio,
+          municipioSeleccionado: undefined,
+          municipioObjetivo: undefined,
+          estadoJuego: EstadoJuego.SELECCION,
+          cantidadGauchosAMover: 1
+        });
+      })
+      .catch(console.error);
   }
 
   renderSnackbar() {
@@ -253,11 +351,11 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
   render() {
     return (
       <div>
-        {this.state.mapData && this.state.infoPartida && <GameMap
+        {this.state.mapData && this.state.partidaConInfo?.informacionDeJuego && <GameMap
           mapData={this.state.mapData}
-          jugadores={this.props.partida?.jugadores}
-          datosDeJuego={this.state.infoPartida}
+          partida={this.state.partidaConInfo}
           onClickMunicipio={this.state.onClickMunicipio}
+          usuarioLogueado={this.props.usuarioLogueado}
         />}
         <Dialog
           open={this.state.dialogOpen}
