@@ -85,10 +85,9 @@ public class PartidasApiController implements PartidasApi {
 
         if (!usuarioTienePermisos(partida))
             return ResponseEntity.badRequest().build();
-        var municipioAActualizar = municipioDao.get(idMunicipio);
+
         var nuevaEspecializacion = modoDeMunicipioMapper.toEntity(body.getModo());
-        this.servicioMunicipio.actualizarMunicipio(municipioAActualizar, nuevaEspecializacion);
-        municipioAActualizar.setBloqueado(body.isEstaBloqueado());
+        this.servicioMunicipio.actualizarMunicipio(idMunicipio, nuevaEspecializacion, body.isEstaBloqueado());
         return ResponseEntity.ok().build();
     }
 
@@ -195,8 +194,7 @@ public class PartidasApiController implements PartidasApi {
                 var comparadores = ordenes.stream().map(this::transformarEnComparador).collect(Collectors.toList());
                 comparadores.forEach(partidaModels::sort);
             }
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
 
@@ -225,7 +223,7 @@ public class PartidasApiController implements PartidasApi {
     }
 
     private Boolean usuarioTienePermisos(Partida partida) {
-        if(debugMode)
+        if (debugMode)
             return true;
 
         String usernameRequest = obtenerUsername();
@@ -233,7 +231,7 @@ public class PartidasApiController implements PartidasApi {
             return false;
 
         Usuario usuarioRequest = usuarioDao.getByUsername(usernameRequest);
-        if(usuarioRequest == null)
+        if (usuarioRequest == null)
             return false;
         return partida.idUsuarioEnTurnoActual().equals(usuarioRequest.getId());
     }
