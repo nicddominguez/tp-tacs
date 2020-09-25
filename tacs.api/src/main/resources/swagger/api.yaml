@@ -795,6 +795,10 @@ components:
         nombre:
           type: string
           description: Nombre de la provincia
+        cantidadMunicipios:
+          type: integer
+          format: int64
+          description: Cantidad de municipios de la provincia
     MunicipioEnJuegoModel:
       type: object
       description: Municipio en juego.
