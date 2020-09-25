@@ -647,6 +647,12 @@ export interface ProvinciaModel {
      * @memberof ProvinciaModel
      */
     nombre: string;
+    /**
+     * Cantidad de municipios de la provincia
+     * @type {number}
+     * @memberof ProvinciaModel
+     */
+    cantidadMunicipios?: number;
 }
 /**
  * 
