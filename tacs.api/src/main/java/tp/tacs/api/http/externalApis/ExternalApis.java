@@ -14,6 +14,7 @@ import tp.tacs.api.http.externalApis.models.TopoResult;
 import tp.tacs.api.mappers.GeorefMapper;
 import tp.tacs.api.mappers.ProvinciaMapper;
 import tp.tacs.api.model.ProvinciaModel;
+import java.util.stream.Collectors;
 
 import java.util.List;
 
@@ -27,7 +28,7 @@ public class ExternalApis implements RepoMunicipios {
     @Autowired
     private ProvinciaMapper provinciaWrapper;
 
-    private String geoRefMunicipioBaseUrlEstandar = "https://apis.datos.gob.ar/georef/api/municipios?aplanar=true";
+    private String geoRefMunicipioBaseUrlEstandar = "https://apis.datos.gob.ar/georef/api/departamentos?aplanar=true";
     private String geoRefProvinciabaseUrlEstandar = "https://apis.datos.gob.ar/georef/api/provincias?aplanar=true";
     private String geoRefProvinciaNombre = "https://apis.datos.gob.ar/georef/api/provincias?aplanar=true&id=";
     private String topoBaseUrl = "https://api.opentopodata.org/v1/srtm90m?locations=";
@@ -36,7 +37,7 @@ public class ExternalApis implements RepoMunicipios {
     public List<Municipio> getMunicipios(String idProvincia, Integer cantidad) {
         String url = geoRefMunicipioBaseUrlEstandar + "&provincia=" + idProvincia + "&max=" + cantidad;
         var municipiosApi = connector.get(url, MunicipiosApi.class);
-        var municipiosBase = geoRefWrapper.wrapList(municipiosApi.getMunicipios());
+        var municipiosBase = geoRefWrapper.wrapList(municipiosApi.getDepartamentos());
         return getAlturas(municipiosBase);
     }
 
@@ -56,10 +57,22 @@ public class ExternalApis implements RepoMunicipios {
         return "https://cdn.pixabay.com/photo/2020/02/16/19/41/horses-4854601_960_720.jpg";
     }
 
+    @SneakyThrows private ProvinciaModel agregarCantidadMunicipios(ProvinciaModel provincia) {
+        String url = geoRefMunicipioBaseUrlEstandar + "&provincia=" + provincia.getId();
+        Long cantidadMunicipios = new Gson().fromJson(connector.get(url), MunicipiosApi.class).getTotal();
+        return provincia.cantidadMunicipios(cantidadMunicipios);
+    }
+
     @Override
     public List<ProvinciaModel> getProvincias() {
         Provincias provincias = connector.get(geoRefProvinciabaseUrlEstandar, Provincias.class);
-        return provinciaWrapper.wrapList(provincias.getProvincias());
+        List<ProvinciaModel> provinciasSinCantidadMunicipios = provinciaWrapper.wrapList(provincias.getProvincias());
+
+        List<ProvinciaModel> provinciasModel = provinciasSinCantidadMunicipios.stream()
+            .map( provincia -> agregarCantidadMunicipios(provincia))
+            .collect(Collectors.toList());
+        
+        return provinciasModel;
     }
 
     public ProvinciaModel getNombreProvinicas(Long idProvincia) {
