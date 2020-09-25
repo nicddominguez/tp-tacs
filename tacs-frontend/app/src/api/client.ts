@@ -201,6 +201,16 @@ export class WololoAdminApiClient extends BaseWololoApiClient {
         );
     }
 
+    public async pasarTurno(idPartida: number) {
+        console.log('RUNNING')
+        return this.doAuthenticatedRequest(
+            async (options) => {
+                console.log('DOING')
+                this.adminApi.pasarTurnoAdmin(idPartida, options)
+            }
+        );
+    }
+
 }
 
 

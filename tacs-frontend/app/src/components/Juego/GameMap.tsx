@@ -3,13 +3,17 @@ import './map.css';
 import { Feature, Geometry, GeoJsonObject } from 'geojson';
 import { LatLng, Layer, PathOptions, LeafletMouseEvent } from 'leaflet';
 import { Map, GeoJSON, TileLayer } from 'react-leaflet';
+import Control from 'react-leaflet-control';
 import { UsuarioModel, MunicipioEnJuegoModel, PartidaModel } from 'api/api';
+import Button from '@material-ui/core/Button';
+import Card from '@material-ui/core/Card';
 
 export interface GameMapProps {
     mapData?: GeoJsonObject | Array<GeoJsonObject>
     onClickMunicipio?: (municipio: MunicipioEnJuegoModel) => void
     partida?: PartidaModel
     usuarioLogueado?: UsuarioModel
+    onPasarTurno?: () => void
 }
 
 interface GameMapState {
@@ -71,10 +75,22 @@ export default class GameMap extends React.Component<GameMapProps, GameMapState>
             ?.municipios
             ?.filter(municipio => municipio.nombre === nombre)
             .forEach(municipio => {
-                if(this.props.onClickMunicipio) {
+                if (this.props.onClickMunicipio) {
                     this.props.onClickMunicipio(municipio);
                 }
             });
+    }
+
+    esElTurnoDelUsuario() {
+        if (this.props.partida?.informacionDeJuego?.idUsuarioProximoTurno === undefined) {
+            return false;
+        }
+
+        if (this.props.usuarioLogueado?.id === undefined) {
+            return false;
+        }
+
+        return this.props.partida?.informacionDeJuego?.idUsuarioProximoTurno === this.props.usuarioLogueado?.id;
     }
 
     render() {
@@ -92,6 +108,16 @@ export default class GameMap extends React.Component<GameMapProps, GameMapState>
                         style={this.featureStyle}
                     />
                 }
+                <Control position='bottomleft'>
+                    <Card>
+                        <Button
+                            onClick={this.props.onPasarTurno ? this.props.onPasarTurno : () => { }}
+                            color='primary'
+                        >
+                            Pasar turno
+                        </Button>
+                    </Card>
+                </Control>
             </Map>
         )
     }

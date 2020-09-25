@@ -11,7 +11,7 @@ import Button from '@material-ui/core/Button';
 import Snackbar from '@material-ui/core/Snackbar';
 import Slider from '@material-ui/core/Slider';
 import { getMapData } from '../../api/maps';
-import { WololoPartidasApiClient } from 'api/client';
+import { WololoPartidasApiClient, WololoAdminApiClient } from 'api/client';
 
 enum EstadoJuego {
   SELECCION = 'SELECCION',
@@ -38,6 +38,7 @@ interface PantallaDeJuegoState {
 }
 
 const partidasApiClient = new WololoPartidasApiClient();
+const adminApiClient = new WololoAdminApiClient();
 
 export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProps, PantallaDeJuegoState> {
 
@@ -64,6 +65,7 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
     this.organizarDesplazamientoGauchos = this.organizarDesplazamientoGauchos.bind(this);
     this.solicitarDesplazamientoGauchos = this.solicitarDesplazamientoGauchos.bind(this);
     this.confirmarDesplazamientoGauchos = this.confirmarDesplazamientoGauchos.bind(this);
+    this.pasarTurno = this.pasarTurno.bind(this);
   }
 
   componentDidMount() {
@@ -95,7 +97,10 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
 
   handleDialogClose() {
     this.setState({
-      dialogOpen: false
+      dialogOpen: false,
+      municipioSeleccionado: undefined,
+      estadoJuego: EstadoJuego.SELECCION,
+      onClickMunicipio: this.seleccionarMunicipio
     });
   }
 
@@ -103,6 +108,17 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
     this.setState({
       cantidadGauchosAMover: nuevoValor as number
     });
+  }
+
+  pasarTurno() {
+    if(this.state.partidaConInfo?.id !== undefined) {
+      adminApiClient.pasarTurno(this.state.partidaConInfo?.id)
+        .then(response => {
+          console.log('Se pasó el turno');
+          // ACTUALIZAR LA PARTIDA!
+        })
+        .catch(console.error);
+    }
   }
 
   actualizarMunicipiosEnPartida(municipiosActualizados: Array<MunicipioEnJuegoModel | undefined>) {
@@ -262,6 +278,8 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
 
     partidasApiClient.moverGauchos(this.state.partidaConInfo.id, bodyMovimiento)
       .then(response => {
+        console.log(response.municipioOrigen)
+        console.log(response.municipioDestino)
         this.actualizarMunicipiosEnPartida([response.municipioDestino, response.municipioOrigen]);
         this.setState({
           dialogOpen: false,
@@ -302,7 +320,7 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
                 <DialogContentText>Acá se puede poner lo que queramos de info del municipio</DialogContentText>
               </DialogContent>
               <DialogActions>
-                <Button onClick={this.handleDialogClose}>Cerrar</Button>
+                <Button onClick={this.handleDialogClose}>Cancelar</Button>
                 <Button onClick={this.organizarDesplazamientoGauchos}>Desplazar gauchos</Button>
                 <Button onClick={this.organizarAtaqueAMunicipio} >Organizar ataque</Button>
               </DialogActions>
@@ -319,7 +337,7 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
               </DialogContent>
               <DialogActions>
                 {/* TODO: Si cierran acá, quedamos en el medio de un ataque. Deberiamos volver a seleccionar. */}
-                <Button onClick={this.handleDialogClose}>Cerrar</Button>
+                <Button onClick={this.handleDialogClose}>Cancelar</Button>
                 <Button onClick={this.confirmarAtaqueAMunicipio}>Confirmar</Button>
               </DialogActions>
             </div>
@@ -340,7 +358,7 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
                 />
               </DialogContent>
               <DialogActions>
-                <Button onClick={this.handleDialogClose}>Cerrar</Button>
+                <Button onClick={this.handleDialogClose}>Cancelar</Button>
                 <Button onClick={this.confirmarDesplazamientoGauchos}>Confirmar</Button>
               </DialogActions>
             </div>
@@ -356,6 +374,7 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
           partida={this.state.partidaConInfo}
           onClickMunicipio={this.state.onClickMunicipio}
           usuarioLogueado={this.props.usuarioLogueado}
+          onPasarTurno={this.pasarTurno}
         />}
         <Dialog
           open={this.state.dialogOpen}
