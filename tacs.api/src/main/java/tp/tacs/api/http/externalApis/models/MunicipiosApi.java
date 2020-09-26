@@ -11,4 +11,5 @@ import java.util.List;
 @ToString
 public class MunicipiosApi {
     private List<MunicipioApi> departamentos;
+    private Long total;
 }

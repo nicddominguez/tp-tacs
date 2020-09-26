@@ -36,7 +36,7 @@ public class PartidaMapper extends AbstractMapper<Partida, PartidaModel> {
     }
 
     public PartidaModel partidaBasica(Partida partida) {
-        var jugadores = usuarioMapper.wrapList(usuarioDao.getByIds(partida.getJugadoresIds()));
+        var jugadores = usuarioMapper.wrapList(usuarioDao.getByIds(partida.getIdsJugadoresOriginales()));
         var provincia = new Provincia();
         provincia.setId(partida.getIdProvincia());
         provincia.setNombre(partida.getNombreProvincia());

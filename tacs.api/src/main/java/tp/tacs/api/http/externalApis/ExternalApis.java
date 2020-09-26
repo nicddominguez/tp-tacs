@@ -14,6 +14,7 @@ import tp.tacs.api.http.externalApis.models.TopoResult;
 import tp.tacs.api.mappers.GeorefMapper;
 import tp.tacs.api.mappers.ProvinciaMapper;
 import tp.tacs.api.model.ProvinciaModel;
+import java.util.stream.Collectors;
 
 import java.util.List;
 
@@ -56,10 +57,22 @@ public class ExternalApis implements RepoMunicipios {
         return "https://cdn.pixabay.com/photo/2020/02/16/19/41/horses-4854601_960_720.jpg";
     }
 
+    @SneakyThrows private ProvinciaModel agregarCantidadMunicipios(ProvinciaModel provincia) {
+        String url = geoRefMunicipioBaseUrlEstandar + "&provincia=" + provincia.getId();
+        Long cantidadMunicipios = new Gson().fromJson(connector.get(url), MunicipiosApi.class).getTotal();
+        return provincia.cantidadMunicipios(cantidadMunicipios);
+    }
+
     @Override
     public List<ProvinciaModel> getProvincias() {
         Provincias provincias = connector.get(geoRefProvinciabaseUrlEstandar, Provincias.class);
-        return provinciaWrapper.wrapList(provincias.getProvincias());
+        List<ProvinciaModel> provinciasSinCantidadMunicipios = provinciaWrapper.wrapList(provincias.getProvincias());
+
+        List<ProvinciaModel> provinciasModel = provinciasSinCantidadMunicipios.stream()
+            .map( provincia -> agregarCantidadMunicipios(provincia))
+            .collect(Collectors.toList());
+        
+        return provinciasModel;
     }
 
     public ProvinciaModel getNombreProvinicas(Long idProvincia) {

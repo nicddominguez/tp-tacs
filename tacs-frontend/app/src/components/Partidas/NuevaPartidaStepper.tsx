@@ -24,12 +24,14 @@ import { default as React } from "react";
 import { Redirect } from "react-router-dom";
 import {
   CrearPartidaBody,
-  ModoDeJuegoModel, ProvinciaModel,
-  UsuarioModel
+  ModoDeJuegoModel,
+  ProvinciaModel,
+  UsuarioModel,
 } from "../../api/api";
 import {
-  WololoPartidasApiClient, WololoProvinciasApiClient,
-  WololoUsuariosApiClient
+  WololoPartidasApiClient,
+  WololoProvinciasApiClient,
+  WololoUsuariosApiClient,
 } from "../../api/client";
 import CreacionPartidaModal from "./CreacionPartidaModal";
 import TablePaginationActions from "./TablePaginationActions";
@@ -130,14 +132,21 @@ class SelectorProvincia extends React.Component<
 const SelectorProvinciaStyled = withStyles(styles)(SelectorProvincia);
 
 interface SelectorCantidadMunicipiosProps {
-  cantidadMunicipios: number | string | Array<number | string>;
+  cantidadMunicipiosSeleccionada: number | string | Array<number | string>;
+  cantidadMunicipios: number;
   onChange: (cantidad: number | string | Array<number | string>) => void;
   classes?: any;
 }
 
+interface SelectorCantidadMunicipiosState {
+  cantidadMunicipiosSeleccionada: string | number | (string | number)[];
+  cantidadMunicipios: number;
+  cantidadMunicipiosMinima: number;
+}
+
 class SelectorCantidadMunicipios extends React.Component<
   SelectorCantidadMunicipiosProps,
-  { cantidadMunicipios: string | number | (string | number)[] }
+  SelectorCantidadMunicipiosState
 > {
   classes: any;
 
@@ -146,37 +155,43 @@ class SelectorCantidadMunicipios extends React.Component<
     this.classes = this.props.classes;
 
     this.state = {
+      cantidadMunicipiosSeleccionada: props.cantidadMunicipios,
       cantidadMunicipios: props.cantidadMunicipios,
+      cantidadMunicipiosMinima: 4,
     };
 
-    this.setCantidadMunicipios = this.setCantidadMunicipios.bind(this);
+    this.setCantidadMunicipiosSeleccionada = this.setCantidadMunicipiosSeleccionada.bind(
+      this
+    );
     this.handleSliderChange = this.handleSliderChange.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleBlur = this.handleBlur.bind(this);
   }
 
-  setCantidadMunicipios(newValue: number | number[] | string) {
+  setCantidadMunicipiosSeleccionada(newValue: number | number[] | string) {
     this.setState({
-      cantidadMunicipios: newValue,
+      cantidadMunicipiosSeleccionada: newValue,
     });
     this.props.onChange(newValue);
   }
 
   handleSliderChange(event: any, newValue: number | number[]) {
-    this.setCantidadMunicipios(newValue);
+    this.setCantidadMunicipiosSeleccionada(newValue);
   }
 
   handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
-    this.setCantidadMunicipios(
+    this.setCantidadMunicipiosSeleccionada(
       event.target.value === "" ? "" : Number(event.target.value)
     );
   }
 
   handleBlur() {
-    if (this.state.cantidadMunicipios < 0) {
-      this.setCantidadMunicipios(0);
-    } else if (this.state.cantidadMunicipios > 100) {
-      this.setCantidadMunicipios(100);
+    if (this.state.cantidadMunicipiosSeleccionada < 0) {
+      this.setCantidadMunicipiosSeleccionada(0);
+    } else if (
+      this.state.cantidadMunicipiosSeleccionada > this.state.cantidadMunicipios
+    ) {
+      this.setCantidadMunicipiosSeleccionada(this.state.cantidadMunicipios);
     }
   }
 
@@ -190,31 +205,31 @@ class SelectorCantidadMunicipios extends React.Component<
           <Grid item xs>
             <Slider
               value={
-                typeof this.state.cantidadMunicipios === "number"
-                  ? this.state.cantidadMunicipios
-                  : 12
+                typeof this.state.cantidadMunicipiosSeleccionada === "number"
+                  ? this.state.cantidadMunicipiosSeleccionada
+                  : this.state.cantidadMunicipiosMinima
               }
               onChange={this.handleSliderChange}
               aria-labelledby="input-slider"
-              min={12}
-              max={50}
+              min={this.state.cantidadMunicipiosMinima}
+              max={this.state.cantidadMunicipios}
             />
           </Grid>
           <Grid item>
             <Input
               className={this.classes.input}
               value={
-                typeof this.state.cantidadMunicipios === "number"
-                  ? this.state.cantidadMunicipios
-                  : 12
+                typeof this.state.cantidadMunicipiosSeleccionada === "number"
+                  ? this.state.cantidadMunicipiosSeleccionada
+                  : this.state.cantidadMunicipiosMinima
               }
               margin="dense"
               onChange={this.handleInputChange}
               onBlur={this.handleBlur}
               inputProps={{
                 step: 1,
-                min: 12,
-                max: 100,
+                min: this.state.cantidadMunicipiosMinima,
+                max: this.state.cantidadMunicipios,
                 type: "number",
                 "aria-labelledby": "input-slider",
               }}
@@ -420,7 +435,8 @@ interface NuevaPartidaStepperState {
   activeStep: number;
   idProvincia: number;
   provincias: Array<ProvinciaModel>;
-  cantidadMunicipios: number | string | Array<number | string>;
+  cantidadMunicipiosSeleccionada: number | string | Array<number | string>;
+  cantidadMunicipios: number;
   modoDeJuego: ModoDeJuegoModel;
   usuariosSeleccionados: Array<UsuarioModel>;
   creacionFallida: boolean;
@@ -450,7 +466,8 @@ export class NuevaPartidaStepper extends React.Component<
       activeStep: 0,
       idProvincia: 6,
       provincias: [],
-      cantidadMunicipios: 30,
+      cantidadMunicipiosSeleccionada: 0,
+      cantidadMunicipios: 0,
       modoDeJuego: ModoDeJuegoModel.Normal,
       usuariosSeleccionados: [],
       creacionFallida: false,
@@ -458,7 +475,6 @@ export class NuevaPartidaStepper extends React.Component<
       puedeRedireccionar: false,
     };
 
-    this.setProvincias = this.setProvincias.bind(this);
     this.handleBack = this.handleBack.bind(this);
     this.handleNext = this.handleNext.bind(this);
     this.setIdProvincia = this.setIdProvincia.bind(this);
@@ -471,17 +487,11 @@ export class NuevaPartidaStepper extends React.Component<
     this.cerrarModalFallido = this.cerrarModalFallido.bind(this);
   }
 
-  setProvincias(provincias: Array<ProvinciaModel>) {
-    this.setState({
-      provincias: provincias,
-    });
-  }
-
   componentDidMount() {
     this.provinciasApiClient
       .listarProvincias(23)
       .then((response) => {
-        this.setProvincias(response.provincias || []);
+        this.setState({ provincias: response.provincias || [] });
       })
       .catch(console.error);
   }
@@ -513,9 +523,16 @@ export class NuevaPartidaStepper extends React.Component<
 
   setCantidadMunicipios(cantidad: number | string | Array<number | string>) {
     this.setState({
-      cantidadMunicipios: cantidad,
+      cantidadMunicipiosSeleccionada: cantidad,
     });
   }
+
+  cantidadMunicipios = () => {
+    const provincia: ProvinciaModel | undefined = this.state.provincias.find(
+      (provincia) => provincia.id == this.state.idProvincia
+    );
+    return provincia?.cantidadMunicipios || 0;
+  };
 
   handleModoDeJuego(event: React.ChangeEvent<{ value: unknown }>) {
     this.setState({
@@ -543,7 +560,7 @@ export class NuevaPartidaStepper extends React.Component<
 
   crearPartida() {
     const body: CrearPartidaBody = {
-      cantidadMunicipios: this.state.cantidadMunicipios as number,
+      cantidadMunicipios: this.state.cantidadMunicipiosSeleccionada as number,
       idJugadores: this.state.usuariosSeleccionados.map(
         (usuario) => usuario.id
       ),
@@ -573,7 +590,10 @@ export class NuevaPartidaStepper extends React.Component<
         return (
           <SelectorCantidadMunicipiosStyled
             onChange={this.setCantidadMunicipios}
-            cantidadMunicipios={this.state.cantidadMunicipios}
+            cantidadMunicipiosSeleccionada={
+              this.state.cantidadMunicipiosSeleccionada
+            }
+            cantidadMunicipios={this.cantidadMunicipios()}
           />
         );
       case 2:
