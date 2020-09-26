@@ -30,7 +30,11 @@ public class Municipio {
     }
 
     public void sacarGauchos(Integer cantidad) {
-        this.cantGauchos -= cantidad;
+        this.cantGauchos = Math.max(0, cantGauchos - cantidad);
+    }
+
+    public void setCantGauchos(Integer cantGauchos) {
+        this.cantGauchos = Math.max(0, cantGauchos);
     }
 
     public boolean estaBloqueado() {
