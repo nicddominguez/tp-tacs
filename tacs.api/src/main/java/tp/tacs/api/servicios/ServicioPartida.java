@@ -281,6 +281,10 @@ public class ServicioPartida {
             this.moverGauchos(idMunicipioAtacante, idMunicipioAtacado, gauchosAtacantesFinal);
         }
 
+        if (this.hayGanador(partida)) {
+            this.terminarPartida(partida);
+        }
+
         return new AtacarMunicipioResponse()
                 .municipioAtacado(municipioEnJuegoMapper.wrap(municipioAtacado))
                 .municipioAtacante(municipioEnJuegoMapper.wrap(municipioAtacante));

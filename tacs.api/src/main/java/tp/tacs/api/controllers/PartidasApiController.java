@@ -78,7 +78,7 @@ public class PartidasApiController implements PartidasApi {
             return new ResponseEntity("No existe la partida solicitada", HttpStatus.BAD_REQUEST);
 
         if (!usuarioTienePermisos(partida))
-            return new ResponseEntity("El usuario no tiene permisos para atacar en este turno", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity("El usuario no puede actualizar el estado de la partida, no es su turno", HttpStatus.BAD_REQUEST);
 
         servicioPartida.actualizarEstadoPartida(partida, estado);
         return ResponseEntity.ok().build();
