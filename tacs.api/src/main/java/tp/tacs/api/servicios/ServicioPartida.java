@@ -13,6 +13,7 @@ import tp.tacs.api.dominio.partida.ModoRapido;
 import tp.tacs.api.dominio.partida.Partida;
 import tp.tacs.api.dominio.usuario.Usuario;
 import tp.tacs.api.handler.PartidaException;
+import tp.tacs.api.http.exception.HttpErrorException;
 import tp.tacs.api.http.externalApis.ExternalApis;
 import tp.tacs.api.mappers.MunicipioEnJuegoMapper;
 import tp.tacs.api.model.*;
@@ -234,8 +235,8 @@ public class ServicioPartida {
         try{
             nombreProvincia = externalApis.getNombreProvinicas(request.getIdProvincia()).getNombre();
         }
-        catch (IndexOutOfBoundsException e){
-            throw new PartidaException("No se pudo crear la partida: No existe provincia con ese id");
+        catch (HttpErrorException | IndexOutOfBoundsException e){
+            throw new PartidaException("No se pudo crear la partida: No se encontró provincia con ese id");
         }
         Partida partida = Partida.builder()
                 .estado(Estado.EN_CURSO)

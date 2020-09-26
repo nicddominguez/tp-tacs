@@ -72,9 +72,13 @@ public class PartidasApiController implements PartidasApi {
     public ResponseEntity<Void> actualizarEstadoPartida(Long idPartida, @Valid ActualizarEstadoPartida body) {
         var estado = estadoDeJuegoMapper.toEntity(body.getEstado());
         var partida = partidaDao.get(idPartida);
+        if(estado == null)
+            return new ResponseEntity("No se especificó el nuevo estado de la partida", HttpStatus.BAD_REQUEST);
+        if (partida == null)
+            return new ResponseEntity("No existe la partida solicitada", HttpStatus.BAD_REQUEST);
 
         if (!usuarioTienePermisos(partida))
-            return ResponseEntity.badRequest().build();
+            return new ResponseEntity("El usuario no tiene permisos para atacar en este turno", HttpStatus.BAD_REQUEST);
 
         servicioPartida.actualizarEstadoPartida(partida, estado);
         return ResponseEntity.ok().build();
@@ -82,48 +86,56 @@ public class PartidasApiController implements PartidasApi {
 
     @Override
     public ResponseEntity<Void> actualizarMunicipio(Long idPartida, Long idMunicipio, @Valid ActualizarMunicipio body) {
+        var modo = body.getModo();
+        if(modo == null)
+            return new ResponseEntity("No se especificó el nuevo modo del municipio", HttpStatus.BAD_REQUEST);
         Partida partida = partidaDao.get(idPartida);
         if (partida == null)
-            return ResponseEntity.badRequest().build();
-
+            return new ResponseEntity("No existe la partida solicitada", HttpStatus.BAD_REQUEST);
         if (!usuarioTienePermisos(partida))
-            return ResponseEntity.badRequest().build();
+            return new ResponseEntity("El usuario no tiene permisos para atacar en este turno", HttpStatus.BAD_REQUEST);
 
-        var nuevaEspecializacion = modoDeMunicipioMapper.toEntity(body.getModo());
+        var nuevaEspecializacion = modoDeMunicipioMapper.toEntity(modo);
         this.servicioMunicipio.actualizarMunicipio(idMunicipio, nuevaEspecializacion, body.isEstaBloqueado());
         return ResponseEntity.ok().build();
     }
 
     @Override
     public ResponseEntity<AtacarMunicipioResponse> atacarMunicipio(Long idPartida, @Valid AtacarMunicipioBody body) {
+        if(body.getIdMunicipioAtacante() == null || body.getIdMunicipioObjetivo() == null)
+            return new ResponseEntity("Se requieren los municipios involucrados en la accion", HttpStatus.BAD_REQUEST);
+        Partida partida = partidaDao.get(idPartida);
+        if (partida == null)
+            return new ResponseEntity("No existe la partida solicitada", HttpStatus.BAD_REQUEST);
+        if (!usuarioTienePermisos(partida))
+            return new ResponseEntity("El usuario no tiene permisos para atacar en este turno", HttpStatus.BAD_REQUEST);
         try {
-            Partida partida = partidaDao.get(idPartida);
-            if (partida == null)
-                return ResponseEntity.badRequest().build();
-
-            if (!usuarioTienePermisos(partida))
-                return new ResponseEntity("El usuario no tiene permisos para atacar en este turno", HttpStatus.FORBIDDEN);
-
             var response = servicioPartida.atacar(partida, body.getIdMunicipioAtacante(), body.getIdMunicipioObjetivo());
             return ResponseEntity.ok(response);
 
         } catch (IndexOutOfBoundsException e) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.badRequest().build();
         }
     }
 
     @Override
     public ResponseEntity<PartidaModel> crearPartida(@Valid CrearPartidaBody body) {
-        if (body.getIdJugadores().isEmpty())
+        var idsJugadores = body.getIdJugadores();
+        var cantidadMunicipios = body.getCantidadMunicipios();
+        if(body.getIdProvincia() == null)
+            return new ResponseEntity("No se puede crear una partida sin especificar una provincia", HttpStatus.BAD_REQUEST);
+        if (idsJugadores == null || idsJugadores.isEmpty())
             return new ResponseEntity("No se puede crear una partida sin usuarios", HttpStatus.BAD_REQUEST);
-        if (body.getCantidadMunicipios() <= 0)
+        if (cantidadMunicipios == null || cantidadMunicipios <= 0)
             return new ResponseEntity("No se puede crear una partida con 0 municipios o menos.", HttpStatus.BAD_REQUEST);
+        if (idsJugadores.size() > cantidadMunicipios)
+            return new ResponseEntity("La cantidad de jugadores debe ser mayor o igual a la cantidad de municipios", HttpStatus.BAD_REQUEST);
         if (body.getModoDeJuego() == null)
             return new ResponseEntity("Modo de juego incorrecto", HttpStatus.BAD_REQUEST);
         //validar que los usuarios existan
-        for (var id : body.getIdJugadores()) {
+        for (var id : idsJugadores) {
             if (usuarioDao.get(id) == null) {
-                return ResponseEntity.badRequest().build();
+                return new ResponseEntity("No existe el usuario solicitado", HttpStatus.BAD_REQUEST);
             }
         }
         Partida partida;
@@ -139,10 +151,13 @@ public class PartidasApiController implements PartidasApi {
     @Override
     public ResponseEntity<MoverGauchosResponse> moverGauchos(Long idPartida, @Valid MoverGauchosBody body) {
 
+        if(body.getIdMunicipioDestino() == null || body.getIdMunicipioOrigen() == null)
+            return new ResponseEntity("Se requieren los municipios involucrados en la acción", HttpStatus.BAD_REQUEST);
+        if(body.getCantidad() == null)
+            return new ResponseEntity("No se indicó la cantidad de gauchos a mover", HttpStatus.BAD_REQUEST);
         Partida partida = partidaDao.get(idPartida);
         if (partida == null)
-            return ResponseEntity.badRequest().build();
-
+            return new ResponseEntity("No existe la partida solicitada", HttpStatus.BAD_REQUEST);
         if (!usuarioTienePermisos(partida))
             return new ResponseEntity("El usuario no tiene permisos para mover gauchos en este turno", HttpStatus.FORBIDDEN);
 
@@ -161,10 +176,10 @@ public class PartidasApiController implements PartidasApi {
 
         Partida partida = partidaDao.get(idPartida);
         if (partida == null)
-            return ResponseEntity.badRequest().build();
+            return new ResponseEntity("No existe la partida solicitada", HttpStatus.BAD_REQUEST);
 
         if (!usuarioTienePermisos(partida))
-            return new ResponseEntity("El usuario no tiene permisos para pasar de turno", HttpStatus.FORBIDDEN);
+            return new ResponseEntity("El usuario no tiene permisos para pasar de turno", HttpStatus.BAD_REQUEST);
 
         servicioPartida.pasarTurno(partida);
         return ResponseEntity.ok().build();
@@ -172,10 +187,11 @@ public class PartidasApiController implements PartidasApi {
 
     @Override
     public ResponseEntity<SimularAtacarMunicipioResponse> simularAtacarMunicipio(Long idPartida, @Valid SimularAtacarMunicipioBody body) {
+        if(body.getIdMunicipioAtacante() == null || body.getIdMunicipioObjetivo() == null)
+            return new ResponseEntity("Se requieren los municipios involucrados en la accion", HttpStatus.BAD_REQUEST);
         var partida = partidaDao.get(idPartida);
-
         if (partida == null)
-            return ResponseEntity.badRequest().build();
+            return new ResponseEntity("No existe la partida solicitada", HttpStatus.BAD_REQUEST);
 
         return ResponseEntity.ok(servicioPartida.simularAtacarMunicipio(partida, body.getIdMunicipioAtacante(), body.getIdMunicipioObjetivo()));
     }
@@ -184,7 +200,7 @@ public class PartidasApiController implements PartidasApi {
     public ResponseEntity<PartidaModel> getPartida(Long idPartida) {
         var partida = servicioPartida.obtenerPartidaPorId(idPartida);
         if (partida == null)
-            return ResponseEntity.notFound().build();
+            return new ResponseEntity("No existe la partida solicitada", HttpStatus.BAD_REQUEST);
         return ResponseEntity.ok(partidaMapper.wrap(partida));
     }
 
