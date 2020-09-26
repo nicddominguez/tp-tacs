@@ -12,6 +12,7 @@ import tp.tacs.api.daos.PartidaDao;
 import tp.tacs.api.daos.UsuarioDao;
 import tp.tacs.api.dominio.partida.Partida;
 import tp.tacs.api.dominio.usuario.Usuario;
+import tp.tacs.api.handler.MunicipioException;
 import tp.tacs.api.handler.PartidaException;
 import tp.tacs.api.mappers.EstadoDeJuegoMapper;
 import tp.tacs.api.mappers.ModoDeMunicipioMapper;
@@ -165,7 +166,7 @@ public class PartidasApiController implements PartidasApi {
         MoverGauchosResponse response;
         try {
             response = servicioPartida.moverGauchos(body.getIdMunicipioOrigen(), body.getIdMunicipioDestino(), cantidad);
-        } catch (PartidaException e) {
+        } catch (MunicipioException | PartidaException e) {
             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
         return ResponseEntity.ok(response);

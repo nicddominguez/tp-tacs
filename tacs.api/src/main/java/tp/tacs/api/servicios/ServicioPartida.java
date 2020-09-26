@@ -12,6 +12,7 @@ import tp.tacs.api.dominio.partida.Estado;
 import tp.tacs.api.dominio.partida.ModoRapido;
 import tp.tacs.api.dominio.partida.Partida;
 import tp.tacs.api.dominio.usuario.Usuario;
+import tp.tacs.api.handler.MunicipioException;
 import tp.tacs.api.handler.PartidaException;
 import tp.tacs.api.http.exception.HttpErrorException;
 import tp.tacs.api.http.externalApis.ExternalApis;
@@ -54,7 +55,7 @@ public class ServicioPartida {
         Usuario ganador = usuarioConMasMunicipios(request);
         ganador.aumentarPartidasGanadas();
         ganador.aumentarRachaActual();
-        request.getJugadoresIds().forEach(jugadorId -> {
+        request.getIdsJugadoresOriginales().forEach(jugadorId -> {
             Usuario usuario = usuarioDao.get(jugadorId);
             usuario.aumentarPartidasJugadas();
             if (!usuario.getId().equals(ganador.getId()))
@@ -76,15 +77,23 @@ public class ServicioPartida {
     }
 
     public void repartirMunicipios(Partida partida, List<Municipio> municipios) {
-        var idsJugadores = partida.getJugadoresIds();
+        var idsJugadores = partida.getIdsJugadoresActuales();
         var usuarios = idsJugadores.stream().map(id -> usuarioDao.get(id)).collect(Collectors.toList());
 
         var i = 0;
         for (Municipio municipio : municipios) {
-            municipio.setDuenio(usuarios.get(i%usuarios.size()));
+            municipio.setDuenio(usuarios.get(i % usuarios.size()));
             i++;
         }
 
+    }
+
+    public void eliminarPerdedores(Partida partida) {
+        var municipios = municipioDao.getByIds(partida.getMunicipios());
+        var duenios = municipios.stream().map(municipio -> municipio.getDuenio().getId()).collect(Collectors.toSet());
+        var jugadores = partida.getIdsJugadoresActuales();
+        var perdedores = jugadores.stream().filter(idJugador -> !duenios.contains(idJugador)).collect(Collectors.toSet());
+        partida.setIdsJugadoresActuales(jugadores.stream().filter(idJugador -> !perdedores.contains(idJugador)).collect(Collectors.toList()));
     }
 
     public void pasarTurno(Partida request) {
@@ -93,6 +102,7 @@ public class ServicioPartida {
             if (this.hayGanador(request)) {
                 this.terminarPartida(request);
             } else {
+                this.eliminarPerdedores(request);
                 request.asignarProximoTurno();
                 this.desbloquearYProducirMunicipios(request);
             }
@@ -103,7 +113,7 @@ public class ServicioPartida {
 
     public Boolean hayGanador(Partida request) {
         List<Municipio> municipios = municipioDao.getByIds(request.getMunicipios());
-        return request.getJugadoresIds().stream().anyMatch(juagadorId -> esDuenioDeTodo(juagadorId, municipios));
+        return request.getIdsJugadoresActuales().stream().anyMatch(juagadorId -> esDuenioDeTodo(juagadorId, municipios));
     }
 
     private boolean esDuenioDeTodo(Long userId, List<Municipio> municipios) {
@@ -219,7 +229,7 @@ public class ServicioPartida {
         var municipioOrigen = municipioDao.get(idMunicipioOrigen);
         var municipioDestino = municipioDao.get(idMunicipioDestino);
         if (cantidad > municipioOrigen.getCantGauchos())
-            throw new PartidaException("La cantidad de gauchos a mover no puede ser menor a la que posee el municipio origen.");
+            throw new MunicipioException("La cantidad de gauchos a mover no puede ser menor a la que posee el municipio origen.");
         municipioOrigen.sacarGauchos(cantidad);
         municipioDestino.agregarGauchos(cantidad);
         municipioDestino.bloquear();
@@ -232,15 +242,15 @@ public class ServicioPartida {
 
     public Partida inicializar(CrearPartidaBody request) {
         String nombreProvincia;
-        try{
+        try {
             nombreProvincia = externalApis.getNombreProvinicas(request.getIdProvincia()).getNombre();
-        }
-        catch (HttpErrorException | IndexOutOfBoundsException e){
+        } catch (HttpErrorException | IndexOutOfBoundsException e) {
             throw new PartidaException("No se pudo crear la partida: No se encontró provincia con ese id");
         }
         Partida partida = Partida.builder()
                 .estado(Estado.EN_CURSO)
-                .jugadoresIds(request.getIdJugadores())
+                .idsJugadoresOriginales(request.getIdJugadores())
+                .idsJugadoresActuales(request.getIdJugadores())
                 .nombreProvincia(nombreProvincia)
                 .idProvincia(request.getIdProvincia().toString())
                 .modoDeJuego(new ModoRapido())

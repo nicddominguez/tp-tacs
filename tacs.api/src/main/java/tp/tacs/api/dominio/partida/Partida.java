@@ -14,7 +14,8 @@ import java.util.List;
 public class Partida {
 
     private Long id;
-    private List<Long> jugadoresIds;
+    private List<Long> idsJugadoresOriginales;
+    private List<Long> idsJugadoresActuales;
     @Builder.Default
     private Integer usuarioJugandoIndiceLista = 0;
     private Estado estado;
@@ -30,7 +31,7 @@ public class Partida {
     private Float minDist;
 
     public void asignarProximoTurno() {
-        if (this.usuarioJugandoIndiceLista < jugadoresIds.size() - 1) {
+        if (this.usuarioJugandoIndiceLista < idsJugadoresActuales.size() - 1) {
             this.usuarioJugandoIndiceLista++;
         } else {
             this.usuarioJugandoIndiceLista = 0;
@@ -38,7 +39,7 @@ public class Partida {
     }
 
     public Long idUsuarioEnTurnoActual() {
-        return jugadoresIds.get(usuarioJugandoIndiceLista);
+        return idsJugadoresActuales.get(usuarioJugandoIndiceLista);
     }
 
 }
