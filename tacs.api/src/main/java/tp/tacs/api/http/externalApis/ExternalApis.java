@@ -3,9 +3,9 @@ package tp.tacs.api.http.externalApis;
 import com.google.gson.Gson;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 import tp.tacs.api.dominio.municipio.Municipio;
-import tp.tacs.api.dominio.municipio.RepoMunicipios;
 import tp.tacs.api.http.HttpClientConnector;
 import tp.tacs.api.http.externalApis.models.MunicipiosApi;
 import tp.tacs.api.http.externalApis.models.Provincias;
@@ -14,12 +14,12 @@ import tp.tacs.api.http.externalApis.models.TopoResult;
 import tp.tacs.api.mappers.GeorefMapper;
 import tp.tacs.api.mappers.ProvinciaMapper;
 import tp.tacs.api.model.ProvinciaModel;
-import java.util.stream.Collectors;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
-public class ExternalApis implements RepoMunicipios {
+public class ExternalApis {
 
     @Autowired
     private HttpClientConnector connector;
@@ -33,9 +33,9 @@ public class ExternalApis implements RepoMunicipios {
     private String geoRefProvinciaNombre = "https://apis.datos.gob.ar/georef/api/provincias?aplanar=true&id=";
     private String topoBaseUrl = "https://api.opentopodata.org/v1/srtm90m?locations=";
 
-    @Override
-    public List<Municipio> getMunicipios(String idProvincia, Integer cantidad) {
-        String url = geoRefMunicipioBaseUrlEstandar + "&provincia=" + idProvincia + "&max=" + cantidad;
+    @Cacheable("municipios")
+    public List<Municipio> getMunicipios(String idProvincia) {
+        String url = geoRefMunicipioBaseUrlEstandar + "&provincia=" + idProvincia + "&max=5000"; //Si no especificamos un max, georef no devuelve todos
         var municipiosApi = connector.get(url, MunicipiosApi.class);
         var municipiosBase = geoRefWrapper.wrapList(municipiosApi.getDepartamentos());
         return getAlturas(municipiosBase);
@@ -52,7 +52,6 @@ public class ExternalApis implements RepoMunicipios {
         return municipios;
     }
 
-    @Override
     public String getPathImagen(String idMunicipio) {
         return "https://cdn.pixabay.com/photo/2020/02/16/19/41/horses-4854601_960_720.jpg";
     }
@@ -63,7 +62,7 @@ public class ExternalApis implements RepoMunicipios {
         return provincia.cantidadMunicipios(cantidadMunicipios);
     }
 
-    @Override
+    @Cacheable("provincias")
     public List<ProvinciaModel> getProvincias() {
         Provincias provincias = connector.get(geoRefProvinciabaseUrlEstandar, Provincias.class);
         List<ProvinciaModel> provinciasSinCantidadMunicipios = provinciaWrapper.wrapList(provincias.getProvincias());
