@@ -8,6 +8,7 @@ import { UsuarioModel, MunicipioEnJuegoModel, PartidaModel } from "api/api";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import { Grid } from "@material-ui/core";
+import iconoParaMunicipio from "components/Juego/MapIcons";
 
 export interface GameMapProps {
   mapData?: GeoJsonObject | Array<GeoJsonObject>;
@@ -52,6 +53,7 @@ export default class GameMap extends React.Component<
     this.onClickArea = this.onClickArea.bind(this);
     this.featureStyle = this.featureStyle.bind(this);
     this.registerClickMunicipio = this.registerClickMunicipio.bind(this);
+    this.renderPopupMunicipio = this.renderPopupMunicipio.bind(this);
   }
 
   featureStyle(feature?: Feature<Geometry, any>): PathOptions {
@@ -119,6 +121,7 @@ export default class GameMap extends React.Component<
     if (municipio.ubicacion) {
       return (
         <Marker
+          key={municipio.id}
           position={
             new LatLng(municipio.ubicacion.lat, municipio.ubicacion.lon)
           }
@@ -129,6 +132,7 @@ export default class GameMap extends React.Component<
             e.target.closePopup();
           }}
           onclick={() => this.registerClickMunicipio(municipio)}
+          icon={iconoParaMunicipio(municipio, this.props.usuarioLogueado)}
         >
           <Popup>
             {/* Acá se debería poder usar material sin problema! */}
