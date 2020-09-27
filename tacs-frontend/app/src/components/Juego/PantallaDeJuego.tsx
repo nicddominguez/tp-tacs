@@ -12,6 +12,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import Slider from '@material-ui/core/Slider';
 import { getMapData } from '../../api/maps';
 import { WololoPartidasApiClient, WololoAdminApiClient, PollingPartida } from 'api/client';
+import { Typography } from '@material-ui/core';
 
 enum EstadoJuego {
   SELECCION = 'SELECCION',
@@ -25,7 +26,8 @@ export interface PantallaDeJuegoProps {
 }
 
 interface PantallaDeJuegoState {
-  dialogOpen: boolean
+  actionDialogOpen: boolean
+  winDialogOpen: boolean
   snackbarOpen: boolean
   snackbarMessage?: string
   onClickMunicipio: (municipio: MunicipioEnJuegoModel) => void
@@ -35,6 +37,7 @@ interface PantallaDeJuegoState {
   cantidadGauchosAMover?: number
   mapData?: GeoJsonObject | Array<GeoJsonObject> | undefined
   partidaConInfo?: PartidaModel
+  simulacionExitosa?: boolean
 }
 
 const partidasApiClient = new WololoPartidasApiClient();
@@ -50,7 +53,8 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
     this.seleccionarMunicipio = this.seleccionarMunicipio.bind(this);
 
     this.state = {
-      dialogOpen: false,
+      actionDialogOpen: false,
+      winDialogOpen: false,
       snackbarOpen: false,
       estadoJuego: EstadoJuego.SELECCION,
       onClickMunicipio: this.seleccionarMunicipio,
@@ -68,6 +72,7 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
     this.solicitarDesplazamientoGauchos = this.solicitarDesplazamientoGauchos.bind(this);
     this.confirmarDesplazamientoGauchos = this.confirmarDesplazamientoGauchos.bind(this);
     this.pasarTurno = this.pasarTurno.bind(this);
+    this.renderWinDialog = this.renderWinDialog.bind(this);
   }
 
   componentDidMount() {
@@ -114,7 +119,7 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
 
   handleDialogClose() {
     this.setState({
-      dialogOpen: false,
+      actionDialogOpen: false,
       municipioSeleccionado: undefined,
       estadoJuego: EstadoJuego.SELECCION,
       onClickMunicipio: this.seleccionarMunicipio
@@ -136,9 +141,26 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
   }
 
   setPartida(partida: PartidaModel) {
+    const partidaTerminada = partida.idGanador !== null && partida.idGanador !== undefined;
+
+    if(partidaTerminada) {
+      this.pollingPartida?.stop();
+    }
+
     this.setState({
-      partidaConInfo: partida
+      partidaConInfo: partida,
+      winDialogOpen: partidaTerminada,
+      onClickMunicipio: partidaTerminada ? () => {} : this.state.onClickMunicipio
     });
+  }
+
+  obtenerGanadorPartida() {
+    const idGanador = this.state.partidaConInfo?.idGanador;
+    if(idGanador !== undefined) {
+      return this.state.partidaConInfo?.jugadores.find(
+        jugador => jugador.id === Number.parseInt(idGanador)
+      );
+    }
   }
 
   pasarTurno() {
@@ -184,14 +206,14 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
     }
 
     this.setState({
-      dialogOpen: true,
+      actionDialogOpen: true,
       municipioSeleccionado: municipioSeleccionado
     });
   }
 
   organizarAtaqueAMunicipio() {
     this.setState({
-      dialogOpen: false,
+      actionDialogOpen: false,
       snackbarOpen: true,
       snackbarMessage: 'Seleccioná el municipio a atacar',
       onClickMunicipio: this.solicitarAtaqueAMunicipio
@@ -221,10 +243,11 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
       .then(response => {
         console.log('Es exitoso?', response.exitoso);
         this.setState({
-          dialogOpen: true,
+          actionDialogOpen: true,
           snackbarOpen: false,
           municipioObjetivo: municipioObjetivo,
-          estadoJuego: EstadoJuego.ATACANDO
+          estadoJuego: EstadoJuego.ATACANDO,
+          simulacionExitosa: response.exitoso
         });
       })
       .catch(console.error);
@@ -251,7 +274,7 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
         console.log(response.municipioAtacado);
         this.actualizarMunicipiosEnPartida([response.municipioAtacado, response.municipioAtacante]);
         this.setState({
-          dialogOpen: false,
+          actionDialogOpen: false,
           snackbarOpen: true,
           snackbarMessage: `Atacaste a ${municipioObjetivo?.nombre} desde ${municipioOrigen?.nombre}`,
           onClickMunicipio: this.seleccionarMunicipio,
@@ -266,7 +289,7 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
 
   organizarDesplazamientoGauchos() {
     this.setState({
-      dialogOpen: false,
+      actionDialogOpen: false,
       snackbarOpen: true,
       snackbarMessage: 'A donde querés mover los gauchos?',
       onClickMunicipio: this.solicitarDesplazamientoGauchos
@@ -285,7 +308,7 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
     }
 
     this.setState({
-      dialogOpen: true,
+      actionDialogOpen: true,
       snackbarOpen: false,
       municipioObjetivo: municipioDestino,
       estadoJuego: EstadoJuego.MOVIENDO
@@ -312,7 +335,7 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
         console.log(response.municipioDestino)
         this.actualizarMunicipiosEnPartida([response.municipioDestino, response.municipioOrigen]);
         this.setState({
-          dialogOpen: false,
+          actionDialogOpen: false,
           snackbarOpen: true,
           snackbarMessage: `Moviste ${this.state.cantidadGauchosAMover} gauchos a ${municipioDestino?.nombre} desde ${municipioOrigen?.nombre}`,
           onClickMunicipio: this.seleccionarMunicipio,
@@ -340,13 +363,14 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
     )
   }
 
-  renderDialog() {
+  renderActionDialog() {
       switch(this.state.estadoJuego) {
         case EstadoJuego.SELECCION:
           return (
             <div>
               <DialogTitle>{this.state.municipioSeleccionado?.nombre}</DialogTitle>
               <DialogContent>
+                {/* TODO: Poner la info del municipio. Gauchos, producción, altura, etc. */}
                 <DialogContentText>Acá se puede poner lo que queramos de info del municipio</DialogContentText>
               </DialogContent>
               <DialogActions>
@@ -366,8 +390,12 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
             <div>
               <DialogTitle>Resumen de ataque</DialogTitle>
               <DialogContent>
+                {/* TODO: Mostrar un resumen del ataque piola */}
                 <DialogContentText>
                   Vas a atacar a {this.state.municipioObjetivo?.nombre} desde {this.state.municipioSeleccionado?.nombre}
+                </DialogContentText>
+                <DialogContentText>
+                  {this.state.simulacionExitosa ? 'Vas a ganar' : 'Vas a perder'}
                 </DialogContentText>
               </DialogContent>
               <DialogActions>
@@ -381,6 +409,7 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
             <div>
               <DialogTitle>Resumen de movimiento</DialogTitle>
               <DialogContent>
+                {/* TODO: Mostrar un resumen piola del movimiento */}
                 <DialogContentText>
                   Vas a mover gauchos a {this.state.municipioObjetivo?.nombre} desde {this.state.municipioSeleccionado?.nombre}
                 </DialogContentText>
@@ -390,6 +419,7 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
                   min={1}
                   max={this.state.municipioSeleccionado?.gauchos || 100}
                 />
+                <Typography>{this.state.cantidadGauchosAMover}</Typography>
               </DialogContent>
               <DialogActions>
                 <Button onClick={this.handleDialogClose}>Cancelar</Button>
@@ -398,6 +428,20 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
             </div>
           )
       }
+  }
+
+  renderWinDialog() {
+    return (
+      <div>
+        <DialogTitle>Partida terminada</DialogTitle>
+        <DialogContent>
+          <DialogContentText>Ganador: {this.obtenerGanadorPartida()?.nombreDeUsuario}</DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => this.setState({winDialogOpen: false})}>Cerrar</Button>
+        </DialogActions>
+      </div>
+    )
   }
 
   render() {
@@ -411,12 +455,17 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
           onPasarTurno={this.pasarTurno}
         />}
         <Dialog
-          open={this.state.dialogOpen}
+          open={this.state.actionDialogOpen}
           onClose={this.handleDialogClose}
         >
-          {this.renderDialog()}
+          {this.renderActionDialog()}
         </Dialog>
         {this.renderSnackbar()}
+        <Dialog
+          open={this.state.winDialogOpen}
+        >
+          {this.renderWinDialog()}
+        </Dialog>
       </div>
     )
   }
