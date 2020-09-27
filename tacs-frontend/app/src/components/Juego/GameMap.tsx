@@ -175,47 +175,64 @@ export default class GameMap extends React.Component<
         <Control position="bottomleft">
           <Grid container direction="column" spacing={1}>
             <Grid item>
-              <Card>
-                <Button
-                  color={this.esElTurnoDelUsuario() ? "default" : "secondary"}
-                >
-                  {this.esElTurnoDelUsuario()
-                    ? "Tu turno"
-                    : `Turno de ${this.nombreUsuario(
-                        this.props.partida?.informacionDeJuego
-                          ?.idUsuarioProximoTurno
-                      )}`}
-                </Button>
-              </Card>
+              <Button
+                color={this.esElTurnoDelUsuario() ? "default" : "secondary"}
+                style={{ backgroundColor: "white" }}
+                fullWidth
+              >
+                {this.esElTurnoDelUsuario()
+                  ? "Tu turno"
+                  : `Turno de ${this.nombreUsuario(
+                      this.props.partida?.informacionDeJuego
+                        ?.idUsuarioProximoTurno
+                    )}`}
+              </Button>
             </Grid>
             <Grid item>
-              <Card>
-                <Button
-                  onClick={
-                    this.props.onPasarTurno ? this.props.onPasarTurno : () => {}
-                  }
-                  color="primary"
-                  disabled={!this.esElTurnoDelUsuario()}
-                >
-                  Pasar turno
-                </Button>
-              </Card>
+              <Button
+                onClick={
+                  this.props.onPasarTurno ? this.props.onPasarTurno : () => {}
+                }
+                color="primary"
+                variant="contained"
+                disabled={!this.esElTurnoDelUsuario()}
+                fullWidth
+              >
+                Pasar turno
+              </Button>
             </Grid>
           </Grid>
         </Control>
 
         {/* Para mostrar los jugadores y sus colores */}
         <Control position="bottomright">
-          <Card>
-            {this.props.partida?.jugadores.map((jugador) => {
-              return (
-                <div>
-                  <span>{this.state.playerColors[jugador.id]} </span>
-                  <span>{jugador.nombreDeUsuario}</span>
-                </div>
-              );
-            })}
-          </Card>
+          <Grid container direction="column" spacing={1}>
+            <Grid item>
+              <Card>
+                {this.props.partida?.jugadores.map((jugador) => {
+                  return (
+                    <div>
+                      <span>{this.state.playerColors[jugador.id]} </span>
+                      <span>{jugador.nombreDeUsuario}</span>
+                    </div>
+                  );
+                })}
+              </Card>
+            </Grid>
+            <Grid item>
+              <Button
+                // TODO: Algo como
+                //   onClick={
+                //     this.props.usuarioSeRinde ? this.props.usuarioSeRinde() : () => {}
+                //   }
+                color="secondary"
+                variant="contained"
+                fullWidth
+              >
+                Rendirse
+              </Button>
+            </Grid>
+          </Grid>
         </Control>
       </Map>
     );
