@@ -190,15 +190,15 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
     partidasApiClient.simularAtacarMunicipio(this.state.partidaConInfo.id, bodyAtaque)
       .then(response => {
         console.log('Es exitoso?', response.exitoso);
+        this.setState({
+          dialogOpen: true,
+          snackbarOpen: false,
+          municipioObjetivo: municipioObjetivo,
+          estadoJuego: EstadoJuego.ATACANDO
+        });
       })
       .catch(console.error);
 
-    this.setState({
-      dialogOpen: true,
-      snackbarOpen: false,
-      municipioObjetivo: municipioObjetivo,
-      estadoJuego: EstadoJuego.ATACANDO
-    });
   }
 
   confirmarAtaqueAMunicipio() {
@@ -336,7 +336,6 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
                 </DialogContentText>
               </DialogContent>
               <DialogActions>
-                {/* TODO: Si cierran acá, quedamos en el medio de un ataque. Deberiamos volver a seleccionar. */}
                 <Button onClick={this.handleDialogClose}>Cancelar</Button>
                 <Button onClick={this.confirmarAtaqueAMunicipio}>Confirmar</Button>
               </DialogActions>

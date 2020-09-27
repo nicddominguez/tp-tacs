@@ -64,10 +64,16 @@ const MenuProps = {
   },
 };
 
-function Row(props: { partida: PartidaSinInfoModel }) {
+function Row(props: { partida: PartidaSinInfoModel, onClickJugar?: (partida: PartidaSinInfoModel) => void }) {
   const { partida } = props;
   const [open, setOpen] = React.useState(false);
   const classes = useRowStyles();
+
+  const jugarAction = () => {
+    if(props.onClickJugar) {
+      props.onClickJugar(props.partida);
+    }
+  }
 
   return (
     <React.Fragment>
@@ -86,6 +92,9 @@ function Row(props: { partida: PartidaSinInfoModel }) {
         <TableCell align="center">{partida.estado}</TableCell>
         <TableCell align="center">{partida.provincia?.nombre}</TableCell>
         <TableCell align="center">{partida.modoDeJuego}</TableCell>
+        <TableCell align="center">
+          <Button color="primary" onClick={jugarAction} >Jugar!</Button>
+        </TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
@@ -151,8 +160,10 @@ const useStyles = (theme: Theme) =>
       margin: theme.spacing(1),
     },
   });
+
 interface Props {
   classes: any;
+  onClickJugar?: (partida: PartidaSinInfoModel) => void;
 }
 
 interface State {
@@ -414,7 +425,7 @@ class Partidas extends React.Component<Props, State> {
                 </TableHead>
                 <TableBody>
                   {this.state.partidas?.map((partida) => (
-                    <Row key={partida.id} partida={partida} />
+                    <Row key={partida.id} partida={partida} onClickJugar={this.props.onClickJugar} />
                   ))}
                 </TableBody>
                 <TableFooter>

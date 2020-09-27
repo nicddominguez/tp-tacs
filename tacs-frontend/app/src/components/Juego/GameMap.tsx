@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDomServer from 'react-dom/server';
 import './map.css';
 import { Feature, Geometry, GeoJsonObject } from 'geojson';
 import { LatLng, Layer, PathOptions, LeafletMouseEvent } from 'leaflet';
@@ -14,6 +15,7 @@ export interface GameMapProps {
     partida?: PartidaModel
     usuarioLogueado?: UsuarioModel
     onPasarTurno?: () => void
+    onTerminarPartida?: () => void
 }
 
 interface GameMapState {
@@ -63,8 +65,28 @@ export default class GameMap extends React.Component<GameMapProps, GameMapState>
     }
 
     onEachFeature(feature: Feature<Geometry, any>, layer: Layer) {
+        const nombreMunicipio: string = feature.properties.nombre;
+        const municipioEnJuego = this.props.partida?.informacionDeJuego
+            ?.municipios
+            ?.find(municipio => municipio.nombre === nombreMunicipio);
+
+        let htmlString = '';
+
+        if(municipioEnJuego) {
+            htmlString = ReactDomServer.renderToString(
+                <div>
+                    <p>{municipioEnJuego?.nombre}</p>
+                    <p>{municipioEnJuego?.gauchos}</p>
+                </div>
+            );
+            layer.bindPopup(htmlString);
+            layer.closePopup();
+        }
+
         layer.on({
-            click: this.onClickArea
+            click: this.onClickArea,
+            mouseover: () => layer.openPopup(),
+            mouseout: () => layer.closePopup()
         });
     }
 
@@ -108,6 +130,10 @@ export default class GameMap extends React.Component<GameMapProps, GameMapState>
                         style={this.featureStyle}
                     />
                 }
+
+                {/* TODO: Acá hay que mostrar de quién es el turno actual. Se saca de la partida */}
+                {/* TODO: El botón de pasar turno se debería mostrar solo cuando es mi turno */}
+                {/* TODO: Poner botón de terminar partida */}
                 <Control position='bottomleft'>
                     <Card>
                         <Button
@@ -116,6 +142,18 @@ export default class GameMap extends React.Component<GameMapProps, GameMapState>
                         >
                             Pasar turno
                         </Button>
+                    </Card>
+                </Control>
+                <Control position='bottomright'>
+                    <Card>
+                        {this.props.partida?.jugadores.map(jugador => {
+                            return (
+                                <div>
+                                    <span>{this.state.playerColors[jugador.id]} </span>
+                                    <span>{jugador.nombreDeUsuario}</span>
+                                </div>
+                            );
+                        })}
                     </Card>
                 </Control>
             </Map>
