@@ -21,6 +21,7 @@ export interface GameMapProps {
   usuarioLogueado?: UsuarioModel;
   onPasarTurno?: () => void;
   onTerminarPartida?: () => void;
+  onRendirUsuario?: () => void;
 }
 
 interface GameMapState {
@@ -242,10 +243,11 @@ export default class GameMap extends React.Component<
             </Grid>
             <Grid item>
               <Button
-                // TODO: Algo como
-                //   onClick={
-                //     this.props.usuarioSeRinde ? this.props.usuarioSeRinde() : () => {}
-                //   }
+                onClick={
+                  this.props.onRendirUsuario
+                    ? this.props.onRendirUsuario
+                    : () => {}
+                }
                 color="secondary"
                 variant="contained"
                 fullWidth
