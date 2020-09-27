@@ -244,7 +244,7 @@ export class PollingPartida {
     }
 
     stop() {
-        if(this.timeout) {
+        if(this.timeout !== undefined) {
             clearTimeout(this.timeout);
             this.timeout = undefined;
         }

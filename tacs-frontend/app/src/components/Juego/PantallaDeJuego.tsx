@@ -75,7 +75,6 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
       // Obtener el mapa
       getMapData(this.props.partidaSinInfo.provincia.id)
         .then(mapData => {
-          console.log(mapData);
           if(mapData) {
             this.setState({
               mapData: mapData
@@ -84,9 +83,7 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
         });
 
       // Obtener la partida
-      partidasApiClient.getPartida(this.props.partidaSinInfo.id)
-        .then(this.setPartida.bind(this))
-        .catch(console.error);
+      this.cargarPartida();
 
       // Configurar polling
       this.pollingPartida = partidasApiClient.pollPartida(
@@ -130,8 +127,15 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
     });
   }
 
+  cargarPartida() {
+    if(this.props.partidaSinInfo?.id !== undefined) {
+      partidasApiClient.getPartida(this.props.partidaSinInfo.id)
+        .then(this.setPartida.bind(this))
+        .catch(console.error);
+    }
+  }
+
   setPartida(partida: PartidaModel) {
-    console.log('Seteando partida');
     this.setState({
       partidaConInfo: partida
     });
@@ -141,8 +145,7 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
     if(this.state.partidaConInfo?.id !== undefined) {
       adminApiClient.pasarTurno(this.state.partidaConInfo?.id)
         .then(response => {
-          console.log('Se pasó el turno');
-          // ACTUALIZAR LA PARTIDA!
+          this.cargarPartida();
         })
         .catch(console.error);
     }
@@ -348,8 +351,13 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
               </DialogContent>
               <DialogActions>
                 <Button onClick={this.handleDialogClose}>Cancelar</Button>
-                <Button onClick={this.organizarDesplazamientoGauchos}>Desplazar gauchos</Button>
-                <Button onClick={this.organizarAtaqueAMunicipio} >Organizar ataque</Button>
+                <Button
+                  onClick={this.organizarDesplazamientoGauchos}
+                  disabled={this.state.municipioSeleccionado?.estaBloqueado || this.state.municipioSeleccionado?.gauchos === 0}
+                >
+                  Desplazar gauchos
+                </Button>
+                <Button onClick={this.organizarAtaqueAMunicipio}>Organizar ataque</Button>
               </DialogActions>
             </div>
           )
