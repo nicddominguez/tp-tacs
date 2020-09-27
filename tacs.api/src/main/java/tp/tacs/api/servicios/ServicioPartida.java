@@ -264,8 +264,8 @@ public class ServicioPartida {
                 .build();
 
         var cantidadMunicipiosPartida = Math.toIntExact(request.getCantidadMunicipios());
-
-        var municipiosDeLaPartida = externalApis.getMunicipios(partida.getIdProvincia()).subList(0, cantidadMunicipiosPartida);
+        List<Municipio> municipios = externalApis.getMunicipios(partida.getIdProvincia());
+        var municipiosDeLaPartida = municipios.subList(0, Math.min(municipios.size(),cantidadMunicipiosPartida));
         municipiosDeLaPartida.forEach(municipio -> municipioDao.save(municipio));
 
         partida.setMunicipios(municipiosDeLaPartida.stream().map(Municipio::getId).collect(Collectors.toList()));
