@@ -1,5 +1,4 @@
 import React from "react";
-import ReactDomServer from "react-dom/server";
 import "./map.css";
 import { Feature, Geometry, GeoJsonObject } from "geojson";
 import { LatLng, Layer, PathOptions, LeafletMouseEvent } from "leaflet";
@@ -8,6 +7,7 @@ import Control from "react-leaflet-control";
 import { UsuarioModel, MunicipioEnJuegoModel, PartidaModel } from "api/api";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
+import { Grid } from "@material-ui/core";
 
 export interface GameMapProps {
   mapData?: GeoJsonObject | Array<GeoJsonObject>;
@@ -106,6 +106,15 @@ export default class GameMap extends React.Component<
     );
   }
 
+  nombreUsuario(id: number | undefined) {
+    const usuario:
+      | UsuarioModel
+      | undefined = this.props.partida?.jugadores.find(
+      (jugador) => jugador.id == id
+    );
+    return usuario?.nombreDeUsuario;
+  }
+
   renderPopupMunicipio(municipio: MunicipioEnJuegoModel) {
     if (municipio.ubicacion) {
       return (
@@ -160,17 +169,35 @@ export default class GameMap extends React.Component<
         {/* TODO: El botón de pasar turno se debería mostrar solo cuando es mi turno */}
         {/* TODO: Poner botón de terminar partida */}
         <Control position="bottomleft">
-          <Card>
-            <Button
-              onClick={
-                this.props.onPasarTurno ? this.props.onPasarTurno : () => {}
-              }
-              color="primary"
-              disabled={!this.esElTurnoDelUsuario()}
-            >
-              Pasar turno
-            </Button>
-          </Card>
+          <Grid container direction="column" spacing={1}>
+            <Grid item>
+              <Card>
+                <Button
+                  color={this.esElTurnoDelUsuario() ? "default" : "secondary"}
+                >
+                  {this.esElTurnoDelUsuario()
+                    ? "Tu turno"
+                    : `Turno de ${this.nombreUsuario(
+                        this.props.partida?.informacionDeJuego
+                          ?.idUsuarioProximoTurno
+                      )}`}
+                </Button>
+              </Card>
+            </Grid>
+            <Grid item>
+              <Card>
+                <Button
+                  onClick={
+                    this.props.onPasarTurno ? this.props.onPasarTurno : () => {}
+                  }
+                  color="primary"
+                  disabled={!this.esElTurnoDelUsuario()}
+                >
+                  Pasar turno
+                </Button>
+              </Card>
+            </Grid>
+          </Grid>
         </Control>
 
         {/* Para mostrar los jugadores y sus colores */}
