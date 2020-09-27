@@ -1,5 +1,12 @@
+<<<<<<< HEAD
 import { Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
+=======
+import React from 'react';
+import GameMap from './GameMap';
+import { GeoJsonObject } from 'geojson';
+import { PartidaModel, MunicipioEnJuegoModel, PartidaSinInfoModel, UsuarioModel, AtacarMunicipioBody, MoverGauchosBody, EstadoDeJuegoModel } from 'api';
+>>>>>>> Agregar lógica para cancelar una partida
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -214,7 +221,6 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
     }
 
     if(municipioSeleccionado.duenio.id !== this.props.usuarioLogueado.id) {
-      console.log('No se puede seleccionar un municipio que no es mio');
       return;
     }
 
@@ -254,7 +260,6 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
 
     partidasApiClient.simularAtacarMunicipio(this.state.partidaConInfo.id, bodyAtaque)
       .then(response => {
-        console.log('Es exitoso?', response.exitoso);
         this.setState({
           actionDialogOpen: true,
           snackbarOpen: false,
@@ -282,7 +287,6 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
 
     partidasApiClient.atacarMunicipio(this.state.partidaConInfo.id, bodyAtaque)
       .then(response => {
-        console.log('RESULTADO')
         console.log(response.municipioAtacante);
         console.log(response.municipioAtacado);
         this.actualizarMunicipiosEnPartida([response.municipioAtacado, response.municipioAtacante]);
