@@ -3,7 +3,7 @@ import ReactDomServer from 'react-dom/server';
 import './map.css';
 import { Feature, Geometry, GeoJsonObject } from 'geojson';
 import { LatLng, Layer, PathOptions, LeafletMouseEvent } from 'leaflet';
-import { Map, GeoJSON, TileLayer } from 'react-leaflet';
+import { Map, GeoJSON, TileLayer, Marker, Popup } from 'react-leaflet';
 import Control from 'react-leaflet-control';
 import { UsuarioModel, MunicipioEnJuegoModel, PartidaModel } from 'api/api';
 import Button from '@material-ui/core/Button';
@@ -49,6 +49,7 @@ export default class GameMap extends React.Component<GameMapProps, GameMapState>
         this.onEachFeature = this.onEachFeature.bind(this);
         this.onClickArea = this.onClickArea.bind(this);
         this.featureStyle = this.featureStyle.bind(this);
+        this.registerClickMunicipio = this.registerClickMunicipio.bind(this);
     }
 
     featureStyle(feature?: Feature<Geometry, any>): PathOptions {
@@ -65,28 +66,8 @@ export default class GameMap extends React.Component<GameMapProps, GameMapState>
     }
 
     onEachFeature(feature: Feature<Geometry, any>, layer: Layer) {
-        const nombreMunicipio: string = feature.properties.nombre;
-        const municipioEnJuego = this.props.partida?.informacionDeJuego
-            ?.municipios
-            ?.find(municipio => municipio.nombre === nombreMunicipio);
-
-        let htmlString = '';
-
-        if(municipioEnJuego) {
-            htmlString = ReactDomServer.renderToString(
-                <div>
-                    <p>{municipioEnJuego?.nombre}</p>
-                    <p>{municipioEnJuego?.gauchos}</p>
-                </div>
-            );
-            layer.bindPopup(htmlString);
-            layer.closePopup();
-        }
-
         layer.on({
-            click: this.onClickArea,
-            mouseover: () => layer.openPopup(),
-            mouseout: () => layer.closePopup()
+            click: this.onClickArea
         });
     }
 
@@ -96,11 +77,13 @@ export default class GameMap extends React.Component<GameMapProps, GameMapState>
         this.props.partida?.informacionDeJuego
             ?.municipios
             ?.filter(municipio => municipio.nombre === nombre)
-            .forEach(municipio => {
-                if (this.props.onClickMunicipio) {
-                    this.props.onClickMunicipio(municipio);
-                }
-            });
+            .forEach(this.registerClickMunicipio);
+    }
+
+    registerClickMunicipio(municipio: MunicipioEnJuegoModel) {
+        if (this.props.onClickMunicipio) {
+            this.props.onClickMunicipio(municipio);
+        }
     }
 
     esElTurnoDelUsuario() {
@@ -113,6 +96,30 @@ export default class GameMap extends React.Component<GameMapProps, GameMapState>
         }
 
         return this.props.partida?.informacionDeJuego?.idUsuarioProximoTurno === this.props.usuarioLogueado?.id;
+    }
+
+    renderPopupMunicipio(municipio: MunicipioEnJuegoModel) {
+        if(municipio.ubicacion) {
+            return (
+                <Marker
+                    position={new LatLng(municipio.ubicacion.lat, municipio.ubicacion.lon)}
+                    onMouseOver={(e: LeafletMouseEvent) => {
+                        e.target.openPopup();
+                    }}
+                    onMouseOut={(e: LeafletMouseEvent) => {
+                        e.target.closePopup();
+                    }}
+                    onclick={() => this.registerClickMunicipio(municipio)}
+                >
+                    <Popup>
+                        {/* Acá se debería poder usar material sin problema! */}
+                        <p>{municipio.nombre}</p>
+                        <p>{municipio.gauchos}</p>
+                    </Popup>
+                </Marker>
+            )
+        }
+        return undefined;
     }
 
     render() {
@@ -131,6 +138,9 @@ export default class GameMap extends React.Component<GameMapProps, GameMapState>
                     />
                 }
 
+                {/* Mostramos un marker con popup */}
+                {this.props.partida?.informacionDeJuego?.municipios?.map(this.renderPopupMunicipio)}
+
                 {/* TODO: Acá hay que mostrar de quién es el turno actual. Se saca de la partida */}
                 {/* TODO: El botón de pasar turno se debería mostrar solo cuando es mi turno */}
                 {/* TODO: Poner botón de terminar partida */}
@@ -144,6 +154,8 @@ export default class GameMap extends React.Component<GameMapProps, GameMapState>
                         </Button>
                     </Card>
                 </Control>
+
+                {/* Para mostrar los jugadores y sus colores */}
                 <Control position='bottomright'>
                     <Card>
                         {this.props.partida?.jugadores.map(jugador => {
