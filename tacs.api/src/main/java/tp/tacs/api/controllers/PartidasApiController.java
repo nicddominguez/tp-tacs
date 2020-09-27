@@ -117,6 +117,9 @@ public class PartidasApiController implements PartidasApi {
         } catch (IndexOutOfBoundsException e) {
             return ResponseEntity.badRequest().build();
         }
+        catch(PartidaException | MunicipioException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @Override
@@ -144,7 +147,7 @@ public class PartidasApiController implements PartidasApi {
             partida = servicioPartida.inicializar(body);
             PartidaModel response = partidaMapper.wrap(partida);
             return ResponseEntity.ok(response);
-        } catch (PartidaException e) {
+        } catch (PartidaException | MunicipioException e) {
             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }

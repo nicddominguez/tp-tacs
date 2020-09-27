@@ -33,12 +33,13 @@ public class ExternalApis {
     private String topoBaseUrl = "https://api.opentopodata.org/v1/srtm90m?locations=";
     private String pixabayUrl = "https://pixabay.com/api/?key=%s&image_type=photo&q=argentina+";
 
-    @Cacheable("municipios")
+
+    //@Cacheable("municipios") Se dehabilita porque al crear partida duplica los municipios
     public List<Municipio> getMunicipios(String idProvincia, String nombreProvincia, Integer cantidadDeMunicipios) {
         String url = geoRefMunicipioBaseUrlEstandar + "&provincia=" + idProvincia + "&max=5000"; //Si no especificamos un max, georef no devuelve todos
         var municipiosApi = connector.get(url, MunicipiosApi.class);
         var municipiosBase = geoRefWrapper.wrapList(municipiosApi.getDepartamentos());
-        var municipiosConCantidadPedida = municipiosBase.subList(0, cantidadDeMunicipios - 1);
+        var municipiosConCantidadPedida = municipiosBase.subList(0, Math.min(municipiosBase.size(),cantidadDeMunicipios));
         var municipiosConImagenes = getImagenes(municipiosConCantidadPedida, nombreProvincia);
         return getAlturas(municipiosConImagenes);
     }
