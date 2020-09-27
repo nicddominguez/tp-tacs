@@ -1,8 +1,7 @@
-import React, { Fragment } from 'react';
-import { Icon, BaseIconOptions, LatLng } from 'leaflet';
-import { Marker } from 'react-leaflet';
-import ImagenGaucho from '../../assets/img/gaucho.webp';
-import { MunicipioEnJuegoModel } from 'api';
+import { Icon, BaseIconOptions } from 'leaflet';
+import ImagenEscudo from '../../assets/img/escudo.svg';
+import ImagenEspada from '../../assets/img/espada.svg';
+import { MunicipioEnJuegoModel, UsuarioModel } from 'api';
 
 function buildIcon(img: string, size: [number, number]) {
   const options: BaseIconOptions = {
@@ -12,34 +11,23 @@ function buildIcon(img: string, size: [number, number]) {
   return new Icon(options);
 }
 
-function iconoGaucho() {
-  return buildIcon(ImagenGaucho, [100, 95]);
+function iconoEspada() {
+  return buildIcon(ImagenEspada, [40, 40]);
 }
 
-export function markersParaMovimiento(municipios?: Array<MunicipioEnJuegoModel>, municipioOrigen?: MunicipioEnJuegoModel) {
+function iconoEscudo() {
+  return buildIcon(ImagenEscudo, [40, 40]);
+}
 
-  if(!municipios || !municipioOrigen) {
-    return <Fragment />;
+export function iconoParaMunicipio(municipio: MunicipioEnJuegoModel, jugadorLogueado?: UsuarioModel) {
+
+  if(!municipio.duenio || !jugadorLogueado) {
+    return undefined;
   }
 
-  const markers = municipios
-    .filter(municipio => municipio.id !== municipioOrigen.id)
-    .filter(municipio => municipio.duenio?.id === municipioOrigen.duenio?.id)
-    .map(municipio => {
-        if(municipio.ubicacion) {
-          return (
-            <Marker
-              icon={iconoGaucho()}
-              position={new LatLng(municipio.ubicacion.lat, municipio.ubicacion.lon)}
-            />
-          )
-        }
-      }
-    );
+  if(municipio.duenio.id === jugadorLogueado.id) {
+    return iconoEscudo();
+  }
 
-  return (
-    <Fragment>
-      {markers}
-    </Fragment>
-  );
+  return iconoEspada();
 }
