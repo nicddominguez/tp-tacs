@@ -33,7 +33,7 @@ public class ExternalApis {
     private String geoRefProvinciaNombre = "https://apis.datos.gob.ar/georef/api/provincias?aplanar=true&id=";
     private String topoBaseUrl = "https://api.opentopodata.org/v1/srtm90m?locations=";
 
-    @Cacheable("municipios")
+    //@Cacheable("municipios") Se dehabilita porque al crear partida duplica los municipios
     public List<Municipio> getMunicipios(String idProvincia) {
         String url = geoRefMunicipioBaseUrlEstandar + "&provincia=" + idProvincia + "&max=5000"; //Si no especificamos un max, georef no devuelve todos
         var municipiosApi = connector.get(url, MunicipiosApi.class);

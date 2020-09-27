@@ -27,7 +27,12 @@ public class PartidaMapper extends AbstractMapper<Partida, PartidaModel> {
 
     @Override
     protected PartidaModel wrapModel(Partida partida) {
-        return this.partidaBasica(partida).informacionDeJuego(datosDeJuegoMapper.wrap(partida));
+        var ganador = partida.getGanador();
+        var partidaBasica = this.partidaBasica(partida)
+                .informacionDeJuego(datosDeJuegoMapper.wrap(partida));
+        if(ganador != null)
+            partidaBasica.idGanador(ganador.getId().toString());
+        return partidaBasica;
     }
 
     @Override
