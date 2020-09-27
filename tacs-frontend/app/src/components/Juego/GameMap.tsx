@@ -1,14 +1,18 @@
-import React from "react";
-import "./map.css";
-import { Feature, Geometry, GeoJsonObject } from "geojson";
-import { LatLng, Layer, PathOptions, LeafletMouseEvent } from "leaflet";
-import { Map, GeoJSON, TileLayer, Marker, Popup } from "react-leaflet";
-import Control from "react-leaflet-control";
-import { UsuarioModel, MunicipioEnJuegoModel, PartidaModel } from "api/api";
+import { Card, Grid } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
-import Card from "@material-ui/core/Card";
-import { Grid } from "@material-ui/core";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import PersonIcon from "@material-ui/icons/Person";
+import { MunicipioEnJuegoModel, PartidaModel, UsuarioModel } from "api/api";
 import iconoParaMunicipio from "components/Juego/MapIcons";
+import { Feature, GeoJsonObject, Geometry } from "geojson";
+import { LatLng, Layer, LeafletMouseEvent, PathOptions } from "leaflet";
+import { default as React } from "react";
+import { GeoJSON, Map, Marker, Popup, TileLayer } from "react-leaflet";
+import Control from "react-leaflet-control";
+import "./map.css";
 
 export interface GameMapProps {
   mapData?: GeoJsonObject | Array<GeoJsonObject>;
@@ -26,7 +30,7 @@ interface GameMapState {
   playerColors: { [k: number]: string };
 }
 
-const GAME_MAP_COLORS = ["red", "brown", "green", "yellow"];
+const GAME_MAP_COLORS = ["red", "blue", "green", "yellow"];
 
 export default class GameMap extends React.Component<
   GameMapProps,
@@ -67,6 +71,9 @@ export default class GameMap extends React.Component<
       fillColor:
         idDuenio !== undefined ? this.state.playerColors[idDuenio] : "grey",
       fillOpacity: idDuenio !== undefined ? 0.5 : 0.2,
+      color: "black",
+      weight: 2,
+      opacity: 0.3,
     };
   }
 
@@ -209,14 +216,28 @@ export default class GameMap extends React.Component<
           <Grid container direction="column" spacing={1}>
             <Grid item>
               <Card>
-                {this.props.partida?.jugadores.map((jugador) => {
-                  return (
-                    <div>
-                      <span>{this.state.playerColors[jugador.id]} </span>
-                      <span>{jugador.nombreDeUsuario}</span>
-                    </div>
-                  );
-                })}
+                <List component="nav" aria-label="main mailbox folders">
+                  {this.props.partida?.jugadores.map((jugador) => {
+                    return (
+                      <ListItem button>
+                        <ListItemIcon>
+                          <PersonIcon
+                            style={{
+                              color: this.state.playerColors[jugador.id],
+                            }}
+                          />
+                        </ListItemIcon>
+                        <ListItemText
+                          primary={
+                            this.props.usuarioLogueado?.id == jugador.id
+                              ? "Yo"
+                              : jugador.nombreDeUsuario
+                          }
+                        />
+                      </ListItem>
+                    );
+                  })}
+                </List>
               </Card>
             </Grid>
             <Grid item>
