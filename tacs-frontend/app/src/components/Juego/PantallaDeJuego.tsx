@@ -11,7 +11,7 @@ import Button from '@material-ui/core/Button';
 import Snackbar from '@material-ui/core/Snackbar';
 import Slider from '@material-ui/core/Slider';
 import { getMapData } from '../../api/maps';
-import { WololoPartidasApiClient, WololoAdminApiClient } from 'api/client';
+import { WololoPartidasApiClient, WololoAdminApiClient, PollingPartida } from 'api/client';
 
 enum EstadoJuego {
   SELECCION = 'SELECCION',
@@ -42,6 +42,8 @@ const adminApiClient = new WololoAdminApiClient();
 
 export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProps, PantallaDeJuegoState> {
 
+  private pollingPartida?: PollingPartida
+
   constructor(props: PantallaDeJuegoProps) {
     super(props);
 
@@ -70,7 +72,8 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
 
   componentDidMount() {
     if(this.props.partidaSinInfo?.id !== undefined && this.props.partidaSinInfo?.provincia?.id) {
-      getMapData(this.props.partidaSinInfo?.provincia.id)
+      // Obtener el mapa
+      getMapData(this.props.partidaSinInfo.provincia.id)
         .then(mapData => {
           console.log(mapData);
           if(mapData) {
@@ -79,13 +82,30 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
             })
           }
         });
-      partidasApiClient.getPartida(this.props.partidaSinInfo?.id)
-        .then(partida => {
-          this.setState({
-            partidaConInfo: partida
-          })
-        })
+
+      // Obtener la partida
+      partidasApiClient.getPartida(this.props.partidaSinInfo.id)
+        .then(this.setPartida.bind(this))
         .catch(console.error);
+
+      // Configurar polling
+      this.pollingPartida = partidasApiClient.pollPartida(
+        this.props.partidaSinInfo.id,
+        2000,
+        (response: Promise<PartidaModel>) => {
+          response
+            .then(this.setPartida.bind(this))
+            .catch(console.error);
+        }
+      );
+      this.pollingPartida.start();
+    }
+  }
+
+  componentWillUnmount() {
+    if(this.pollingPartida) {
+      this.pollingPartida.stop();
+      this.pollingPartida = undefined;
     }
   }
 
@@ -107,6 +127,13 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
   handleCantidadDeGauchosUpdate(event: any, nuevoValor: number | Array<number>) {
     this.setState({
       cantidadGauchosAMover: nuevoValor as number
+    });
+  }
+
+  setPartida(partida: PartidaModel) {
+    console.log('Seteando partida');
+    this.setState({
+      partidaConInfo: partida
     });
   }
 
