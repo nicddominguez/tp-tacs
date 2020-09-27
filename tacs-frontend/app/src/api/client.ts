@@ -13,7 +13,7 @@ import {
     MoverGauchosBody,
     AtacarMunicipioBody,
     SimularAtacarMunicipioBody,
-    RefreshAccessTokenBody
+    RefreshAccessTokenBody, ActualizarEstadoPartida
 } from './api';
 
 export class BaseWololoApiClient {
@@ -299,7 +299,7 @@ export class WololoPartidasApiClient extends BaseWololoApiClient {
         )
     }
 
-    public async actualizarEstadoPartida(idPartida: number, body: PartidaModel) {
+    public async actualizarEstadoPartida(idPartida: number, body: ActualizarEstadoPartida) {
         return this.doAuthenticatedRequest(
             async (options) => this.partidasApi.actualizarEstadoPartida(idPartida, body, options)
         )

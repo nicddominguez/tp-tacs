@@ -30,7 +30,12 @@ import {
   MuiPickersUtilsProvider,
 } from "@material-ui/pickers";
 import { MaterialUiPickersDate } from "@material-ui/pickers/typings/date";
-import { EstadoDeJuegoModel, PartidaSinInfoModel } from "api";
+import {
+  ActualizarEstadoPartida,
+  EstadoDeJuegoModel,
+  PartidaModel,
+  PartidaSinInfoModel,
+} from "api";
 import { WololoPartidasApiClient } from "api/client";
 import "date-fns";
 import React from "react";
@@ -64,16 +69,26 @@ const MenuProps = {
   },
 };
 
-function Row(props: { partida: PartidaSinInfoModel, onClickJugar?: (partida: PartidaSinInfoModel) => void }) {
+function Row(props: {
+  partida: PartidaSinInfoModel;
+  onClickJugar?: (partida: PartidaSinInfoModel) => void;
+  onClickCancelar?: (partida: PartidaSinInfoModel) => void;
+}) {
   const { partida } = props;
   const [open, setOpen] = React.useState(false);
   const classes = useRowStyles();
 
   const jugarAction = () => {
-    if(props.onClickJugar) {
+    if (props.onClickJugar) {
       props.onClickJugar(props.partida);
     }
-  }
+  };
+
+  const cancelarAction = () => {
+    if (props.onClickCancelar) {
+      props.onClickCancelar(props.partida);
+    }
+  };
 
   return (
     <React.Fragment>
@@ -93,7 +108,14 @@ function Row(props: { partida: PartidaSinInfoModel, onClickJugar?: (partida: Par
         <TableCell align="center">{partida.provincia?.nombre}</TableCell>
         <TableCell align="center">{partida.modoDeJuego}</TableCell>
         <TableCell align="center">
-          <Button color="primary" onClick={jugarAction} >Jugar!</Button>
+          <Grid container direction="column">
+            <Button color="primary" onClick={jugarAction}>
+              Jugar! ⚔️
+            </Button>
+            <Button color="secondary" onClick={cancelarAction}>
+              Cancelar 🗑️
+            </Button>
+          </Grid>
         </TableCell>
       </TableRow>
       <TableRow>
@@ -191,11 +213,7 @@ class Partidas extends React.Component<Props, State> {
 
   dateToStringFormat = (date: Date | undefined) => {
     return date
-      ? date.getFullYear() +
-          "/" +
-          (date.getMonth() + 1) +
-          "/" +
-          date.getDate()
+      ? date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + date.getDate()
       : undefined;
   };
 
@@ -299,6 +317,19 @@ class Partidas extends React.Component<Props, State> {
       },
       this.listarPartidas
     );
+  };
+
+  onClickCancelar = (partidaSinInfo: PartidaSinInfoModel) => {
+    const idPartida: number | undefined = partidaSinInfo.id;
+    const actualizarEstadoPartida: ActualizarEstadoPartida = {
+      estado: EstadoDeJuegoModel.Cancelada,
+    };
+    if (idPartida != undefined) {
+      this.partidasApi
+        .actualizarEstadoPartida(idPartida, actualizarEstadoPartida)
+        .then((response) => console.log("Partida cancelada"))
+        .catch(console.error);
+    }
   };
 
   render() {
@@ -421,11 +452,17 @@ class Partidas extends React.Component<Props, State> {
                     <TableCell align="center">Estado</TableCell>
                     <TableCell align="center">Provincia</TableCell>
                     <TableCell align="center">Modo de juego</TableCell>
+                    <TableCell align="center">Acciones</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {this.state.partidas?.map((partida) => (
-                    <Row key={partida.id} partida={partida} onClickJugar={this.props.onClickJugar} />
+                    <Row
+                      key={partida.id}
+                      partida={partida}
+                      onClickJugar={this.props.onClickJugar}
+                      onClickCancelar={this.onClickCancelar}
+                    />
                   ))}
                 </TableBody>
                 <TableFooter>
