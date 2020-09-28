@@ -95,7 +95,7 @@ public class PartidasApiController implements PartidasApi {
         if (partida == null)
             return new ResponseEntity("No existe la partida solicitada", HttpStatus.BAD_REQUEST);
         if (!usuarioTienePermisos(partida))
-            return new ResponseEntity("El usuario no tiene permisos para atacar en este turno", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity("El usuario no tiene permisos para actualizar el municipio en este turno", HttpStatus.BAD_REQUEST);
 
         var nuevaEspecializacion = modoDeMunicipioMapper.toEntity(modo);
         this.servicioMunicipio.actualizarMunicipio(idMunicipio, nuevaEspecializacion, body.isEstaBloqueado());
@@ -239,7 +239,7 @@ public class PartidasApiController implements PartidasApi {
     }
 
     public Comparator<PartidaSinInfoModel> transformarEnComparador(String orden) {
-        switch (orden) {
+        switch (orden.toLowerCase()) {
             case "fecha":
                 return Comparator.comparing(PartidaSinInfoModel::getFecha);
             case "estado":
