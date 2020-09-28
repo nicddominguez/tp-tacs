@@ -31,6 +31,8 @@ interface PantallaDeJuegoState {
   snackbarOpen: boolean
   snackbarMessage?: string
   onClickMunicipio: (municipio: MunicipioEnJuegoModel) => void
+  onPasarTurno: () => void
+  onRendirUsuario: () => void
   estadoJuego: EstadoJuego,
   municipioSeleccionado?: MunicipioEnJuegoModel
   municipioObjetivo?: MunicipioEnJuegoModel
@@ -51,6 +53,8 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
     super(props);
 
     this.seleccionarMunicipio = this.seleccionarMunicipio.bind(this);
+    this.cancelarPartida = this.cancelarPartida.bind(this);
+    this.pasarTurno = this.pasarTurno.bind(this);
 
     this.state = {
       actionDialogOpen: false,
@@ -58,6 +62,8 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
       snackbarOpen: false,
       estadoJuego: EstadoJuego.SELECCION,
       onClickMunicipio: this.seleccionarMunicipio,
+      onPasarTurno: this.pasarTurno,
+      onRendirUsuario: this.cancelarPartida,
       cantidadGauchosAMover: 1,
       mapData: undefined
     };
@@ -71,9 +77,7 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
     this.organizarDesplazamientoGauchos = this.organizarDesplazamientoGauchos.bind(this);
     this.solicitarDesplazamientoGauchos = this.solicitarDesplazamientoGauchos.bind(this);
     this.confirmarDesplazamientoGauchos = this.confirmarDesplazamientoGauchos.bind(this);
-    this.pasarTurno = this.pasarTurno.bind(this);
     this.renderWinDialog = this.renderWinDialog.bind(this);
-    this.cancelarPartida = this.cancelarPartida.bind(this);
     this.renderBotonCambiarEstadoMunicipio = this.renderBotonCambiarEstadoMunicipio.bind(this);
   }
 
@@ -152,7 +156,9 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
     this.setState({
       partidaConInfo: partida,
       winDialogOpen: partidaTerminada,
-      onClickMunicipio: partidaTerminada ? () => { } : this.state.onClickMunicipio
+      onClickMunicipio: partidaTerminada ? () => { } : this.state.onClickMunicipio,
+      onPasarTurno: partidaTerminada ? () => {} : this.state.onPasarTurno,
+      onRendirUsuario: partidaTerminada ? () => {} : this.state.onRendirUsuario
     });
   }
 
@@ -513,8 +519,8 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
           partida={this.state.partidaConInfo}
           onClickMunicipio={this.state.onClickMunicipio}
           usuarioLogueado={this.props.usuarioLogueado}
-          onPasarTurno={this.pasarTurno}
-          onRendirUsuario={this.cancelarPartida}
+          onPasarTurno={this.state.onPasarTurno}
+          onRendirUsuario={this.state.onRendirUsuario}
         />}
         <Dialog
           open={this.state.actionDialogOpen}
