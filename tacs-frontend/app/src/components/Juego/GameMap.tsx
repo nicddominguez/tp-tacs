@@ -164,9 +164,6 @@ export default class GameMap extends React.Component<
       this.state.startLatitude,
       this.state.startLongitude
     );
-    if (this.props.partida?.estado != "EnProgreso" as any as EstadoDeJuegoModel) {
-      return <Redirect to="/app/partidas" />;
-    }
     return (
       <Map center={position} zoom={this.state.startZoom}>
         <TileLayer

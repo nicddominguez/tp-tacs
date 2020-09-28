@@ -1,12 +1,5 @@
-<<<<<<< HEAD
 import { Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
-=======
-import React from 'react';
-import GameMap from './GameMap';
-import { GeoJsonObject } from 'geojson';
-import { PartidaModel, MunicipioEnJuegoModel, PartidaSinInfoModel, UsuarioModel, AtacarMunicipioBody, MoverGauchosBody, EstadoDeJuegoModel } from 'api';
->>>>>>> Agregar lógica para cancelar una partida
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';

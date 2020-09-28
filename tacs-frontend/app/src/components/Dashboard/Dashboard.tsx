@@ -20,7 +20,6 @@ import { Link, Route, useHistory } from "react-router-dom";
 import { dashboardRoutes as routes } from "../Routes/DashboardRoutes";
 import { WololoAuthApiClient, WololoUsuariosApiClient } from "../../api/client";
 import { UsuarioModel, PartidaModel, EstadoDeJuegoModel, ModoDeJuegoModel, PartidaSinInfoModel } from "../../api/api";
-import Chaco from "assets/maps/chaco";
 import PantallaDeJuego from "components/Juego/PantallaDeJuego";
 import NuevaPartidaStepper from "components/Partidas/NuevaPartidaStepper";
 import Partidas from "components/Partidas/Partidas";
