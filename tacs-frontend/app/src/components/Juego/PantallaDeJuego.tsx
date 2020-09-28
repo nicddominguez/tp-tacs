@@ -1,18 +1,18 @@
-import React from 'react';
-import GameMap from './GameMap';
-import { GeoJsonObject } from 'geojson';
-import { PartidaModel, MunicipioEnJuegoModel, PartidaSinInfoModel, UsuarioModel, AtacarMunicipioBody, MoverGauchosBody } from 'api';
+import { Typography } from '@material-ui/core';
+import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
-import Button from '@material-ui/core/Button';
-import Snackbar from '@material-ui/core/Snackbar';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import Slider from '@material-ui/core/Slider';
+import Snackbar from '@material-ui/core/Snackbar';
+import { ActualizarEstadoPartida, AtacarMunicipioBody, EstadoDeJuegoModel, MoverGauchosBody, MunicipioEnJuegoModel, PartidaModel, PartidaSinInfoModel, UsuarioModel } from 'api';
+import { PollingPartida, WololoAdminApiClient, WololoPartidasApiClient } from 'api/client';
+import { GeoJsonObject } from 'geojson';
+import React from 'react';
 import { getMapData } from '../../api/maps';
-import { WololoPartidasApiClient, WololoAdminApiClient, PollingPartida } from 'api/client';
-import { Typography } from '@material-ui/core';
+import GameMap from './GameMap';
 
 enum EstadoJuego {
   SELECCION = 'SELECCION',
@@ -73,6 +73,7 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
     this.confirmarDesplazamientoGauchos = this.confirmarDesplazamientoGauchos.bind(this);
     this.pasarTurno = this.pasarTurno.bind(this);
     this.renderWinDialog = this.renderWinDialog.bind(this);
+    this.cancelarPartida = this.cancelarPartida.bind(this);
   }
 
   componentDidMount() {
@@ -169,6 +170,18 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
         .then(response => {
           this.cargarPartida();
         })
+        .catch(console.error);
+    }
+  }
+
+  cancelarPartida() {
+    const actualizarEstadoPartida: ActualizarEstadoPartida = {
+      estado: "Cancelada" as any as EstadoDeJuegoModel,
+    };
+    if (this.state.partidaConInfo != undefined) {
+      partidasApiClient
+        .actualizarEstadoPartida(this.state.partidaConInfo.id, actualizarEstadoPartida)
+        .then((response) => console.log("Partida cancelada"))
         .catch(console.error);
     }
   }
@@ -453,6 +466,7 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
           onClickMunicipio={this.state.onClickMunicipio}
           usuarioLogueado={this.props.usuarioLogueado}
           onPasarTurno={this.pasarTurno}
+          onRendirUsuario={this.cancelarPartida}
         />}
         <Dialog
           open={this.state.actionDialogOpen}

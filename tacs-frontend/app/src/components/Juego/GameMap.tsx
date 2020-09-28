@@ -5,13 +5,19 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import PersonIcon from "@material-ui/icons/Person";
-import { MunicipioEnJuegoModel, PartidaModel, UsuarioModel } from "api/api";
+import {
+  EstadoDeJuegoModel,
+  MunicipioEnJuegoModel,
+  PartidaModel,
+  UsuarioModel
+} from "api/api";
 import iconoParaMunicipio from "components/Juego/MapIcons";
 import { Feature, GeoJsonObject, Geometry } from "geojson";
 import { LatLng, Layer, LeafletMouseEvent, PathOptions } from "leaflet";
 import { default as React } from "react";
 import { GeoJSON, Map, Marker, Popup, TileLayer } from "react-leaflet";
 import Control from "react-leaflet-control";
+import { Redirect } from "react-router-dom";
 import "./map.css";
 
 export interface GameMapProps {
@@ -158,6 +164,9 @@ export default class GameMap extends React.Component<
       this.state.startLatitude,
       this.state.startLongitude
     );
+    if (this.props.partida?.estado != "EnProgreso" as any as EstadoDeJuegoModel) {
+      return <Redirect to="/app/partidas" />;
+    }
     return (
       <Map center={position} zoom={this.state.startZoom}>
         <TileLayer
@@ -250,6 +259,7 @@ export default class GameMap extends React.Component<
                 }
                 color="secondary"
                 variant="contained"
+                disabled={!this.esElTurnoDelUsuario()}
                 fullWidth
               >
                 Rendirse
