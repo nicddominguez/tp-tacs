@@ -24,6 +24,7 @@ public class Municipio {
     private Double latitud;
     private Double longitud;
     private Float altura;
+    private String urlImagen;
 
     public void agregarGauchos(Integer cantidad) {
         this.cantGauchos += cantidad;

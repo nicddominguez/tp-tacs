@@ -25,6 +25,7 @@ import tp.tacs.api.utils.Utils;
 
 import javax.annotation.PostConstruct;
 import javax.validation.Valid;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.stream.Collectors;
@@ -103,19 +104,26 @@ public class PartidasApiController implements PartidasApi {
 
     @Override
     public ResponseEntity<AtacarMunicipioResponse> atacarMunicipio(Long idPartida, @Valid AtacarMunicipioBody body) {
-        if(body.getIdMunicipioAtacante() == null || body.getIdMunicipioObjetivo() == null)
-            return new ResponseEntity("Se requieren los municipios involucrados en la accion", HttpStatus.BAD_REQUEST);
+        var idMunicipioAtacante = body.getIdMunicipioAtacante();
+        var idMunicipioObjetivo = body.getIdMunicipioObjetivo();
+        if(idMunicipioAtacante == null || idMunicipioObjetivo == null)
+            return new ResponseEntity("Se requieren los municipios involucrados en el ataque", HttpStatus.BAD_REQUEST);
         Partida partida = partidaDao.get(idPartida);
         if (partida == null)
-            return new ResponseEntity("No existe la partida solicitada", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity("No se pudo atacar: No existe la partida solicitada", HttpStatus.BAD_REQUEST);
+        if(!partida.getMunicipios().containsAll(Arrays.asList(idMunicipioAtacante, idMunicipioObjetivo)))
+            return new ResponseEntity("No se pudo atacar: los municipios no pertenecen a la partida indicada", HttpStatus.BAD_REQUEST);
         if (!usuarioTienePermisos(partida))
             return new ResponseEntity("El usuario no tiene permisos para atacar en este turno", HttpStatus.BAD_REQUEST);
         try {
-            var response = servicioPartida.atacar(partida, body.getIdMunicipioAtacante(), body.getIdMunicipioObjetivo());
+            var response = servicioPartida.atacar(partida, idMunicipioAtacante, idMunicipioObjetivo);
             return ResponseEntity.ok(response);
 
         } catch (IndexOutOfBoundsException e) {
             return ResponseEntity.badRequest().build();
+        }
+        catch(PartidaException | MunicipioException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -144,7 +152,7 @@ public class PartidasApiController implements PartidasApi {
             partida = servicioPartida.inicializar(body);
             PartidaModel response = partidaMapper.wrap(partida);
             return ResponseEntity.ok(response);
-        } catch (PartidaException e) {
+        } catch (PartidaException | MunicipioException e) {
             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }

@@ -50,17 +50,18 @@ public class ServicioPartida {
         }
     }
 
-    public void terminarPartida(Partida request) {
-        request.setEstado(Estado.TERMINADA);
-        Usuario ganador = usuarioConMasMunicipios(request);
+    public void terminarPartida(Partida partida) {
+        partida.setEstado(Estado.TERMINADA);
+        Usuario ganador = usuarioConMasMunicipios(partida);
         ganador.aumentarPartidasGanadas();
         ganador.aumentarRachaActual();
-        request.getIdsJugadoresOriginales().forEach(jugadorId -> {
+        partida.getIdsJugadoresOriginales().forEach(jugadorId -> {
             Usuario usuario = usuarioDao.get(jugadorId);
             usuario.aumentarPartidasJugadas();
             if (!usuario.getId().equals(ganador.getId()))
                 usuario.reiniciarRacha();
         });
+        partida.setGanador(ganador);
     }
 
     public Usuario usuarioConMasMunicipios(Partida partida) {
@@ -142,7 +143,7 @@ public class ServicioPartida {
     }
 
     public Float multAltura(Partida partida, Municipio municipio) {
-        Float altura = municipio.getAltura();
+        Float altura = Math.abs(municipio.getAltura());
         Float minAltura = partida.getMinAltura();
         Float maxAltura = partida.getMaxAltura();
         return 1 + (altura - minAltura) / (2 * (maxAltura - minAltura));
@@ -154,20 +155,20 @@ public class ServicioPartida {
         Float multDist = this.multDistancia(partida, municipioAtacante, municipioAtacado);
         Integer cantGauchosAtacado = municipioAtacado.getCantGauchos();
         Integer cantGauchosAtacante = municipioAtacante.getCantGauchos();
-        return (int) Math.round(Math.ceil((cantGauchosAtacado * multAltura * multDefensa) - (cantGauchosAtacante * multDist))
-                / (multAltura * multDefensa));
+        return Math.max((int) Math.round(Math.ceil((cantGauchosAtacado * multAltura * multDefensa) - (cantGauchosAtacante * multDist))
+                / (multAltura * multDefensa)), 0);
     }
 
     public Integer gauchosAtacantesFinales(Partida partida, Municipio municipioAtacante, Municipio municipioAtacado) {
         var multDist = this.multDistancia(partida, municipioAtacante, municipioAtacado);
         var multAltura = this.calcularMultAlturaMunicipio(partida, municipioAtacante);
         var multDefensa = municipioAtacado.getEspecializacion().multDefensa();
-        return (int) Math
-                .floor(municipioAtacante.getCantGauchos() * multDist - municipioAtacado.getCantGauchos() * multAltura * multDefensa);
+        return Math.max((int) Math
+                .floor(municipioAtacante.getCantGauchos() * multDist - municipioAtacado.getCantGauchos() * multAltura * multDefensa), 0);
     }
 
     public Float calcularMultAlturaMunicipio(Partida partida, Municipio municipio) {
-        Float altura = municipio.getAltura();
+        Float altura = Math.abs(municipio.getAltura());
         return 1 + (altura - partida.getMinAltura()) / (2 * (partida.getMaxAltura() - partida.getMinAltura()));
     }
 
@@ -206,7 +207,7 @@ public class ServicioPartida {
     public void calcularAlturas(Partida partida) {
         Supplier<Stream<Float>> alturas = () -> partida.getMunicipios().stream().map(municipio -> {
             Municipio municipio1 = municipioDao.get(municipio);
-            return municipio1.getAltura();
+            return Math.abs(municipio1.getAltura());
         });
         DoubleStream doubleStreamMax = alturas.get().mapToDouble(Float::doubleValue);
         DoubleStream doubleStreamMin = alturas.get().mapToDouble(Float::doubleValue);
@@ -242,6 +243,9 @@ public class ServicioPartida {
 
     public Partida inicializar(CrearPartidaBody request) {
         String nombreProvincia;
+        if(request.getCantidadMunicipios() <= 1 ){
+            throw new PartidaException("No se pudo crear la partida: la cantidad de municipios debe ser mayor a 1");
+        }
         try {
             nombreProvincia = externalApis.getNombreProvinicas(request.getIdProvincia()).getNombre();
         } catch (HttpErrorException | IndexOutOfBoundsException e) {
@@ -257,9 +261,11 @@ public class ServicioPartida {
                 .fechaCreacion(new Date())
                 .build();
 
-        var cantidadMunicipiosPartida = Math.toIntExact(request.getCantidadMunicipios());
 
-        var municipiosDeLaPartida = externalApis.getMunicipios(partida.getIdProvincia(), cantidadMunicipiosPartida);
+        var cantidadMunicipiosPartida = Math.toIntExact(request.getCantidadMunicipios());
+        List<Municipio> municipios = externalApis.getMunicipios(partida.getIdProvincia(), nombreProvincia);
+        var municipiosDeLaPartida = municipios.subList(0, Math.min(municipios.size(),cantidadMunicipiosPartida));
+
         municipiosDeLaPartida.forEach(municipio -> municipioDao.save(municipio));
 
         partida.setMunicipios(municipiosDeLaPartida.stream().map(Municipio::getId).collect(Collectors.toList()));
