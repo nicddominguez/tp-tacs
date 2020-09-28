@@ -46,8 +46,6 @@ public class ServicioPartida {
             throw new PartidaException("La partida no está en curso. No se pudo " + accion);
         }
         if (!partida.idUsuarioEnTurnoActual().equals(duenio.getId())) {
-            System.out.println("id turno actual: " + partida.idUsuarioEnTurnoActual());
-            System.out.println("duenio del municipio: " + duenio.getId());
             throw new PartidaException("No es el turno del dueño del municipio.");
         }
     }
@@ -263,9 +261,10 @@ public class ServicioPartida {
                 .fechaCreacion(new Date())
                 .build();
 
-        var cantidadMunicipiosPartida = Math.toIntExact(request.getCantidadMunicipios());
 
-        List<Municipio> municipiosDeLaPartida = externalApis.getMunicipios(partida.getIdProvincia(), nombreProvincia, cantidadMunicipiosPartida);
+        var cantidadMunicipiosPartida = Math.toIntExact(request.getCantidadMunicipios());
+        List<Municipio> municipios = externalApis.getMunicipios(partida.getIdProvincia(), nombreProvincia);
+        var municipiosDeLaPartida = municipios.subList(0, Math.min(municipios.size(),cantidadMunicipiosPartida));
 
         municipiosDeLaPartida.forEach(municipio -> municipioDao.save(municipio));
 

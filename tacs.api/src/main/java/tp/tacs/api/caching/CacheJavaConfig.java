@@ -14,7 +14,8 @@ public class CacheJavaConfig {
     //Hay que crear uno de estos Beans por cada configuración de cache distinta (por ejemplo para distintos TTL)
     @Bean
     public CacheManager cacheManager() {
-        CaffeineCacheManager cacheManager = new CaffeineCacheManager("municipios", "provincias"); //Todos los que tengan la misma config se pueden poner acá
+        CaffeineCacheManager cacheManager = new CaffeineCacheManager("municipiosApi", "cantidadMunicipios",
+                "nombreProvincias", "provincias", "alturas", "imagenes"); //Todos los que tengan la misma config se pueden poner acá
         cacheManager.setAllowNullValues(false); // puede pasar si tenes un valor de @Cacheable que retorna null
         cacheManager.setCaffeine(caffeineCacheBuilder());
         return cacheManager;
