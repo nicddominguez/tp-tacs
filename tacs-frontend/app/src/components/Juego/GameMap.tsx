@@ -1,4 +1,4 @@
-import { Card, Grid } from "@material-ui/core";
+import { Card, Grid, Typography } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -150,8 +150,10 @@ export default class GameMap extends React.Component<
         >
           <Popup>
             {/* Acá se debería poder usar material sin problema! */}
-            <p>{municipio.nombre}</p>
-            <p>{municipio.gauchos}</p>
+            <Typography>Municipio: {municipio.nombre}</Typography>
+            <Typography>Cantidad de gauchos: {municipio.gauchos}</Typography>
+            <Typography>Modo: {municipio.modo}</Typography>
+            {municipio.estaBloqueado ? <Typography color='error'>Bloqueado</Typography> : undefined}
           </Popup>
         </Marker>
       );

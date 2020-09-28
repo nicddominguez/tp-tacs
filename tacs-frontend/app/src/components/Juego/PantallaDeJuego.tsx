@@ -1,4 +1,4 @@
-import { Typography } from '@material-ui/core';
+import { Typography, CardMedia, Card } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -430,21 +430,32 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
   }
 
   renderActionDialog() {
+    const municipio = this.state.municipioSeleccionado;
     switch (this.state.estadoJuego) {
       case EstadoJuego.SELECCION:
         return (
           <div>
-            <DialogTitle>{this.state.municipioSeleccionado?.nombre}</DialogTitle>
+            <DialogTitle>{municipio?.nombre}</DialogTitle>
             <DialogContent>
-              {/* TODO: Poner la info del municipio. Gauchos, producción, altura, etc. */}
-              <DialogContentText>Acá se puede poner lo que queramos de info del municipio</DialogContentText>
+              <Typography>Cantidad de gauchos: {municipio?.gauchos}</Typography>
+              <Typography>Modo: {municipio?.modo}</Typography>
+              <Typography>Producción: {municipio?.produccionDeGauchos}</Typography>
+              <Typography>Defensa: {municipio?.puntosDeDefensa}</Typography>
+              {municipio?.estaBloqueado ? <Typography color='error'>Bloqueado</Typography> : undefined}
+              <Card>
+                <CardMedia
+                  image={municipio?.urlImagen}
+                  title={municipio?.nombre}
+                  style={{height: '150px'}}
+                />
+              </Card>
             </DialogContent>
             <DialogActions>
               <Button onClick={this.handleDialogClose}>Cancelar</Button>
               {this.renderBotonCambiarEstadoMunicipio()}
               <Button
                 onClick={this.organizarDesplazamientoGauchos}
-                disabled={this.state.municipioSeleccionado?.estaBloqueado || this.state.municipioSeleccionado?.gauchos === 0}
+                disabled={municipio?.estaBloqueado || municipio?.gauchos === 0}
               >
                 Desplazar gauchos
                 </Button>
@@ -459,7 +470,7 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
             <DialogContent>
               {/* TODO: Mostrar un resumen del ataque piola */}
               <DialogContentText>
-                Vas a atacar a {this.state.municipioObjetivo?.nombre} desde {this.state.municipioSeleccionado?.nombre}
+                Vas a atacar a {municipio?.nombre} desde {municipio?.nombre}
               </DialogContentText>
               <DialogContentText>
                 {this.state.simulacionExitosa ? 'Vas a ganar' : 'Vas a perder'}
@@ -476,7 +487,6 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
           <div>
             <DialogTitle>Resumen de movimiento</DialogTitle>
             <DialogContent>
-              {/* TODO: Mostrar un resumen piola del movimiento */}
               <DialogContentText>
                 Vas a mover gauchos a {this.state.municipioObjetivo?.nombre} desde {this.state.municipioSeleccionado?.nombre}
               </DialogContentText>
