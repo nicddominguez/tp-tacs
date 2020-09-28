@@ -15,12 +15,12 @@ public class ModoDeJuegoMapper {
     }
 
     public ModoDeJuego toEntity(ModoDeJuegoModel model) {
-        switch (model.toString()) {
-            case "Rapido":
+        switch (model.toString().toUpperCase()) {
+            case "RAPIDO":
                 return new ModoRapido();
-            case "Normal":
+            case "NORMAL":
                 return new ModoNormal();
-            case "Extendido":
+            case "EXTENDIDO":
                 return new ModoExtendido();
             default:
                 throw new RuntimeException("Unexpected value: " + model.toString());

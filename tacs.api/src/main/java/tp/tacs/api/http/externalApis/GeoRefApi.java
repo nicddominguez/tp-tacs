@@ -27,7 +27,7 @@ public class GeoRefApi {
     }
 
     @SneakyThrows
-    @Cacheable("cantidadMunicipios")
+    @Cacheable(value = "cantidadMunicipios", key = "#provincia.id")
     public Long agregarCantidadMunicipios(ProvinciaModel provincia) {
         String url = geoRefMunicipioBaseUrlEstandar + "&provincia=" + provincia.getId();
         return new Gson().fromJson(connector.get(url), MunicipiosApi.class).getTotal();

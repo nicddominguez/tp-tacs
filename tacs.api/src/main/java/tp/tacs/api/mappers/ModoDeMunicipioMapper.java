@@ -14,10 +14,10 @@ public class ModoDeMunicipioMapper {
     }
 
     public Especializacion toEntity(ModoDeMunicipioModel model){
-        switch (model.toString()){
-            case "Defensa":
+        switch (model.toString().toUpperCase()){
+            case "DEFENSA":
                 return new Defensa();
-            case "Produccion":
+            case "PRODUCCION":
                 return new Produccion();
             default:
                 throw new RuntimeException("Unexpected value: " + model.toString());
