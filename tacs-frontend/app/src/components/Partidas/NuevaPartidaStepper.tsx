@@ -3,36 +3,37 @@ import FormControl from "@material-ui/core/FormControl";
 import Grid from "@material-ui/core/Grid";
 import Input from "@material-ui/core/Input";
 import InputLabel from "@material-ui/core/InputLabel";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
 import MenuItem from "@material-ui/core/MenuItem";
+import Paper from "@material-ui/core/Paper";
 import Select from "@material-ui/core/Select";
 import Slider from "@material-ui/core/Slider";
 import Step from "@material-ui/core/Step";
 import StepContent from "@material-ui/core/StepContent";
 import StepLabel from "@material-ui/core/StepLabel";
 import Stepper from "@material-ui/core/Stepper";
-import { createStyles, Theme } from "@material-ui/core/styles";
+import { createStyles, Theme, withStyles } from "@material-ui/core/styles";
+import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
-import { withStyles } from "@material-ui/core/styles";
+import Add from "@material-ui/icons/Add";
+import Cancel from "@material-ui/icons/Cancel";
 import { default as React } from "react";
+import { Redirect } from "react-router-dom";
 import {
-  ProvinciaModel,
-  UsuarioModel,
   CrearPartidaBody,
   ModoDeJuegoModel,
+  ProvinciaModel,
+  UsuarioModel,
 } from "../../api/api";
 import {
+  WololoPartidasApiClient,
   WololoProvinciasApiClient,
   WololoUsuariosApiClient,
-  WololoPartidasApiClient,
 } from "../../api/client";
-import Paper from "@material-ui/core/Paper";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import Cancel from "@material-ui/icons/Cancel";
-import Add from "@material-ui/icons/Add";
-import TextField from "@material-ui/core/TextField";
+import CreacionPartidaModal from "./CreacionPartidaModal";
 import TablePaginationActions from "./TablePaginationActions";
 
 const styles = (theme: Theme) =>
@@ -131,14 +132,21 @@ class SelectorProvincia extends React.Component<
 const SelectorProvinciaStyled = withStyles(styles)(SelectorProvincia);
 
 interface SelectorCantidadMunicipiosProps {
-  cantidadMunicipios: number | string | Array<number | string>;
+  cantidadMunicipiosSeleccionada: number | string | Array<number | string>;
+  cantidadMunicipios: number;
   onChange: (cantidad: number | string | Array<number | string>) => void;
   classes?: any;
 }
 
+interface SelectorCantidadMunicipiosState {
+  cantidadMunicipiosSeleccionada: string | number | (string | number)[];
+  cantidadMunicipios: number;
+  cantidadMunicipiosMinima: number;
+}
+
 class SelectorCantidadMunicipios extends React.Component<
   SelectorCantidadMunicipiosProps,
-  { cantidadMunicipios: string | number | (string | number)[] }
+  SelectorCantidadMunicipiosState
 > {
   classes: any;
 
@@ -147,37 +155,43 @@ class SelectorCantidadMunicipios extends React.Component<
     this.classes = this.props.classes;
 
     this.state = {
+      cantidadMunicipiosSeleccionada: props.cantidadMunicipios,
       cantidadMunicipios: props.cantidadMunicipios,
+      cantidadMunicipiosMinima: 4,
     };
 
-    this.setCantidadMunicipios = this.setCantidadMunicipios.bind(this);
+    this.setCantidadMunicipiosSeleccionada = this.setCantidadMunicipiosSeleccionada.bind(
+      this
+    );
     this.handleSliderChange = this.handleSliderChange.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleBlur = this.handleBlur.bind(this);
   }
 
-  setCantidadMunicipios(newValue: number | number[] | string) {
+  setCantidadMunicipiosSeleccionada(newValue: number | number[] | string) {
     this.setState({
-      cantidadMunicipios: newValue,
+      cantidadMunicipiosSeleccionada: newValue,
     });
     this.props.onChange(newValue);
   }
 
   handleSliderChange(event: any, newValue: number | number[]) {
-    this.setCantidadMunicipios(newValue);
+    this.setCantidadMunicipiosSeleccionada(newValue);
   }
 
   handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
-    this.setCantidadMunicipios(
+    this.setCantidadMunicipiosSeleccionada(
       event.target.value === "" ? "" : Number(event.target.value)
     );
   }
 
   handleBlur() {
-    if (this.state.cantidadMunicipios < 0) {
-      this.setCantidadMunicipios(0);
-    } else if (this.state.cantidadMunicipios > 100) {
-      this.setCantidadMunicipios(100);
+    if (this.state.cantidadMunicipiosSeleccionada < 0) {
+      this.setCantidadMunicipiosSeleccionada(0);
+    } else if (
+      this.state.cantidadMunicipiosSeleccionada > this.state.cantidadMunicipios
+    ) {
+      this.setCantidadMunicipiosSeleccionada(this.state.cantidadMunicipios);
     }
   }
 
@@ -191,31 +205,31 @@ class SelectorCantidadMunicipios extends React.Component<
           <Grid item xs>
             <Slider
               value={
-                typeof this.state.cantidadMunicipios === "number"
-                  ? this.state.cantidadMunicipios
-                  : 12
+                typeof this.state.cantidadMunicipiosSeleccionada === "number"
+                  ? this.state.cantidadMunicipiosSeleccionada
+                  : this.state.cantidadMunicipiosMinima
               }
               onChange={this.handleSliderChange}
               aria-labelledby="input-slider"
-              min={12}
-              max={50}
+              min={this.state.cantidadMunicipiosMinima}
+              max={this.state.cantidadMunicipios}
             />
           </Grid>
           <Grid item>
             <Input
               className={this.classes.input}
               value={
-                typeof this.state.cantidadMunicipios === "number"
-                  ? this.state.cantidadMunicipios
-                  : 12
+                typeof this.state.cantidadMunicipiosSeleccionada === "number"
+                  ? this.state.cantidadMunicipiosSeleccionada
+                  : this.state.cantidadMunicipiosMinima
               }
               margin="dense"
               onChange={this.handleInputChange}
               onBlur={this.handleBlur}
               inputProps={{
                 step: 1,
-                min: 12,
-                max: 100,
+                min: this.state.cantidadMunicipiosMinima,
+                max: this.state.cantidadMunicipios,
                 type: "number",
                 "aria-labelledby": "input-slider",
               }}
@@ -421,9 +435,13 @@ interface NuevaPartidaStepperState {
   activeStep: number;
   idProvincia: number;
   provincias: Array<ProvinciaModel>;
-  cantidadMunicipios: number | string | Array<number | string>;
-  modoDeJuego: string;
+  cantidadMunicipiosSeleccionada: number | string | Array<number | string>;
+  cantidadMunicipios: number;
+  modoDeJuego: ModoDeJuegoModel;
   usuariosSeleccionados: Array<UsuarioModel>;
+  creacionFallida: boolean;
+  creacionExitosa: boolean;
+  puedeRedireccionar: boolean;
 }
 
 interface NuevaPartidaStepperProps {
@@ -446,14 +464,17 @@ export class NuevaPartidaStepper extends React.Component<
 
     this.state = {
       activeStep: 0,
-      idProvincia: 1,
+      idProvincia: 6,
       provincias: [],
-      cantidadMunicipios: 30,
-      modoDeJuego: "",
+      cantidadMunicipiosSeleccionada: 0,
+      cantidadMunicipios: 0,
+      modoDeJuego: ModoDeJuegoModel.Normal,
       usuariosSeleccionados: [],
+      creacionFallida: false,
+      creacionExitosa: false,
+      puedeRedireccionar: false,
     };
 
-    this.setProvincias = this.setProvincias.bind(this);
     this.handleBack = this.handleBack.bind(this);
     this.handleNext = this.handleNext.bind(this);
     this.setIdProvincia = this.setIdProvincia.bind(this);
@@ -462,19 +483,15 @@ export class NuevaPartidaStepper extends React.Component<
     this.handleModoDeJuego = this.handleModoDeJuego.bind(this);
     this.handleFinish = this.handleFinish.bind(this);
     this.crearPartida = this.crearPartida.bind(this);
-  }
-
-  setProvincias(provincias: Array<ProvinciaModel>) {
-    this.setState({
-      provincias: provincias,
-    });
+    this.cerrarModalExitoso = this.cerrarModalExitoso.bind(this);
+    this.cerrarModalFallido = this.cerrarModalFallido.bind(this);
   }
 
   componentDidMount() {
     this.provinciasApiClient
       .listarProvincias(23)
       .then((response) => {
-        this.setProvincias(response.provincias || []);
+        this.setState({ provincias: response.provincias || [] });
       })
       .catch(console.error);
   }
@@ -506,13 +523,20 @@ export class NuevaPartidaStepper extends React.Component<
 
   setCantidadMunicipios(cantidad: number | string | Array<number | string>) {
     this.setState({
-      cantidadMunicipios: cantidad,
+      cantidadMunicipiosSeleccionada: cantidad,
     });
   }
 
+  cantidadMunicipios = () => {
+    const provincia: ProvinciaModel | undefined = this.state.provincias.find(
+      (provincia) => provincia.id == this.state.idProvincia
+    );
+    return provincia?.cantidadMunicipios || 0;
+  };
+
   handleModoDeJuego(event: React.ChangeEvent<{ value: unknown }>) {
     this.setState({
-      modoDeJuego: event.target.value as string,
+      modoDeJuego: event.target.value as ModoDeJuegoModel,
     });
   }
 
@@ -526,19 +550,30 @@ export class NuevaPartidaStepper extends React.Component<
     this.crearPartida();
   }
 
+  cerrarModalExitoso() {
+    this.setState({ puedeRedireccionar: true });
+  }
+
+  cerrarModalFallido() {
+    this.setState({ creacionFallida: false });
+  }
+
   crearPartida() {
     const body: CrearPartidaBody = {
-      cantidadMunicipios: this.state.cantidadMunicipios as number,
+      cantidadMunicipios: this.state.cantidadMunicipiosSeleccionada as number,
       idJugadores: this.state.usuariosSeleccionados.map(
         (usuario) => usuario.id
       ),
       idProvincia: this.state.idProvincia,
-      modoDeJuego: (this.state.modoDeJuego as unknown) as ModoDeJuegoModel,
+      modoDeJuego: this.state.modoDeJuego,
     };
     this.partidasApiClient
       .crearPartida(body)
-      .then((response) => console.log("Partida creada"))
-      .catch(console.error);
+      .then((response) => {
+        console.log("Partida creada");
+        this.setState({ creacionExitosa: true });
+      })
+      .catch((response) => this.setState({ creacionFallida: true }));
   }
 
   renderActiveStep() {
@@ -555,7 +590,10 @@ export class NuevaPartidaStepper extends React.Component<
         return (
           <SelectorCantidadMunicipiosStyled
             onChange={this.setCantidadMunicipios}
-            cantidadMunicipios={this.state.cantidadMunicipios}
+            cantidadMunicipiosSeleccionada={
+              this.state.cantidadMunicipiosSeleccionada
+            }
+            cantidadMunicipios={this.cantidadMunicipios()}
           />
         );
       case 2:
@@ -568,9 +606,9 @@ export class NuevaPartidaStepper extends React.Component<
               value={this.state.modoDeJuego}
               onChange={this.handleModoDeJuego}
             >
-              <MenuItem value={"RAPIDO"}>Rápido</MenuItem>
-              <MenuItem value={"NORMAL"}>Normal</MenuItem>
-              <MenuItem value={"EXTENDIDO"}>Extendido</MenuItem>
+              <MenuItem value={ModoDeJuegoModel.Rapido}>Rápido</MenuItem>
+              <MenuItem value={ModoDeJuegoModel.Normal}>Normal</MenuItem>
+              <MenuItem value={ModoDeJuegoModel.Extendido}>Extendido</MenuItem>
             </Select>
           </FormControl>
         );
@@ -584,6 +622,9 @@ export class NuevaPartidaStepper extends React.Component<
   }
 
   render() {
+    if (this.state.puedeRedireccionar) {
+      return <Redirect to="/app/partidas" />;
+    }
     return (
       <div className={this.classes.root}>
         <Stepper activeStep={this.state.activeStep} orientation="vertical">
@@ -616,6 +657,10 @@ export class NuevaPartidaStepper extends React.Component<
                         color="primary"
                         onClick={this.handleFinish}
                         className={this.classes.button}
+                        disabled={
+                          this.state.usuariosSeleccionados.length < 2 ||
+                          this.state.usuariosSeleccionados.length > 4
+                        }
                       >
                         Crear
                       </Button>
@@ -626,6 +671,16 @@ export class NuevaPartidaStepper extends React.Component<
             </Step>
           ))}
         </Stepper>
+        <CreacionPartidaModal
+          message="Creación exitosa!"
+          open={this.state.creacionExitosa}
+          onClose={this.cerrarModalExitoso}
+        />
+        <CreacionPartidaModal
+          message="Algo fallo al crear la partida :("
+          open={this.state.creacionFallida}
+          onClose={this.cerrarModalFallido}
+        />
       </div>
     );
   }

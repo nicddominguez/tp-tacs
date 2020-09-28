@@ -40,7 +40,9 @@ public class PartidaDao implements Dao<Partida> {
 
     @Override
     public Partida get(Long id) {
-        return partidas.stream().filter(partida -> partida.getId().equals(id)).collect(Collectors.toList()).get(0);
+        return partidas.stream()
+                .filter(partida -> partida.getId().equals(id))
+                .findFirst().orElse(null);
     }
 
     @Override

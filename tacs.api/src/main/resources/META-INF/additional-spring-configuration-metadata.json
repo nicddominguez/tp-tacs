@@ -24,6 +24,11 @@
       "name": "security.rutas.administrativas",
       "type": "java.lang.String",
       "description": "Rutas para las cuales se necesitan permisos de administrador"
+    },
+    {
+      "name": "application.debug-mode",
+      "type": "java.lang.Boolean",
+      "description": "Setear en True para saltar validaciones y poder testear la aplicacion"
     }
   ]
 }

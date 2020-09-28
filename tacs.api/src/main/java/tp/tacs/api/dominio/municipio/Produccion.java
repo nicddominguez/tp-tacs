@@ -4,7 +4,7 @@ public class Produccion implements Especializacion {
 
     @Override
     public Float multDefensa() {
-        return 0.25f;
+        return 1f;
     }
 
     @Override

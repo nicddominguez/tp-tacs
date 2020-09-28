@@ -24,20 +24,26 @@ public class Municipio {
     private Double latitud;
     private Double longitud;
     private Float altura;
+    private String urlImagen;
+
+    public void agregarGauchos(Integer cantidad) {
+        this.cantGauchos += cantidad;
+    }
+
+    public void sacarGauchos(Integer cantidad) {
+        this.cantGauchos = Math.max(0, cantGauchos - cantidad);
+    }
 
     public void setCantGauchos(Integer cantGauchos) {
-        this.cantGauchos = Math.max(cantGauchos, 0);
-    }
-
-    public void agregarGauchos(Integer cantidad){
-        cantGauchos =+ cantidad;
-    }
-    public void sacarGauchos(Integer cantidad){
-        cantGauchos =- cantidad;
+        this.cantGauchos = Math.max(0, cantGauchos);
     }
 
     public boolean estaBloqueado() {
         return bloqueado;
+    }
+
+    public void bloquear() {
+        this.bloqueado = true;
     }
 
     public void desbloquear() {
@@ -52,8 +58,8 @@ public class Municipio {
         return duenio.getId().equals(userId);
     }
 
-    public String coordenadasParaTopo(){
-        return String.format("%s,%s",this.getLatitud().toString(),this.getLongitud().toString());
+    public String coordenadasParaTopo() {
+        return String.format("%s,%s", this.getLatitud().toString(), this.getLongitud().toString());
     }
 
     public void actualizarNivelProduccion(Partida partida) {

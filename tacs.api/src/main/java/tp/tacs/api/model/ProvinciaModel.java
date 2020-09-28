@@ -23,6 +23,9 @@ public class ProvinciaModel   {
   @JsonProperty("nombre")
   private String nombre = null;
 
+  @JsonProperty("cantidadMunicipios")
+  private Long cantidadMunicipios = null;
+
   public ProvinciaModel id(Long id) {
     this.id = id;
     return this;
@@ -63,6 +66,25 @@ public class ProvinciaModel   {
     this.nombre = nombre;
   }
 
+  public ProvinciaModel cantidadMunicipios(Long cantidadMunicipios) {
+    this.cantidadMunicipios = cantidadMunicipios;
+    return this;
+  }
+
+  /**
+   * Cantidad de municipios de la provincia
+   * @return cantidadMunicipios
+  **/
+  @ApiModelProperty(value = "Cantidad de municipios de la provincia")
+
+    public Long getCantidadMunicipios() {
+    return cantidadMunicipios;
+  }
+
+  public void setCantidadMunicipios(Long cantidadMunicipios) {
+    this.cantidadMunicipios = cantidadMunicipios;
+  }
+
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -74,12 +96,13 @@ public class ProvinciaModel   {
     }
     ProvinciaModel provinciaModel = (ProvinciaModel) o;
     return Objects.equals(this.id, provinciaModel.id) &&
-        Objects.equals(this.nombre, provinciaModel.nombre);
+        Objects.equals(this.nombre, provinciaModel.nombre) &&
+        Objects.equals(this.cantidadMunicipios, provinciaModel.cantidadMunicipios);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, nombre);
+    return Objects.hash(id, nombre, cantidadMunicipios);
   }
 
   @Override
@@ -89,6 +112,7 @@ public class ProvinciaModel   {
     
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    nombre: ").append(toIndentedString(nombre)).append("\n");
+    sb.append("    cantidadMunicipios: ").append(toIndentedString(cantidadMunicipios)).append("\n");
     sb.append("}");
     return sb.toString();
   }

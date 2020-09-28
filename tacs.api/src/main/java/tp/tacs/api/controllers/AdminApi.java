@@ -70,5 +70,23 @@ public interface AdminApi {
 ,@ApiParam(value = "", defaultValue = "0") @Valid @RequestParam(value = "pagina", required = false, defaultValue="0") Long pagina
 );
 
+
+    @ApiOperation(value = "Pasar de turno", nickname = "pasarTurnoAdmin", notes = "", tags={ "Admin", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "Success") })
+    @RequestMapping(value = "/admin/pasarTurno/{idPartida}",
+        method = RequestMethod.POST)
+    ResponseEntity<Void> pasarTurnoAdmin(@ApiParam(value = "",required=true) @PathVariable("idPartida") Long idPartida
+);
+
+    @ApiOperation(value = "Obtener JWT por id de usuario", nickname = "obtenerJwtUsuario", notes = "", tags={ "Admin", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "Success") })
+        @ApiResponse(code = 400, message = "Bad request")
+    @RequestMapping(value = "/admin/token/{idUsuario}",
+        method = RequestMethod.GET)
+    ResponseEntity<String> obtenerJwtUsuario(@ApiParam(value = "",required=true) @PathVariable("idUsuario") Long idUsuario
+);
+
 }
 

@@ -22,9 +22,8 @@ public class ListarUsuariosResponse   {
   @JsonProperty("usuarios")
   @Valid
   private List<UsuarioModel> usuarios = null;
-  
+
   @JsonProperty("cantidadTotalDeUsuarios")
-  @Valid
   private Long cantidadTotalDeUsuarios = null;
 
   public ListarUsuariosResponse usuarios(List<UsuarioModel> usuarios) {
@@ -65,7 +64,6 @@ public class ListarUsuariosResponse   {
   **/
   @ApiModelProperty(value = "")
   
-    @Valid
     public Long getCantidadTotalDeUsuarios() {
     return cantidadTotalDeUsuarios;
   }
@@ -73,6 +71,7 @@ public class ListarUsuariosResponse   {
   public void setCantidadTotalDeUsuarios(Long cantidadTotalDeUsuarios) {
     this.cantidadTotalDeUsuarios = cantidadTotalDeUsuarios;
   }
+
 
   @Override
   public boolean equals(java.lang.Object o) {

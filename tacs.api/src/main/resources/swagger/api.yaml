@@ -88,6 +88,22 @@ paths:
                 $ref: '#/components/schemas/NuevoJWTModel'
         401:
           description: Unauthorized
+  /admin/pasarTurno/{idPartida}:
+    post:
+      tags:
+        - Admin
+      summary: Pasar de turno
+      operationId: pasarTurnoAdmin
+      parameters:
+        - in: path
+          name: idPartida
+          schema:
+            type: integer
+            format: int64
+          required: true
+      responses:
+        200:
+          description: Success
   /admin/estadisticas:
     get:
       tags:
@@ -231,6 +247,9 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/UsuarioModel'
+                  cantidadTotalDeUsuarios:
+                    type: integer
+                    format: int64
         400:
           description: Bad request
         403:
@@ -368,6 +387,9 @@ paths:
                         idGanador:
                           type: string
                           description: Id del usuario ganador
+                  cantidadTotalDePartidas:
+                    type: integer
+                    format: int64
         400:
           description: Bad request
         403:
@@ -609,6 +631,28 @@ paths:
           description: Bad request
         404:
           description: Not found
+  /partidas/{idPartida}/turnos:
+    post:
+      tags:
+        - Partidas
+      summary: Pasar de turno
+      operationId: pasarTurno
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: idPartida
+          schema:
+            type: integer
+            format: int64
+          required: true
+      responses:
+        200:
+          description: Success
+        403:
+          description: Forbidden
+        404:
+          description: Not found
   /partidas/{idPartida}/ataques/simulaciones:
     post:
       tags:
@@ -751,6 +795,10 @@ components:
         nombre:
           type: string
           description: Nombre de la provincia
+        cantidadMunicipios:
+          type: integer
+          format: int64
+          description: Cantidad de municipios de la provincia
     MunicipioEnJuegoModel:
       type: object
       description: Municipio en juego.
