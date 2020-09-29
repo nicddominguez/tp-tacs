@@ -13,7 +13,7 @@ import {
     MoverGauchosBody,
     AtacarMunicipioBody,
     SimularAtacarMunicipioBody,
-    RefreshAccessTokenBody
+    RefreshAccessTokenBody, ActualizarEstadoPartida
 } from './api';
 
 export class BaseWololoApiClient {
@@ -170,6 +170,12 @@ export class WololoUsuariosApiClient extends BaseWololoApiClient {
         );
     }
 
+    public async obtenerUsuarioLogueado() {
+        return this.doAuthenticatedRequest(
+            async (options) => this.usuarioApi.obtenerUsuarioLogueado(options)
+        );
+    }
+
 }
 
 
@@ -193,6 +199,55 @@ export class WololoAdminApiClient extends BaseWololoApiClient {
         return this.doAuthenticatedRequest(
             async (options) => this.adminApi.getScoreboard(tamanioPagina, pagina, options)
         );
+    }
+
+    public async pasarTurno(idPartida: number) {
+        console.log('RUNNING')
+        return this.doAuthenticatedRequest(
+            async (options) => {
+                console.log('DOING')
+                this.adminApi.pasarTurnoAdmin(idPartida, options)
+            }
+        );
+    }
+
+}
+
+
+export class PollingPartida {
+
+    private idPartida: number
+    private frecuenciaMs: number
+    private handler: (response: Promise<PartidaModel>) => void
+    private partidasApiClient: WololoPartidasApiClient
+    private timeout?: number
+
+    constructor(
+            idPartida: number,
+            frecuenciaMs: number,
+            handler: (response: Promise<PartidaModel>) => void,
+            partidasApiClient: WololoPartidasApiClient) {
+        this.idPartida = idPartida;
+        this.frecuenciaMs = frecuenciaMs;
+        this.handler = handler;
+        this.partidasApiClient = partidasApiClient;
+    }
+
+    private doPoll() {
+        const partida = this.partidasApiClient.getPartida(this.idPartida);
+        this.handler(partida);
+        this.timeout = window.setTimeout(this.doPoll.bind(this), this.frecuenciaMs);
+    }
+
+    start() {
+        this.timeout = window.setTimeout(this.doPoll.bind(this), this.frecuenciaMs);
+    }
+
+    stop() {
+        if(this.timeout !== undefined) {
+            clearTimeout(this.timeout);
+            this.timeout = undefined;
+        }
     }
 
 }
@@ -223,13 +278,28 @@ export class WololoPartidasApiClient extends BaseWololoApiClient {
         )
     }
 
+    public async getPartida(idPartida: number) {
+        return this.doAuthenticatedRequest(
+            async (options) => this.partidasApi.getPartida(idPartida, options)
+        );
+    }
+
+    public pollPartida(idPartida: number, frecuenciaMs: number, handler: (response: Promise<PartidaModel>) => void) {
+        return new PollingPartida(
+            idPartida,
+            frecuenciaMs,
+            handler,
+            this
+        );
+    }
+
     public async crearPartida(body: CrearPartidaBody) {
         return this.doAuthenticatedRequest(
             async (options) => this.partidasApi.crearPartida(body, options)
         )
     }
 
-    public async actualizarEstadoPartida(idPartida: number, body: PartidaModel) {
+    public async actualizarEstadoPartida(idPartida: number, body: ActualizarEstadoPartida) {
         return this.doAuthenticatedRequest(
             async (options) => this.partidasApi.actualizarEstadoPartida(idPartida, body, options)
         )

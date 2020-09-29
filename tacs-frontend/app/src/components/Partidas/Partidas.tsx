@@ -13,7 +13,7 @@ import {
   createStyles,
   makeStyles,
   Theme,
-  withStyles,
+  withStyles
 } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -27,10 +27,14 @@ import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import {
   KeyboardDatePicker,
-  MuiPickersUtilsProvider,
+  MuiPickersUtilsProvider
 } from "@material-ui/pickers";
 import { MaterialUiPickersDate } from "@material-ui/pickers/typings/date";
-import { EstadoDeJuegoModel, PartidaSinInfoModel } from "api";
+import {
+  EstadoDeJuegoModel,
+
+  PartidaSinInfoModel
+} from "api";
 import { WololoPartidasApiClient } from "api/client";
 import "date-fns";
 import React from "react";
@@ -64,10 +68,19 @@ const MenuProps = {
   },
 };
 
-function Row(props: { partida: PartidaSinInfoModel }) {
+function Row(props: {
+  partida: PartidaSinInfoModel;
+  onClickJugar?: (partida: PartidaSinInfoModel) => void;
+}) {
   const { partida } = props;
   const [open, setOpen] = React.useState(false);
   const classes = useRowStyles();
+
+  const jugarAction = () => {
+    if (props.onClickJugar) {
+      props.onClickJugar(props.partida);
+    }
+  };
 
   return (
     <React.Fragment>
@@ -86,6 +99,11 @@ function Row(props: { partida: PartidaSinInfoModel }) {
         <TableCell align="center">{partida.estado}</TableCell>
         <TableCell align="center">{partida.provincia?.nombre}</TableCell>
         <TableCell align="center">{partida.modoDeJuego}</TableCell>
+        <TableCell align="center">
+          <Button color="primary" onClick={jugarAction}>
+            Jugar! ⚔️
+          </Button>
+        </TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
@@ -151,8 +169,10 @@ const useStyles = (theme: Theme) =>
       margin: theme.spacing(1),
     },
   });
+
 interface Props {
   classes: any;
+  onClickJugar?: (partida: PartidaSinInfoModel) => void;
 }
 
 interface State {
@@ -180,11 +200,7 @@ class Partidas extends React.Component<Props, State> {
 
   dateToStringFormat = (date: Date | undefined) => {
     return date
-      ? date.getFullYear() +
-          "/" +
-          (date.getMonth() + 1) +
-          "/" +
-          date.getDate()
+      ? date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + date.getDate()
       : undefined;
   };
 
@@ -304,7 +320,6 @@ class Partidas extends React.Component<Props, State> {
                   size="small"
                   variant="contained"
                   className={classes.margin}
-                  onClick={this.handleRemoverOrdenar}
                 >
                   Remover
                 </Button>
@@ -410,11 +425,16 @@ class Partidas extends React.Component<Props, State> {
                     <TableCell align="center">Estado</TableCell>
                     <TableCell align="center">Provincia</TableCell>
                     <TableCell align="center">Modo de juego</TableCell>
+                    <TableCell align="center">Acciones</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {this.state.partidas?.map((partida) => (
-                    <Row key={partida.id} partida={partida} />
+                    <Row
+                      key={partida.id}
+                      partida={partida}
+                      onClickJugar={this.props.onClickJugar}
+                    />
                   ))}
                 </TableBody>
                 <TableFooter>

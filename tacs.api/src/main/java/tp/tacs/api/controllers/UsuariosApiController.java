@@ -2,6 +2,7 @@ package tp.tacs.api.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RestController;
 import tp.tacs.api.dominio.usuario.Usuario;
 import tp.tacs.api.mappers.UsuarioMapper;
@@ -13,6 +14,7 @@ import tp.tacs.api.utils.Utils;
 import javax.validation.Valid;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class UsuariosApiController implements UsuariosApi {
@@ -35,5 +37,17 @@ public class UsuariosApiController implements UsuariosApi {
         Long cantidadTotalDeUsuarios = Long.valueOf(usuarios.size());
 
         return ResponseEntity.ok(new ListarUsuariosResponse().usuarios(listaPaginada).cantidadTotalDeUsuarios(cantidadTotalDeUsuarios));
+    }
+
+    @Override
+    public ResponseEntity<UsuarioModel> obtenerUsuarioLogueado() {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        return Optional.ofNullable(authentication)
+                .map(auth -> (String) auth.getPrincipal())
+                .flatMap(this.servicioUsuario::getByUsername)
+                .map(this.usuarioMapper::wrap)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 }

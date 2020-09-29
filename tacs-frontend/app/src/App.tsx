@@ -9,7 +9,7 @@ export default function App() {
 
   const baseApiClient = new BaseWololoApiClient();
   const [isLoggedIn, setLoggedIn] = React.useState(baseApiClient.userIsLoggedIn());
-  const [currentUser, setCurrentUser]: [UsuarioModel | undefined, any] = React.useState(undefined);
+  const [currentUser, setCurrentUser] = React.useState(undefined as UsuarioModel | undefined);
 
   const setUserLoggedIn = (user: UsuarioModel) => {
     setLoggedIn(true);
@@ -27,7 +27,7 @@ export default function App() {
         <Route path="/app">
           <Dashboard
             flagLoggedOut={setUserLoggedOut}
-            currentUser={currentUser} />
+          />
         </Route>
       </Switch>
       {isLoggedIn ? <Redirect to="/app/partidas" /> : <Redirect to="/login" />}

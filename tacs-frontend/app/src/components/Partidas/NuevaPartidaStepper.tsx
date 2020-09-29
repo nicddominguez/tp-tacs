@@ -491,7 +491,12 @@ export class NuevaPartidaStepper extends React.Component<
     this.provinciasApiClient
       .listarProvincias(23)
       .then((response) => {
-        this.setState({ provincias: response.provincias || [] });
+        this.setState({
+          provincias: response.provincias || [],
+          cantidadMunicipiosSeleccionada: this.cantidadMunicipios(
+            response.provincias || []
+          ),
+        });
       })
       .catch(console.error);
   }
@@ -516,9 +521,15 @@ export class NuevaPartidaStepper extends React.Component<
   }
 
   setIdProvincia(id: number) {
-    this.setState({
-      idProvincia: id,
-    });
+    this.setState(
+      {
+        idProvincia: id,
+      },
+      () =>
+        this.setCantidadMunicipios(
+          this.cantidadMunicipios(this.state.provincias)
+        )
+    );
   }
 
   setCantidadMunicipios(cantidad: number | string | Array<number | string>) {
@@ -527,8 +538,8 @@ export class NuevaPartidaStepper extends React.Component<
     });
   }
 
-  cantidadMunicipios = () => {
-    const provincia: ProvinciaModel | undefined = this.state.provincias.find(
+  cantidadMunicipios = (provincias: ProvinciaModel[]) => {
+    const provincia: ProvinciaModel | undefined = provincias.find(
       (provincia) => provincia.id == this.state.idProvincia
     );
     return provincia?.cantidadMunicipios || 0;
@@ -593,7 +604,7 @@ export class NuevaPartidaStepper extends React.Component<
             cantidadMunicipiosSeleccionada={
               this.state.cantidadMunicipiosSeleccionada
             }
-            cantidadMunicipios={this.cantidadMunicipios()}
+            cantidadMunicipios={this.cantidadMunicipios(this.state.provincias)}
           />
         );
       case 2:

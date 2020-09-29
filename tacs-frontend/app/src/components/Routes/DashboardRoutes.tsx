@@ -1,9 +1,9 @@
+import React from "react";
 import BarChartIcon from "@material-ui/icons/BarChart";
 import MapIcon from "@material-ui/icons/Map";
 import ViewListIcon from "@material-ui/icons/ViewList";
 import NuevaPartidaStepper from "../Partidas/NuevaPartidaStepper";
 import Partidas from "../Partidas/Partidas";
-import React from "react";
 
 export const dashboardRoutes = [
   {
