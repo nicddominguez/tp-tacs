@@ -79,6 +79,7 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
     this.confirmarDesplazamientoGauchos = this.confirmarDesplazamientoGauchos.bind(this);
     this.renderWinDialog = this.renderWinDialog.bind(this);
     this.renderBotonCambiarEstadoMunicipio = this.renderBotonCambiarEstadoMunicipio.bind(this);
+    this.esElTurnoDelUsuario = this.esElTurnoDelUsuario.bind(this);
   }
 
   componentDidMount() {
@@ -394,6 +395,24 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
       .catch(console.error);
   }
 
+  esElTurnoDelUsuario() {
+    if (
+      this.state.partidaConInfo?.informacionDeJuego?.idUsuarioProximoTurno ===
+      undefined
+    ) {
+      return false;
+    }
+
+    if (this.props.usuarioLogueado?.id === undefined) {
+      return false;
+    }
+
+    return (
+      this.state.partidaConInfo?.informacionDeJuego?.idUsuarioProximoTurno ===
+      this.props.usuarioLogueado?.id
+    );
+  }
+
   renderSnackbar() {
     return (
       <Snackbar
@@ -414,6 +433,7 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
       return (
         <Button
           onClick={() => this.cambiarModoDeMunicipio(ModoDeMunicipioModel.Produccion)}
+
         >
           Cambiar a Producción
         </Button>
@@ -450,7 +470,7 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
                 />
               </Card>
             </DialogContent>
-            <DialogActions>
+            <DialogActions style={{display: this.esElTurnoDelUsuario() ? "block" : "none"}}>
               <Button onClick={this.handleDialogClose}>Cancelar</Button>
               {this.renderBotonCambiarEstadoMunicipio()}
               <Button
@@ -476,7 +496,7 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
                 {this.state.simulacionExitosa ? 'Vas a ganar' : 'Vas a perder'}
               </DialogContentText>
             </DialogContent>
-            <DialogActions>
+            <DialogActions style={{display: this.esElTurnoDelUsuario() ? "block" : "none"}}>
               <Button onClick={this.handleDialogClose}>Cancelar</Button>
               <Button onClick={this.confirmarAtaqueAMunicipio}>Confirmar</Button>
             </DialogActions>
@@ -498,7 +518,7 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
               />
               <Typography>{this.state.cantidadGauchosAMover}</Typography>
             </DialogContent>
-            <DialogActions>
+            <DialogActions style={{display: this.esElTurnoDelUsuario() ? "block" : "none"}}>
               <Button onClick={this.handleDialogClose}>Cancelar</Button>
               <Button onClick={this.confirmarDesplazamientoGauchos}>Confirmar</Button>
             </DialogActions>
