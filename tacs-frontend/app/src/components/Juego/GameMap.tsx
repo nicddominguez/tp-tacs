@@ -211,7 +211,6 @@ export default class GameMap extends React.Component<
                 }
                 color="primary"
                 variant="contained"
-                disabled={!this.esElTurnoDelUsuario()}
                 fullWidth
               >
                 Pasar turno
