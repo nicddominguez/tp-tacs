@@ -288,8 +288,8 @@ public class ServicioPartida {
         this.distintoDuenio(municipioAtacante, municipioAtacado);
 
         Integer gauchosAtacantesFinal = this.gauchosAtacantesFinales(partida, municipioAtacante, municipioAtacado);
-        municipioAtacante.setCantGauchos(gauchosAtacantesFinal);
         Integer gauchosDefensoresFinal = this.gauchosDefensoresFinales(partida, municipioAtacante, municipioAtacado);
+        municipioAtacante.setCantGauchos(gauchosAtacantesFinal);
         municipioAtacado.setCantGauchos(gauchosDefensoresFinal);
 
         if (gauchosDefensoresFinal <= 0) {
