@@ -50,8 +50,8 @@ public class ServicioPartida {
         }
     }
 
-    public void terminarPartida(Partida partida) {
-        partida.setEstado(Estado.TERMINADA);
+    public void terminarPartida(Partida partida, Estado estadoPartida) {
+        partida.setEstado(estadoPartida);
         Usuario ganador = usuarioConMasMunicipios(partida);
         ganador.aumentarPartidasGanadas();
         ganador.aumentarRachaActual();
@@ -72,6 +72,7 @@ public class ServicioPartida {
         var ganadosPorUsuario = municipiosConDuenio.stream()
                 .collect(Collectors.groupingBy(Municipio::getDuenio, Collectors.counting()));
 
+        //en caso de 2 con el mismo municipio, gana el "primero", definido por el comparador
         return Collections
                 .max(ganadosPorUsuario.entrySet(), Map.Entry.comparingByValue())
                 .getKey();
@@ -101,7 +102,7 @@ public class ServicioPartida {
 
         if (Estado.EN_CURSO.equals(request.getEstado())) {
             if (this.hayGanador(request)) {
-                this.terminarPartida(request);
+                this.terminarPartida(request, Estado.TERMINADA);
             } else {
                 this.eliminarPerdedores(request);
                 request.asignarProximoTurno();
@@ -298,7 +299,7 @@ public class ServicioPartida {
         }
 
         if (this.hayGanador(partida)) {
-            this.terminarPartida(partida);
+            this.terminarPartida(partida, Estado.TERMINADA);
         }
 
         return new AtacarMunicipioResponse()
@@ -307,7 +308,10 @@ public class ServicioPartida {
     }
 
     public void actualizarEstadoPartida(Partida partida, Estado estado) {
-        partida.setEstado(estado);
+        if(estado != Estado.EN_CURSO)
+            this.terminarPartida(partida, estado);
+        else
+            partida.setEstado(estado);
     }
 
 }
