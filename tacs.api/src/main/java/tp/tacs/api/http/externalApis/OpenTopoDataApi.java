@@ -1,5 +1,6 @@
 package tp.tacs.api.http.externalApis;
 
+import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,9 @@ import tp.tacs.api.http.HttpClientConnector;
 import tp.tacs.api.http.externalApis.models.TopoData;
 import tp.tacs.api.http.externalApis.models.TopoResult;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class OpenTopoDataApi {
@@ -19,10 +22,16 @@ public class OpenTopoDataApi {
     private HttpClientConnector connector;
 
     private final String topoBaseUrl = "https://api.opentopodata.org/v1/srtm90m?locations=";
+    private static final Integer LIMITE_REQUESTS = 100;
 
-    @SneakyThrows
     @Cacheable(value = "alturas", sync = true, key = "#idProvincia")
     public List<TopoData> getAlturas(String idProvincia, List<Municipio> municipios) {
+        var municipiosDivididos = Lists.partition(municipios, LIMITE_REQUESTS);
+        return municipiosDivididos.stream().map(this::getTopoData).flatMap(Collection::stream).collect(Collectors.toList());
+    }
+
+    @SneakyThrows
+    private List<TopoData> getTopoData(List<Municipio> municipios) {
         String coordenadas = municipios.stream().map(Municipio::coordenadasParaTopo)
                 .reduce("", (coord1, coord2) -> coord1 + "%7C" + coord2);
         String url = String.format("%s%s", topoBaseUrl, coordenadas);
