@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import tp.tacs.api.dominio.partida.Estado;
 import tp.tacs.api.dominio.partida.Partida;
 import tp.tacs.api.dominio.partida.PartidaSinInfo;
+import tp.tacs.api.dominio.usuario.Usuario;
 import tp.tacs.api.mappers.EstadoDeJuegoMapper;
 import tp.tacs.api.mappers.PartidaSinInfoPartidaMapper;
 import tp.tacs.api.model.EstadisticasDeJuegoModel;
@@ -98,27 +99,37 @@ public class PartidaDao implements Dao<Partida> {
                 .collect(Collectors.toList());
     }
 
-    public List<PartidaSinInfo> getPartidasFiltradas(Date fechaInicio, Date fechaFin, EstadoDeJuegoModel estado) {
+    private Stream<PartidaSinInfo> getPartidasFiltradasStream(Date fechaInicio, Date fechaFin, EstadoDeJuegoModel estado) {
         Stream<PartidaSinInfo> partidasFiltradasStream = partidas
-            .stream()
-            .map(partida -> partidaSinInfoPartidaMapper.unwrap(partida));
+                .stream()
+                .map(partida -> partidaSinInfoPartidaMapper.unwrap(partida));
 
         if (fechaInicio != null) {
             partidasFiltradasStream = partidasFiltradasStream
-                .filter(partida -> partida.getFechaCreacion().after(fechaInicio));
+                    .filter(partida -> partida.getFechaCreacion().after(fechaInicio));
         }
 
         if (fechaFin != null) {
             partidasFiltradasStream = partidasFiltradasStream
-                .filter(partida -> partida.getFechaCreacion().before(fechaFin));
+                    .filter(partida -> partida.getFechaCreacion().before(fechaFin));
         }
 
         if (estado != null) {
             var estadoDeJuego = estadoDeJuegoMapper.toEntity(estado);
             partidasFiltradasStream = partidasFiltradasStream
-                .filter(partida -> partida.getEstado().equals(estadoDeJuego));
+                    .filter(partida -> partida.getEstado().equals(estadoDeJuego));
         }
+        return partidasFiltradasStream;
+    }
 
+    public List<PartidaSinInfo> getPartidasFiltradas(Date fechaInicio, Date fechaFin, EstadoDeJuegoModel estado) {
+        Stream<PartidaSinInfo> partidasFiltradasStream = getPartidasFiltradasStream(fechaInicio, fechaFin, estado);
+        return partidasFiltradasStream.collect(Collectors.toList());
+    }
+
+    public List<PartidaSinInfo> getPartidasFiltradasUsuario(Date fechaInicio, Date fechaFin, EstadoDeJuegoModel estado, Usuario usuario) {
+        Stream<PartidaSinInfo> partidasFiltradasStream = getPartidasFiltradasStream(fechaInicio, fechaFin, estado);
+        partidasFiltradasStream = partidasFiltradasStream.filter(partida -> partida.perteneceALaPartida(usuario));
         return partidasFiltradasStream.collect(Collectors.toList());
     }
 }
