@@ -140,14 +140,14 @@ public class ServicioPartida {
         Float distancia = this.distanciaEntre(municipioAtacante, municipioAtacado);
         Float maxDist = partida.getMaxDist();
         Float minDist = partida.getMinDist();
-        return 1 - (distancia - minDist) / (2 * (maxDist - minDist));
+        return 1f - (distancia - minDist) / (2f * (maxDist - minDist));
     }
 
     public Float multAltura(Partida partida, Municipio municipio) {
         Float altura = Math.abs(municipio.getAltura());
         Float minAltura = partida.getMinAltura();
         Float maxAltura = partida.getMaxAltura();
-        return 1 + (altura - minAltura) / (2 * (maxAltura - minAltura));
+        return 1f + (altura - minAltura) / (2f * (maxAltura - minAltura));
     }
 
     public Integer gauchosDefensoresFinales(Partida partida, Municipio municipioAtacante, Municipio municipioAtacado) {
@@ -156,21 +156,23 @@ public class ServicioPartida {
         Float multDist = this.multDistancia(partida, municipioAtacante, municipioAtacado);
         Integer cantGauchosAtacado = municipioAtacado.getCantGauchos();
         Integer cantGauchosAtacante = municipioAtacante.getCantGauchos();
-        return Math.max((int) Math.round(Math.ceil((cantGauchosAtacado * multAltura * multDefensa) - (cantGauchosAtacante * multDist))
-                / (multAltura * multDefensa)), 0);
+        int gauchosDefensoresFinales = (int) Math.round(Math.ceil((cantGauchosAtacado * multAltura * multDefensa) - (cantGauchosAtacante * multDist))
+                / (multAltura * multDefensa));
+        return Math.max(gauchosDefensoresFinales, 0);
     }
 
     public Integer gauchosAtacantesFinales(Partida partida, Municipio municipioAtacante, Municipio municipioAtacado) {
         var multDist = this.multDistancia(partida, municipioAtacante, municipioAtacado);
         var multAltura = this.calcularMultAlturaMunicipio(partida, municipioAtacante);
         var multDefensa = municipioAtacado.getEspecializacion().multDefensa();
-        return Math.max((int) Math
-                .floor(municipioAtacante.getCantGauchos() * multDist - municipioAtacado.getCantGauchos() * multAltura * multDefensa), 0);
+        int gauchosAtacantesFinales = (int) Math
+                .floor(municipioAtacante.getCantGauchos() * multDist - municipioAtacado.getCantGauchos() * multAltura * multDefensa);
+        return Math.max(gauchosAtacantesFinales, 0);
     }
 
     public Float calcularMultAlturaMunicipio(Partida partida, Municipio municipio) {
         Float altura = Math.abs(municipio.getAltura());
-        return 1 + (altura - partida.getMinAltura()) / (2 * (partida.getMaxAltura() - partida.getMinAltura()));
+        return 1f + (altura - partida.getMinAltura()) / (2f * (partida.getMaxAltura() - partida.getMinAltura()));
     }
 
     public void distintoDuenio(Municipio unMunicipio, Municipio otroMunucipio) {
