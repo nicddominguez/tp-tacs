@@ -47,8 +47,8 @@ public class ServicioMunicipio {
     public void actualizarNivelProduccion(Municipio municipio, Partida partida) {
         var minAltura = partida.getMinAltura();
         var maxAltura = partida.getMaxAltura();
-        float multiplicador = 1 - (municipio.getAltura() - minAltura)
-                / (2 * (maxAltura - minAltura));
+        float multiplicador = 1f - (municipio.getAltura() - minAltura)
+                / (2f * (maxAltura - minAltura));
         int cantGauchos = municipio.getEspecializacion().nivelDeProduccion(multiplicador);
         municipio.setNivelDeProduccion(cantGauchos);
     }
