@@ -488,7 +488,6 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
           <div>
             <DialogTitle>Resumen de ataque</DialogTitle>
             <DialogContent>
-              {/* TODO: Mostrar un resumen del ataque piola */}
               <DialogContentText>
                 Vas a atacar a {municipio?.nombre} desde {municipio?.nombre}
               </DialogContentText>

@@ -146,7 +146,6 @@ export default function Dashboard(props: DashboardProps) {
     <div className={classes.root}>
       <CssBaseline />
       <AppBar
-        // TODO: El sidebar no tiene animacion al colapsarse o expandirse
         position="absolute"
         className={clsx(classes.appBar, open && classes.appBarShift)}
       >

@@ -311,7 +311,6 @@ class Partidas extends React.Component<Props, State> {
     return (
       <Container maxWidth="lg" className={classes.container}>
         <Grid container spacing={3} className={classes.paper}>
-          {/* TODO: Hacer que xs sea 12 para mobile */}
           <Grid item xs={6}>
             <Paper className={classes.paper}>
               <Grid container justify="space-between" alignItems="center">

@@ -40,7 +40,6 @@ export default function NuevaPartidaFabButton() {
   };
 
   return (
-    // FIXME: Al agregar el fab, aparecio la barra desplazamiento horizontal (parece que se agrego alguna especie de padding o margen)
     <div className={classes.root}>
       <Fab
         color="primary"
