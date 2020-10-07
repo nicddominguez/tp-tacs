@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import tp.tacs.api.daos.PartidaDao;
 import tp.tacs.api.daos.UsuarioDao;
 import tp.tacs.api.dominio.partida.Partida;
+import tp.tacs.api.dominio.partida.PartidaSinInfo;
 import tp.tacs.api.dominio.usuario.Usuario;
 import tp.tacs.api.handler.MunicipioException;
 import tp.tacs.api.handler.PartidaException;
@@ -28,6 +29,7 @@ import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
@@ -158,6 +160,18 @@ public class PartidasApiController implements PartidasApi {
     }
 
     @Override
+    public ResponseEntity<OneOfinlineResponse200> getPartida(Long idPartida, @Valid String campos) {
+        var partida = servicioPartida.obtenerPartidaPorId(idPartida);
+        if (partida == null)
+            return new ResponseEntity("No existe la partida solicitada", HttpStatus.BAD_REQUEST);
+        if(campos != null && campos.toUpperCase().equals("LIVIANA")){
+            return ResponseEntity.ok(partidaMapper.aPartidaLivianaModel(partida));
+        }
+        return ResponseEntity.ok(partidaMapper.wrap(partida));
+    }
+
+
+    @Override
     public ResponseEntity<MoverGauchosResponse> moverGauchos(Long idPartida, @Valid MoverGauchosBody body) {
 
         if(body.getIdMunicipioDestino() == null || body.getIdMunicipioOrigen() == null)
@@ -206,17 +220,17 @@ public class PartidasApiController implements PartidasApi {
     }
 
     @Override
-    public ResponseEntity<PartidaModel> getPartida(Long idPartida) {
-        var partida = servicioPartida.obtenerPartidaPorId(idPartida);
-        if (partida == null)
-            return new ResponseEntity("No existe la partida solicitada", HttpStatus.BAD_REQUEST);
-        return ResponseEntity.ok(partidaMapper.wrap(partida));
-    }
-
-    @Override
     public ResponseEntity<ListarPartidasResponse> listarPartidas(@Valid Date fechaInicio, @Valid Date fechaFin,
                                                                  @Valid EstadoDeJuegoModel estado, @Valid String ordenarPor, @Valid Long tamanioPagina, @Valid Long pagina) {
-        var partidas = this.partidaDao.getPartidasFiltradas(fechaInicio, fechaFin, estado);
+
+        List<PartidaSinInfo> partidas;
+        Usuario usuarioRequest = usuarioDao.getByUsername(obtenerUsername());
+        if (debugMode) {
+            partidas = this.partidaDao.getPartidasFiltradas(fechaInicio, fechaFin, estado);
+        } else {
+            partidas = this.partidaDao.getPartidasFiltradasUsuario(fechaInicio, fechaFin, estado, usuarioRequest);
+        }
+
         var partidaModels = partidaSinInfoMapper.partidasParaListar(partidas);
 
         //TODO recibir si ordenar DESC o ASC

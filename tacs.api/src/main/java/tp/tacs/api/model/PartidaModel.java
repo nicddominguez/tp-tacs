@@ -1,21 +1,16 @@
 package tp.tacs.api.model;
 
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.springframework.validation.annotation.Validated;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import tp.tacs.api.model.DatosDeJuegoModel;
-import tp.tacs.api.model.EstadoDeJuegoModel;
-import tp.tacs.api.model.ModoDeJuegoModel;
-import tp.tacs.api.model.ProvinciaModel;
-import tp.tacs.api.model.UsuarioModel;
-import org.springframework.validation.annotation.Validated;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+import java.util.Objects;
 
 /**
  * Una partida
@@ -23,8 +18,7 @@ import javax.validation.constraints.*;
 @ApiModel(description = "Una partida")
 @Validated
 
-
-public class PartidaModel   {
+public class PartidaModel  implements OneOfinlineResponse200 {
   @JsonProperty("id")
   private Long id = null;
 
@@ -61,11 +55,11 @@ public class PartidaModel   {
   /**
    * Id de la partida
    * @return id
-  **/
+   **/
   @ApiModelProperty(required = true, value = "Id de la partida")
-      @NotNull
+  @NotNull
 
-    public Long getId() {
+  public Long getId() {
     return id;
   }
 
@@ -81,12 +75,12 @@ public class PartidaModel   {
   /**
    * Get provincia
    * @return provincia
-  **/
+   **/
   @ApiModelProperty(required = true, value = "")
-      @NotNull
+  @NotNull
 
-    @Valid
-    public ProvinciaModel getProvincia() {
+  @Valid
+  public ProvinciaModel getProvincia() {
     return provincia;
   }
 
@@ -102,11 +96,11 @@ public class PartidaModel   {
   /**
    * Cantidad de municipios que se usan
    * @return cantidadMunicipios
-  **/
+   **/
   @ApiModelProperty(required = true, value = "Cantidad de municipios que se usan")
-      @NotNull
+  @NotNull
 
-    public Long getCantidadMunicipios() {
+  public Long getCantidadMunicipios() {
     return cantidadMunicipios;
   }
 
@@ -122,12 +116,12 @@ public class PartidaModel   {
   /**
    * Get estado
    * @return estado
-  **/
+   **/
   @ApiModelProperty(required = true, value = "")
-      @NotNull
+  @NotNull
 
-    @Valid
-    public EstadoDeJuegoModel getEstado() {
+  @Valid
+  public EstadoDeJuegoModel getEstado() {
     return estado;
   }
 
@@ -148,11 +142,11 @@ public class PartidaModel   {
   /**
    * Usuarios que juegan esta partida
    * @return jugadores
-  **/
+   **/
   @ApiModelProperty(required = true, value = "Usuarios que juegan esta partida")
-      @NotNull
-    @Valid
-    public List<UsuarioModel> getJugadores() {
+  @NotNull
+  @Valid
+  public List<UsuarioModel> getJugadores() {
     return jugadores;
   }
 
@@ -168,12 +162,12 @@ public class PartidaModel   {
   /**
    * Get modoDeJuego
    * @return modoDeJuego
-  **/
+   **/
   @ApiModelProperty(required = true, value = "")
-      @NotNull
+  @NotNull
 
-    @Valid
-    public ModoDeJuegoModel getModoDeJuego() {
+  @Valid
+  public ModoDeJuegoModel getModoDeJuego() {
     return modoDeJuego;
   }
 
@@ -189,12 +183,12 @@ public class PartidaModel   {
   /**
    * Fecha de inicio de la partida
    * @return fecha
-  **/
+   **/
   @ApiModelProperty(required = true, value = "Fecha de inicio de la partida")
-      @NotNull
+  @NotNull
 
-    @Valid
-    public Date getFecha() {
+  @Valid
+  public Date getFecha() {
     return fecha;
   }
 
@@ -210,11 +204,11 @@ public class PartidaModel   {
   /**
    * Get informacionDeJuego
    * @return informacionDeJuego
-  **/
+   **/
   @ApiModelProperty(value = "")
-  
-    @Valid
-    public DatosDeJuegoModel getInformacionDeJuego() {
+
+  @Valid
+  public DatosDeJuegoModel getInformacionDeJuego() {
     return informacionDeJuego;
   }
 
@@ -230,10 +224,10 @@ public class PartidaModel   {
   /**
    * Id del usuario ganador
    * @return idGanador
-  **/
+   **/
   @ApiModelProperty(value = "Id del usuario ganador")
-  
-    public String getIdGanador() {
+
+  public String getIdGanador() {
     return idGanador;
   }
 
@@ -252,14 +246,14 @@ public class PartidaModel   {
     }
     PartidaModel partidaModel = (PartidaModel) o;
     return Objects.equals(this.id, partidaModel.id) &&
-        Objects.equals(this.provincia, partidaModel.provincia) &&
-        Objects.equals(this.cantidadMunicipios, partidaModel.cantidadMunicipios) &&
-        Objects.equals(this.estado, partidaModel.estado) &&
-        Objects.equals(this.jugadores, partidaModel.jugadores) &&
-        Objects.equals(this.modoDeJuego, partidaModel.modoDeJuego) &&
-        Objects.equals(this.fecha, partidaModel.fecha) &&
-        Objects.equals(this.informacionDeJuego, partidaModel.informacionDeJuego) &&
-        Objects.equals(this.idGanador, partidaModel.idGanador);
+            Objects.equals(this.provincia, partidaModel.provincia) &&
+            Objects.equals(this.cantidadMunicipios, partidaModel.cantidadMunicipios) &&
+            Objects.equals(this.estado, partidaModel.estado) &&
+            Objects.equals(this.jugadores, partidaModel.jugadores) &&
+            Objects.equals(this.modoDeJuego, partidaModel.modoDeJuego) &&
+            Objects.equals(this.fecha, partidaModel.fecha) &&
+            Objects.equals(this.informacionDeJuego, partidaModel.informacionDeJuego) &&
+            Objects.equals(this.idGanador, partidaModel.idGanador);
   }
 
   @Override
@@ -271,7 +265,7 @@ public class PartidaModel   {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class PartidaModel {\n");
-    
+
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    provincia: ").append(toIndentedString(provincia)).append("\n");
     sb.append("    cantidadMunicipios: ").append(toIndentedString(cantidadMunicipios)).append("\n");
