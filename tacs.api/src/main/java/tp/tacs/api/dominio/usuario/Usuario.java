@@ -37,6 +37,6 @@ public class Usuario {
     }
 
     public boolean nombreContiene(String nombre) {
-        return this.nombre.toUpperCase().startsWith(nombre.toUpperCase());
+        return this.nombre.toUpperCase().contains(nombre.toUpperCase());
     }
 }
