@@ -3,7 +3,7 @@ package tp.tacs.api.servicios;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tp.tacs.api.daos.PartidaDao;
-import tp.tacs.api.daos.UsuarioDao;
+import tp.tacs.api.daos.UsuarioDaoMemoria;
 import tp.tacs.api.model.EstadisticasDeJuegoModel;
 import tp.tacs.api.model.EstadisticasDeUsuarioModel;
 import tp.tacs.api.utils.Utils;
@@ -16,7 +16,7 @@ public class ServicioAdmin {
     @Autowired
     private Utils utils;
     @Autowired
-    private UsuarioDao usuarioDao;
+    private UsuarioDaoMemoria usuarioDaoMemoria;
     @Autowired
     private PartidaDao partidaDao;
 
@@ -25,10 +25,10 @@ public class ServicioAdmin {
     }
 
     public EstadisticasDeUsuarioModel estadisticasDeUsuario(Long idUsuario) {
-        return usuarioDao.estadisticas(idUsuario);
+        return usuarioDaoMemoria.estadisticas(idUsuario);
     }
 
     public List<EstadisticasDeUsuarioModel> tablaDePuntos(Long pagina, Long tamanioPagina) {
-        return utils.obtenerListaPaginada(pagina, tamanioPagina, usuarioDao.scoreBoard());
+        return utils.obtenerListaPaginada(pagina, tamanioPagina, usuarioDaoMemoria.scoreBoard());
     }
 }

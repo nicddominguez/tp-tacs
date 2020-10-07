@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RestController;
 import tp.tacs.api.daos.PartidaDao;
-import tp.tacs.api.daos.UsuarioDao;
+import tp.tacs.api.daos.UsuarioDaoMemoria;
 import tp.tacs.api.dominio.partida.Partida;
 import tp.tacs.api.dominio.partida.PartidaSinInfo;
 import tp.tacs.api.dominio.usuario.Usuario;
@@ -65,7 +65,7 @@ public class PartidasApiController implements PartidasApi {
     @Autowired
     private PartidaDao partidaDao;
     @Autowired
-    private UsuarioDao usuarioDao;
+    private UsuarioDaoMemoria usuarioDaoMemoria;
 
     @PostConstruct
     private void postConstruct() {
@@ -145,7 +145,7 @@ public class PartidasApiController implements PartidasApi {
             return new ResponseEntity("Modo de juego incorrecto", HttpStatus.BAD_REQUEST);
         //validar que los usuarios existan
         for (var id : idsJugadores) {
-            if (usuarioDao.get(id) == null) {
+            if (usuarioDaoMemoria.get(id) == null) {
                 return new ResponseEntity("No existe el usuario solicitado", HttpStatus.BAD_REQUEST);
             }
         }
@@ -224,7 +224,7 @@ public class PartidasApiController implements PartidasApi {
                                                                  @Valid EstadoDeJuegoModel estado, @Valid String ordenarPor, @Valid Long tamanioPagina, @Valid Long pagina) {
 
         List<PartidaSinInfo> partidas;
-        Usuario usuarioRequest = usuarioDao.getByUsername(obtenerUsername());
+        Usuario usuarioRequest = usuarioDaoMemoria.getByUsername(obtenerUsername());
         if (debugMode) {
             partidas = this.partidaDao.getPartidasFiltradas(fechaInicio, fechaFin, estado);
         } else {
@@ -276,7 +276,7 @@ public class PartidasApiController implements PartidasApi {
         if (usernameRequest == null)
             return false;
 
-        Usuario usuarioRequest = usuarioDao.getByUsername(usernameRequest);
+        Usuario usuarioRequest = usuarioDaoMemoria.getByUsername(usernameRequest);
         if (usuarioRequest == null)
             return false;
         return partida.idUsuarioEnTurnoActual().equals(usuarioRequest.getId());

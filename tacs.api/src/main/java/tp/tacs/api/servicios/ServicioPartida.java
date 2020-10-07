@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tp.tacs.api.daos.MunicipioDao;
 import tp.tacs.api.daos.PartidaDao;
-import tp.tacs.api.daos.UsuarioDao;
+import tp.tacs.api.daos.UsuarioDaoMemoria;
 import tp.tacs.api.dominio.municipio.Municipio;
 import tp.tacs.api.dominio.partida.Estado;
 import tp.tacs.api.dominio.partida.ModoRapido;
@@ -31,7 +31,7 @@ public class ServicioPartida {
     @Autowired
     private ExternalApis externalApis;
     @Autowired
-    private UsuarioDao usuarioDao;
+    private UsuarioDaoMemoria usuarioDaoMemoria;
     @Autowired
     private MunicipioDao municipioDao;
     @Autowired
@@ -56,7 +56,7 @@ public class ServicioPartida {
         ganador.aumentarPartidasGanadas();
         ganador.aumentarRachaActual();
         partida.getIdsJugadoresOriginales().forEach(jugadorId -> {
-            Usuario usuario = usuarioDao.get(jugadorId);
+            Usuario usuario = usuarioDaoMemoria.get(jugadorId);
             usuario.aumentarPartidasJugadas();
             if (!usuario.getId().equals(ganador.getId()))
                 usuario.reiniciarRacha();
@@ -80,7 +80,7 @@ public class ServicioPartida {
 
     public void repartirMunicipios(Partida partida, List<Municipio> municipios) {
         var idsJugadores = partida.getIdsJugadoresActuales();
-        var usuarios = idsJugadores.stream().map(id -> usuarioDao.get(id)).collect(Collectors.toList());
+        var usuarios = idsJugadores.stream().map(id -> usuarioDaoMemoria.get(id)).collect(Collectors.toList());
 
         var i = 0;
         for (Municipio municipio : municipios) {
