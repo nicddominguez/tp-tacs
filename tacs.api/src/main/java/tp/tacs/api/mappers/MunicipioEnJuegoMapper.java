@@ -3,7 +3,6 @@ package tp.tacs.api.mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import tp.tacs.api.dominio.municipio.Municipio;
-import tp.tacs.api.http.externalApis.ExternalApis;
 import tp.tacs.api.model.MunicipioEnJuegoModel;
 
 @Component
@@ -14,8 +13,6 @@ public class MunicipioEnJuegoMapper extends AbstractMapper<Municipio, MunicipioE
     private ModoDeMunicipioMapper modoDeMunicipioMapper;
     @Autowired
     private CoordenadasMapper coordenadasMapper;
-    @Autowired
-    private ExternalApis externalApis;
 
     @Override
     protected MunicipioEnJuegoModel wrapModel(Municipio model) {

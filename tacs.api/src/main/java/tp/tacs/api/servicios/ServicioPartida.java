@@ -333,4 +333,10 @@ public class ServicioPartida {
         return partida.getJugadoresIds().contains(usuario.getId());
     }
 
+    public List<PartidaSinInfo> getPartidasFiltradasUsuario(Date fechaInicio, Date fechaFin, EstadoDeJuegoModel estado, Usuario usuario) {
+        Stream<PartidaSinInfo> partidasFiltradasStream = partidaDao.getPartidasFiltradasStream(fechaInicio, fechaFin, estado);
+        partidasFiltradasStream = partidasFiltradasStream.filter(partida -> this.perteneceALaPartida(partida, usuario));
+        return partidasFiltradasStream.collect(Collectors.toList());
+    }
+
 }

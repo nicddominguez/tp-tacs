@@ -228,7 +228,7 @@ public class PartidasApiController implements PartidasApi {
         if (debugMode) {
             partidas = this.partidaDao.getPartidasFiltradas(fechaInicio, fechaFin, estado);
         } else {
-            partidas = this.partidaDao.getPartidasFiltradasUsuario(fechaInicio, fechaFin, estado, usuarioRequest);
+            partidas = this.servicioPartida.getPartidasFiltradasUsuario(fechaInicio, fechaFin, estado, usuarioRequest);
         }
 
         var partidaModels = partidaSinInfoMapper.partidasParaListar(partidas);
