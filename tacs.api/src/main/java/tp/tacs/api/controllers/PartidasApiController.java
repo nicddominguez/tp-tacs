@@ -26,7 +26,10 @@ import tp.tacs.api.utils.Utils;
 
 import javax.annotation.PostConstruct;
 import javax.validation.Valid;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
@@ -157,6 +160,18 @@ public class PartidasApiController implements PartidasApi {
     }
 
     @Override
+    public ResponseEntity<OneOfinlineResponse200> getPartida(Long idPartida, @Valid String campos) {
+        var partida = servicioPartida.obtenerPartidaPorId(idPartida);
+        if (partida == null)
+            return new ResponseEntity("No existe la partida solicitada", HttpStatus.BAD_REQUEST);
+        if(campos != null && campos.toUpperCase().equals("LIVIANA")){
+            return ResponseEntity.ok(partidaMapper.aPartidaLivianaModel(partida));
+        }
+        return ResponseEntity.ok(partidaMapper.wrap(partida));
+    }
+
+
+    @Override
     public ResponseEntity<MoverGauchosResponse> moverGauchos(Long idPartida, @Valid MoverGauchosBody body) {
 
         if(body.getIdMunicipioDestino() == null || body.getIdMunicipioOrigen() == null)
@@ -202,14 +217,6 @@ public class PartidasApiController implements PartidasApi {
             return new ResponseEntity("No existe la partida solicitada", HttpStatus.BAD_REQUEST);
 
         return ResponseEntity.ok(servicioPartida.simularAtacarMunicipio(partida, body.getIdMunicipioAtacante(), body.getIdMunicipioObjetivo()));
-    }
-
-    @Override
-    public ResponseEntity<PartidaModel> getPartida(Long idPartida) {
-        var partida = servicioPartida.obtenerPartidaPorId(idPartida);
-        if (partida == null)
-            return new ResponseEntity("No existe la partida solicitada", HttpStatus.BAD_REQUEST);
-        return ResponseEntity.ok(partidaMapper.wrap(partida));
     }
 
     @Override

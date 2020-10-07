@@ -474,13 +474,21 @@ paths:
             type: integer
             format: int64
           required: true
+        - in: query
+          name: campos
+          example: "completa, liviana"
+          schema:
+            type: string
+          required: false
       responses:
         200:
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PartidaModel'
+                oneOf:
+                  - $ref: '#/components/schemas/PartidaModel'
+                  - $ref: '#/components/schemas/PartidaLivianaModel'
         400:
           description: Bad Request
         404:
@@ -722,6 +730,62 @@ paths:
           description: Not found
 components:
   schemas:
+
+    PartidaLivianaModel:
+      type: object
+      description: Partida Liviana
+      required:
+        - estado
+      properties:
+        id:
+          type: integer
+          format: int64
+        estado:
+          $ref: '#/components/schemas/EstadoDeJuegoModel'
+        idGanador:
+          type: string
+        idUsuarioProximoTurno:
+          type: integer
+          format: int64
+        municipiosPorJugador:
+          type: array
+          items:
+            $ref: '#/components/schemas/MunicipiosPorJugadorLivianoModel'
+
+    MunicipiosPorJugadorLivianoModel:
+      type: object
+      properties:
+        idJugador:
+          type: integer
+          format: int64
+        municipios:
+          type: array
+          items:
+            $ref: '#/components/schemas/MunicipiosLivianosModel'
+
+    MunicipiosLivianosModel :
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Id del municipio.
+        gauchos:
+          type: integer
+          format: int64
+          description: Cantidad de gauchos en el municipio
+        puntosDeDefensa:
+          type: number
+          format: float
+        produccionDeGauchos:
+          type: integer
+          format: int64
+        modo:
+          $ref: '#/components/schemas/ModoDeMunicipioModel'
+        estaBloqueado:
+          type: boolean
+          description: Si el municipio está bloqueado.
+
     PartidaModel:
       type: object
       description: Una partida
