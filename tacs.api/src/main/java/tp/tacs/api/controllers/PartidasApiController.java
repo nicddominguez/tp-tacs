@@ -100,7 +100,7 @@ public class PartidasApiController implements PartidasApi {
             return new ResponseEntity("El usuario no tiene permisos para actualizar el municipio en este turno", HttpStatus.BAD_REQUEST);
 
         var nuevaEspecializacion = modoDeMunicipioMapper.toEntity(modo);
-        this.servicioMunicipio.actualizarMunicipio(idMunicipio, nuevaEspecializacion, body.isEstaBloqueado());
+        this.servicioMunicipio.actualizarMunicipio(partida, idMunicipio, nuevaEspecializacion);
         return ResponseEntity.ok().build();
     }
 
