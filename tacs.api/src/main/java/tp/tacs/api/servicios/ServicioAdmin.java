@@ -1,5 +1,7 @@
 package tp.tacs.api.servicios;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tp.tacs.api.daos.PartidaDao;
@@ -12,7 +14,9 @@ import java.util.Date;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class ServicioAdmin {
+
     @Autowired
     private Utils utils;
     @Autowired
