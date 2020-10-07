@@ -13,7 +13,7 @@ import {
   createStyles,
   makeStyles,
   Theme,
-  withStyles
+  withStyles,
 } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -27,14 +27,10 @@ import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import {
   KeyboardDatePicker,
-  MuiPickersUtilsProvider
+  MuiPickersUtilsProvider,
 } from "@material-ui/pickers";
 import { MaterialUiPickersDate } from "@material-ui/pickers/typings/date";
-import {
-  EstadoDeJuegoModel,
-
-  PartidaSinInfoModel
-} from "api";
+import { EstadoDeJuegoModel, PartidaSinInfoModel } from "api";
 import { WololoPartidasApiClient } from "api/client";
 import "date-fns";
 import React from "react";
@@ -319,6 +315,7 @@ class Partidas extends React.Component<Props, State> {
                   size="small"
                   variant="contained"
                   className={classes.margin}
+                  onClick={this.handleRemoverOrdenar}
                 >
                   Remover
                 </Button>
