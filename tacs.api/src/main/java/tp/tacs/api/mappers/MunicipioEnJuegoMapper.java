@@ -22,7 +22,7 @@ public class MunicipioEnJuegoMapper extends AbstractMapper<Municipio, MunicipioE
         return new MunicipioEnJuegoModel()
                 .altura(model.getAltura().longValue())
                 .duenio(usuarioMapper.wrap(model.getDuenio()))
-                .estaBloqueado(model.estaBloqueado())
+                .estaBloqueado(model.isBloqueado())
                 .gauchos(model.getCantGauchos().longValue())
                 .modo(modoDeMunicipioMapper.toModel(model.getEspecializacion()))
                 .id(model.getId())

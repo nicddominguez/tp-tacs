@@ -11,6 +11,8 @@ import tp.tacs.api.model.MunicipiosLivianosModel;
 import tp.tacs.api.model.MunicipiosPorJugadorLivianoModel;
 import tp.tacs.api.model.PartidaLivianaModel;
 import tp.tacs.api.model.PartidaModel;
+import tp.tacs.api.servicios.ServicioMunicipio;
+import tp.tacs.api.servicios.ServicioPartida;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +36,10 @@ public class PartidaMapper extends AbstractMapper<Partida, PartidaModel> {
     private ModoDeMunicipioMapper modoDeMunicipioMapper;
     @Autowired
     private MunicipioDao municipioDao;
+    @Autowired
+    private ServicioPartida servicioPartida;
+    @Autowired
+    private ServicioMunicipio servicioMunicipio;
 
     @Override
     protected PartidaModel wrapModel(Partida partida) {
@@ -89,7 +95,7 @@ public class PartidaMapper extends AbstractMapper<Partida, PartidaModel> {
     public MunicipiosLivianosModel municipioLivianosModel(Municipio municipio) {
         return new MunicipiosLivianosModel()
                 .id(municipio.getId())
-                .estaBloqueado(municipio.estaBloqueado())
+                .estaBloqueado(municipio.isBloqueado())
                 .gauchos(municipio.getCantGauchos().longValue())
                 .modo(modoDeMunicipioMapper.toModel(municipio.getEspecializacion()))
                 .produccionDeGauchos(municipio.getNivelDeProduccion().longValue())
@@ -102,7 +108,7 @@ public class PartidaMapper extends AbstractMapper<Partida, PartidaModel> {
         var partidaLiviana = new PartidaLivianaModel()
                 .id(partida.getId())
                 .estado(estadoDeJuegoMapper.toModel(partida.getEstado()))
-                .idUsuarioProximoTurno(partida.idUsuarioEnTurnoActual())
+                .idUsuarioProximoTurno(servicioPartida.idUsuarioEnTurnoActual(partida))
                 .municipiosPorJugador(municipiosPorJugador);
         if (ganador != null)
             partidaLiviana.idGanador(ganador.getId().toString());

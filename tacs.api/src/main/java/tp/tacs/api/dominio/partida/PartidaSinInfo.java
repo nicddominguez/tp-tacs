@@ -29,7 +29,4 @@ public class PartidaSinInfo {
     private Float maxDist;
     private Float minDist;
 
-    public boolean perteneceALaPartida(Usuario usuario) {
-        return jugadoresIds.contains(usuario.getId());
-    }
 }

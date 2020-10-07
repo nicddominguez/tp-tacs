@@ -10,6 +10,7 @@ import tp.tacs.api.mappers.EstadoDeJuegoMapper;
 import tp.tacs.api.mappers.PartidaSinInfoPartidaMapper;
 import tp.tacs.api.model.EstadisticasDeJuegoModel;
 import tp.tacs.api.model.EstadoDeJuegoModel;
+import tp.tacs.api.servicios.ServicioPartida;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
@@ -25,6 +26,8 @@ public class PartidaDao implements Dao<Partida> {
     private EstadoDeJuegoMapper estadoDeJuegoMapper;
     @Autowired
     private PartidaSinInfoPartidaMapper partidaSinInfoPartidaMapper;
+    @Autowired
+    private ServicioPartida servicioPartida;
 
     private List<Partida> partidas;
     private Long partidaId;
@@ -129,7 +132,7 @@ public class PartidaDao implements Dao<Partida> {
 
     public List<PartidaSinInfo> getPartidasFiltradasUsuario(Date fechaInicio, Date fechaFin, EstadoDeJuegoModel estado, Usuario usuario) {
         Stream<PartidaSinInfo> partidasFiltradasStream = getPartidasFiltradasStream(fechaInicio, fechaFin, estado);
-        partidasFiltradasStream = partidasFiltradasStream.filter(partida -> partida.perteneceALaPartida(usuario));
+        partidasFiltradasStream = partidasFiltradasStream.filter(partida -> servicioPartida.perteneceALaPartida(partida, usuario));
         return partidasFiltradasStream.collect(Collectors.toList());
     }
 }

@@ -11,6 +11,7 @@ import tp.tacs.api.dominio.municipio.Municipio;
 import tp.tacs.api.dominio.partida.Estado;
 import tp.tacs.api.dominio.partida.ModoRapido;
 import tp.tacs.api.dominio.partida.Partida;
+import tp.tacs.api.dominio.partida.PartidaSinInfo;
 import tp.tacs.api.dominio.usuario.Usuario;
 import tp.tacs.api.handler.MunicipioException;
 import tp.tacs.api.handler.PartidaException;
@@ -45,7 +46,7 @@ public class ServicioPartida {
         if (!partida.getEstado().equals(Estado.EN_CURSO)) {
             throw new PartidaException("La partida no está en curso. No se pudo " + accion);
         }
-        if (!partida.idUsuarioEnTurnoActual().equals(duenio.getId())) {
+        if (!this.idUsuarioEnTurnoActual(partida).equals(duenio.getId())) {
             throw new PartidaException("No es el turno del dueño del municipio.");
         }
     }
@@ -105,7 +106,7 @@ public class ServicioPartida {
                 this.terminarPartida(request, Estado.TERMINADA);
             } else {
                 this.eliminarPerdedores(request);
-                request.asignarProximoTurno();
+                this.asignarProximoTurno(request);
                 this.desbloquearYProducirMunicipios(request);
             }
         } else {
@@ -119,13 +120,13 @@ public class ServicioPartida {
     }
 
     private boolean esDuenioDeTodo(Long userId, List<Municipio> municipios) {
-        return municipios.stream().allMatch(municipio -> municipio.esDe(userId));
+        return municipios.stream().allMatch(municipio -> servicioMunicipio.esDe(municipio, userId));
     }
 
     public void desbloquearYProducirMunicipios(Partida partida) {
         List<Municipio> municipios = municipioDao.getByIds(partida.getMunicipios());
         municipios.forEach(municipio -> {
-            municipio.desbloquear();
+            municipio.setBloqueado(false);
             servicioMunicipio.producir(municipio);
         });
     }
@@ -234,9 +235,9 @@ public class ServicioPartida {
         var municipioDestino = municipioDao.get(idMunicipioDestino);
         if (cantidad > municipioOrigen.getCantGauchos())
             throw new MunicipioException("La cantidad de gauchos a mover no puede ser menor a la que posee el municipio origen.");
-        municipioOrigen.sacarGauchos(cantidad);
-        municipioDestino.agregarGauchos(cantidad);
-        municipioDestino.bloquear();
+        servicioMunicipio.sacarGauchos(municipioOrigen, cantidad);
+        servicioMunicipio.agregarGauchos(municipioDestino, cantidad);
+        municipioDestino.setBloqueado(true);
         MunicipioEnJuegoModel municipioOrigenModel = municipioEnJuegoMapper.wrap(municipioOrigen);
         MunicipioEnJuegoModel municipioDestinoModel = municipioEnJuegoMapper.wrap(municipioDestino);
         return new MoverGauchosResponse()
@@ -275,7 +276,7 @@ public class ServicioPartida {
         this.calcularAlturas(partida);
         this.calcularDistancias(partida);
 
-        municipiosDeLaPartida.forEach(municipio -> municipio.actualizarNivelProduccion(partida));
+        municipiosDeLaPartida.forEach(municipio -> servicioMunicipio.actualizarNivelProduccion(municipio, partida));
 
         this.repartirMunicipios(partida, municipiosDeLaPartida);
         partidaDao.save(partida);
@@ -314,6 +315,22 @@ public class ServicioPartida {
             this.terminarPartida(partida, estado);
         else
             partida.setEstado(estado);
+    }
+
+    public void asignarProximoTurno(Partida partida) {
+        if (partida.getUsuarioJugandoIndiceLista() < partida.getIdsJugadoresActuales().size() - 1) {
+            partida.setUsuarioJugandoIndiceLista(partida.getUsuarioJugandoIndiceLista() + 1);
+        } else {
+            partida.setUsuarioJugandoIndiceLista(0);
+        }
+    }
+
+    public Long idUsuarioEnTurnoActual(Partida partida) {
+        return partida.getIdsJugadoresActuales().get(partida.getUsuarioJugandoIndiceLista());
+    }
+
+    public boolean perteneceALaPartida(PartidaSinInfo partida, Usuario usuario) {
+        return partida.getJugadoresIds().contains(usuario.getId());
     }
 
 }

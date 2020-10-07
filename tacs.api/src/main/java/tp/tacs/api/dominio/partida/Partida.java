@@ -30,16 +30,4 @@ public class Partida {
     private Float maxDist;
     private Float minDist;
 
-    public void asignarProximoTurno() {
-        if (this.usuarioJugandoIndiceLista < idsJugadoresActuales.size() - 1) {
-            this.usuarioJugandoIndiceLista++;
-        } else {
-            this.usuarioJugandoIndiceLista = 0;
-        }
-    }
-
-    public Long idUsuarioEnTurnoActual() {
-        return idsJugadoresActuales.get(usuarioJugandoIndiceLista);
-    }
-
 }

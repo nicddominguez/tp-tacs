@@ -20,17 +20,43 @@ public class ServicioMunicipio {
     private MunicipioDao municipioDao;
 
     public Municipio producir(Municipio municipio) {
-        municipio.agregarGauchos(municipio.getNivelDeProduccion());
+        this.agregarGauchos(municipio, municipio.getNivelDeProduccion());
         return municipio;
     }
 
     public void actualizarMunicipio(Partida partida, Long idMunicipio, Especializacion especializacion) {
         var municipio = municipioDao.get(idMunicipio);
         municipio.setEspecializacion(especializacion);
-        municipio.actualizarNivelProduccion(partida);
+        this.actualizarNivelProduccion(municipio, partida);
     }
 
     public List<ProvinciaModel> provincias() {
         return this.externalApis.getProvincias();
     }
+
+    public void agregarGauchos(Municipio municipio, Integer cantidad) {
+        municipio.setCantGauchos(municipio.getCantGauchos() + cantidad);
+    }
+
+    public void sacarGauchos(Municipio municipio, Integer cantidad) {
+        municipio.setCantGauchos(Math.max(0, municipio.getCantGauchos() - cantidad));
+    }
+
+    public boolean esDe(Municipio municipio, Long userId) {
+        return municipio.getDuenio().getId().equals(userId);
+    }
+
+    public String coordenadasParaTopo(Municipio municipio) {
+        return String.format("%s,%s", municipio.getLatitud().toString(), municipio.getLongitud().toString());
+    }
+
+    public void actualizarNivelProduccion(Municipio municipio, Partida partida) {
+        var minAltura = partida.getMinAltura();
+        var maxAltura = partida.getMaxAltura();
+        float multiplicador = 1 - (municipio.getAltura() - minAltura)
+                / (2 * (maxAltura - minAltura));
+        int cantGauchos = municipio.getEspecializacion().nivelDeProduccion(multiplicador);
+        municipio.setNivelDeProduccion(cantGauchos);
+    }
+
 }

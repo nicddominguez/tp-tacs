@@ -279,7 +279,7 @@ public class PartidasApiController implements PartidasApi {
         Usuario usuarioRequest = usuarioDao.getByUsername(usernameRequest);
         if (usuarioRequest == null)
             return false;
-        return partida.idUsuarioEnTurnoActual().equals(usuarioRequest.getId());
+        return servicioPartida.idUsuarioEnTurnoActual(partida).equals(usuarioRequest.getId());
     }
 }
 
