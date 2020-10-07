@@ -34,11 +34,12 @@ public class PartidaSinInfoMapper extends AbstractMapper<PartidaSinInfo, Partida
     }
 
     public PartidaSinInfoModel partidaBasica(PartidaSinInfo partida) {
+        var ganador = partida.getGanador();
         var jugadores = usuarioMapper.wrapList(usuarioDao.getByIds(partida.getJugadoresIds()));
         var provincia = new Provincia();
         provincia.setId(partida.getIdProvincia());
         provincia.setNombre(partida.getNombreProvincia());
-        return new PartidaSinInfoModel()
+        var partidaBasica = new PartidaSinInfoModel()
                 .jugadores(jugadores)
                 .estado(estadoDeJuegoMapper.toModel(partida.getEstado()))
                 .cantidadMunicipios((long) partida.getMunicipios().size())
@@ -46,6 +47,10 @@ public class PartidaSinInfoMapper extends AbstractMapper<PartidaSinInfo, Partida
                 .modoDeJuego(modoDeJuegoMapper.toModel(partida.getModoDeJuego()))
                 .provincia(provinciaMapper.wrapModel(provincia))
                 .id(partida.getId());
+        if (ganador != null) {
+            partidaBasica.setIdGanador(ganador.getId().toString());
+        }
+        return partidaBasica;
     }
 
     public List<PartidaSinInfoModel> partidasParaListar(List<PartidaSinInfo> partidas) {
