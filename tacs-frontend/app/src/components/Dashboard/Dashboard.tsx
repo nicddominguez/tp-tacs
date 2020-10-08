@@ -15,6 +15,7 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import MenuIcon from "@material-ui/icons/Menu";
 import clsx from "clsx";
 import Estadisticas from "components/Estadisticas/Estadisticas";
+import EstadisticasUsuarios from "components/Estadisticas/EstadisticasUsuarios";
 import PantallaDeJuego from "components/Juego/PantallaDeJuego";
 import NuevaPartidaStepper from "components/Partidas/NuevaPartidaStepper";
 import Partidas from "components/Partidas/Partidas";
@@ -246,7 +247,7 @@ export default function Dashboard(props: DashboardProps) {
           key="/app/estadisticas/usuarios"
           path="/app/estadisticas/usuarios"
           exact
-          component={() => <h2>Estadisticas de Usuarios</h2>}
+          component={() => <EstadisticasUsuarios />}
         />
         <Route
           key="/app/estadisticas/partidas"
