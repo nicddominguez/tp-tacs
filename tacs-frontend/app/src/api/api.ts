@@ -679,6 +679,12 @@ export interface ScoreboardResponse {
      * @memberof ScoreboardResponse
      */
     scoreboard?: Array<EstadisticasDeUsuarioModel>;
+    /**
+     * Cantidad total de jugadores
+     * @type {number}
+     * @memberof ScoreboardResponse
+     */
+    cantidadJugadores?: number;
 }
 /**
  *
