@@ -80,4 +80,7 @@ public class UsuarioDao implements Dao<Usuario> {
         return estadisticasDeUsuarioModels;
     }
 
+    public Long cantidadTotalUsuarios() {
+        return (long) this.usuarios.size();
+    }
 }

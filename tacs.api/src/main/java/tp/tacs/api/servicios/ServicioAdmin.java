@@ -34,4 +34,9 @@ public class ServicioAdmin {
     public List<EstadisticasDeUsuarioModel> tablaDePuntos(Long tamanioPagina, Long pagina) {
         return utils.obtenerListaPaginada(pagina, tamanioPagina, usuarioDao.scoreBoard());
     }
+
+    public Long cantidadTotaUsuarios() {
+        return usuarioDao.cantidadTotalUsuarios();
+    }
+
 }

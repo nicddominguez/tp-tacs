@@ -49,7 +49,10 @@ public class AdminApiController implements AdminApi {
     @Override
     public ResponseEntity<ScoreboardResponse> getScoreboard(@Valid Long tamanioPagina, @Valid Long pagina) {
         var listaPaginada = servicioAdmin.tablaDePuntos(tamanioPagina, pagina);
-        ScoreboardResponse scoreboardResponse = new ScoreboardResponse().scoreboard(listaPaginada);
+        Long cantidadUsuarios = servicioAdmin.cantidadTotaUsuarios();
+        ScoreboardResponse scoreboardResponse = new ScoreboardResponse()
+                .scoreboard(listaPaginada)
+                .cantidadUsuarios(cantidadUsuarios);
         return ResponseEntity.ok(scoreboardResponse);
     }
 
