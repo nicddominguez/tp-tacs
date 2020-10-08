@@ -461,6 +461,7 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
               <Typography>Modo: {municipio?.modo}</Typography>
               <Typography>Producción: {municipio?.produccionDeGauchos}</Typography>
               <Typography>Defensa: {municipio?.puntosDeDefensa}</Typography>
+              <Typography>Altura: {municipio?.altura} m.s.n.m.</Typography>
               {municipio?.estaBloqueado ? <Typography color='error'>Bloqueado</Typography> : undefined}
               <Card>
                 <CardMedia
