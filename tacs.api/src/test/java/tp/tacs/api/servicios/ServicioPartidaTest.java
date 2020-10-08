@@ -32,7 +32,6 @@ class ServicioPartidaTest {
     private ExternalApis externalApis;
     @Spy
     private UsuarioDao usuarioDao;
-    @Spy
     private MunicipioDao municipioDao;
     @Spy
     private PartidaDao partidaDao;
@@ -43,6 +42,7 @@ class ServicioPartidaTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
+        municipioDao = MunicipioDao.builder().build();
         usuario = Usuario.builder().id(0L).rachaActual(0L).partidasJugadas(0L).partidasGanadas(0L).isAdmin(false).googleId("").nombre("nombre0").mail("mail0").build();
         usuario1 = Usuario.builder().id(1L).rachaActual(1L).partidasJugadas(1L).partidasGanadas(1L).isAdmin(false).googleId("").nombre("nombre1").mail("mail1").build();
         municipio = Municipio.builder().id(0L).nombre("nombre0").externalApiId("0").duenio(usuario).nivelDeProduccion(1).latitud(1d).longitud(1d).altura(1f).urlImagen("urlImageb").build();
