@@ -65,7 +65,7 @@ class Scoreboard extends React.Component<Props, State> {
       .then((scoreboardResponse) => {
         this.setState({
           scoreboard: scoreboardResponse.scoreboard,
-          cantidadTotalDeEstadisticas: 10, //TODO: sacar el 10 y usar el dato de la response cuando este disponible
+          cantidadTotalDeEstadisticas: scoreboardResponse.cantidadJugadores || 0,
         });
       });
   }
