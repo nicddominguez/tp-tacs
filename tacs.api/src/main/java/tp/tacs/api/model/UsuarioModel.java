@@ -1,13 +1,12 @@
 package tp.tacs.api.model;
 
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.validation.annotation.Validated;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+
+import javax.validation.constraints.NotNull;
+import java.util.Objects;
 
 /**
  * Un usuario.
@@ -19,6 +18,9 @@ import javax.validation.constraints.*;
 public class UsuarioModel   {
   @JsonProperty("id")
   private Long id = null;
+
+  @JsonProperty("esAdmin")
+  private Boolean esAdmin = null;
 
   @JsonProperty("nombreDeUsuario")
   private String nombreDeUsuario = null;
@@ -43,6 +45,25 @@ public class UsuarioModel   {
     this.id = id;
   }
 
+  public UsuarioModel esAdmin(Boolean esAdmin) {
+    this.esAdmin = esAdmin;
+    return this;
+  }
+
+  /**
+   * Get esAdmin
+   * @return esAdmin
+  **/
+  @ApiModelProperty(value = "")
+  
+    public Boolean isEsAdmin() {
+    return esAdmin;
+  }
+
+  public void setEsAdmin(Boolean esAdmin) {
+    this.esAdmin = esAdmin;
+  }
+
   public UsuarioModel nombreDeUsuario(String nombreDeUsuario) {
     this.nombreDeUsuario = nombreDeUsuario;
     return this;
@@ -65,7 +86,7 @@ public class UsuarioModel   {
 
 
   @Override
-  public boolean equals(java.lang.Object o) {
+  public boolean equals(Object o) {
     if (this == o) {
       return true;
     }
@@ -74,12 +95,13 @@ public class UsuarioModel   {
     }
     UsuarioModel usuarioModel = (UsuarioModel) o;
     return Objects.equals(this.id, usuarioModel.id) &&
+        Objects.equals(this.esAdmin, usuarioModel.esAdmin) &&
         Objects.equals(this.nombreDeUsuario, usuarioModel.nombreDeUsuario);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, nombreDeUsuario);
+    return Objects.hash(id, esAdmin, nombreDeUsuario);
   }
 
   @Override
@@ -88,6 +110,7 @@ public class UsuarioModel   {
     sb.append("class UsuarioModel {\n");
     
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("    esAdmin: ").append(toIndentedString(esAdmin)).append("\n");
     sb.append("    nombreDeUsuario: ").append(toIndentedString(nombreDeUsuario)).append("\n");
     sb.append("}");
     return sb.toString();
@@ -97,7 +120,7 @@ public class UsuarioModel   {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(java.lang.Object o) {
+  private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }

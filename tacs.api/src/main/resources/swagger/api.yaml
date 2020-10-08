@@ -868,6 +868,8 @@ components:
         id:
           type: integer
           format: int64
+        esAdmin:
+          type: boolean
         nombreDeUsuario:
           type: string
     ProvinciaModel:
