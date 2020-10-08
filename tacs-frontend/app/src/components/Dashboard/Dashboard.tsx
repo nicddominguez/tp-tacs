@@ -17,6 +17,7 @@ import clsx from "clsx";
 import Estadisticas from "components/Estadisticas/Estadisticas";
 import EstadisticasPartidas from "components/Estadisticas/EstadisticasPartidas";
 import EstadisticasUsuarios from "components/Estadisticas/EstadisticasUsuarios";
+import Scoreboard from "components/Estadisticas/Scoreboard";
 import PantallaDeJuego from "components/Juego/PantallaDeJuego";
 import NuevaPartidaStepper from "components/Partidas/NuevaPartidaStepper";
 import Partidas from "components/Partidas/Partidas";
@@ -260,7 +261,7 @@ export default function Dashboard(props: DashboardProps) {
           key="/app/estadisticas/scoreboard"
           path="/app/estadisticas/scoreboard"
           exact
-          component={() => <h2>Scoreboard</h2>}
+          component={() => <Scoreboard />}
         />
       </main>
     </div>
