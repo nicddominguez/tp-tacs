@@ -2,6 +2,7 @@ package tp.tacs.api.servicios;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tp.tacs.api.daos.MunicipioDao;
@@ -25,6 +26,7 @@ import java.util.stream.DoubleStream;
 import java.util.stream.Stream;
 
 @Service
+@AllArgsConstructor
 public class ServicioPartida {
     @Autowired
     private ExternalApis externalApis;
