@@ -1,10 +1,12 @@
 package tp.tacs.api.dominio.municipio;
 
+import tp.tacs.api.dominio.partida.ModoDeJuego;
+
 public class Produccion implements Especializacion {
 
     @Override
-    public Float multDefensa() {
-        return 1f;
+    public Float multDefensa(ModoDeJuego modoDeJuego) {
+        return modoDeJuego.getMultDefEnProduccion();
     }
 
     @Override

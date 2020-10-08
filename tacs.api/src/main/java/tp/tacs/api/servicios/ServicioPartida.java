@@ -8,10 +8,7 @@ import tp.tacs.api.daos.MunicipioDao;
 import tp.tacs.api.daos.PartidaDao;
 import tp.tacs.api.daos.UsuarioDao;
 import tp.tacs.api.dominio.municipio.Municipio;
-import tp.tacs.api.dominio.partida.Estado;
-import tp.tacs.api.dominio.partida.ModoRapido;
-import tp.tacs.api.dominio.partida.Partida;
-import tp.tacs.api.dominio.partida.PartidaSinInfo;
+import tp.tacs.api.dominio.partida.*;
 import tp.tacs.api.dominio.usuario.Usuario;
 import tp.tacs.api.handler.MunicipioException;
 import tp.tacs.api.handler.PartidaException;
@@ -153,7 +150,7 @@ public class ServicioPartida {
 
     public Integer gauchosDefensoresFinales(Partida partida, Municipio municipioAtacante, Municipio municipioAtacado) {
         Float multAltura = this.multAltura(partida, municipioAtacado);
-        Float multDefensa = municipioAtacado.getEspecializacion().multDefensa();
+        Float multDefensa = municipioAtacado.getEspecializacion().multDefensa(partida.getModoDeJuego());
         Float multDist = this.multDistancia(partida, municipioAtacante, municipioAtacado);
         Integer cantGauchosAtacado = municipioAtacado.getCantGauchos();
         Integer cantGauchosAtacante = municipioAtacante.getCantGauchos();
@@ -165,7 +162,7 @@ public class ServicioPartida {
     public Integer gauchosAtacantesFinales(Partida partida, Municipio municipioAtacante, Municipio municipioAtacado) {
         var multDist = this.multDistancia(partida, municipioAtacante, municipioAtacado);
         var multAltura = this.calcularMultAlturaMunicipio(partida, municipioAtacante);
-        var multDefensa = municipioAtacado.getEspecializacion().multDefensa();
+        var multDefensa = municipioAtacado.getEspecializacion().multDefensa(partida.getModoDeJuego());
         int gauchosAtacantesFinales = (int) Math
                 .floor(municipioAtacante.getCantGauchos() * multDist - municipioAtacado.getCantGauchos() * multAltura * multDefensa);
         return Math.max(gauchosAtacantesFinales, 0);
@@ -230,7 +227,7 @@ public class ServicioPartida {
         return partidaDao.get(request);
     }
 
-    public MoverGauchosResponse moverGauchos(Long idMunicipioOrigen, Long idMunicipioDestino, Integer cantidad) {
+    public MoverGauchosResponse moverGauchos(Long idMunicipioOrigen, Long idMunicipioDestino, Integer cantidad, ModoDeJuego modoDeJuego) {
         var municipioOrigen = municipioDao.get(idMunicipioOrigen);
         var municipioDestino = municipioDao.get(idMunicipioDestino);
         if (cantidad > municipioOrigen.getCantGauchos())
@@ -238,8 +235,8 @@ public class ServicioPartida {
         servicioMunicipio.sacarGauchos(municipioOrigen, cantidad);
         servicioMunicipio.agregarGauchos(municipioDestino, cantidad);
         municipioDestino.setBloqueado(true);
-        MunicipioEnJuegoModel municipioOrigenModel = municipioEnJuegoMapper.wrap(municipioOrigen);
-        MunicipioEnJuegoModel municipioDestinoModel = municipioEnJuegoMapper.wrap(municipioDestino);
+        MunicipioEnJuegoModel municipioOrigenModel = municipioEnJuegoMapper.toModel(municipioOrigen, modoDeJuego);
+        MunicipioEnJuegoModel municipioDestinoModel = municipioEnJuegoMapper.toModel(municipioDestino, modoDeJuego);
         return new MoverGauchosResponse()
                 .municipioOrigen(municipioOrigenModel)
                 .municipioDestino(municipioDestinoModel);
@@ -298,7 +295,7 @@ public class ServicioPartida {
 
         if (gauchosDefensoresFinal <= 0) {
             municipioAtacado.setDuenio(municipioAtacante.getDuenio());
-            this.moverGauchos(idMunicipioAtacante, idMunicipioAtacado, gauchosAtacantesFinal);
+            this.moverGauchos(idMunicipioAtacante, idMunicipioAtacado, gauchosAtacantesFinal, partida.getModoDeJuego());
         }
 
         if (this.hayGanador(partida)) {
@@ -306,8 +303,8 @@ public class ServicioPartida {
         }
 
         return new AtacarMunicipioResponse()
-                .municipioAtacado(municipioEnJuegoMapper.wrap(municipioAtacado))
-                .municipioAtacante(municipioEnJuegoMapper.wrap(municipioAtacante));
+                .municipioAtacado(municipioEnJuegoMapper.toModel(municipioAtacado, partida.getModoDeJuego()))
+                .municipioAtacante(municipioEnJuegoMapper.toModel(municipioAtacante, partida.getModoDeJuego()));
     }
 
     public void actualizarEstadoPartida(Partida partida, Estado estado) {

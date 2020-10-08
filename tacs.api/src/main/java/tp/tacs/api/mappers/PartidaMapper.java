@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import tp.tacs.api.daos.MunicipioDao;
 import tp.tacs.api.daos.UsuarioDao;
 import tp.tacs.api.dominio.municipio.Municipio;
+import tp.tacs.api.dominio.partida.ModoDeJuego;
 import tp.tacs.api.dominio.partida.Partida;
 import tp.tacs.api.http.externalApis.models.Provincia;
 import tp.tacs.api.model.MunicipiosLivianosModel;
@@ -82,24 +83,26 @@ public class PartidaMapper extends AbstractMapper<Partida, PartidaModel> {
                 .groupingBy(municipio -> municipio.getDuenio().getId()));
         List<MunicipiosPorJugadorLivianoModel> municipiosPorJugadorLiviano = new ArrayList<>();
         municipiosPorJugador.forEach((idJugador, municipios) -> municipiosPorJugadorLiviano
-                .add(this.municipiosPorJugadorLivianoModel(idJugador, municipios)));
+                .add(this.municipiosPorJugadorLivianoModel(idJugador, municipios, partida.getModoDeJuego())));
         return municipiosPorJugadorLiviano;
     }
 
-    public MunicipiosPorJugadorLivianoModel municipiosPorJugadorLivianoModel(Long idJugador, List<Municipio> municipios) {
-        var municipiosLivianos = municipios.stream().map(this::municipioLivianosModel).collect(Collectors.toList());
+    public MunicipiosPorJugadorLivianoModel municipiosPorJugadorLivianoModel(Long idJugador, List<Municipio> municipios, ModoDeJuego modoDeJuego) {
+        var municipiosLivianos = municipios.stream()
+                .map(muni -> municipioLivianosModel(muni, modoDeJuego))
+                .collect(Collectors.toList());
         return new MunicipiosPorJugadorLivianoModel().idJugador(idJugador).municipios(municipiosLivianos);
     }
 
 
-    public MunicipiosLivianosModel municipioLivianosModel(Municipio municipio) {
+    public MunicipiosLivianosModel municipioLivianosModel(Municipio municipio, ModoDeJuego modoDeJuego) {
         return new MunicipiosLivianosModel()
                 .id(municipio.getId())
                 .estaBloqueado(municipio.isBloqueado())
                 .gauchos(municipio.getCantGauchos().longValue())
                 .modo(modoDeMunicipioMapper.toModel(municipio.getEspecializacion()))
                 .produccionDeGauchos(municipio.getNivelDeProduccion().longValue())
-                .puntosDeDefensa(municipio.getEspecializacion().multDefensa());
+                .puntosDeDefensa(municipio.getEspecializacion().multDefensa(modoDeJuego));
     }
 
     public PartidaLivianaModel aPartidaLivianaModel(Partida partida) {

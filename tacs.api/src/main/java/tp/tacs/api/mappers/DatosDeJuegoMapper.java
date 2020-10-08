@@ -16,10 +16,10 @@ public class DatosDeJuegoMapper extends AbstractMapper<Partida,DatosDeJuegoModel
     @Autowired
     private ServicioPartida servicioPartida;
 
-    @Override protected DatosDeJuegoModel wrapModel(Partida model) {
+    @Override protected DatosDeJuegoModel wrapModel(Partida partida) {
         return new DatosDeJuegoModel()
-                .municipios(municipioEnJuegoMapper.wrapList(municipioDao.getByIds(model.getMunicipios())))
-                .idUsuarioProximoTurno(servicioPartida.idUsuarioEnTurnoActual(model));
+                .municipios(municipioEnJuegoMapper.toModelList(municipioDao.getByIds(partida.getMunicipios()), partida.getModoDeJuego()))
+                .idUsuarioProximoTurno(servicioPartida.idUsuarioEnTurnoActual(partida));
     }
 
     @Override protected Partida unwrapModel(DatosDeJuegoModel model) {

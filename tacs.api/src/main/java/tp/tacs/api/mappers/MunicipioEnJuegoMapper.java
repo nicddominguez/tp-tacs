@@ -3,10 +3,16 @@ package tp.tacs.api.mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import tp.tacs.api.dominio.municipio.Municipio;
+import tp.tacs.api.dominio.partida.ModoDeJuego;
 import tp.tacs.api.model.MunicipioEnJuegoModel;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 @Component
-public class MunicipioEnJuegoMapper extends AbstractMapper<Municipio, MunicipioEnJuegoModel> {
+public class MunicipioEnJuegoMapper {
     @Autowired
     private UsuarioMapper usuarioMapper;
     @Autowired
@@ -14,24 +20,26 @@ public class MunicipioEnJuegoMapper extends AbstractMapper<Municipio, MunicipioE
     @Autowired
     private CoordenadasMapper coordenadasMapper;
 
-    @Override
-    protected MunicipioEnJuegoModel wrapModel(Municipio model) {
+    public MunicipioEnJuegoModel toModel(Municipio municipio, ModoDeJuego modoDeJuego) {
         return new MunicipioEnJuegoModel()
-                .altura(model.getAltura().longValue())
-                .duenio(usuarioMapper.wrap(model.getDuenio()))
-                .estaBloqueado(model.isBloqueado())
-                .gauchos(model.getCantGauchos().longValue())
-                .modo(modoDeMunicipioMapper.toModel(model.getEspecializacion()))
-                .id(model.getId())
-                .nombre(model.getNombre())
-                .produccionDeGauchos(model.getNivelDeProduccion().longValue())
-                .puntosDeDefensa(model.getEspecializacion().multDefensa().floatValue())
-                .ubicacion(coordenadasMapper.toModel(model.getLatitud(), model.getLongitud()))
-                .urlImagen(model.getUrlImagen());
+                .altura(municipio.getAltura().longValue())
+                .duenio(usuarioMapper.wrap(municipio.getDuenio()))
+                .estaBloqueado(municipio.isBloqueado())
+                .gauchos(municipio.getCantGauchos().longValue())
+                .modo(modoDeMunicipioMapper.toModel(municipio.getEspecializacion()))
+                .id(municipio.getId())
+                .nombre(municipio.getNombre())
+                .produccionDeGauchos(municipio.getNivelDeProduccion().longValue())
+                .puntosDeDefensa(municipio.getEspecializacion().multDefensa(modoDeJuego))
+                .ubicacion(coordenadasMapper.toModel(municipio.getLatitud(), municipio.getLongitud()))
+                .urlImagen(municipio.getUrlImagen());
     }
 
-    @Override
-    protected Municipio unwrapModel(MunicipioEnJuegoModel model) {
-        return null;
+    public List<MunicipioEnJuegoModel> toModelList(List<Municipio> municipios, ModoDeJuego modoDeJuego) {
+        return Optional.ofNullable(municipios)
+                .orElse(Collections.emptyList())
+                .stream()
+                .map(municipio -> this.toModel(municipio, modoDeJuego))
+                .collect(Collectors.toList());
     }
 }
