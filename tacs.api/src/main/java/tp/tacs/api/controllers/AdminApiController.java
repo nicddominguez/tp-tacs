@@ -36,7 +36,7 @@ public class AdminApiController implements AdminApi {
     }
 
     @Override
-    public ResponseEntity<EstadisticasDeUsuarioModel> getEstadisticasDeUsuario(Long idUsuario) {
+    public ResponseEntity<EstadisticasDeUsuarioModel> getEstadisticasDeUsuario(String idUsuario) {
         // todo validaciones de inputs
         return ResponseEntity.ok(servicioAdmin.estadisticasDeUsuario(idUsuario));
     }
@@ -62,7 +62,7 @@ public class AdminApiController implements AdminApi {
         }
     }
 
-    @Override public ResponseEntity<String> obtenerJwtUsuario(Long idUsuario) {
+    @Override public ResponseEntity<String> obtenerJwtUsuario(String idUsuario) {
         String jwtUsuario = servicioUsuario.generarJwtParaUsuarioPorId(idUsuario);
         return ResponseEntity.ok(jwtUsuario);
     }

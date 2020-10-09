@@ -13,18 +13,17 @@ import java.util.Objects;
  * MunicipiosPorJugadorLivianoModel
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-10-06T22:54:33.699Z[GMT]")
 
 
 public class MunicipiosPorJugadorLivianoModel   {
   @JsonProperty("idJugador")
-  private Long idJugador = null;
+  private String idJugador = null;
 
   @JsonProperty("municipios")
   @Valid
   private List<MunicipiosLivianosModel> municipios = null;
 
-  public MunicipiosPorJugadorLivianoModel idJugador(Long idJugador) {
+  public MunicipiosPorJugadorLivianoModel idJugador(String idJugador) {
     this.idJugador = idJugador;
     return this;
   }
@@ -35,11 +34,11 @@ public class MunicipiosPorJugadorLivianoModel   {
   **/
   @ApiModelProperty(value = "")
   
-    public Long getIdJugador() {
+    public String getIdJugador() {
     return idJugador;
   }
 
-  public void setIdJugador(Long idJugador) {
+  public void setIdJugador(String idJugador) {
     this.idJugador = idJugador;
   }
 

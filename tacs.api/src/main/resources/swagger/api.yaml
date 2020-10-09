@@ -190,8 +190,7 @@ paths:
           name: idUsuario
           description: Id del usuario
           schema:
-            type: integer
-            format: int64
+            type: string
           required: true
       responses:
         200:
@@ -439,8 +438,7 @@ paths:
                   description: Jugadores
                   type: array
                   items:
-                    type: integer
-                    format: int64
+                    type: string
                 modoDeJuego:
                   $ref: '#/components/schemas/ModoDeJuegoModel'
       responses:
@@ -541,12 +539,10 @@ paths:
               title: moverGauchosBody
               properties:
                 idMunicipioOrigen:
-                  type: integer
-                  format: int64
+                  type: string
                   description: Id del municipio de origen
                 idMunicipioDestino:
-                  type: integer
-                  format: int64
+                  type: string
                   description: Id del municipio de destino
                 cantidad:
                   type: integer
@@ -586,8 +582,7 @@ paths:
         - in: path
           name: idMunicipio
           schema:
-            type: integer
-            format: int64
+            type: string
           required: true
       requestBody:
         content:
@@ -629,12 +624,10 @@ paths:
               title: atacarMunicipioBody
               properties:
                 idMunicipioAtacante:
-                  type: integer
-                  format: int64
+                  type: string
                   description: Id del municipio que ataca
                 idMunicipioObjetivo:
-                  type: integer
-                  format: int64
+                  type: string
                   description: Id del municipio atacado
       responses:
         200:
@@ -696,12 +689,10 @@ paths:
               title: simularAtacarMunicipioBody
               properties:
                 idMunicipioAtacante:
-                  type: integer
-                  format: int64
+                  type: string
                   description: Id del municipio que ataca
                 idMunicipioObjetivo:
-                  type: integer
-                  format: int64
+                  type: string
                   description: Id del municipio atacado
       responses:
         200:
@@ -735,8 +726,7 @@ components:
         idGanador:
           type: string
         idUsuarioProximoTurno:
-          type: integer
-          format: int64
+          type: string
         municipiosPorJugador:
           type: array
           items:
@@ -746,8 +736,7 @@ components:
       type: object
       properties:
         idJugador:
-          type: integer
-          format: int64
+          type: string
         municipios:
           type: array
           items:
@@ -757,8 +746,7 @@ components:
       type: object
       properties:
         id:
-          type: integer
-          format: int64
+          type: string
           description: Id del municipio.
         gauchos:
           type: integer
@@ -822,8 +810,7 @@ components:
         - provincia
       properties:
         idUsuarioProximoTurno:
-          type: integer
-          format: int64
+          type: string
         municipios:
           type: array
           description: Municipios en juego que contiene la provincia.
@@ -851,8 +838,7 @@ components:
         - nombreDeUsuario
       properties:
         id:
-          type: integer
-          format: int64
+          type: string
         nombreDeUsuario:
           type: string
     ProvinciaModel:
@@ -878,8 +864,7 @@ components:
       description: Municipio en juego.
       properties:
         id:
-          type: integer
-          format: int64
+          type: string
           description: Id del municipio.
         nombre:
           type: string

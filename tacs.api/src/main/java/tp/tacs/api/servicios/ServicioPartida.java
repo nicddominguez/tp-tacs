@@ -4,9 +4,9 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import tp.tacs.api.daos.MunicipioDaoMemoria;
+import tp.tacs.api.daos.MunicipioDaoMongo;
 import tp.tacs.api.daos.PartidaDaoMongo;
-import tp.tacs.api.daos.UsuarioDaoMemoria;
+import tp.tacs.api.daos.UsuarioDaoMongo;
 import tp.tacs.api.dominio.municipio.Municipio;
 import tp.tacs.api.dominio.partida.Estado;
 import tp.tacs.api.dominio.partida.ModoRapido;
@@ -31,9 +31,9 @@ public class ServicioPartida {
     @Autowired
     private ExternalApis externalApis;
     @Autowired
-    private UsuarioDaoMemoria usuarioDaoMemoria;
+    private UsuarioDaoMongo usuarioDao;
     @Autowired
-    private MunicipioDaoMemoria municipioDao;
+    private MunicipioDaoMongo municipioDao;
     @Autowired
     private PartidaDaoMongo partidaDao;
     @Autowired
@@ -56,12 +56,14 @@ public class ServicioPartida {
         ganador.aumentarPartidasGanadas();
         ganador.aumentarRachaActual();
         partida.getIdsJugadoresOriginales().forEach(jugadorId -> {
-            Usuario usuario = usuarioDaoMemoria.get(jugadorId);
+            Usuario usuario = usuarioDao.get(jugadorId);
             usuario.aumentarPartidasJugadas();
             if (!usuario.getId().equals(ganador.getId()))
                 usuario.reiniciarRacha();
+            usuarioDao.save(usuario);
         });
         partida.setGanador(ganador);
+        partidaDao.save(partida);
     }
 
     public Usuario usuarioConMasMunicipios(Partida partida) {
@@ -80,11 +82,12 @@ public class ServicioPartida {
 
     public void repartirMunicipios(Partida partida, List<Municipio> municipios) {
         var idsJugadores = partida.getIdsJugadoresActuales();
-        var usuarios = idsJugadores.stream().map(id -> usuarioDaoMemoria.get(id)).collect(Collectors.toList());
+        var usuarios = idsJugadores.stream().map(id -> usuarioDao.get(id)).collect(Collectors.toList());
 
         var i = 0;
         for (Municipio municipio : municipios) {
             municipio.setDuenio(usuarios.get(i % usuarios.size()));
+            municipioDao.save(municipio);
             i++;
         }
 
@@ -106,6 +109,7 @@ public class ServicioPartida {
             } else {
                 this.eliminarPerdedores(request);
                 request.asignarProximoTurno();
+                partidaDao.save(request);
                 this.desbloquearYProducirMunicipios(request);
             }
         } else {
@@ -118,7 +122,7 @@ public class ServicioPartida {
         return request.getIdsJugadoresActuales().stream().anyMatch(juagadorId -> esDuenioDeTodo(juagadorId, municipios));
     }
 
-    private boolean esDuenioDeTodo(Long userId, List<Municipio> municipios) {
+    private boolean esDuenioDeTodo(String userId, List<Municipio> municipios) {
         return municipios.stream().allMatch(municipio -> municipio.esDe(userId));
     }
 
@@ -184,6 +188,7 @@ public class ServicioPartida {
         HashSet<Float> distancias = distanciasTotales(partida);
         partida.setMaxDist(distancias.stream().max(Float::compareTo).get());
         partida.setMinDist(distancias.stream().min(Float::compareTo).get());
+        partidaDao.save(partida);
     }
 
     private HashSet<Float> distanciasTotales(Partida partida) {
@@ -216,9 +221,10 @@ public class ServicioPartida {
         DoubleStream doubleStreamMin = alturas.get().mapToDouble(Float::doubleValue);
         partida.setMaxAltura((float) doubleStreamMax.max().getAsDouble());
         partida.setMinAltura((float) doubleStreamMin.min().getAsDouble());
+        partidaDao.save(partida);
     }
 
-    public SimularAtacarMunicipioResponse simularAtacarMunicipio(Partida partida, Long idMunicipioAtacante, Long idMunicipioAtacado) {
+    public SimularAtacarMunicipioResponse simularAtacarMunicipio(Partida partida, String idMunicipioAtacante, String idMunicipioAtacado) {
         var municipioAtacante = municipioDao.get(idMunicipioAtacante);
         var municipioAtacado = municipioDao.get(idMunicipioAtacado);
         Integer gauchosFinales = this.gauchosDefensoresFinales(partida, municipioAtacante, municipioAtacado);
@@ -229,7 +235,7 @@ public class ServicioPartida {
         return partidaDao.get(request);
     }
 
-    public MoverGauchosResponse moverGauchos(Long idMunicipioOrigen, Long idMunicipioDestino, Integer cantidad) {
+    public MoverGauchosResponse moverGauchos(String idMunicipioOrigen, String idMunicipioDestino, Integer cantidad) {
         var municipioOrigen = municipioDao.get(idMunicipioOrigen);
         var municipioDestino = municipioDao.get(idMunicipioDestino);
         if (cantidad > municipioOrigen.getCantGauchos())
@@ -237,6 +243,8 @@ public class ServicioPartida {
         municipioOrigen.sacarGauchos(cantidad);
         municipioDestino.agregarGauchos(cantidad);
         municipioDestino.bloquear();
+        municipioDao.save(municipioOrigen);
+        municipioDao.save(municipioDestino);
         MunicipioEnJuegoModel municipioOrigenModel = municipioEnJuegoMapper.wrap(municipioOrigen);
         MunicipioEnJuegoModel municipioDestinoModel = municipioEnJuegoMapper.wrap(municipioDestino);
         return new MoverGauchosResponse()
@@ -278,11 +286,11 @@ public class ServicioPartida {
         municipiosDeLaPartida.forEach(municipio -> municipio.actualizarNivelProduccion(partida));
 
         this.repartirMunicipios(partida, municipiosDeLaPartida);
-        partidaDao.save(partida);
+        municipiosDeLaPartida.forEach(municipio -> municipioDao.save(municipio));
         return partida;
     }
 
-    public AtacarMunicipioResponse atacar(Partida partida, Long idMunicipioAtacante, Long idMunicipioAtacado) {
+    public AtacarMunicipioResponse atacar(Partida partida, String idMunicipioAtacante, String idMunicipioAtacado) {
 
         var municipioAtacante = municipioDao.get(idMunicipioAtacante);
         var municipioAtacado = municipioDao.get(idMunicipioAtacado);
@@ -299,7 +307,8 @@ public class ServicioPartida {
             municipioAtacado.setDuenio(municipioAtacante.getDuenio());
             this.moverGauchos(idMunicipioAtacante, idMunicipioAtacado, gauchosAtacantesFinal);
         }
-
+        municipioDao.save(municipioAtacado);
+        municipioDao.save(municipioAtacante);
         if (this.hayGanador(partida)) {
             this.terminarPartida(partida, Estado.TERMINADA);
         }
@@ -312,8 +321,10 @@ public class ServicioPartida {
     public void actualizarEstadoPartida(Partida partida, Estado estado) {
         if(estado != Estado.EN_CURSO)
             this.terminarPartida(partida, estado);
-        else
+        else {
             partida.setEstado(estado);
+            partidaDao.save(partida);
+        }
     }
 
 }

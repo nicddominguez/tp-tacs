@@ -23,7 +23,7 @@ public class MunicipioDaoMongo implements MunicipioDao {
     }
 
     @Override
-    public Municipio get(Long id) {
+    public Municipio get(String id) {
         return this.mongoOps.findById(id, Municipio.class);
     }
 
@@ -44,7 +44,7 @@ public class MunicipioDaoMongo implements MunicipioDao {
 
 
     @Override
-    public List<Municipio> getByIds(List<Long> idsMunicipios) {
+    public List<Municipio> getByIds(List<String> idsMunicipios) {
         return this.mongoOps.find(
                 new Query(where("_id").in(idsMunicipios)),
                 Municipio.class

@@ -5,9 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import tp.tacs.api.model.CoordenadasModel;
-import tp.tacs.api.model.ModoDeMunicipioModel;
-import tp.tacs.api.model.UsuarioModel;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
@@ -21,7 +18,7 @@ import javax.validation.constraints.*;
 
 public class MunicipioEnJuegoModel   {
   @JsonProperty("id")
-  private Long id = null;
+  private String id = null;
 
   @JsonProperty("nombre")
   private String nombre = null;
@@ -53,7 +50,7 @@ public class MunicipioEnJuegoModel   {
   @JsonProperty("urlImagen")
   private String urlImagen = null;
 
-  public MunicipioEnJuegoModel id(Long id) {
+  public MunicipioEnJuegoModel id(String id) {
     this.id = id;
     return this;
   }
@@ -64,11 +61,11 @@ public class MunicipioEnJuegoModel   {
   **/
   @ApiModelProperty(value = "Id del municipio.")
   
-    public Long getId() {
+    public String getId() {
     return id;
   }
 
-  public void setId(Long id) {
+  public void setId(String id) {
     this.id = id;
   }
 
@@ -267,7 +264,7 @@ public class MunicipioEnJuegoModel   {
 
 
   @Override
-  public boolean equals(java.lang.Object o) {
+  public boolean equals(Object o) {
     if (this == o) {
       return true;
     }
@@ -317,7 +314,7 @@ public class MunicipioEnJuegoModel   {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(java.lang.Object o) {
+  private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }

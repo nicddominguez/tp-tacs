@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RestController;
 import tp.tacs.api.daos.PartidaDaoMongo;
-import tp.tacs.api.daos.UsuarioDaoMemoria;
+import tp.tacs.api.daos.UsuarioDaoMongo;
 import tp.tacs.api.dominio.partida.Partida;
 import tp.tacs.api.dominio.partida.PartidaSinInfo;
 import tp.tacs.api.dominio.usuario.Usuario;
@@ -65,7 +65,7 @@ public class PartidasApiController implements PartidasApi {
     @Autowired
     private PartidaDaoMongo partidaDao;
     @Autowired
-    private UsuarioDaoMemoria usuarioDaoMemoria;
+    private UsuarioDaoMongo usuarioDao;
 
     @PostConstruct
     private void postConstruct() {
@@ -89,7 +89,7 @@ public class PartidasApiController implements PartidasApi {
     }
 
     @Override
-    public ResponseEntity<Void> actualizarMunicipio(String idPartida, Long idMunicipio, @Valid ActualizarMunicipio body) {
+    public ResponseEntity<Void> actualizarMunicipio(String idPartida, String idMunicipio, @Valid ActualizarMunicipio body) {
         var modo = body.getModo();
         if(modo == null)
             return new ResponseEntity("No se especificó el nuevo modo del municipio", HttpStatus.BAD_REQUEST);
@@ -145,7 +145,7 @@ public class PartidasApiController implements PartidasApi {
             return new ResponseEntity("Modo de juego incorrecto", HttpStatus.BAD_REQUEST);
         //validar que los usuarios existan
         for (var id : idsJugadores) {
-            if (usuarioDaoMemoria.get(id) == null) {
+            if (usuarioDao.get(id) == null) {
                 return new ResponseEntity("No existe el usuario solicitado", HttpStatus.BAD_REQUEST);
             }
         }
@@ -224,7 +224,7 @@ public class PartidasApiController implements PartidasApi {
                                                                  @Valid EstadoDeJuegoModel estado, @Valid String ordenarPor, @Valid Long tamanioPagina, @Valid Long pagina) {
 
         List<PartidaSinInfo> partidas;
-        Usuario usuarioRequest = usuarioDaoMemoria.getByUsername(obtenerUsername());
+        Usuario usuarioRequest = usuarioDao.getByUsername(obtenerUsername());
         if (debugMode) {
             partidas = this.partidaDao.getPartidasFiltradas(fechaInicio, fechaFin, estado);
         } else {
@@ -276,7 +276,7 @@ public class PartidasApiController implements PartidasApi {
         if (usernameRequest == null)
             return false;
 
-        Usuario usuarioRequest = usuarioDaoMemoria.getByUsername(usernameRequest);
+        Usuario usuarioRequest = usuarioDao.getByUsername(usernameRequest);
         if (usuarioRequest == null)
             return false;
         return partida.idUsuarioEnTurnoActual().equals(usuarioRequest.getId());

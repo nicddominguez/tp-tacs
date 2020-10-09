@@ -1,16 +1,14 @@
 package tp.tacs.api.model;
 
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.springframework.validation.annotation.Validated;
+
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
-import tp.tacs.api.model.MunicipioEnJuegoModel;
-import org.springframework.validation.annotation.Validated;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+import java.util.Objects;
 
 /**
  * Datos de una partida. Incluye su provincia en juego y el usuario que tiene el proximo turno.
@@ -21,13 +19,13 @@ import javax.validation.constraints.*;
 
 public class DatosDeJuegoModel   {
   @JsonProperty("idUsuarioProximoTurno")
-  private Long idUsuarioProximoTurno = null;
+  private String idUsuarioProximoTurno = null;
 
   @JsonProperty("municipios")
   @Valid
   private List<MunicipioEnJuegoModel> municipios = null;
 
-  public DatosDeJuegoModel idUsuarioProximoTurno(Long idUsuarioProximoTurno) {
+  public DatosDeJuegoModel idUsuarioProximoTurno(String idUsuarioProximoTurno) {
     this.idUsuarioProximoTurno = idUsuarioProximoTurno;
     return this;
   }
@@ -38,11 +36,11 @@ public class DatosDeJuegoModel   {
   **/
   @ApiModelProperty(value = "")
   
-    public Long getIdUsuarioProximoTurno() {
+    public String getIdUsuarioProximoTurno() {
     return idUsuarioProximoTurno;
   }
 
-  public void setIdUsuarioProximoTurno(Long idUsuarioProximoTurno) {
+  public void setIdUsuarioProximoTurno(String idUsuarioProximoTurno) {
     this.idUsuarioProximoTurno = idUsuarioProximoTurno;
   }
 
@@ -75,7 +73,7 @@ public class DatosDeJuegoModel   {
 
 
   @Override
-  public boolean equals(java.lang.Object o) {
+  public boolean equals(Object o) {
     if (this == o) {
       return true;
     }
@@ -107,7 +105,7 @@ public class DatosDeJuegoModel   {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(java.lang.Object o) {
+  private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }

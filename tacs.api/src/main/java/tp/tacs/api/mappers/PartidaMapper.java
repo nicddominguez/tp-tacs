@@ -2,9 +2,9 @@ package tp.tacs.api.mappers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import tp.tacs.api.daos.MunicipioDaoMemoria;
+import tp.tacs.api.daos.MunicipioDaoMongo;
+import tp.tacs.api.daos.UsuarioDaoMongo;
 import tp.tacs.api.dominio.municipio.Municipio;
-import tp.tacs.api.daos.UsuarioDaoMemoria;
 import tp.tacs.api.dominio.partida.Partida;
 import tp.tacs.api.http.externalApis.models.Provincia;
 import tp.tacs.api.model.MunicipiosLivianosModel;
@@ -27,13 +27,13 @@ public class PartidaMapper extends AbstractMapper<Partida, PartidaModel> {
     @Autowired
     private DatosDeJuegoMapper datosDeJuegoMapper;
     @Autowired
-    private UsuarioDaoMemoria usuarioDaoMemoria;
+    private UsuarioDaoMongo usuarioDao;
     @Autowired
     private ProvinciaMapper provinciaMapper;
     @Autowired
     private ModoDeMunicipioMapper modoDeMunicipioMapper;
     @Autowired
-    private MunicipioDaoMemoria municipioDao;
+    private MunicipioDaoMongo municipioDao;
 
     @Override
     protected PartidaModel wrapModel(Partida partida) {
@@ -51,7 +51,7 @@ public class PartidaMapper extends AbstractMapper<Partida, PartidaModel> {
     }
 
     public PartidaModel partidaBasica(Partida partida) {
-        var jugadores = usuarioMapper.wrapList(usuarioDaoMemoria.getByIds(partida.getIdsJugadoresOriginales()));
+        var jugadores = usuarioMapper.wrapList(usuarioDao.getByIds(partida.getIdsJugadoresOriginales()));
         var provincia = new Provincia();
         provincia.setId(partida.getIdProvincia());
         provincia.setNombre(partida.getNombreProvincia());
@@ -80,7 +80,7 @@ public class PartidaMapper extends AbstractMapper<Partida, PartidaModel> {
         return municipiosPorJugadorLiviano;
     }
 
-    public MunicipiosPorJugadorLivianoModel municipiosPorJugadorLivianoModel(Long idJugador, List<Municipio> municipios) {
+    public MunicipiosPorJugadorLivianoModel municipiosPorJugadorLivianoModel(String idJugador, List<Municipio> municipios) {
         var municipiosLivianos = municipios.stream().map(this::municipioLivianosModel).collect(Collectors.toList());
         return new MunicipiosPorJugadorLivianoModel().idJugador(idJugador).municipios(municipiosLivianos);
     }

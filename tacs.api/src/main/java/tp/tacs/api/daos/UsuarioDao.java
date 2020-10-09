@@ -11,9 +11,11 @@ public interface UsuarioDao extends Dao<Usuario> {
 
     Usuario getByUsername(String username);
 
-    List<Usuario> getByIds(List<Long> idsUsuarios);
+    List<Usuario> getByIds(List<String> idsUsuarios);
 
-    EstadisticasDeUsuarioModel estadisticas(Long idUsuario);
+    EstadisticasDeUsuarioModel estadisticas(String idUsuario);
+
+    Usuario get(String id);
 
     List<EstadisticasDeUsuarioModel> scoreBoard();
 

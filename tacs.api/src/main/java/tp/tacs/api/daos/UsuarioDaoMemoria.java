@@ -22,10 +22,10 @@ public class UsuarioDaoMemoria implements UsuarioDao {
     @PostConstruct
     private void postConstruct() {
         usuarios = new ArrayList<>();
-        Usuario nico = Usuario.builder().rachaActual(0L).partidasJugadas(0L).partidasGanadas(0L).isAdmin(false).googleId("").nombre("Nico").id(90L).mail("asd@gmail.com").build();
-        Usuario juan = Usuario.builder().rachaActual(0L).partidasJugadas(0L).partidasGanadas(0L).isAdmin(false).googleId("").nombre("Juan").id(91L).mail("asd@gmail.com").build();
-        Usuario alejo = Usuario.builder().rachaActual(0L).partidasJugadas(0L).partidasGanadas(0L).isAdmin(false).googleId("").nombre("Alejo").id(92L).mail("asd@gmail.com").build();
-        Usuario pablo = Usuario.builder().rachaActual(0L).partidasJugadas(0L).partidasGanadas(0L).isAdmin(false).googleId("").nombre("Pablo").id(93L).mail("asd@gmail.com").build();
+        Usuario nico = Usuario.builder().rachaActual(0L).partidasJugadas(0L).partidasGanadas(0L).isAdmin(false).googleId("").nombre("Nico").id("90L").mail("asd@gmail.com").build();
+        Usuario juan = Usuario.builder().rachaActual(0L).partidasJugadas(0L).partidasGanadas(0L).isAdmin(false).googleId("").nombre("Juan").id("91L").mail("asd@gmail.com").build();
+        Usuario alejo = Usuario.builder().rachaActual(0L).partidasJugadas(0L).partidasGanadas(0L).isAdmin(false).googleId("").nombre("Alejo").id("92L").mail("asd@gmail.com").build();
+        Usuario pablo = Usuario.builder().rachaActual(0L).partidasJugadas(0L).partidasGanadas(0L).isAdmin(false).googleId("").nombre("Pablo").id("93L").mail("asd@gmail.com").build();
         usuarios.add(nico);
         usuarios.add(juan);
         usuarios.add(alejo);
@@ -34,7 +34,7 @@ public class UsuarioDaoMemoria implements UsuarioDao {
     }
 
     @Override
-    public Usuario get(Long id) {
+    public Usuario get(String id) {
         return usuarios.stream().filter(usuario -> usuario.getId().equals(id)).findFirst().orElse(null);
     }
 
@@ -64,12 +64,12 @@ public class UsuarioDaoMemoria implements UsuarioDao {
     }
 
     @Override
-    public List<Usuario> getByIds(List<Long> idsUsuarios) {
+    public List<Usuario> getByIds(List<String> idsUsuarios) {
         return usuarios.stream().filter(municipio -> idsUsuarios.contains(municipio.getId())).collect(Collectors.toList());
     }
 
     @Override
-    public EstadisticasDeUsuarioModel estadisticas(Long idUsuario) {
+    public EstadisticasDeUsuarioModel estadisticas(String idUsuario) {
         Usuario usuario = this.get(idUsuario);
         return new EstadisticasDeUsuarioModel()
                 .usuario(this.usuarioMapper.wrap(usuario))

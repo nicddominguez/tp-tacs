@@ -14,13 +14,13 @@ import java.util.List;
 public class PartidaSinInfo {
 
     private String id;
-    private List<Long> jugadoresIds;
+    private List<String> jugadoresIds;
     @Builder.Default
     private Integer usuarioJugandoIndiceLista = 0;
     private Estado estado;
     private String nombreProvincia;
     private String idProvincia;
-    private List<Long> municipios;
+    private List<String> municipios;
     private ModoDeJuego modoDeJuego;
     private Date fechaCreacion;
     private Usuario ganador;

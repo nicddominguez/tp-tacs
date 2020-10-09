@@ -40,7 +40,7 @@ public interface PartidasApi {
             consumes = { "application/json" },
             method = RequestMethod.PATCH)
     ResponseEntity<Void> actualizarMunicipio(@ApiParam(value = "",required=true) @PathVariable("idPartida") String idPartida
-            ,@ApiParam(value = "",required=true) @PathVariable("idMunicipio") Long idMunicipio
+            ,@ApiParam(value = "",required=true) @PathVariable("idMunicipio") String idMunicipio
             ,@ApiParam(value = ""  )  @Valid @RequestBody ActualizarMunicipio body
     );
 

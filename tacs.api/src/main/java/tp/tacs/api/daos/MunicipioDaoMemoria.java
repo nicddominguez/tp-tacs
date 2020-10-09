@@ -21,7 +21,7 @@ public class MunicipioDaoMemoria implements MunicipioDao {
     }
 
     @Override
-    public Municipio get(Long id) {
+    public Municipio get(String id) {
         return municipios.stream().filter(municipio -> municipio.getId().equals(id)).collect(Collectors.toList()).get(0);
     }
 
@@ -42,12 +42,13 @@ public class MunicipioDaoMemoria implements MunicipioDao {
                 .collect(Collectors.toList());
     }
 
-    public List<Municipio> getByIds(List<Long> ids) {
+    @Override
+    public List<Municipio> getByIds(List<String> ids) {
         return municipios.stream().filter(municipio -> ids.contains(municipio.getId())).collect(Collectors.toList());
     }
 
     private synchronized void asignarId(Municipio municipio) {
-        municipio.setId(municipioId);
+        municipio.setId(municipioId.toString());
         municipioId++;
     }
 

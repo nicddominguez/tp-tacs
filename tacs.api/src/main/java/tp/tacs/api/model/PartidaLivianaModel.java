@@ -28,7 +28,7 @@ public class PartidaLivianaModel  implements OneOfinlineResponse200 {
   private String idGanador = null;
 
   @JsonProperty("idUsuarioProximoTurno")
-  private Long idUsuarioProximoTurno = null;
+  private String idUsuarioProximoTurno = null;
 
   @JsonProperty("municipiosPorJugador")
   @Valid
@@ -93,7 +93,7 @@ public class PartidaLivianaModel  implements OneOfinlineResponse200 {
     this.idGanador = idGanador;
   }
 
-  public PartidaLivianaModel idUsuarioProximoTurno(Long idUsuarioProximoTurno) {
+  public PartidaLivianaModel idUsuarioProximoTurno(String idUsuarioProximoTurno) {
     this.idUsuarioProximoTurno = idUsuarioProximoTurno;
     return this;
   }
@@ -104,11 +104,11 @@ public class PartidaLivianaModel  implements OneOfinlineResponse200 {
   **/
   @ApiModelProperty(value = "")
   
-    public Long getIdUsuarioProximoTurno() {
+    public String getIdUsuarioProximoTurno() {
     return idUsuarioProximoTurno;
   }
 
-  public void setIdUsuarioProximoTurno(Long idUsuarioProximoTurno) {
+  public void setIdUsuarioProximoTurno(String idUsuarioProximoTurno) {
     this.idUsuarioProximoTurno = idUsuarioProximoTurno;
   }
 

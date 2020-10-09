@@ -7,7 +7,7 @@ import java.util.List;
 public interface MunicipioDao extends Dao<Municipio> {
 
 
-    Municipio get (Long id);
+    Municipio get (String id);
 
     List<Municipio> getAll();
 
@@ -15,5 +15,5 @@ public interface MunicipioDao extends Dao<Municipio> {
 
     void delete(Municipio element);
 
-    List<Municipio> getByIds(List<Long> ids);
+    List<Municipio> getByIds(List<String> ids);
 }

@@ -2,7 +2,7 @@ package tp.tacs.api.servicios;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import tp.tacs.api.daos.UsuarioDaoMemoria;
+import tp.tacs.api.daos.UsuarioDaoMongo;
 import tp.tacs.api.dominio.usuario.Usuario;
 import tp.tacs.api.security.GoogleIdTokenService;
 import tp.tacs.api.security.JWTTokenService;
@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 @Service
 public class ServicioUsuario {
 
-    private final UsuarioDaoMemoria usuarioDaoMemoria;
+    private final UsuarioDaoMongo usuarioDao;
     private final JWTTokenService jwtTokenService;
     private final GoogleIdTokenService googleIdTokenService;
 
@@ -24,14 +24,14 @@ public class ServicioUsuario {
     private final AtomicLong nextUserId = new AtomicLong(0L);
 
     @Autowired
-    public ServicioUsuario(UsuarioDaoMemoria usuarioDaoMemoria, JWTTokenService jwtTokenService, GoogleIdTokenService googleIdTokenService) {
-        this.usuarioDaoMemoria = usuarioDaoMemoria;
+    public ServicioUsuario(UsuarioDaoMongo usuarioDao, JWTTokenService jwtTokenService, GoogleIdTokenService googleIdTokenService) {
+        this.usuarioDao = usuarioDao;
         this.jwtTokenService = jwtTokenService;
         this.googleIdTokenService = googleIdTokenService;
     }
 
     public List<Usuario> listarUsuarios(String filter) {
-        List<Usuario> usuarios = this.usuarioDaoMemoria.getAll();
+        List<Usuario> usuarios = this.usuarioDao.getAll();
         if (filter != null) {
             usuarios = usuarios.stream().filter(usuario -> usuario.nombreContiene(filter)).collect(Collectors.toList());
         }
@@ -54,17 +54,17 @@ public class ServicioUsuario {
         );
     }
 
-    public String generarJwtParaUsuarioPorId(Long id) {
-        Usuario usuario = this.usuarioDaoMemoria.get(id);
+    public String generarJwtParaUsuarioPorId(String id) {
+        Usuario usuario = this.usuarioDao.get(id);
         return this.generarJwtParaUsuario(usuario);
     }
 
     public Optional<Usuario> getByUsername(String username) {
-        return Optional.ofNullable(this.usuarioDaoMemoria.getByUsername(username));
+        return Optional.ofNullable(this.usuarioDao.getByUsername(username));
     }
 
     public Optional<Usuario> getByGoogleId(String googleid) {
-        return Optional.ofNullable(this.usuarioDaoMemoria.getByGoogleId(googleid));
+        return Optional.ofNullable(this.usuarioDao.getByGoogleId(googleid));
     }
 
     public Usuario crearUsuario(String idTokenString) {
@@ -76,15 +76,15 @@ public class ServicioUsuario {
 
         return this.getByGoogleId(googleId).orElseGet(() -> {
             // El usuario no existe, lo creamos
-            var userId = this.nextUserId.getAndIncrement();
+            Long userId = this.nextUserId.getAndIncrement();
             var nuevoUsuario = Usuario.builder()
-                    .id(userId)
+                    .id(userId.toString())
                     .mail(email)
                     .nombre(name)
                     .googleId(googleId)
                     .isAdmin(true)
                     .build();
-            this.usuarioDaoMemoria.save(nuevoUsuario);
+            this.usuarioDao.save(nuevoUsuario);
             return nuevoUsuario;
         });
     }

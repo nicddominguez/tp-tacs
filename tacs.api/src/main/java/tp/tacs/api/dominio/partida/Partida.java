@@ -15,14 +15,14 @@ import java.util.List;
 public class Partida {
 
     private String id;
-    private List<Long> idsJugadoresOriginales;
-    private List<Long> idsJugadoresActuales;
+    private List<String> idsJugadoresOriginales;
+    private List<String> idsJugadoresActuales;
     @Builder.Default
     private Integer usuarioJugandoIndiceLista = 0;
     private Estado estado;
     private String nombreProvincia;
     private String idProvincia;
-    private List<Long> municipios;
+    private List<String> municipios;
     private ModoDeJuego modoDeJuego;
     private Date fechaCreacion;
     private Usuario ganador;
@@ -39,7 +39,7 @@ public class Partida {
         }
     }
 
-    public Long idUsuarioEnTurnoActual() {
+    public String idUsuarioEnTurnoActual() {
         return idsJugadoresActuales.get(usuarioJugandoIndiceLista);
     }
 

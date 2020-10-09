@@ -11,12 +11,11 @@ import java.util.Objects;
  * MunicipiosLivianosModel
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-10-06T22:54:33.699Z[GMT]")
 
 
 public class MunicipiosLivianosModel   {
   @JsonProperty("id")
-  private Long id = null;
+  private String id = null;
 
   @JsonProperty("gauchos")
   private Long gauchos = null;
@@ -33,7 +32,7 @@ public class MunicipiosLivianosModel   {
   @JsonProperty("estaBloqueado")
   private Boolean estaBloqueado = null;
 
-  public MunicipiosLivianosModel id(Long id) {
+  public MunicipiosLivianosModel id(String id) {
     this.id = id;
     return this;
   }
@@ -43,12 +42,12 @@ public class MunicipiosLivianosModel   {
    * @return id
   **/
   @ApiModelProperty(value = "Id del municipio.")
-  
-    public Long getId() {
+
+    public String getId() {
     return id;
   }
 
-  public void setId(Long id) {
+  public void setId(String id) {
     this.id = id;
   }
 
@@ -62,7 +61,7 @@ public class MunicipiosLivianosModel   {
    * @return gauchos
   **/
   @ApiModelProperty(value = "Cantidad de gauchos en el municipio")
-  
+
     public Long getGauchos() {
     return gauchos;
   }
@@ -81,7 +80,7 @@ public class MunicipiosLivianosModel   {
    * @return puntosDeDefensa
   **/
   @ApiModelProperty(value = "")
-  
+
     public Float getPuntosDeDefensa() {
     return puntosDeDefensa;
   }
@@ -100,7 +99,7 @@ public class MunicipiosLivianosModel   {
    * @return produccionDeGauchos
   **/
   @ApiModelProperty(value = "")
-  
+
     public Long getProduccionDeGauchos() {
     return produccionDeGauchos;
   }
@@ -119,7 +118,7 @@ public class MunicipiosLivianosModel   {
    * @return modo
   **/
   @ApiModelProperty(value = "")
-  
+
     @Valid
     public ModoDeMunicipioModel getModo() {
     return modo;
@@ -139,7 +138,7 @@ public class MunicipiosLivianosModel   {
    * @return estaBloqueado
   **/
   @ApiModelProperty(value = "Si el municipio está bloqueado.")
-  
+
     public Boolean isEstaBloqueado() {
     return estaBloqueado;
   }
@@ -175,7 +174,7 @@ public class MunicipiosLivianosModel   {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class MunicipiosLivianosModel {\n");
-    
+
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    gauchos: ").append(toIndentedString(gauchos)).append("\n");
     sb.append("    puntosDeDefensa: ").append(toIndentedString(puntosDeDefensa)).append("\n");

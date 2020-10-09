@@ -10,7 +10,7 @@ import tp.tacs.api.dominio.usuario.Usuario;
 @Getter
 @Setter
 public class Municipio {
-    private Long id;
+    private String id;
     private String nombre;
     private String externalApiId;
     @Builder.Default
@@ -54,7 +54,7 @@ public class Municipio {
         return duenio == null;
     }
 
-    public boolean esDe(Long userId) {
+    public boolean esDe(String userId) {
         return duenio.getId().equals(userId);
     }
 
