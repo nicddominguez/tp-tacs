@@ -4,8 +4,8 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import tp.tacs.api.daos.MunicipioDao;
-import tp.tacs.api.daos.PartidaDao;
+import tp.tacs.api.daos.MunicipioDaoMemoria;
+import tp.tacs.api.daos.PartidaDaoMongo;
 import tp.tacs.api.daos.UsuarioDaoMemoria;
 import tp.tacs.api.dominio.municipio.Municipio;
 import tp.tacs.api.dominio.partida.Estado;
@@ -33,9 +33,9 @@ public class ServicioPartida {
     @Autowired
     private UsuarioDaoMemoria usuarioDaoMemoria;
     @Autowired
-    private MunicipioDao municipioDao;
+    private MunicipioDaoMemoria municipioDao;
     @Autowired
-    private PartidaDao partidaDao;
+    private PartidaDaoMongo partidaDao;
     @Autowired
     private ServicioMunicipio servicioMunicipio;
     @Autowired
@@ -225,7 +225,7 @@ public class ServicioPartida {
         return new SimularAtacarMunicipioResponse().exitoso(gauchosFinales <= 0);
     }
 
-    public Partida obtenerPartidaPorId(Long request) {
+    public Partida obtenerPartidaPorId(String request) {
         return partidaDao.get(request);
     }
 

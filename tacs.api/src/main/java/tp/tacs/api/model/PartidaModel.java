@@ -20,7 +20,7 @@ import java.util.Objects;
 
 public class PartidaModel  implements OneOfinlineResponse200 {
   @JsonProperty("id")
-  private Long id = null;
+  private String id = null;
 
   @JsonProperty("provincia")
   private ProvinciaModel provincia = null;
@@ -47,7 +47,7 @@ public class PartidaModel  implements OneOfinlineResponse200 {
   @JsonProperty("idGanador")
   private String idGanador = null;
 
-  public PartidaModel id(Long id) {
+  public PartidaModel id(String id) {
     this.id = id;
     return this;
   }
@@ -55,15 +55,15 @@ public class PartidaModel  implements OneOfinlineResponse200 {
   /**
    * Id de la partida
    * @return id
-   **/
+  **/
   @ApiModelProperty(required = true, value = "Id de la partida")
-  @NotNull
+      @NotNull
 
-  public Long getId() {
+    public String getId() {
     return id;
   }
 
-  public void setId(Long id) {
+  public void setId(String id) {
     this.id = id;
   }
 
@@ -75,12 +75,12 @@ public class PartidaModel  implements OneOfinlineResponse200 {
   /**
    * Get provincia
    * @return provincia
-   **/
+  **/
   @ApiModelProperty(required = true, value = "")
-  @NotNull
+      @NotNull
 
-  @Valid
-  public ProvinciaModel getProvincia() {
+    @Valid
+    public ProvinciaModel getProvincia() {
     return provincia;
   }
 
@@ -96,11 +96,11 @@ public class PartidaModel  implements OneOfinlineResponse200 {
   /**
    * Cantidad de municipios que se usan
    * @return cantidadMunicipios
-   **/
+  **/
   @ApiModelProperty(required = true, value = "Cantidad de municipios que se usan")
-  @NotNull
+      @NotNull
 
-  public Long getCantidadMunicipios() {
+    public Long getCantidadMunicipios() {
     return cantidadMunicipios;
   }
 
@@ -116,12 +116,12 @@ public class PartidaModel  implements OneOfinlineResponse200 {
   /**
    * Get estado
    * @return estado
-   **/
+  **/
   @ApiModelProperty(required = true, value = "")
-  @NotNull
+      @NotNull
 
-  @Valid
-  public EstadoDeJuegoModel getEstado() {
+    @Valid
+    public EstadoDeJuegoModel getEstado() {
     return estado;
   }
 
@@ -142,11 +142,11 @@ public class PartidaModel  implements OneOfinlineResponse200 {
   /**
    * Usuarios que juegan esta partida
    * @return jugadores
-   **/
+  **/
   @ApiModelProperty(required = true, value = "Usuarios que juegan esta partida")
-  @NotNull
-  @Valid
-  public List<UsuarioModel> getJugadores() {
+      @NotNull
+    @Valid
+    public List<UsuarioModel> getJugadores() {
     return jugadores;
   }
 
@@ -162,12 +162,12 @@ public class PartidaModel  implements OneOfinlineResponse200 {
   /**
    * Get modoDeJuego
    * @return modoDeJuego
-   **/
+  **/
   @ApiModelProperty(required = true, value = "")
-  @NotNull
+      @NotNull
 
-  @Valid
-  public ModoDeJuegoModel getModoDeJuego() {
+    @Valid
+    public ModoDeJuegoModel getModoDeJuego() {
     return modoDeJuego;
   }
 
@@ -183,12 +183,12 @@ public class PartidaModel  implements OneOfinlineResponse200 {
   /**
    * Fecha de inicio de la partida
    * @return fecha
-   **/
+  **/
   @ApiModelProperty(required = true, value = "Fecha de inicio de la partida")
-  @NotNull
+      @NotNull
 
-  @Valid
-  public Date getFecha() {
+    @Valid
+    public Date getFecha() {
     return fecha;
   }
 
@@ -204,11 +204,11 @@ public class PartidaModel  implements OneOfinlineResponse200 {
   /**
    * Get informacionDeJuego
    * @return informacionDeJuego
-   **/
+  **/
   @ApiModelProperty(value = "")
-
-  @Valid
-  public DatosDeJuegoModel getInformacionDeJuego() {
+  
+    @Valid
+    public DatosDeJuegoModel getInformacionDeJuego() {
     return informacionDeJuego;
   }
 
@@ -224,10 +224,10 @@ public class PartidaModel  implements OneOfinlineResponse200 {
   /**
    * Id del usuario ganador
    * @return idGanador
-   **/
+  **/
   @ApiModelProperty(value = "Id del usuario ganador")
-
-  public String getIdGanador() {
+  
+    public String getIdGanador() {
     return idGanador;
   }
 
@@ -237,7 +237,7 @@ public class PartidaModel  implements OneOfinlineResponse200 {
 
 
   @Override
-  public boolean equals(java.lang.Object o) {
+  public boolean equals(Object o) {
     if (this == o) {
       return true;
     }
@@ -246,14 +246,14 @@ public class PartidaModel  implements OneOfinlineResponse200 {
     }
     PartidaModel partidaModel = (PartidaModel) o;
     return Objects.equals(this.id, partidaModel.id) &&
-            Objects.equals(this.provincia, partidaModel.provincia) &&
-            Objects.equals(this.cantidadMunicipios, partidaModel.cantidadMunicipios) &&
-            Objects.equals(this.estado, partidaModel.estado) &&
-            Objects.equals(this.jugadores, partidaModel.jugadores) &&
-            Objects.equals(this.modoDeJuego, partidaModel.modoDeJuego) &&
-            Objects.equals(this.fecha, partidaModel.fecha) &&
-            Objects.equals(this.informacionDeJuego, partidaModel.informacionDeJuego) &&
-            Objects.equals(this.idGanador, partidaModel.idGanador);
+        Objects.equals(this.provincia, partidaModel.provincia) &&
+        Objects.equals(this.cantidadMunicipios, partidaModel.cantidadMunicipios) &&
+        Objects.equals(this.estado, partidaModel.estado) &&
+        Objects.equals(this.jugadores, partidaModel.jugadores) &&
+        Objects.equals(this.modoDeJuego, partidaModel.modoDeJuego) &&
+        Objects.equals(this.fecha, partidaModel.fecha) &&
+        Objects.equals(this.informacionDeJuego, partidaModel.informacionDeJuego) &&
+        Objects.equals(this.idGanador, partidaModel.idGanador);
   }
 
   @Override
@@ -265,7 +265,7 @@ public class PartidaModel  implements OneOfinlineResponse200 {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class PartidaModel {\n");
-
+    
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    provincia: ").append(toIndentedString(provincia)).append("\n");
     sb.append("    cantidadMunicipios: ").append(toIndentedString(cantidadMunicipios)).append("\n");
@@ -283,7 +283,7 @@ public class PartidaModel  implements OneOfinlineResponse200 {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(java.lang.Object o) {
+  private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }

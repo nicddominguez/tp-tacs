@@ -2,7 +2,7 @@ package tp.tacs.api.servicios;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import tp.tacs.api.daos.PartidaDao;
+import tp.tacs.api.daos.PartidaDaoMongo;
 import tp.tacs.api.daos.UsuarioDaoMemoria;
 import tp.tacs.api.model.EstadisticasDeJuegoModel;
 import tp.tacs.api.model.EstadisticasDeUsuarioModel;
@@ -18,7 +18,7 @@ public class ServicioAdmin {
     @Autowired
     private UsuarioDaoMemoria usuarioDaoMemoria;
     @Autowired
-    private PartidaDao partidaDao;
+    private PartidaDaoMongo partidaDao;
 
     public EstadisticasDeJuegoModel estadisticasDeJuego(Date fechaInicio, Date fechaFin) {
         return partidaDao.estadisticas(fechaInicio, fechaFin);

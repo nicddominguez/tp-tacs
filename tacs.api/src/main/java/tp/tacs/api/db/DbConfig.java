@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 public class DbConfig {
 
     public @Bean MongoClient mongoClient() {
-        return MongoClients.create("mongodb://root:example@34.72.171.144:27017/");
+        return MongoClients.create("mongodb://root:example@34.95.185.134:27017/");
     }
 
 }

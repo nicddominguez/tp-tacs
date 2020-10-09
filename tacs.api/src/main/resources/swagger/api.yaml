@@ -98,8 +98,7 @@ paths:
         - in: path
           name: idPartida
           schema:
-            type: integer
-            format: int64
+            type: string
           required: true
       responses:
         200:
@@ -383,8 +382,7 @@ paths:
                       title: partidaSinInfoModel
                       properties:
                         id:
-                          type: integer
-                          format: int64
+                          type: string
                           description: Id de la partida
                         provincia:
                           $ref: '#/components/schemas/ProvinciaModel'
@@ -471,8 +469,7 @@ paths:
           name: idPartida
           description: Id de la partida
           schema:
-            type: integer
-            format: int64
+            type: string
           required: true
         - in: query
           name: campos
@@ -504,8 +501,7 @@ paths:
         - in: path
           name: idPartida
           schema:
-            type: integer
-            format: int64
+            type: string
           required: true
       requestBody:
         content:
@@ -535,8 +531,7 @@ paths:
         - in: path
           name: idPartida
           schema:
-            type: integer
-            format: int64
+            type: string
           required: true
       requestBody:
         content:
@@ -586,8 +581,7 @@ paths:
         - in: path
           name: idPartida
           schema:
-            type: integer
-            format: int64
+            type: string
           required: true
         - in: path
           name: idMunicipio
@@ -625,8 +619,7 @@ paths:
         - in: path
           name: idPartida
           schema:
-            type: integer
-            format: int64
+            type: string
           required: true
       requestBody:
         content:
@@ -672,8 +665,7 @@ paths:
         - in: path
           name: idPartida
           schema:
-            type: integer
-            format: int64
+            type: string
           required: true
       responses:
         200:
@@ -694,8 +686,7 @@ paths:
         - in: path
           name: idPartida
           schema:
-            type: integer
-            format: int64
+            type: string
           required: true
       requestBody:
         content:
@@ -738,8 +729,7 @@ components:
         - estado
       properties:
         id:
-          type: integer
-          format: int64
+          type: string
         estado:
           $ref: '#/components/schemas/EstadoDeJuegoModel'
         idGanador:
@@ -799,8 +789,7 @@ components:
         - fecha
       properties:
         id:
-          type: integer
-          format: int64
+          type: string
           description: Id de la partida
         provincia:
           $ref: '#/components/schemas/ProvinciaModel'

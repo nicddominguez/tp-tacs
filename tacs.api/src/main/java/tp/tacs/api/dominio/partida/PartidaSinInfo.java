@@ -13,7 +13,7 @@ import java.util.List;
 @Setter
 public class PartidaSinInfo {
 
-    private Long id;
+    private String id;
     private List<Long> jugadoresIds;
     @Builder.Default
     private Integer usuarioJugandoIndiceLista = 0;

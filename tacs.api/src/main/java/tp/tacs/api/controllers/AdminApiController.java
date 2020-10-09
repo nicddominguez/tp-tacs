@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
-import tp.tacs.api.daos.PartidaDao;
+import tp.tacs.api.daos.PartidaDaoMongo;
 import tp.tacs.api.dominio.partida.Partida;
 import tp.tacs.api.handler.PartidaException;
 import tp.tacs.api.model.EstadisticasDeJuegoModel;
@@ -25,7 +25,7 @@ public class AdminApiController implements AdminApi {
     @Autowired
     private ServicioPartida servicioPartida;
     @Autowired
-    private PartidaDao partidaDao;
+    private PartidaDaoMongo partidaDao;
     @Autowired
     private ServicioUsuario servicioUsuario;
 
@@ -49,7 +49,7 @@ public class AdminApiController implements AdminApi {
         return ResponseEntity.ok(scoreboardResponse);
     }
 
-    @Override public ResponseEntity<Void> pasarTurnoAdmin(Long idPartida) {
+    @Override public ResponseEntity<Void> pasarTurnoAdmin(String idPartida) {
         Partida partida = partidaDao.get(idPartida);
         if (partida == null)
             return ResponseEntity.notFound().build();

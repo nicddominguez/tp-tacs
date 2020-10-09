@@ -19,7 +19,7 @@ import java.util.Objects;
 
 public class PartidaLivianaModel  implements OneOfinlineResponse200 {
   @JsonProperty("id")
-  private Long id = null;
+  private String id = null;
 
   @JsonProperty("estado")
   private EstadoDeJuegoModel estado = null;
@@ -34,7 +34,7 @@ public class PartidaLivianaModel  implements OneOfinlineResponse200 {
   @Valid
   private List<MunicipiosPorJugadorLivianoModel> municipiosPorJugador = null;
 
-  public PartidaLivianaModel id(Long id) {
+  public PartidaLivianaModel id(String id) {
     this.id = id;
     return this;
   }
@@ -45,11 +45,11 @@ public class PartidaLivianaModel  implements OneOfinlineResponse200 {
   **/
   @ApiModelProperty(value = "")
   
-    public Long getId() {
+    public String getId() {
     return id;
   }
 
-  public void setId(Long id) {
+  public void setId(String id) {
     this.id = id;
   }
 

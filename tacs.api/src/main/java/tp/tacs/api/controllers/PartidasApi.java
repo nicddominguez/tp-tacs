@@ -13,141 +13,140 @@ import tp.tacs.api.model.*;
 import javax.validation.Valid;
 import java.util.Date;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-10-06T22:54:33.699Z[GMT]")
 @Api(value = "partidas", description = "the partidas API")
 public interface PartidasApi {
 
     @ApiOperation(value = "Actualiza el estado de una partida", nickname = "actualizarEstadoPartida", notes = "", authorizations = {
-        @Authorization(value = "bearerAuth")    }, tags={ "Partidas", })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "Success"),
-        @ApiResponse(code = 400, message = "Bad request"),
-        @ApiResponse(code = 404, message = "Not found") })
+            @Authorization(value = "bearerAuth")    }, tags={ "Partidas", })
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success"),
+            @ApiResponse(code = 400, message = "Bad request"),
+            @ApiResponse(code = 404, message = "Not found") })
     @RequestMapping(value = "/partidas/{idPartida}",
-        consumes = { "application/json" },
-        method = RequestMethod.PATCH)
-    ResponseEntity<Void> actualizarEstadoPartida(@ApiParam(value = "",required=true) @PathVariable("idPartida") Long idPartida
-,@ApiParam(value = ""  )  @Valid @RequestBody ActualizarEstadoPartida body
-);
+            consumes = { "application/json" },
+            method = RequestMethod.PATCH)
+    ResponseEntity<Void> actualizarEstadoPartida(@ApiParam(value = "",required=true) @PathVariable("idPartida") String idPartida
+            ,@ApiParam(value = ""  )  @Valid @RequestBody ActualizarEstadoPartida body
+    );
 
 
     @ApiOperation(value = "Actualiza el estado de un municipio en juego", nickname = "actualizarMunicipio", notes = "", authorizations = {
-        @Authorization(value = "bearerAuth")    }, tags={ "Partidas", })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "Success"),
-        @ApiResponse(code = 400, message = "Bad request"),
-        @ApiResponse(code = 404, message = "Not found") })
+            @Authorization(value = "bearerAuth")    }, tags={ "Partidas", })
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success"),
+            @ApiResponse(code = 400, message = "Bad request"),
+            @ApiResponse(code = 404, message = "Not found") })
     @RequestMapping(value = "/partidas/{idPartida}/municipios/{idMunicipio}",
-        consumes = { "application/json" },
-        method = RequestMethod.PATCH)
-    ResponseEntity<Void> actualizarMunicipio(@ApiParam(value = "",required=true) @PathVariable("idPartida") Long idPartida
-,@ApiParam(value = "",required=true) @PathVariable("idMunicipio") Long idMunicipio
-,@ApiParam(value = ""  )  @Valid @RequestBody ActualizarMunicipio body
-);
+            consumes = { "application/json" },
+            method = RequestMethod.PATCH)
+    ResponseEntity<Void> actualizarMunicipio(@ApiParam(value = "",required=true) @PathVariable("idPartida") String idPartida
+            ,@ApiParam(value = "",required=true) @PathVariable("idMunicipio") Long idMunicipio
+            ,@ApiParam(value = ""  )  @Valid @RequestBody ActualizarMunicipio body
+    );
 
 
     @ApiOperation(value = "Ataca a un municipio. Al atacar, se ataca con todos los gauchos del municipio atacante.", nickname = "atacarMunicipio", notes = "", response = AtacarMunicipioResponse.class, authorizations = {
-        @Authorization(value = "bearerAuth")    }, tags={ "Partidas", })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "Success", response = AtacarMunicipioResponse.class),
-        @ApiResponse(code = 400, message = "Bad request"),
-        @ApiResponse(code = 404, message = "Not found") })
+            @Authorization(value = "bearerAuth")    }, tags={ "Partidas", })
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success", response = AtacarMunicipioResponse.class),
+            @ApiResponse(code = 400, message = "Bad request"),
+            @ApiResponse(code = 404, message = "Not found") })
     @RequestMapping(value = "/partidas/{idPartida}/ataques",
-        produces = { "application/json" }, 
-        consumes = { "application/json" },
-        method = RequestMethod.POST)
-    ResponseEntity<AtacarMunicipioResponse> atacarMunicipio(@ApiParam(value = "",required=true) @PathVariable("idPartida") Long idPartida
-,@ApiParam(value = ""  )  @Valid @RequestBody AtacarMunicipioBody body
-);
+            produces = { "application/json" },
+            consumes = { "application/json" },
+            method = RequestMethod.POST)
+    ResponseEntity<AtacarMunicipioResponse> atacarMunicipio(@ApiParam(value = "",required=true) @PathVariable("idPartida") String idPartida
+            ,@ApiParam(value = ""  )  @Valid @RequestBody AtacarMunicipioBody body
+    );
 
 
     @ApiOperation(value = "Crear una nueva partida", nickname = "crearPartida", notes = "", response = PartidaModel.class, authorizations = {
-        @Authorization(value = "bearerAuth")    }, tags={ "Partidas", })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 201, message = "Created", response = PartidaModel.class),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 403, message = "Forbidden"),
-        @ApiResponse(code = 404, message = "Not found") })
+            @Authorization(value = "bearerAuth")    }, tags={ "Partidas", })
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Created", response = PartidaModel.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 403, message = "Forbidden"),
+            @ApiResponse(code = 404, message = "Not found") })
     @RequestMapping(value = "/partidas",
-        produces = { "application/json" }, 
-        consumes = { "application/json" },
-        method = RequestMethod.POST)
+            produces = { "application/json" },
+            consumes = { "application/json" },
+            method = RequestMethod.POST)
     ResponseEntity<PartidaModel> crearPartida(@ApiParam(value = ""  )  @Valid @RequestBody CrearPartidaBody body
-);
+    );
 
 
     @ApiOperation(value = "Retorna la partida con id: idPartida. Incluye los datos del juego.", nickname = "getPartida", notes = "", response = InlineResponse200.class, authorizations = {
-        @Authorization(value = "bearerAuth")    }, tags={ "Partidas", })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "Success", response = InlineResponse200.class),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 404, message = "Not found") })
+            @Authorization(value = "bearerAuth")    }, tags={ "Partidas", })
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success", response = InlineResponse200.class),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 404, message = "Not found") })
     @RequestMapping(value = "/partidas/{idPartida}",
-        produces = { "application/json" }, 
-        method = RequestMethod.GET)
-    ResponseEntity<OneOfinlineResponse200> getPartida(@ApiParam(value = "Id de la partida",required=true) @PathVariable("idPartida") Long idPartida
-,@ApiParam(value = "") @Valid @RequestParam(value = "campos", required = false) String campos
-);
+            produces = { "application/json" },
+            method = RequestMethod.GET)
+    ResponseEntity<OneOfinlineResponse200> getPartida(@ApiParam(value = "Id de la partida",required=true) @PathVariable("idPartida") String idPartida
+            ,@ApiParam(value = "") @Valid @RequestParam(value = "campos", required = false) String campos
+    );
 
 
     @ApiOperation(value = "Permite listar partidas. No incluye los datos de juego asociados a las mismas.", nickname = "listarPartidas", notes = "", response = ListarPartidasResponse.class, authorizations = {
-        @Authorization(value = "bearerAuth")    }, tags={ "Partidas", })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "Success", response = ListarPartidasResponse.class),
-        @ApiResponse(code = 400, message = "Bad request"),
-        @ApiResponse(code = 403, message = "Forbidden") })
+            @Authorization(value = "bearerAuth")    }, tags={ "Partidas", })
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success", response = ListarPartidasResponse.class),
+            @ApiResponse(code = 400, message = "Bad request"),
+            @ApiResponse(code = 403, message = "Forbidden") })
     @RequestMapping(value = "/partidas",
-        produces = { "application/json" }, 
-        method = RequestMethod.GET)
+            produces = { "application/json" },
+            method = RequestMethod.GET)
     ResponseEntity<ListarPartidasResponse> listarPartidas(@ApiParam(value = "") @Valid @RequestParam(value = "fechaInicio", required = false) Date fechaInicio
-,@ApiParam(value = "") @Valid @RequestParam(value = "fechaFin", required = false) Date fechaFin
-,@ApiParam(value = "") @Valid @RequestParam(value = "estado", required = false) EstadoDeJuegoModel estado
-,@ApiParam(value = "Campos por los que ordenar separados por coma. Los campos soportados son fecha y estado.") @Valid @RequestParam(value = "ordenarPor", required = false) String ordenarPor
-,@ApiParam(value = "", defaultValue = "10") @Valid @RequestParam(value = "tamanioPagina", required = false, defaultValue="10") Long tamanioPagina
-,@ApiParam(value = "", defaultValue = "0") @Valid @RequestParam(value = "pagina", required = false, defaultValue="0") Long pagina
-);
+            ,@ApiParam(value = "") @Valid @RequestParam(value = "fechaFin", required = false) Date fechaFin
+            ,@ApiParam(value = "") @Valid @RequestParam(value = "estado", required = false) EstadoDeJuegoModel estado
+            ,@ApiParam(value = "Campos por los que ordenar separados por coma. Los campos soportados son fecha y estado.") @Valid @RequestParam(value = "ordenarPor", required = false) String ordenarPor
+            ,@ApiParam(value = "", defaultValue = "10") @Valid @RequestParam(value = "tamanioPagina", required = false, defaultValue="10") Long tamanioPagina
+            ,@ApiParam(value = "", defaultValue = "0") @Valid @RequestParam(value = "pagina", required = false, defaultValue="0") Long pagina
+    );
 
 
     @ApiOperation(value = "Mueve gauchos de un municipio a otro", nickname = "moverGauchos", notes = "", response = MoverGauchosResponse.class, authorizations = {
-        @Authorization(value = "bearerAuth")    }, tags={ "Partidas", })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "Success", response = MoverGauchosResponse.class),
-        @ApiResponse(code = 400, message = "Bad request"),
-        @ApiResponse(code = 404, message = "Not found") })
+            @Authorization(value = "bearerAuth")    }, tags={ "Partidas", })
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success", response = MoverGauchosResponse.class),
+            @ApiResponse(code = 400, message = "Bad request"),
+            @ApiResponse(code = 404, message = "Not found") })
     @RequestMapping(value = "/partidas/{idPartida}/movimientos",
-        produces = { "application/json" }, 
-        consumes = { "application/json" },
-        method = RequestMethod.POST)
-    ResponseEntity<MoverGauchosResponse> moverGauchos(@ApiParam(value = "",required=true) @PathVariable("idPartida") Long idPartida
-,@ApiParam(value = ""  )  @Valid @RequestBody MoverGauchosBody body
-);
+            produces = { "application/json" },
+            consumes = { "application/json" },
+            method = RequestMethod.POST)
+    ResponseEntity<MoverGauchosResponse> moverGauchos(@ApiParam(value = "",required=true) @PathVariable("idPartida") String idPartida
+            ,@ApiParam(value = ""  )  @Valid @RequestBody MoverGauchosBody body
+    );
 
 
     @ApiOperation(value = "Pasar de turno", nickname = "pasarTurno", notes = "", authorizations = {
-        @Authorization(value = "bearerAuth")    }, tags={ "Partidas", })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "Success"),
-        @ApiResponse(code = 403, message = "Forbidden"),
-        @ApiResponse(code = 404, message = "Not found") })
+            @Authorization(value = "bearerAuth")    }, tags={ "Partidas", })
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success"),
+            @ApiResponse(code = 403, message = "Forbidden"),
+            @ApiResponse(code = 404, message = "Not found") })
     @RequestMapping(value = "/partidas/{idPartida}/turnos",
-        method = RequestMethod.POST)
-    ResponseEntity<Void> pasarTurno(@ApiParam(value = "",required=true) @PathVariable("idPartida") Long idPartida
-);
+            method = RequestMethod.POST)
+    ResponseEntity<Void> pasarTurno(@ApiParam(value = "",required=true) @PathVariable("idPartida") String idPartida
+    );
 
 
     @ApiOperation(value = "Ataca a un municipio", nickname = "simularAtacarMunicipio", notes = "", response = SimularAtacarMunicipioResponse.class, authorizations = {
-        @Authorization(value = "bearerAuth")    }, tags={ "Partidas", })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "Success", response = SimularAtacarMunicipioResponse.class),
-        @ApiResponse(code = 400, message = "Bad request"),
-        @ApiResponse(code = 404, message = "Not found") })
+            @Authorization(value = "bearerAuth")    }, tags={ "Partidas", })
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success", response = SimularAtacarMunicipioResponse.class),
+            @ApiResponse(code = 400, message = "Bad request"),
+            @ApiResponse(code = 404, message = "Not found") })
     @RequestMapping(value = "/partidas/{idPartida}/ataques/simulaciones",
-        produces = { "application/json" }, 
-        consumes = { "application/json" },
-        method = RequestMethod.POST)
-    ResponseEntity<SimularAtacarMunicipioResponse> simularAtacarMunicipio(@ApiParam(value = "",required=true) @PathVariable("idPartida") Long idPartida
-,@ApiParam(value = ""  )  @Valid @RequestBody SimularAtacarMunicipioBody body
-);
+            produces = { "application/json" },
+            consumes = { "application/json" },
+            method = RequestMethod.POST)
+    ResponseEntity<SimularAtacarMunicipioResponse> simularAtacarMunicipio(@ApiParam(value = "",required=true) @PathVariable("idPartida") String idPartida
+            ,@ApiParam(value = ""  )  @Valid @RequestBody SimularAtacarMunicipioBody body
+    );
 
 }
 

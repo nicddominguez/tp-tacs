@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RestController;
-import tp.tacs.api.daos.PartidaDao;
+import tp.tacs.api.daos.PartidaDaoMongo;
 import tp.tacs.api.daos.UsuarioDaoMemoria;
 import tp.tacs.api.dominio.partida.Partida;
 import tp.tacs.api.dominio.partida.PartidaSinInfo;
@@ -63,7 +63,7 @@ public class PartidasApiController implements PartidasApi {
      * Daos
      */
     @Autowired
-    private PartidaDao partidaDao;
+    private PartidaDaoMongo partidaDao;
     @Autowired
     private UsuarioDaoMemoria usuarioDaoMemoria;
 
@@ -73,7 +73,7 @@ public class PartidasApiController implements PartidasApi {
     }
 
     @Override
-    public ResponseEntity<Void> actualizarEstadoPartida(Long idPartida, @Valid ActualizarEstadoPartida body) {
+    public ResponseEntity<Void> actualizarEstadoPartida(String idPartida, @Valid ActualizarEstadoPartida body) {
         var estado = estadoDeJuegoMapper.toEntity(body.getEstado());
         var partida = partidaDao.get(idPartida);
         if(estado == null)
@@ -89,7 +89,7 @@ public class PartidasApiController implements PartidasApi {
     }
 
     @Override
-    public ResponseEntity<Void> actualizarMunicipio(Long idPartida, Long idMunicipio, @Valid ActualizarMunicipio body) {
+    public ResponseEntity<Void> actualizarMunicipio(String idPartida, Long idMunicipio, @Valid ActualizarMunicipio body) {
         var modo = body.getModo();
         if(modo == null)
             return new ResponseEntity("No se especificó el nuevo modo del municipio", HttpStatus.BAD_REQUEST);
@@ -105,7 +105,7 @@ public class PartidasApiController implements PartidasApi {
     }
 
     @Override
-    public ResponseEntity<AtacarMunicipioResponse> atacarMunicipio(Long idPartida, @Valid AtacarMunicipioBody body) {
+    public ResponseEntity<AtacarMunicipioResponse> atacarMunicipio(String idPartida, @Valid AtacarMunicipioBody body) {
         var idMunicipioAtacante = body.getIdMunicipioAtacante();
         var idMunicipioObjetivo = body.getIdMunicipioObjetivo();
         if(idMunicipioAtacante == null || idMunicipioObjetivo == null)
@@ -160,7 +160,7 @@ public class PartidasApiController implements PartidasApi {
     }
 
     @Override
-    public ResponseEntity<OneOfinlineResponse200> getPartida(Long idPartida, @Valid String campos) {
+    public ResponseEntity<OneOfinlineResponse200> getPartida(String idPartida, @Valid String campos) {
         var partida = servicioPartida.obtenerPartidaPorId(idPartida);
         if (partida == null)
             return new ResponseEntity("No existe la partida solicitada", HttpStatus.BAD_REQUEST);
@@ -172,7 +172,7 @@ public class PartidasApiController implements PartidasApi {
 
 
     @Override
-    public ResponseEntity<MoverGauchosResponse> moverGauchos(Long idPartida, @Valid MoverGauchosBody body) {
+    public ResponseEntity<MoverGauchosResponse> moverGauchos(String idPartida, @Valid MoverGauchosBody body) {
 
         if(body.getIdMunicipioDestino() == null || body.getIdMunicipioOrigen() == null)
             return new ResponseEntity("Se requieren los municipios involucrados en la acción", HttpStatus.BAD_REQUEST);
@@ -195,7 +195,7 @@ public class PartidasApiController implements PartidasApi {
     }
 
     @Override
-    public ResponseEntity<Void> pasarTurno(Long idPartida) {
+    public ResponseEntity<Void> pasarTurno(String idPartida) {
 
         Partida partida = partidaDao.get(idPartida);
         if (partida == null)
@@ -209,7 +209,7 @@ public class PartidasApiController implements PartidasApi {
     }
 
     @Override
-    public ResponseEntity<SimularAtacarMunicipioResponse> simularAtacarMunicipio(Long idPartida, @Valid SimularAtacarMunicipioBody body) {
+    public ResponseEntity<SimularAtacarMunicipioResponse> simularAtacarMunicipio(String idPartida, @Valid SimularAtacarMunicipioBody body) {
         if(body.getIdMunicipioAtacante() == null || body.getIdMunicipioObjetivo() == null)
             return new ResponseEntity("Se requieren los municipios involucrados en la accion", HttpStatus.BAD_REQUEST);
         var partida = partidaDao.get(idPartida);

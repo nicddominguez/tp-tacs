@@ -11,9 +11,10 @@ import java.util.List;
 @Builder
 @Getter
 @Setter
+
 public class Partida {
 
-    private Long id;
+    private String id;
     private List<Long> idsJugadoresOriginales;
     private List<Long> idsJugadoresActuales;
     @Builder.Default
