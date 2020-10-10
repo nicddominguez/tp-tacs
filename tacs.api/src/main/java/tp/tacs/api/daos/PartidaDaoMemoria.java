@@ -1,7 +1,8 @@
 package tp.tacs.api.daos;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Repository;
 import tp.tacs.api.dominio.partida.Estado;
 import tp.tacs.api.dominio.partida.Partida;
 import tp.tacs.api.dominio.partida.PartidaSinInfo;
@@ -18,7 +19,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@Component
+@Repository("partidaDaoMemoria")
+@ConditionalOnProperty(prefix="application", name="persistance-implementation", havingValue = "memoria")
 public class PartidaDaoMemoria implements PartidaDao {
 
     @Autowired
@@ -53,8 +55,10 @@ public class PartidaDaoMemoria implements PartidaDao {
 
     @Override
     public void save(Partida element) {
-        asignarId(element);
-        partidas.add(element);
+        if(!partidas.contains(element)) {
+            asignarId(element);
+            partidas.add(element);
+        }
     }
 
     private synchronized void asignarId(Partida partida) {

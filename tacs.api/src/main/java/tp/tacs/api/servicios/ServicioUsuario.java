@@ -2,7 +2,7 @@ package tp.tacs.api.servicios;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import tp.tacs.api.daos.UsuarioDaoMongo;
+import tp.tacs.api.daos.UsuarioDao;
 import tp.tacs.api.dominio.usuario.Usuario;
 import tp.tacs.api.security.GoogleIdTokenService;
 import tp.tacs.api.security.JWTTokenService;
@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 @Service
 public class ServicioUsuario {
 
-    private final UsuarioDaoMongo usuarioDao;
     private final JWTTokenService jwtTokenService;
     private final GoogleIdTokenService googleIdTokenService;
 
@@ -24,8 +23,10 @@ public class ServicioUsuario {
     private final AtomicLong nextUserId = new AtomicLong(0L);
 
     @Autowired
-    public ServicioUsuario(UsuarioDaoMongo usuarioDao, JWTTokenService jwtTokenService, GoogleIdTokenService googleIdTokenService) {
-        this.usuarioDao = usuarioDao;
+    UsuarioDao usuarioDao;
+
+    @Autowired
+    public ServicioUsuario(JWTTokenService jwtTokenService, GoogleIdTokenService googleIdTokenService) {
         this.jwtTokenService = jwtTokenService;
         this.googleIdTokenService = googleIdTokenService;
     }

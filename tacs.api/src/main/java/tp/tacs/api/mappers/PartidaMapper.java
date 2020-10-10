@@ -2,8 +2,8 @@ package tp.tacs.api.mappers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import tp.tacs.api.daos.MunicipioDaoMongo;
-import tp.tacs.api.daos.UsuarioDaoMongo;
+import tp.tacs.api.daos.MunicipioDao;
+import tp.tacs.api.daos.UsuarioDao;
 import tp.tacs.api.dominio.municipio.Municipio;
 import tp.tacs.api.dominio.partida.Partida;
 import tp.tacs.api.http.externalApis.models.Provincia;
@@ -27,13 +27,13 @@ public class PartidaMapper extends AbstractMapper<Partida, PartidaModel> {
     @Autowired
     private DatosDeJuegoMapper datosDeJuegoMapper;
     @Autowired
-    private UsuarioDaoMongo usuarioDao;
+    private UsuarioDao usuarioDao;
     @Autowired
     private ProvinciaMapper provinciaMapper;
     @Autowired
     private ModoDeMunicipioMapper modoDeMunicipioMapper;
     @Autowired
-    private MunicipioDaoMongo municipioDao;
+    private MunicipioDao municipioDao;
 
     @Override
     protected PartidaModel wrapModel(Partida partida) {

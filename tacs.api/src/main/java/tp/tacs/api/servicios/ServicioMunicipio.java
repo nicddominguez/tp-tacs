@@ -2,7 +2,7 @@ package tp.tacs.api.servicios;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import tp.tacs.api.daos.MunicipioDaoMongo;
+import tp.tacs.api.daos.MunicipioDao;
 import tp.tacs.api.dominio.municipio.Especializacion;
 import tp.tacs.api.dominio.municipio.Municipio;
 import tp.tacs.api.http.externalApis.ExternalApis;
@@ -16,7 +16,7 @@ public class ServicioMunicipio {
     private ExternalApis externalApis;
 
     @Autowired
-    private MunicipioDaoMongo municipioDao;
+    private MunicipioDao municipioDao;
 
     public Municipio producir(Municipio municipio) {
         municipio.agregarGauchos(municipio.getNivelDeProduccion());

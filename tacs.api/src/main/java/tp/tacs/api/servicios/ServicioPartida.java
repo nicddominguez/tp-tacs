@@ -4,9 +4,9 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import tp.tacs.api.daos.MunicipioDaoMongo;
-import tp.tacs.api.daos.PartidaDaoMongo;
-import tp.tacs.api.daos.UsuarioDaoMongo;
+import tp.tacs.api.daos.MunicipioDao;
+import tp.tacs.api.daos.PartidaDao;
+import tp.tacs.api.daos.UsuarioDao;
 import tp.tacs.api.dominio.municipio.Municipio;
 import tp.tacs.api.dominio.partida.Estado;
 import tp.tacs.api.dominio.partida.ModoRapido;
@@ -31,11 +31,11 @@ public class ServicioPartida {
     @Autowired
     private ExternalApis externalApis;
     @Autowired
-    private UsuarioDaoMongo usuarioDao;
+    private UsuarioDao usuarioDao;
     @Autowired
-    private MunicipioDaoMongo municipioDao;
+    private MunicipioDao municipioDao;
     @Autowired
-    private PartidaDaoMongo partidaDao;
+    private PartidaDao partidaDao;
     @Autowired
     private ServicioMunicipio servicioMunicipio;
     @Autowired

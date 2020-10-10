@@ -2,10 +2,12 @@ package tp.tacs.api.daos;
 
 import com.mongodb.client.MongoClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import tp.tacs.api.dominio.usuario.Usuario;
 import tp.tacs.api.mappers.UsuarioMapper;
 import tp.tacs.api.model.EstadisticasDeUsuarioModel;
@@ -16,7 +18,9 @@ import java.util.stream.Collectors;
 
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 
-@Component
+@Repository("usuarioDaoMongo")
+@Primary
+@ConditionalOnProperty(prefix="application", name="persistance-implementation", havingValue = "mongo")
 public class UsuarioDaoMongo implements UsuarioDao {
 
     private final MongoOperations mongoOps;

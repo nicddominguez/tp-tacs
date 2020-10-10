@@ -1,7 +1,8 @@
 package tp.tacs.api.daos;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Repository;
 import tp.tacs.api.dominio.usuario.Usuario;
 import tp.tacs.api.mappers.UsuarioMapper;
 import tp.tacs.api.model.EstadisticasDeUsuarioModel;
@@ -11,7 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Component
+@Repository("usuarioDaoMemoria")
+@ConditionalOnProperty(prefix="application", name="persistance-implementation", havingValue = "memoria")
 public class UsuarioDaoMemoria implements UsuarioDao {
 
     private List<Usuario> usuarios;
@@ -45,7 +47,8 @@ public class UsuarioDaoMemoria implements UsuarioDao {
 
     @Override
     public void save(Usuario element) {
-        usuarios.add(element);
+        if(!usuarios.contains(element))
+            usuarios.add(element);
     }
 
     @Override

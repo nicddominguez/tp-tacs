@@ -1,6 +1,7 @@
 package tp.tacs.api.daos;
 
-import org.springframework.stereotype.Component;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Repository;
 import tp.tacs.api.dominio.municipio.Municipio;
 
 import javax.annotation.PostConstruct;
@@ -8,7 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Component
+@Repository("municipioDaoMemoria")
+@ConditionalOnProperty(prefix="application", name="persistance-implementation", havingValue = "memoria")
 public class MunicipioDaoMemoria implements MunicipioDao {
 
     private List<Municipio> municipios;
@@ -32,8 +34,10 @@ public class MunicipioDaoMemoria implements MunicipioDao {
 
     @Override
     public void save(Municipio element) {
-        this.asignarId(element);
-        municipios.add(element);
+        if(!municipios.contains(element)) {
+            this.asignarId(element);
+            municipios.add(element);
+        }
     }
 
     @Override

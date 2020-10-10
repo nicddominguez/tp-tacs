@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
-import tp.tacs.api.daos.PartidaDaoMongo;
+import tp.tacs.api.daos.PartidaDao;
 import tp.tacs.api.dominio.partida.Partida;
 import tp.tacs.api.handler.PartidaException;
 import tp.tacs.api.model.EstadisticasDeJuegoModel;
@@ -25,7 +25,7 @@ public class AdminApiController implements AdminApi {
     @Autowired
     private ServicioPartida servicioPartida;
     @Autowired
-    private PartidaDaoMongo partidaDao;
+    private PartidaDao partidaDao;
     @Autowired
     private ServicioUsuario servicioUsuario;
 

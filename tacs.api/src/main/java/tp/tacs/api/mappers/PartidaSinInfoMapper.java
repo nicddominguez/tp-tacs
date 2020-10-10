@@ -2,7 +2,7 @@ package tp.tacs.api.mappers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import tp.tacs.api.daos.UsuarioDaoMongo;
+import tp.tacs.api.daos.UsuarioDao;
 import tp.tacs.api.dominio.partida.PartidaSinInfo;
 import tp.tacs.api.http.externalApis.models.Provincia;
 import tp.tacs.api.model.PartidaSinInfoModel;
@@ -21,7 +21,7 @@ public class PartidaSinInfoMapper extends AbstractMapper<PartidaSinInfo, Partida
     @Autowired
     private ModoDeJuegoMapper modoDeJuegoMapper;
     @Autowired
-    private UsuarioDaoMongo usuarioDao;
+    private UsuarioDao usuarioDao;
 
     @Override
     protected PartidaSinInfo unwrapModel(PartidaSinInfoModel model) {

@@ -9,7 +9,7 @@ import tp.tacs.api.model.EstadoDeJuegoModel;
 import java.util.Date;
 import java.util.List;
 
-public interface PartidaDao {
+public interface PartidaDao extends Dao<Partida>{
 
     List<Partida> getAll();
 
