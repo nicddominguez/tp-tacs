@@ -33,7 +33,7 @@
     {
       "name": "application.persistance-implementation",
       "type": "java.lang.String",
-      "description": "Valores: memoria, mongodb"
+      "description": "Valores: memoria, mongo"
     }
   ]
 }

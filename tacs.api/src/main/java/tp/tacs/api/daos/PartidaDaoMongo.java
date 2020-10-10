@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 import tp.tacs.api.dominio.partida.Estado;
@@ -17,6 +18,7 @@ import tp.tacs.api.mappers.PartidaSinInfoPartidaMapper;
 import tp.tacs.api.model.EstadisticasDeJuegoModel;
 import tp.tacs.api.model.EstadoDeJuegoModel;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,7 +27,7 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 
 @Repository("partidaDaoMongo")
 @Primary
-@ConditionalOnProperty(prefix="application", name="persistance-implementation", havingValue = "mongo")
+@ConditionalOnProperty(prefix = "application", name = "persistance-implementation", havingValue = "mongo")
 public class PartidaDaoMongo implements PartidaDao {
 
     private final MongoOperations mongoOps;
@@ -77,28 +79,46 @@ public class PartidaDaoMongo implements PartidaDao {
                 .partidasCanceladas(partidasCanceladas);
     }
 
+    private Criteria generarCriteriaFechas(Date fechaInicio, Date fechaFin) {
+        if (fechaInicio != null) {
+            if (fechaFin != null)
+                return where("fechaCreacion").gte(fechaInicio).lt(fechaFin);
+            return where("fechaCreacion").gte(fechaInicio);
+        }
+        if (fechaFin != null)
+            return where("fechaCreacion").lt(fechaFin);
+        return new Criteria();
+    }
+
+    private ArrayList<Criteria> generarCriteria(Date fechaInicio, Date fechaFin, EstadoDeJuegoModel estado) {
+        var criteria = new ArrayList<Criteria>();
+        criteria.add(generarCriteriaFechas(fechaInicio, fechaFin));
+        if (estado != null)
+            criteria.add(where("estado").is(estado));
+        return criteria;
+    }
+
+    private Query queryPartidasFiltradas(Date fechaInicio, Date fechaFin, EstadoDeJuegoModel estado) {
+        var criteria = this.generarCriteria(fechaInicio, fechaFin, estado);
+        Query query = new Query();
+        criteria.forEach(query::addCriteria);
+        return query;
+    }
+
     @Override
     public List<PartidaSinInfo> getPartidasFiltradas(Date fechaInicio, Date fechaFin, EstadoDeJuegoModel estado) {
-        Query query;
-        if(estado == null) {
-            query = new Query(where("fechaCreacion").gte(fechaInicio).lt(fechaFin));
-        }
-        else {
-            var estadoDeJuego = estadoDeJuegoMapper.toEntity(estado);
-            query = new Query(where("fechaCreacion").gte(fechaInicio).lt(fechaFin).and("estado").is(estadoDeJuego));
-        }
+        var query = queryPartidasFiltradas(fechaInicio, fechaFin, estado);
         var partidas = this.mongoOps.find(query, Partida.class);
         return partidas.stream().map(partidaSinInfoPartidaMapper::unwrap).collect(Collectors.toList());
     }
 
+
     @Override
     public List<PartidaSinInfo> getPartidasFiltradasUsuario(Date fechaInicio, Date fechaFin, EstadoDeJuegoModel estado, Usuario usuario) {
-        Query query = new Query(where("fechaCreacion").gte(fechaInicio).lt(fechaFin).and("estado").is(estado));
+        var query = this.queryPartidasFiltradas(fechaInicio, fechaFin, estado);
+        query.addCriteria(where(usuario.getId()).in("idsJugadoresOriginales"));
         var partidas = this.mongoOps.find(query, Partida.class);
-        //TODO: hacer la operación de búsqueda por usuario en la db
-        var partidasDelUsuario = partidas.stream().filter(partida ->
-                partida.getIdsJugadoresOriginales().contains(usuario.getId()));
-        return partidasDelUsuario.map(partidaSinInfoPartidaMapper::unwrap).collect(Collectors.toList());
+        return partidas.stream().map(partidaSinInfoPartidaMapper::unwrap).collect(Collectors.toList());
     }
 
 }
