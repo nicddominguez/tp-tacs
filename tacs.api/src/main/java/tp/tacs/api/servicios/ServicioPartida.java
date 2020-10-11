@@ -55,6 +55,7 @@ public class ServicioPartida {
         Usuario ganador = usuarioConMasMunicipios(partida);
         ganador.aumentarPartidasGanadas();
         ganador.aumentarRachaActual();
+        usuarioDao.save(ganador);
         partida.getIdsJugadoresOriginales().forEach(jugadorId -> {
             Usuario usuario = usuarioDao.get(jugadorId);
             usuario.aumentarPartidasJugadas();

@@ -34,7 +34,7 @@ interface GameMapState {
   startLatitude: number;
   startLongitude: number;
   startZoom: number;
-  playerColors: { [k: number]: string };
+  playerColors: { [k: string]: string };
 }
 
 const GAME_MAP_COLORS = ["red", "blue", "green", "yellow"];
@@ -48,7 +48,7 @@ export default class GameMap extends React.Component<
   constructor(props: GameMapProps) {
     super(props);
 
-    let playerColors: { [k: number]: string } = {};
+    let playerColors: { [k: string]: string } = {};
     this.props.partida?.jugadores?.forEach((player, index) => {
       playerColors[player.id] = GAME_MAP_COLORS[index];
     });
@@ -122,7 +122,7 @@ export default class GameMap extends React.Component<
     );
   }
 
-  nombreUsuario(id: number | undefined) {
+  nombreUsuario(id: string | undefined) {
     const usuario:
       | UsuarioModel
       | undefined = this.props.partida?.jugadores.find(

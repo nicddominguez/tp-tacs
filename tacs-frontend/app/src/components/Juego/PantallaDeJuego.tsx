@@ -167,7 +167,7 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
     const idGanador = this.state.partidaConInfo?.idGanador;
     if (idGanador !== undefined) {
       return this.state.partidaConInfo?.jugadores.find(
-        jugador => jugador.id === Number.parseInt(idGanador)
+        jugador => jugador.id === idGanador
       );
     }
   }

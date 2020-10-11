@@ -189,7 +189,7 @@ export class WololoAdminApiClient extends BaseWololoApiClient {
         );
     }
 
-    public async getEstadisticasDeUsuario(idUsuario: number) {
+    public async getEstadisticasDeUsuario(idUsuario: string) {
         return this.doAuthenticatedRequest(
             async (options) => this.adminApi.getEstadisticasDeUsuario(idUsuario, options)
         );
@@ -201,7 +201,7 @@ export class WololoAdminApiClient extends BaseWololoApiClient {
         );
     }
 
-    public async pasarTurno(idPartida: number) {
+    public async pasarTurno(idPartida: string) {
         console.log('RUNNING')
         return this.doAuthenticatedRequest(
             async (options) => {
@@ -216,14 +216,14 @@ export class WololoAdminApiClient extends BaseWololoApiClient {
 
 export class PollingPartida {
 
-    private idPartida: number
+    private idPartida: string
     private frecuenciaMs: number
     private handler: (response: Promise<PartidaModel>) => void
     private partidasApiClient: WololoPartidasApiClient
     private timeout?: number
 
     constructor(
-            idPartida: number,
+            idPartida: string,
             frecuenciaMs: number,
             handler: (response: Promise<PartidaModel>) => void,
             partidasApiClient: WololoPartidasApiClient) {
@@ -278,13 +278,13 @@ export class WololoPartidasApiClient extends BaseWololoApiClient {
         )
     }
 
-    public async getPartida(idPartida: number) {
+    public async getPartida(idPartida: string) {
         return this.doAuthenticatedRequest(
             async (options) => this.partidasApi.getPartida(idPartida, options)
         );
     }
 
-    public pollPartida(idPartida: number, frecuenciaMs: number, handler: (response: Promise<PartidaModel>) => void) {
+    public pollPartida(idPartida: string, frecuenciaMs: number, handler: (response: Promise<PartidaModel>) => void) {
         return new PollingPartida(
             idPartida,
             frecuenciaMs,
@@ -299,31 +299,31 @@ export class WololoPartidasApiClient extends BaseWololoApiClient {
         )
     }
 
-    public async actualizarEstadoPartida(idPartida: number, body: ActualizarEstadoPartida) {
+    public async actualizarEstadoPartida(idPartida: string, body: ActualizarEstadoPartida) {
         return this.doAuthenticatedRequest(
             async (options) => this.partidasApi.actualizarEstadoPartida(idPartida, body, options)
         )
     }
 
-    public async actualizarMunicipio(idPartida: number, idMunicipio: number, body: MunicipioEnJuegoModel) {
+    public async actualizarMunicipio(idPartida: string, idMunicipio: string, body: MunicipioEnJuegoModel) {
         return this.doAuthenticatedRequest(
             async (options) => this.partidasApi.actualizarMunicipio(idPartida, idMunicipio, body, options)
         )
     }
 
-    public async moverGauchos(idPartida: number, body: MoverGauchosBody) {
+    public async moverGauchos(idPartida: string, body: MoverGauchosBody) {
         return this.doAuthenticatedRequest(
             async (options) => this.partidasApi.moverGauchos(idPartida, body, options)
         )
     }
 
-    public async atacarMunicipio(idPartida: number, body: AtacarMunicipioBody) {
+    public async atacarMunicipio(idPartida: string, body: AtacarMunicipioBody) {
         return this.doAuthenticatedRequest(
             async (options) => this.partidasApi.atacarMunicipio(idPartida, body, options)
         )
     }
 
-    public async simularAtacarMunicipio(idPartida: number, body: SimularAtacarMunicipioBody) {
+    public async simularAtacarMunicipio(idPartida: string, body: SimularAtacarMunicipioBody) {
         return this.doAuthenticatedRequest(
             async (options) => this.partidasApi.simularAtacarMunicipio(idPartida, body, options)
         )

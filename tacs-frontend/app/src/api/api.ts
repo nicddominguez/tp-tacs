@@ -78,70 +78,70 @@ export class RequiredError extends Error {
 }
 
 /**
- *
+ * 
  * @export
  * @interface ActualizarEstadoPartida
  */
 export interface ActualizarEstadoPartida {
     /**
-     *
+     * 
      * @type {EstadoDeJuegoModel}
      * @memberof ActualizarEstadoPartida
      */
     estado?: EstadoDeJuegoModel;
 }
 /**
- *
+ * 
  * @export
  * @interface ActualizarMunicipio
  */
 export interface ActualizarMunicipio {
     /**
-     *
+     * 
      * @type {ModoDeMunicipioModel}
      * @memberof ActualizarMunicipio
      */
     modo?: ModoDeMunicipioModel;
     /**
-     *
+     * 
      * @type {boolean}
      * @memberof ActualizarMunicipio
      */
     estaBloqueado?: boolean;
 }
 /**
- *
+ * 
  * @export
  * @interface AtacarMunicipioBody
  */
 export interface AtacarMunicipioBody {
     /**
      * Id del municipio que ataca
-     * @type {number}
+     * @type {string}
      * @memberof AtacarMunicipioBody
      */
-    idMunicipioAtacante?: number;
+    idMunicipioAtacante?: string;
     /**
      * Id del municipio atacado
-     * @type {number}
+     * @type {string}
      * @memberof AtacarMunicipioBody
      */
-    idMunicipioObjetivo?: number;
+    idMunicipioObjetivo?: string;
 }
 /**
- *
+ * 
  * @export
  * @interface AtacarMunicipioResponse
  */
 export interface AtacarMunicipioResponse {
     /**
-     *
+     * 
      * @type {MunicipioEnJuegoModel}
      * @memberof AtacarMunicipioResponse
      */
     municipioAtacante?: MunicipioEnJuegoModel;
     /**
-     *
+     * 
      * @type {MunicipioEnJuegoModel}
      * @memberof AtacarMunicipioResponse
      */
@@ -167,7 +167,7 @@ export interface CoordenadasModel {
     lon: number;
 }
 /**
- *
+ * 
  * @export
  * @interface CrearPartidaBody
  */
@@ -186,12 +186,12 @@ export interface CrearPartidaBody {
     cantidadMunicipios?: number;
     /**
      * Jugadores
-     * @type {Array<number>}
+     * @type {Array<string>}
      * @memberof CrearPartidaBody
      */
-    idJugadores?: Array<number>;
+    idJugadores?: Array<string>;
     /**
-     *
+     * 
      * @type {ModoDeJuegoModel}
      * @memberof CrearPartidaBody
      */
@@ -204,11 +204,11 @@ export interface CrearPartidaBody {
  */
 export interface DatosDeJuegoModel {
     /**
-     *
-     * @type {number}
+     * 
+     * @type {string}
      * @memberof DatosDeJuegoModel
      */
-    idUsuarioProximoTurno?: number;
+    idUsuarioProximoTurno?: string;
     /**
      * Municipios en juego que contiene la provincia.
      * @type {Array<MunicipioEnJuegoModel>}
@@ -217,56 +217,56 @@ export interface DatosDeJuegoModel {
     municipios?: Array<MunicipioEnJuegoModel>;
 }
 /**
- *
+ * 
  * @export
  * @interface EstadisticasDeJuegoModel
  */
 export interface EstadisticasDeJuegoModel {
     /**
-     *
+     * 
      * @type {number}
      * @memberof EstadisticasDeJuegoModel
      */
     partidasCreadas?: number;
     /**
-     *
+     * 
      * @type {number}
      * @memberof EstadisticasDeJuegoModel
      */
     partidasEnCurso?: number;
     /**
-     *
+     * 
      * @type {number}
      * @memberof EstadisticasDeJuegoModel
      */
     partidasTerminadas?: number;
     /**
-     *
+     * 
      * @type {number}
      * @memberof EstadisticasDeJuegoModel
      */
     partidasCanceladas?: number;
 }
 /**
- *
+ * 
  * @export
  * @interface EstadisticasDeUsuarioModel
  */
 export interface EstadisticasDeUsuarioModel {
     /**
-     *
+     * 
      * @type {UsuarioModel}
      * @memberof EstadisticasDeUsuarioModel
      */
     usuario?: UsuarioModel;
     /**
-     *
+     * 
      * @type {number}
      * @memberof EstadisticasDeUsuarioModel
      */
     partidasJugadas?: number;
     /**
-     *
+     * 
      * @type {number}
      * @memberof EstadisticasDeUsuarioModel
      */
@@ -284,12 +284,12 @@ export interface EstadisticasDeUsuarioModel {
  * @enum {string}
  */
 export enum EstadoDeJuegoModel {
-    EnProgreso = <any> 'ENPROGRESO',
-    Terminada = <any> 'TERMINADA',
-    Cancelada = <any> 'CANCELADA'
+    EnProgreso = <any> 'EnProgreso',
+    Terminada = <any> 'Terminada',
+    Cancelada = <any> 'Cancelada'
 }
 /**
- *
+ * 
  * @export
  * @interface GoogleAuthModel
  */
@@ -302,51 +302,58 @@ export interface GoogleAuthModel {
     idToken: string;
 }
 /**
- *
+ * 
+ * @export
+ * @interface InlineResponse200
+ */
+export interface InlineResponse200 {
+}
+/**
+ * 
  * @export
  * @interface ListarPartidasResponse
  */
 export interface ListarPartidasResponse {
     /**
-     *
+     * 
      * @type {Array<PartidaSinInfoModel>}
      * @memberof ListarPartidasResponse
      */
     partidas?: Array<PartidaSinInfoModel>;
     /**
-     *
+     * 
      * @type {number}
      * @memberof ListarPartidasResponse
      */
     cantidadTotalDePartidas?: number;
 }
 /**
- *
+ * 
  * @export
  * @interface ListarProvinciasResponse
  */
 export interface ListarProvinciasResponse {
     /**
-     *
+     * 
      * @type {Array<ProvinciaModel>}
      * @memberof ListarProvinciasResponse
      */
     provincias?: Array<ProvinciaModel>;
 }
 /**
- *
+ * 
  * @export
  * @interface ListarUsuariosResponse
  */
 export interface ListarUsuariosResponse {
     /**
-     *
+     * 
      * @type {Array<UsuarioModel>}
      * @memberof ListarUsuariosResponse
      */
     usuarios?: Array<UsuarioModel>;
     /**
-     *
+     * 
      * @type {number}
      * @memberof ListarUsuariosResponse
      */
@@ -372,23 +379,23 @@ export enum ModoDeMunicipioModel {
     Produccion = <any> 'Produccion'
 }
 /**
- *
+ * 
  * @export
  * @interface MoverGauchosBody
  */
 export interface MoverGauchosBody {
     /**
      * Id del municipio de origen
-     * @type {number}
+     * @type {string}
      * @memberof MoverGauchosBody
      */
-    idMunicipioOrigen?: number;
+    idMunicipioOrigen?: string;
     /**
      * Id del municipio de destino
-     * @type {number}
+     * @type {string}
      * @memberof MoverGauchosBody
      */
-    idMunicipioDestino?: number;
+    idMunicipioDestino?: string;
     /**
      * Cantidad de gauchos a mover
      * @type {number}
@@ -397,19 +404,19 @@ export interface MoverGauchosBody {
     cantidad?: number;
 }
 /**
- *
+ * 
  * @export
  * @interface MoverGauchosResponse
  */
 export interface MoverGauchosResponse {
     /**
-     *
+     * 
      * @type {MunicipioEnJuegoModel}
      * @memberof MoverGauchosResponse
      */
     municipioOrigen?: MunicipioEnJuegoModel;
     /**
-     *
+     * 
      * @type {MunicipioEnJuegoModel}
      * @memberof MoverGauchosResponse
      */
@@ -423,10 +430,10 @@ export interface MoverGauchosResponse {
 export interface MunicipioEnJuegoModel {
     /**
      * Id del municipio.
-     * @type {number}
+     * @type {string}
      * @memberof MunicipioEnJuegoModel
      */
-    id?: number;
+    id?: string;
     /**
      * Nombre del municipio.
      * @type {string}
@@ -434,7 +441,7 @@ export interface MunicipioEnJuegoModel {
      */
     nombre?: string;
     /**
-     *
+     * 
      * @type {CoordenadasModel}
      * @memberof MunicipioEnJuegoModel
      */
@@ -446,7 +453,7 @@ export interface MunicipioEnJuegoModel {
      */
     altura?: number;
     /**
-     *
+     * 
      * @type {UsuarioModel}
      * @memberof MunicipioEnJuegoModel
      */
@@ -458,19 +465,19 @@ export interface MunicipioEnJuegoModel {
      */
     gauchos?: number;
     /**
-     *
+     * 
      * @type {number}
      * @memberof MunicipioEnJuegoModel
      */
     puntosDeDefensa?: number;
     /**
-     *
+     * 
      * @type {number}
      * @memberof MunicipioEnJuegoModel
      */
     produccionDeGauchos?: number;
     /**
-     *
+     * 
      * @type {ModoDeMunicipioModel}
      * @memberof MunicipioEnJuegoModel
      */
@@ -489,13 +496,75 @@ export interface MunicipioEnJuegoModel {
     urlImagen?: string;
 }
 /**
- *
+ * 
+ * @export
+ * @interface MunicipiosLivianosModel
+ */
+export interface MunicipiosLivianosModel {
+    /**
+     * Id del municipio.
+     * @type {string}
+     * @memberof MunicipiosLivianosModel
+     */
+    id?: string;
+    /**
+     * Cantidad de gauchos en el municipio
+     * @type {number}
+     * @memberof MunicipiosLivianosModel
+     */
+    gauchos?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof MunicipiosLivianosModel
+     */
+    puntosDeDefensa?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof MunicipiosLivianosModel
+     */
+    produccionDeGauchos?: number;
+    /**
+     * 
+     * @type {ModoDeMunicipioModel}
+     * @memberof MunicipiosLivianosModel
+     */
+    modo?: ModoDeMunicipioModel;
+    /**
+     * Si el municipio está bloqueado.
+     * @type {boolean}
+     * @memberof MunicipiosLivianosModel
+     */
+    estaBloqueado?: boolean;
+}
+/**
+ * 
+ * @export
+ * @interface MunicipiosPorJugadorLivianoModel
+ */
+export interface MunicipiosPorJugadorLivianoModel {
+    /**
+     * 
+     * @type {string}
+     * @memberof MunicipiosPorJugadorLivianoModel
+     */
+    idJugador?: string;
+    /**
+     * 
+     * @type {Array<MunicipiosLivianosModel>}
+     * @memberof MunicipiosPorJugadorLivianoModel
+     */
+    municipios?: Array<MunicipiosLivianosModel>;
+}
+/**
+ * 
  * @export
  * @interface NuevoJWTModel
  */
 export interface NuevoJWTModel {
     /**
-     *
+     * 
      * @type {UsuarioModel}
      * @memberof NuevoJWTModel
      */
@@ -514,6 +583,43 @@ export interface NuevoJWTModel {
     refreshToken?: string;
 }
 /**
+ * Partida Liviana
+ * @export
+ * @interface PartidaLivianaModel
+ */
+export interface PartidaLivianaModel {
+    /**
+     * 
+     * @type {string}
+     * @memberof PartidaLivianaModel
+     */
+    id?: string;
+    /**
+     * 
+     * @type {EstadoDeJuegoModel}
+     * @memberof PartidaLivianaModel
+     */
+    estado: EstadoDeJuegoModel;
+    /**
+     * 
+     * @type {string}
+     * @memberof PartidaLivianaModel
+     */
+    idGanador?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PartidaLivianaModel
+     */
+    idUsuarioProximoTurno?: string;
+    /**
+     * 
+     * @type {Array<MunicipiosPorJugadorLivianoModel>}
+     * @memberof PartidaLivianaModel
+     */
+    municipiosPorJugador?: Array<MunicipiosPorJugadorLivianoModel>;
+}
+/**
  * Una partida
  * @export
  * @interface PartidaModel
@@ -521,12 +627,12 @@ export interface NuevoJWTModel {
 export interface PartidaModel {
     /**
      * Id de la partida
-     * @type {number}
+     * @type {string}
      * @memberof PartidaModel
      */
-    id: number;
+    id: string;
     /**
-     *
+     * 
      * @type {ProvinciaModel}
      * @memberof PartidaModel
      */
@@ -538,7 +644,7 @@ export interface PartidaModel {
      */
     cantidadMunicipios: number;
     /**
-     *
+     * 
      * @type {EstadoDeJuegoModel}
      * @memberof PartidaModel
      */
@@ -550,7 +656,7 @@ export interface PartidaModel {
      */
     jugadores: Array<UsuarioModel>;
     /**
-     *
+     * 
      * @type {ModoDeJuegoModel}
      * @memberof PartidaModel
      */
@@ -562,7 +668,7 @@ export interface PartidaModel {
      */
     fecha: string;
     /**
-     *
+     * 
      * @type {DatosDeJuegoModel}
      * @memberof PartidaModel
      */
@@ -575,19 +681,19 @@ export interface PartidaModel {
     idGanador?: string;
 }
 /**
- *
+ * 
  * @export
  * @interface PartidaSinInfoModel
  */
 export interface PartidaSinInfoModel {
     /**
      * Id de la partida
-     * @type {number}
+     * @type {string}
      * @memberof PartidaSinInfoModel
      */
-    id?: number;
+    id?: string;
     /**
-     *
+     * 
      * @type {ProvinciaModel}
      * @memberof PartidaSinInfoModel
      */
@@ -599,7 +705,7 @@ export interface PartidaSinInfoModel {
      */
     cantidadMunicipios?: number;
     /**
-     *
+     * 
      * @type {EstadoDeJuegoModel}
      * @memberof PartidaSinInfoModel
      */
@@ -611,7 +717,7 @@ export interface PartidaSinInfoModel {
      */
     jugadores?: Array<UsuarioModel>;
     /**
-     *
+     * 
      * @type {ModoDeJuegoModel}
      * @memberof PartidaSinInfoModel
      */
@@ -655,26 +761,26 @@ export interface ProvinciaModel {
     cantidadMunicipios?: number;
 }
 /**
- *
+ * 
  * @export
  * @interface RefreshAccessTokenBody
  */
 export interface RefreshAccessTokenBody {
     /**
-     *
+     * 
      * @type {string}
      * @memberof RefreshAccessTokenBody
      */
     refreshToken?: string;
 }
 /**
- *
+ * 
  * @export
  * @interface ScoreboardResponse
  */
 export interface ScoreboardResponse {
     /**
-     *
+     * 
      * @type {Array<EstadisticasDeUsuarioModel>}
      * @memberof ScoreboardResponse
      */
@@ -687,26 +793,26 @@ export interface ScoreboardResponse {
     cantidadJugadores?: number;
 }
 /**
- *
+ * 
  * @export
  * @interface SimularAtacarMunicipioBody
  */
 export interface SimularAtacarMunicipioBody {
     /**
      * Id del municipio que ataca
-     * @type {number}
+     * @type {string}
      * @memberof SimularAtacarMunicipioBody
      */
-    idMunicipioAtacante?: number;
+    idMunicipioAtacante?: string;
     /**
      * Id del municipio atacado
-     * @type {number}
+     * @type {string}
      * @memberof SimularAtacarMunicipioBody
      */
-    idMunicipioObjetivo?: number;
+    idMunicipioObjetivo?: string;
 }
 /**
- *
+ * 
  * @export
  * @interface SimularAtacarMunicipioResponse
  */
@@ -725,13 +831,19 @@ export interface SimularAtacarMunicipioResponse {
  */
 export interface UsuarioModel {
     /**
-     *
-     * @type {number}
+     * 
+     * @type {string}
      * @memberof UsuarioModel
      */
-    id: number;
+    id: string;
     /**
-     *
+     * 
+     * @type {boolean}
+     * @memberof UsuarioModel
+     */
+    esAdmin?: boolean;
+    /**
+     * 
      * @type {string}
      * @memberof UsuarioModel
      */
@@ -744,10 +856,10 @@ export interface UsuarioModel {
 export const AdminApiFetchParamCreator = function (configuration?: Configuration) {
     return {
         /**
-         *
+         * 
          * @summary Obtiene las estadísticas generales del juego
-         * @param {string} [fechaInicio]
-         * @param {string} [fechaFin]
+         * @param {string} [fechaInicio] 
+         * @param {string} [fechaFin] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -779,13 +891,13 @@ export const AdminApiFetchParamCreator = function (configuration?: Configuration
             };
         },
         /**
-         *
+         * 
          * @summary Obtiene las estadísticas particulares de un usuario
-         * @param {number} idUsuario Id del usuario
+         * @param {string} idUsuario Id del usuario
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getEstadisticasDeUsuario(idUsuario: number, options: any = {}): FetchArgs {
+        getEstadisticasDeUsuario(idUsuario: string, options: any = {}): FetchArgs {
             // verify required parameter 'idUsuario' is not null or undefined
             if (idUsuario === null || idUsuario === undefined) {
                 throw new RequiredError('idUsuario','Required parameter idUsuario was null or undefined when calling getEstadisticasDeUsuario.');
@@ -810,10 +922,10 @@ export const AdminApiFetchParamCreator = function (configuration?: Configuration
             };
         },
         /**
-         *
+         * 
          * @summary Retorna los datos del scoreboard ordenados por partidas ganadas descendentemente.
-         * @param {number} [tamanioPagina]
-         * @param {number} [pagina]
+         * @param {number} [tamanioPagina] 
+         * @param {number} [pagina] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -845,13 +957,13 @@ export const AdminApiFetchParamCreator = function (configuration?: Configuration
             };
         },
         /**
-         *
+         * 
          * @summary Pasar de turno
-         * @param {number} idPartida
+         * @param {string} idPartida 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        pasarTurnoAdmin(idPartida: number, options: any = {}): FetchArgs {
+        pasarTurnoAdmin(idPartida: string, options: any = {}): FetchArgs {
             // verify required parameter 'idPartida' is not null or undefined
             if (idPartida === null || idPartida === undefined) {
                 throw new RequiredError('idPartida','Required parameter idPartida was null or undefined when calling pasarTurnoAdmin.');
@@ -883,10 +995,10 @@ export const AdminApiFetchParamCreator = function (configuration?: Configuration
 export const AdminApiFp = function(configuration?: Configuration) {
     return {
         /**
-         *
+         * 
          * @summary Obtiene las estadísticas generales del juego
-         * @param {string} [fechaInicio]
-         * @param {string} [fechaFin]
+         * @param {string} [fechaInicio] 
+         * @param {string} [fechaFin] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -903,13 +1015,13 @@ export const AdminApiFp = function(configuration?: Configuration) {
             };
         },
         /**
-         *
+         * 
          * @summary Obtiene las estadísticas particulares de un usuario
-         * @param {number} idUsuario Id del usuario
+         * @param {string} idUsuario Id del usuario
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getEstadisticasDeUsuario(idUsuario: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<EstadisticasDeUsuarioModel> {
+        getEstadisticasDeUsuario(idUsuario: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<EstadisticasDeUsuarioModel> {
             const localVarFetchArgs = AdminApiFetchParamCreator(configuration).getEstadisticasDeUsuario(idUsuario, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
@@ -922,10 +1034,10 @@ export const AdminApiFp = function(configuration?: Configuration) {
             };
         },
         /**
-         *
+         * 
          * @summary Retorna los datos del scoreboard ordenados por partidas ganadas descendentemente.
-         * @param {number} [tamanioPagina]
-         * @param {number} [pagina]
+         * @param {number} [tamanioPagina] 
+         * @param {number} [pagina] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -942,13 +1054,13 @@ export const AdminApiFp = function(configuration?: Configuration) {
             };
         },
         /**
-         *
+         * 
          * @summary Pasar de turno
-         * @param {number} idPartida
+         * @param {string} idPartida 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        pasarTurnoAdmin(idPartida: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
+        pasarTurnoAdmin(idPartida: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
             const localVarFetchArgs = AdminApiFetchParamCreator(configuration).pasarTurnoAdmin(idPartida, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
@@ -970,10 +1082,10 @@ export const AdminApiFp = function(configuration?: Configuration) {
 export const AdminApiFactory = function (configuration?: Configuration, fetch?: FetchAPI, basePath?: string) {
     return {
         /**
-         *
+         * 
          * @summary Obtiene las estadísticas generales del juego
-         * @param {string} [fechaInicio]
-         * @param {string} [fechaFin]
+         * @param {string} [fechaInicio] 
+         * @param {string} [fechaFin] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -981,20 +1093,20 @@ export const AdminApiFactory = function (configuration?: Configuration, fetch?: 
             return AdminApiFp(configuration).getEstadisticas(fechaInicio, fechaFin, options)(fetch, basePath);
         },
         /**
-         *
+         * 
          * @summary Obtiene las estadísticas particulares de un usuario
-         * @param {number} idUsuario Id del usuario
+         * @param {string} idUsuario Id del usuario
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getEstadisticasDeUsuario(idUsuario: number, options?: any) {
+        getEstadisticasDeUsuario(idUsuario: string, options?: any) {
             return AdminApiFp(configuration).getEstadisticasDeUsuario(idUsuario, options)(fetch, basePath);
         },
         /**
-         *
+         * 
          * @summary Retorna los datos del scoreboard ordenados por partidas ganadas descendentemente.
-         * @param {number} [tamanioPagina]
-         * @param {number} [pagina]
+         * @param {number} [tamanioPagina] 
+         * @param {number} [pagina] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -1002,13 +1114,13 @@ export const AdminApiFactory = function (configuration?: Configuration, fetch?: 
             return AdminApiFp(configuration).getScoreboard(tamanioPagina, pagina, options)(fetch, basePath);
         },
         /**
-         *
+         * 
          * @summary Pasar de turno
-         * @param {number} idPartida
+         * @param {string} idPartida 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        pasarTurnoAdmin(idPartida: number, options?: any) {
+        pasarTurnoAdmin(idPartida: string, options?: any) {
             return AdminApiFp(configuration).pasarTurnoAdmin(idPartida, options)(fetch, basePath);
         },
     };
@@ -1022,10 +1134,10 @@ export const AdminApiFactory = function (configuration?: Configuration, fetch?: 
  */
 export class AdminApi extends BaseAPI {
     /**
-     *
+     * 
      * @summary Obtiene las estadísticas generales del juego
-     * @param {string} [fechaInicio]
-     * @param {string} [fechaFin]
+     * @param {string} [fechaInicio] 
+     * @param {string} [fechaFin] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AdminApi
@@ -1035,22 +1147,22 @@ export class AdminApi extends BaseAPI {
     }
 
     /**
-     *
+     * 
      * @summary Obtiene las estadísticas particulares de un usuario
-     * @param {number} idUsuario Id del usuario
+     * @param {string} idUsuario Id del usuario
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AdminApi
      */
-    public getEstadisticasDeUsuario(idUsuario: number, options?: any) {
+    public getEstadisticasDeUsuario(idUsuario: string, options?: any) {
         return AdminApiFp(this.configuration).getEstadisticasDeUsuario(idUsuario, options)(this.fetch, this.basePath);
     }
 
     /**
-     *
+     * 
      * @summary Retorna los datos del scoreboard ordenados por partidas ganadas descendentemente.
-     * @param {number} [tamanioPagina]
-     * @param {number} [pagina]
+     * @param {number} [tamanioPagina] 
+     * @param {number} [pagina] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AdminApi
@@ -1060,14 +1172,14 @@ export class AdminApi extends BaseAPI {
     }
 
     /**
-     *
+     * 
      * @summary Pasar de turno
-     * @param {number} idPartida
+     * @param {string} idPartida 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AdminApi
      */
-    public pasarTurnoAdmin(idPartida: number, options?: any) {
+    public pasarTurnoAdmin(idPartida: string, options?: any) {
         return AdminApiFp(this.configuration).pasarTurnoAdmin(idPartida, options)(this.fetch, this.basePath);
     }
 
@@ -1081,7 +1193,7 @@ export const AuthApiFetchParamCreator = function (configuration?: Configuration)
         /**
          * Loguea a un usuario validando su Google Id Token y retornando un JWT de la aplicación
          * @summary login
-         * @param {GoogleAuthModel} body
+         * @param {GoogleAuthModel} body 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -1111,9 +1223,9 @@ export const AuthApiFetchParamCreator = function (configuration?: Configuration)
             };
         },
         /**
-         *
+         * 
          * @summary Permite obtener un nuevo JWT
-         * @param {RefreshAccessTokenBody} [body]
+         * @param {RefreshAccessTokenBody} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -1141,7 +1253,7 @@ export const AuthApiFetchParamCreator = function (configuration?: Configuration)
         /**
          * Registro a un usuario nuevo y retorna un JWT de la aplicación
          * @summary singUp
-         * @param {GoogleAuthModel} body
+         * @param {GoogleAuthModel} body 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -1182,7 +1294,7 @@ export const AuthApiFp = function(configuration?: Configuration) {
         /**
          * Loguea a un usuario validando su Google Id Token y retornando un JWT de la aplicación
          * @summary login
-         * @param {GoogleAuthModel} body
+         * @param {GoogleAuthModel} body 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -1199,9 +1311,9 @@ export const AuthApiFp = function(configuration?: Configuration) {
             };
         },
         /**
-         *
+         * 
          * @summary Permite obtener un nuevo JWT
-         * @param {RefreshAccessTokenBody} [body]
+         * @param {RefreshAccessTokenBody} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -1220,7 +1332,7 @@ export const AuthApiFp = function(configuration?: Configuration) {
         /**
          * Registro a un usuario nuevo y retorna un JWT de la aplicación
          * @summary singUp
-         * @param {GoogleAuthModel} body
+         * @param {GoogleAuthModel} body 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -1248,7 +1360,7 @@ export const AuthApiFactory = function (configuration?: Configuration, fetch?: F
         /**
          * Loguea a un usuario validando su Google Id Token y retornando un JWT de la aplicación
          * @summary login
-         * @param {GoogleAuthModel} body
+         * @param {GoogleAuthModel} body 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -1256,9 +1368,9 @@ export const AuthApiFactory = function (configuration?: Configuration, fetch?: F
             return AuthApiFp(configuration).logIn(body, options)(fetch, basePath);
         },
         /**
-         *
+         * 
          * @summary Permite obtener un nuevo JWT
-         * @param {RefreshAccessTokenBody} [body]
+         * @param {RefreshAccessTokenBody} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -1268,7 +1380,7 @@ export const AuthApiFactory = function (configuration?: Configuration, fetch?: F
         /**
          * Registro a un usuario nuevo y retorna un JWT de la aplicación
          * @summary singUp
-         * @param {GoogleAuthModel} body
+         * @param {GoogleAuthModel} body 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -1288,7 +1400,7 @@ export class AuthApi extends BaseAPI {
     /**
      * Loguea a un usuario validando su Google Id Token y retornando un JWT de la aplicación
      * @summary login
-     * @param {GoogleAuthModel} body
+     * @param {GoogleAuthModel} body 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AuthApi
@@ -1298,9 +1410,9 @@ export class AuthApi extends BaseAPI {
     }
 
     /**
-     *
+     * 
      * @summary Permite obtener un nuevo JWT
-     * @param {RefreshAccessTokenBody} [body]
+     * @param {RefreshAccessTokenBody} [body] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AuthApi
@@ -1312,7 +1424,7 @@ export class AuthApi extends BaseAPI {
     /**
      * Registro a un usuario nuevo y retorna un JWT de la aplicación
      * @summary singUp
-     * @param {GoogleAuthModel} body
+     * @param {GoogleAuthModel} body 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AuthApi
@@ -1329,14 +1441,14 @@ export class AuthApi extends BaseAPI {
 export const PartidasApiFetchParamCreator = function (configuration?: Configuration) {
     return {
         /**
-         *
+         * 
          * @summary Actualiza el estado de una partida
-         * @param {number} idPartida
-         * @param {ActualizarEstadoPartida} [body]
+         * @param {string} idPartida 
+         * @param {ActualizarEstadoPartida} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        actualizarEstadoPartida(idPartida: number, body?: ActualizarEstadoPartida, options: any = {}): FetchArgs {
+        actualizarEstadoPartida(idPartida: string, body?: ActualizarEstadoPartida, options: any = {}): FetchArgs {
             // verify required parameter 'idPartida' is not null or undefined
             if (idPartida === null || idPartida === undefined) {
                 throw new RequiredError('idPartida','Required parameter idPartida was null or undefined when calling actualizarEstadoPartida.');
@@ -1365,15 +1477,15 @@ export const PartidasApiFetchParamCreator = function (configuration?: Configurat
             };
         },
         /**
-         *
+         * 
          * @summary Actualiza el estado de un municipio en juego
-         * @param {number} idPartida
-         * @param {number} idMunicipio
-         * @param {ActualizarMunicipio} [body]
+         * @param {string} idPartida 
+         * @param {string} idMunicipio 
+         * @param {ActualizarMunicipio} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        actualizarMunicipio(idPartida: number, idMunicipio: number, body?: ActualizarMunicipio, options: any = {}): FetchArgs {
+        actualizarMunicipio(idPartida: string, idMunicipio: string, body?: ActualizarMunicipio, options: any = {}): FetchArgs {
             // verify required parameter 'idPartida' is not null or undefined
             if (idPartida === null || idPartida === undefined) {
                 throw new RequiredError('idPartida','Required parameter idPartida was null or undefined when calling actualizarMunicipio.');
@@ -1407,14 +1519,14 @@ export const PartidasApiFetchParamCreator = function (configuration?: Configurat
             };
         },
         /**
-         *
+         * 
          * @summary Ataca a un municipio. Al atacar, se ataca con todos los gauchos del municipio atacante.
-         * @param {number} idPartida
-         * @param {AtacarMunicipioBody} [body]
+         * @param {string} idPartida 
+         * @param {AtacarMunicipioBody} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        atacarMunicipio(idPartida: number, body?: AtacarMunicipioBody, options: any = {}): FetchArgs {
+        atacarMunicipio(idPartida: string, body?: AtacarMunicipioBody, options: any = {}): FetchArgs {
             // verify required parameter 'idPartida' is not null or undefined
             if (idPartida === null || idPartida === undefined) {
                 throw new RequiredError('idPartida','Required parameter idPartida was null or undefined when calling atacarMunicipio.');
@@ -1443,9 +1555,9 @@ export const PartidasApiFetchParamCreator = function (configuration?: Configurat
             };
         },
         /**
-         *
+         * 
          * @summary Crear una nueva partida
-         * @param {CrearPartidaBody} [body]
+         * @param {CrearPartidaBody} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -1473,13 +1585,14 @@ export const PartidasApiFetchParamCreator = function (configuration?: Configurat
             };
         },
         /**
-         *
+         * 
          * @summary Retorna la partida con id: idPartida. Incluye los datos del juego.
-         * @param {number} idPartida Id de la partida
+         * @param {string} idPartida Id de la partida
+         * @param {string} [campos] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getPartida(idPartida: number, options: any = {}): FetchArgs {
+        getPartida(idPartida: string, campos?: string, options: any = {}): FetchArgs {
             // verify required parameter 'idPartida' is not null or undefined
             if (idPartida === null || idPartida === undefined) {
                 throw new RequiredError('idPartida','Required parameter idPartida was null or undefined when calling getPartida.');
@@ -1493,6 +1606,10 @@ export const PartidasApiFetchParamCreator = function (configuration?: Configurat
 
             // authentication bearerAuth required
 
+            if (campos !== undefined) {
+                localVarQueryParameter['campos'] = campos;
+            }
+
             localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             delete localVarUrlObj.search;
@@ -1504,14 +1621,14 @@ export const PartidasApiFetchParamCreator = function (configuration?: Configurat
             };
         },
         /**
-         *
+         * 
          * @summary Permite listar partidas. No incluye los datos de juego asociados a las mismas.
-         * @param {string} [fechaInicio]
-         * @param {string} [fechaFin]
-         * @param {EstadoDeJuegoModel} [estado]
+         * @param {string} [fechaInicio] 
+         * @param {string} [fechaFin] 
+         * @param {EstadoDeJuegoModel} [estado] 
          * @param {string} [ordenarPor] Campos por los que ordenar separados por coma. Los campos soportados son fecha y estado.
-         * @param {number} [tamanioPagina]
-         * @param {number} [pagina]
+         * @param {number} [tamanioPagina] 
+         * @param {number} [pagina] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -1559,14 +1676,14 @@ export const PartidasApiFetchParamCreator = function (configuration?: Configurat
             };
         },
         /**
-         *
+         * 
          * @summary Mueve gauchos de un municipio a otro
-         * @param {number} idPartida
-         * @param {MoverGauchosBody} [body]
+         * @param {string} idPartida 
+         * @param {MoverGauchosBody} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        moverGauchos(idPartida: number, body?: MoverGauchosBody, options: any = {}): FetchArgs {
+        moverGauchos(idPartida: string, body?: MoverGauchosBody, options: any = {}): FetchArgs {
             // verify required parameter 'idPartida' is not null or undefined
             if (idPartida === null || idPartida === undefined) {
                 throw new RequiredError('idPartida','Required parameter idPartida was null or undefined when calling moverGauchos.');
@@ -1595,13 +1712,13 @@ export const PartidasApiFetchParamCreator = function (configuration?: Configurat
             };
         },
         /**
-         *
+         * 
          * @summary Pasar de turno
-         * @param {number} idPartida
+         * @param {string} idPartida 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        pasarTurno(idPartida: number, options: any = {}): FetchArgs {
+        pasarTurno(idPartida: string, options: any = {}): FetchArgs {
             // verify required parameter 'idPartida' is not null or undefined
             if (idPartida === null || idPartida === undefined) {
                 throw new RequiredError('idPartida','Required parameter idPartida was null or undefined when calling pasarTurno.');
@@ -1626,14 +1743,14 @@ export const PartidasApiFetchParamCreator = function (configuration?: Configurat
             };
         },
         /**
-         *
+         * 
          * @summary Ataca a un municipio
-         * @param {number} idPartida
-         * @param {SimularAtacarMunicipioBody} [body]
+         * @param {string} idPartida 
+         * @param {SimularAtacarMunicipioBody} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        simularAtacarMunicipio(idPartida: number, body?: SimularAtacarMunicipioBody, options: any = {}): FetchArgs {
+        simularAtacarMunicipio(idPartida: string, body?: SimularAtacarMunicipioBody, options: any = {}): FetchArgs {
             // verify required parameter 'idPartida' is not null or undefined
             if (idPartida === null || idPartida === undefined) {
                 throw new RequiredError('idPartida','Required parameter idPartida was null or undefined when calling simularAtacarMunicipio.');
@@ -1671,14 +1788,14 @@ export const PartidasApiFetchParamCreator = function (configuration?: Configurat
 export const PartidasApiFp = function(configuration?: Configuration) {
     return {
         /**
-         *
+         * 
          * @summary Actualiza el estado de una partida
-         * @param {number} idPartida
-         * @param {ActualizarEstadoPartida} [body]
+         * @param {string} idPartida 
+         * @param {ActualizarEstadoPartida} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        actualizarEstadoPartida(idPartida: number, body?: ActualizarEstadoPartida, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
+        actualizarEstadoPartida(idPartida: string, body?: ActualizarEstadoPartida, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
             const localVarFetchArgs = PartidasApiFetchParamCreator(configuration).actualizarEstadoPartida(idPartida, body, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
@@ -1691,15 +1808,15 @@ export const PartidasApiFp = function(configuration?: Configuration) {
             };
         },
         /**
-         *
+         * 
          * @summary Actualiza el estado de un municipio en juego
-         * @param {number} idPartida
-         * @param {number} idMunicipio
-         * @param {ActualizarMunicipio} [body]
+         * @param {string} idPartida 
+         * @param {string} idMunicipio 
+         * @param {ActualizarMunicipio} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        actualizarMunicipio(idPartida: number, idMunicipio: number, body?: ActualizarMunicipio, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
+        actualizarMunicipio(idPartida: string, idMunicipio: string, body?: ActualizarMunicipio, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
             const localVarFetchArgs = PartidasApiFetchParamCreator(configuration).actualizarMunicipio(idPartida, idMunicipio, body, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
@@ -1712,14 +1829,14 @@ export const PartidasApiFp = function(configuration?: Configuration) {
             };
         },
         /**
-         *
+         * 
          * @summary Ataca a un municipio. Al atacar, se ataca con todos los gauchos del municipio atacante.
-         * @param {number} idPartida
-         * @param {AtacarMunicipioBody} [body]
+         * @param {string} idPartida 
+         * @param {AtacarMunicipioBody} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        atacarMunicipio(idPartida: number, body?: AtacarMunicipioBody, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<AtacarMunicipioResponse> {
+        atacarMunicipio(idPartida: string, body?: AtacarMunicipioBody, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<AtacarMunicipioResponse> {
             const localVarFetchArgs = PartidasApiFetchParamCreator(configuration).atacarMunicipio(idPartida, body, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
@@ -1732,9 +1849,9 @@ export const PartidasApiFp = function(configuration?: Configuration) {
             };
         },
         /**
-         *
+         * 
          * @summary Crear una nueva partida
-         * @param {CrearPartidaBody} [body]
+         * @param {CrearPartidaBody} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -1751,14 +1868,15 @@ export const PartidasApiFp = function(configuration?: Configuration) {
             };
         },
         /**
-         *
+         * 
          * @summary Retorna la partida con id: idPartida. Incluye los datos del juego.
-         * @param {number} idPartida Id de la partida
+         * @param {string} idPartida Id de la partida
+         * @param {string} [campos] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getPartida(idPartida: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<PartidaModel> {
-            const localVarFetchArgs = PartidasApiFetchParamCreator(configuration).getPartida(idPartida, options);
+        getPartida(idPartida: string, campos?: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<PartidaModel> {
+            const localVarFetchArgs = PartidasApiFetchParamCreator(configuration).getPartida(idPartida, campos, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
@@ -1770,14 +1888,14 @@ export const PartidasApiFp = function(configuration?: Configuration) {
             };
         },
         /**
-         *
+         * 
          * @summary Permite listar partidas. No incluye los datos de juego asociados a las mismas.
-         * @param {string} [fechaInicio]
-         * @param {string} [fechaFin]
-         * @param {EstadoDeJuegoModel} [estado]
+         * @param {string} [fechaInicio] 
+         * @param {string} [fechaFin] 
+         * @param {EstadoDeJuegoModel} [estado] 
          * @param {string} [ordenarPor] Campos por los que ordenar separados por coma. Los campos soportados son fecha y estado.
-         * @param {number} [tamanioPagina]
-         * @param {number} [pagina]
+         * @param {number} [tamanioPagina] 
+         * @param {number} [pagina] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -1794,14 +1912,14 @@ export const PartidasApiFp = function(configuration?: Configuration) {
             };
         },
         /**
-         *
+         * 
          * @summary Mueve gauchos de un municipio a otro
-         * @param {number} idPartida
-         * @param {MoverGauchosBody} [body]
+         * @param {string} idPartida 
+         * @param {MoverGauchosBody} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        moverGauchos(idPartida: number, body?: MoverGauchosBody, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<MoverGauchosResponse> {
+        moverGauchos(idPartida: string, body?: MoverGauchosBody, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<MoverGauchosResponse> {
             const localVarFetchArgs = PartidasApiFetchParamCreator(configuration).moverGauchos(idPartida, body, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
@@ -1814,13 +1932,13 @@ export const PartidasApiFp = function(configuration?: Configuration) {
             };
         },
         /**
-         *
+         * 
          * @summary Pasar de turno
-         * @param {number} idPartida
+         * @param {string} idPartida 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        pasarTurno(idPartida: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
+        pasarTurno(idPartida: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
             const localVarFetchArgs = PartidasApiFetchParamCreator(configuration).pasarTurno(idPartida, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
@@ -1833,14 +1951,14 @@ export const PartidasApiFp = function(configuration?: Configuration) {
             };
         },
         /**
-         *
+         * 
          * @summary Ataca a un municipio
-         * @param {number} idPartida
-         * @param {SimularAtacarMunicipioBody} [body]
+         * @param {string} idPartida 
+         * @param {SimularAtacarMunicipioBody} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        simularAtacarMunicipio(idPartida: number, body?: SimularAtacarMunicipioBody, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<SimularAtacarMunicipioResponse> {
+        simularAtacarMunicipio(idPartida: string, body?: SimularAtacarMunicipioBody, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<SimularAtacarMunicipioResponse> {
             const localVarFetchArgs = PartidasApiFetchParamCreator(configuration).simularAtacarMunicipio(idPartida, body, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
@@ -1862,43 +1980,43 @@ export const PartidasApiFp = function(configuration?: Configuration) {
 export const PartidasApiFactory = function (configuration?: Configuration, fetch?: FetchAPI, basePath?: string) {
     return {
         /**
-         *
+         * 
          * @summary Actualiza el estado de una partida
-         * @param {number} idPartida
-         * @param {ActualizarEstadoPartida} [body]
+         * @param {string} idPartida 
+         * @param {ActualizarEstadoPartida} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        actualizarEstadoPartida(idPartida: number, body?: ActualizarEstadoPartida, options?: any) {
+        actualizarEstadoPartida(idPartida: string, body?: ActualizarEstadoPartida, options?: any) {
             return PartidasApiFp(configuration).actualizarEstadoPartida(idPartida, body, options)(fetch, basePath);
         },
         /**
-         *
+         * 
          * @summary Actualiza el estado de un municipio en juego
-         * @param {number} idPartida
-         * @param {number} idMunicipio
-         * @param {ActualizarMunicipio} [body]
+         * @param {string} idPartida 
+         * @param {string} idMunicipio 
+         * @param {ActualizarMunicipio} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        actualizarMunicipio(idPartida: number, idMunicipio: number, body?: ActualizarMunicipio, options?: any) {
+        actualizarMunicipio(idPartida: string, idMunicipio: string, body?: ActualizarMunicipio, options?: any) {
             return PartidasApiFp(configuration).actualizarMunicipio(idPartida, idMunicipio, body, options)(fetch, basePath);
         },
         /**
-         *
+         * 
          * @summary Ataca a un municipio. Al atacar, se ataca con todos los gauchos del municipio atacante.
-         * @param {number} idPartida
-         * @param {AtacarMunicipioBody} [body]
+         * @param {string} idPartida 
+         * @param {AtacarMunicipioBody} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        atacarMunicipio(idPartida: number, body?: AtacarMunicipioBody, options?: any) {
+        atacarMunicipio(idPartida: string, body?: AtacarMunicipioBody, options?: any) {
             return PartidasApiFp(configuration).atacarMunicipio(idPartida, body, options)(fetch, basePath);
         },
         /**
-         *
+         * 
          * @summary Crear una nueva partida
-         * @param {CrearPartidaBody} [body]
+         * @param {CrearPartidaBody} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -1906,24 +2024,25 @@ export const PartidasApiFactory = function (configuration?: Configuration, fetch
             return PartidasApiFp(configuration).crearPartida(body, options)(fetch, basePath);
         },
         /**
-         *
+         * 
          * @summary Retorna la partida con id: idPartida. Incluye los datos del juego.
-         * @param {number} idPartida Id de la partida
+         * @param {string} idPartida Id de la partida
+         * @param {string} [campos] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getPartida(idPartida: number, options?: any) {
-            return PartidasApiFp(configuration).getPartida(idPartida, options)(fetch, basePath);
+        getPartida(idPartida: string, campos?: string, options?: any) {
+            return PartidasApiFp(configuration).getPartida(idPartida, campos, options)(fetch, basePath);
         },
         /**
-         *
+         * 
          * @summary Permite listar partidas. No incluye los datos de juego asociados a las mismas.
-         * @param {string} [fechaInicio]
-         * @param {string} [fechaFin]
-         * @param {EstadoDeJuegoModel} [estado]
+         * @param {string} [fechaInicio] 
+         * @param {string} [fechaFin] 
+         * @param {EstadoDeJuegoModel} [estado] 
          * @param {string} [ordenarPor] Campos por los que ordenar separados por coma. Los campos soportados son fecha y estado.
-         * @param {number} [tamanioPagina]
-         * @param {number} [pagina]
+         * @param {number} [tamanioPagina] 
+         * @param {number} [pagina] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -1931,35 +2050,35 @@ export const PartidasApiFactory = function (configuration?: Configuration, fetch
             return PartidasApiFp(configuration).listarPartidas(fechaInicio, fechaFin, estado, ordenarPor, tamanioPagina, pagina, options)(fetch, basePath);
         },
         /**
-         *
+         * 
          * @summary Mueve gauchos de un municipio a otro
-         * @param {number} idPartida
-         * @param {MoverGauchosBody} [body]
+         * @param {string} idPartida 
+         * @param {MoverGauchosBody} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        moverGauchos(idPartida: number, body?: MoverGauchosBody, options?: any) {
+        moverGauchos(idPartida: string, body?: MoverGauchosBody, options?: any) {
             return PartidasApiFp(configuration).moverGauchos(idPartida, body, options)(fetch, basePath);
         },
         /**
-         *
+         * 
          * @summary Pasar de turno
-         * @param {number} idPartida
+         * @param {string} idPartida 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        pasarTurno(idPartida: number, options?: any) {
+        pasarTurno(idPartida: string, options?: any) {
             return PartidasApiFp(configuration).pasarTurno(idPartida, options)(fetch, basePath);
         },
         /**
-         *
+         * 
          * @summary Ataca a un municipio
-         * @param {number} idPartida
-         * @param {SimularAtacarMunicipioBody} [body]
+         * @param {string} idPartida 
+         * @param {SimularAtacarMunicipioBody} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        simularAtacarMunicipio(idPartida: number, body?: SimularAtacarMunicipioBody, options?: any) {
+        simularAtacarMunicipio(idPartida: string, body?: SimularAtacarMunicipioBody, options?: any) {
             return PartidasApiFp(configuration).simularAtacarMunicipio(idPartida, body, options)(fetch, basePath);
         },
     };
@@ -1973,49 +2092,49 @@ export const PartidasApiFactory = function (configuration?: Configuration, fetch
  */
 export class PartidasApi extends BaseAPI {
     /**
-     *
+     * 
      * @summary Actualiza el estado de una partida
-     * @param {number} idPartida
-     * @param {ActualizarEstadoPartida} [body]
+     * @param {string} idPartida 
+     * @param {ActualizarEstadoPartida} [body] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof PartidasApi
      */
-    public actualizarEstadoPartida(idPartida: number, body?: ActualizarEstadoPartida, options?: any) {
+    public actualizarEstadoPartida(idPartida: string, body?: ActualizarEstadoPartida, options?: any) {
         return PartidasApiFp(this.configuration).actualizarEstadoPartida(idPartida, body, options)(this.fetch, this.basePath);
     }
 
     /**
-     *
+     * 
      * @summary Actualiza el estado de un municipio en juego
-     * @param {number} idPartida
-     * @param {number} idMunicipio
-     * @param {ActualizarMunicipio} [body]
+     * @param {string} idPartida 
+     * @param {string} idMunicipio 
+     * @param {ActualizarMunicipio} [body] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof PartidasApi
      */
-    public actualizarMunicipio(idPartida: number, idMunicipio: number, body?: ActualizarMunicipio, options?: any) {
+    public actualizarMunicipio(idPartida: string, idMunicipio: string, body?: ActualizarMunicipio, options?: any) {
         return PartidasApiFp(this.configuration).actualizarMunicipio(idPartida, idMunicipio, body, options)(this.fetch, this.basePath);
     }
 
     /**
-     *
+     * 
      * @summary Ataca a un municipio. Al atacar, se ataca con todos los gauchos del municipio atacante.
-     * @param {number} idPartida
-     * @param {AtacarMunicipioBody} [body]
+     * @param {string} idPartida 
+     * @param {AtacarMunicipioBody} [body] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof PartidasApi
      */
-    public atacarMunicipio(idPartida: number, body?: AtacarMunicipioBody, options?: any) {
+    public atacarMunicipio(idPartida: string, body?: AtacarMunicipioBody, options?: any) {
         return PartidasApiFp(this.configuration).atacarMunicipio(idPartida, body, options)(this.fetch, this.basePath);
     }
 
     /**
-     *
+     * 
      * @summary Crear una nueva partida
-     * @param {CrearPartidaBody} [body]
+     * @param {CrearPartidaBody} [body] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof PartidasApi
@@ -2025,26 +2144,27 @@ export class PartidasApi extends BaseAPI {
     }
 
     /**
-     *
+     * 
      * @summary Retorna la partida con id: idPartida. Incluye los datos del juego.
-     * @param {number} idPartida Id de la partida
+     * @param {string} idPartida Id de la partida
+     * @param {string} [campos] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof PartidasApi
      */
-    public getPartida(idPartida: number, options?: any) {
-        return PartidasApiFp(this.configuration).getPartida(idPartida, options)(this.fetch, this.basePath);
+    public getPartida(idPartida: string, campos?: string, options?: any) {
+        return PartidasApiFp(this.configuration).getPartida(idPartida, campos, options)(this.fetch, this.basePath);
     }
 
     /**
-     *
+     * 
      * @summary Permite listar partidas. No incluye los datos de juego asociados a las mismas.
-     * @param {string} [fechaInicio]
-     * @param {string} [fechaFin]
-     * @param {EstadoDeJuegoModel} [estado]
+     * @param {string} [fechaInicio] 
+     * @param {string} [fechaFin] 
+     * @param {EstadoDeJuegoModel} [estado] 
      * @param {string} [ordenarPor] Campos por los que ordenar separados por coma. Los campos soportados son fecha y estado.
-     * @param {number} [tamanioPagina]
-     * @param {number} [pagina]
+     * @param {number} [tamanioPagina] 
+     * @param {number} [pagina] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof PartidasApi
@@ -2054,40 +2174,40 @@ export class PartidasApi extends BaseAPI {
     }
 
     /**
-     *
+     * 
      * @summary Mueve gauchos de un municipio a otro
-     * @param {number} idPartida
-     * @param {MoverGauchosBody} [body]
+     * @param {string} idPartida 
+     * @param {MoverGauchosBody} [body] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof PartidasApi
      */
-    public moverGauchos(idPartida: number, body?: MoverGauchosBody, options?: any) {
+    public moverGauchos(idPartida: string, body?: MoverGauchosBody, options?: any) {
         return PartidasApiFp(this.configuration).moverGauchos(idPartida, body, options)(this.fetch, this.basePath);
     }
 
     /**
-     *
+     * 
      * @summary Pasar de turno
-     * @param {number} idPartida
+     * @param {string} idPartida 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof PartidasApi
      */
-    public pasarTurno(idPartida: number, options?: any) {
+    public pasarTurno(idPartida: string, options?: any) {
         return PartidasApiFp(this.configuration).pasarTurno(idPartida, options)(this.fetch, this.basePath);
     }
 
     /**
-     *
+     * 
      * @summary Ataca a un municipio
-     * @param {number} idPartida
-     * @param {SimularAtacarMunicipioBody} [body]
+     * @param {string} idPartida 
+     * @param {SimularAtacarMunicipioBody} [body] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof PartidasApi
      */
-    public simularAtacarMunicipio(idPartida: number, body?: SimularAtacarMunicipioBody, options?: any) {
+    public simularAtacarMunicipio(idPartida: string, body?: SimularAtacarMunicipioBody, options?: any) {
         return PartidasApiFp(this.configuration).simularAtacarMunicipio(idPartida, body, options)(this.fetch, this.basePath);
     }
 
@@ -2099,10 +2219,10 @@ export class PartidasApi extends BaseAPI {
 export const ProvinciasApiFetchParamCreator = function (configuration?: Configuration) {
     return {
         /**
-         *
+         * 
          * @summary Permite listar las provincias
-         * @param {number} [tamanioPagina]
-         * @param {number} [pagina]
+         * @param {number} [tamanioPagina] 
+         * @param {number} [pagina] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -2143,10 +2263,10 @@ export const ProvinciasApiFetchParamCreator = function (configuration?: Configur
 export const ProvinciasApiFp = function(configuration?: Configuration) {
     return {
         /**
-         *
+         * 
          * @summary Permite listar las provincias
-         * @param {number} [tamanioPagina]
-         * @param {number} [pagina]
+         * @param {number} [tamanioPagina] 
+         * @param {number} [pagina] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -2172,10 +2292,10 @@ export const ProvinciasApiFp = function(configuration?: Configuration) {
 export const ProvinciasApiFactory = function (configuration?: Configuration, fetch?: FetchAPI, basePath?: string) {
     return {
         /**
-         *
+         * 
          * @summary Permite listar las provincias
-         * @param {number} [tamanioPagina]
-         * @param {number} [pagina]
+         * @param {number} [tamanioPagina] 
+         * @param {number} [pagina] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -2193,10 +2313,10 @@ export const ProvinciasApiFactory = function (configuration?: Configuration, fet
  */
 export class ProvinciasApi extends BaseAPI {
     /**
-     *
+     * 
      * @summary Permite listar las provincias
-     * @param {number} [tamanioPagina]
-     * @param {number} [pagina]
+     * @param {number} [tamanioPagina] 
+     * @param {number} [pagina] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ProvinciasApi
@@ -2213,11 +2333,11 @@ export class ProvinciasApi extends BaseAPI {
 export const UsuariosApiFetchParamCreator = function (configuration?: Configuration) {
     return {
         /**
-         *
+         * 
          * @summary Permite listar a los usuarios
-         * @param {string} [filter]
-         * @param {number} [tamanioPagina]
-         * @param {number} [pagina]
+         * @param {string} [filter] 
+         * @param {number} [tamanioPagina] 
+         * @param {number} [pagina] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -2253,7 +2373,7 @@ export const UsuariosApiFetchParamCreator = function (configuration?: Configurat
             };
         },
         /**
-         *
+         * 
          * @summary Permite obtener información del usuario logueado
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -2287,11 +2407,11 @@ export const UsuariosApiFetchParamCreator = function (configuration?: Configurat
 export const UsuariosApiFp = function(configuration?: Configuration) {
     return {
         /**
-         *
+         * 
          * @summary Permite listar a los usuarios
-         * @param {string} [filter]
-         * @param {number} [tamanioPagina]
-         * @param {number} [pagina]
+         * @param {string} [filter] 
+         * @param {number} [tamanioPagina] 
+         * @param {number} [pagina] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -2308,7 +2428,7 @@ export const UsuariosApiFp = function(configuration?: Configuration) {
             };
         },
         /**
-         *
+         * 
          * @summary Permite obtener información del usuario logueado
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -2335,11 +2455,11 @@ export const UsuariosApiFp = function(configuration?: Configuration) {
 export const UsuariosApiFactory = function (configuration?: Configuration, fetch?: FetchAPI, basePath?: string) {
     return {
         /**
-         *
+         * 
          * @summary Permite listar a los usuarios
-         * @param {string} [filter]
-         * @param {number} [tamanioPagina]
-         * @param {number} [pagina]
+         * @param {string} [filter] 
+         * @param {number} [tamanioPagina] 
+         * @param {number} [pagina] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -2347,7 +2467,7 @@ export const UsuariosApiFactory = function (configuration?: Configuration, fetch
             return UsuariosApiFp(configuration).listarUsuarios(filter, tamanioPagina, pagina, options)(fetch, basePath);
         },
         /**
-         *
+         * 
          * @summary Permite obtener información del usuario logueado
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -2366,11 +2486,11 @@ export const UsuariosApiFactory = function (configuration?: Configuration, fetch
  */
 export class UsuariosApi extends BaseAPI {
     /**
-     *
+     * 
      * @summary Permite listar a los usuarios
-     * @param {string} [filter]
-     * @param {number} [tamanioPagina]
-     * @param {number} [pagina]
+     * @param {string} [filter] 
+     * @param {number} [tamanioPagina] 
+     * @param {number} [pagina] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UsuariosApi
@@ -2380,7 +2500,7 @@ export class UsuariosApi extends BaseAPI {
     }
 
     /**
-     *
+     * 
      * @summary Permite obtener información del usuario logueado
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
