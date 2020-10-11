@@ -9,8 +9,11 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 import tp.tacs.api.dominio.municipio.Municipio;
+import tp.tacs.api.dominio.partida.Partida;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 
@@ -53,6 +56,15 @@ public class MunicipioDaoMongo implements MunicipioDao {
                 new Query(where("_id").in(idsMunicipios)),
                 Municipio.class
         );
+    }
+
+    @Override
+    public Set<Municipio> municipiosConDuenio(Partida partida) {
+        var query = new Query(
+                where("_id").in(partida.getMunicipios())
+                        .and("duenio").exists(true)
+        );
+        return new HashSet<>(this.mongoOps.find(query, Municipio.class));
     }
 
 }

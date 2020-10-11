@@ -67,8 +67,7 @@ public class ServicioPartida {
     }
 
     public Usuario usuarioConMasMunicipios(Partida partida) {
-        var municipiosConDuenio = municipioDao.getByIds(partida.getMunicipios()).stream()
-                .filter(municipio -> municipio.getDuenio() != null).collect(Collectors.toSet());
+        Set<Municipio> municipiosConDuenio = municipioDao.municipiosConDuenio(partida);
 
         //Agrupa por usuario sumando la cantidad de municipios que tenga
         var ganadosPorUsuario = municipiosConDuenio.stream()

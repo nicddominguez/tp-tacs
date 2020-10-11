@@ -1,8 +1,10 @@
 package tp.tacs.api.daos;
 
 import tp.tacs.api.dominio.municipio.Municipio;
+import tp.tacs.api.dominio.partida.Partida;
 
 import java.util.List;
+import java.util.Set;
 
 public interface MunicipioDao extends Dao<Municipio> {
 
@@ -16,4 +18,5 @@ public interface MunicipioDao extends Dao<Municipio> {
 
     List<Municipio> getByIds(List<String> ids);
 
+    Set<Municipio> municipiosConDuenio(Partida partida);
 }
