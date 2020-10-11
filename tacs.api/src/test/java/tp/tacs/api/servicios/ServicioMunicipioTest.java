@@ -49,7 +49,7 @@ class ServicioMunicipioTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
-        municipioDao = MunicipioDaoMemoria.builder().build();
+        municipioDao = new MunicipioDaoMemoria();
         usuarioA = Usuario.builder().id("0L").build();
         usuarioB = Usuario.builder().id("1L").build();
 

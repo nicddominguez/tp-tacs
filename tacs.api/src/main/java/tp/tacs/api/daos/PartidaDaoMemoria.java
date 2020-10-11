@@ -11,7 +11,6 @@ import tp.tacs.api.mappers.EstadoDeJuegoMapper;
 import tp.tacs.api.mappers.PartidaSinInfoPartidaMapper;
 import tp.tacs.api.model.EstadisticasDeJuegoModel;
 import tp.tacs.api.model.EstadoDeJuegoModel;
-import tp.tacs.api.servicios.ServicioPartida;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
@@ -24,8 +23,6 @@ import java.util.stream.Stream;
 @ConditionalOnProperty(prefix="application", name="persistance-implementation", havingValue = "memoria")
 public class PartidaDaoMemoria implements PartidaDao {
 
-    @Autowired
-    private ServicioPartida servicioPartida;
     @Autowired
     private EstadoDeJuegoMapper estadoDeJuegoMapper;
     @Autowired
@@ -132,7 +129,7 @@ public class PartidaDaoMemoria implements PartidaDao {
 
     public List<PartidaSinInfo> getPartidasFiltradasUsuario(Date fechaInicio, Date fechaFin, EstadoDeJuegoModel estado, Usuario usuario) {
         Stream<PartidaSinInfo> partidasFiltradasStream = getPartidasFiltradasStream(fechaInicio, fechaFin, estado);
-        partidasFiltradasStream = partidasFiltradasStream.filter(partida -> servicioPartida.perteneceALaPartida(partida, usuario));
+        partidasFiltradasStream = partidasFiltradasStream.filter(partida -> partida.getJugadoresIds().contains(usuario.getId()));
         return partidasFiltradasStream.collect(Collectors.toList());
     }
 }

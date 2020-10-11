@@ -1,8 +1,5 @@
 package tp.tacs.api.daos;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
 import tp.tacs.api.dominio.municipio.Municipio;
@@ -13,16 +10,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Builder
-@Getter
-@Setter
 @Repository("municipioDaoMemoria")
 @ConditionalOnProperty(prefix = "application", name = "persistance-implementation", havingValue = "memoria")
 public class MunicipioDaoMemoria implements MunicipioDao {
 
-    @Builder.Default
     public List<Municipio> municipios = new ArrayList<>();
-    @Builder.Default
     private Long municipioId = 0L;
 
     @Override
