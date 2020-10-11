@@ -3,6 +3,8 @@ package tp.tacs.api.daos;
 import tp.tacs.api.dominio.partida.Partida;
 import tp.tacs.api.dominio.partida.PartidaSinInfo;
 import tp.tacs.api.dominio.usuario.Usuario;
+import tp.tacs.api.mappers.EstadoDeJuegoMapper;
+import tp.tacs.api.mappers.PartidaSinInfoPartidaMapper;
 import tp.tacs.api.model.EstadisticasDeJuegoModel;
 import tp.tacs.api.model.EstadoDeJuegoModel;
 

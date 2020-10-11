@@ -18,7 +18,6 @@ const useStyles = makeStyles((theme) => ({
     height: "100vh",
   },
   image: {
-    // TODO: Usar una collection propia
     backgroundImage: "url(https://source.unsplash.com/collection/10417678)",
     backgroundRepeat: "no-repeat",
     backgroundColor:

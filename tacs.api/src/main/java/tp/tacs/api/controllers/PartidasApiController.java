@@ -100,7 +100,7 @@ public class PartidasApiController implements PartidasApi {
             return new ResponseEntity("El usuario no tiene permisos para actualizar el municipio en este turno", HttpStatus.BAD_REQUEST);
 
         var nuevaEspecializacion = modoDeMunicipioMapper.toEntity(modo);
-        this.servicioMunicipio.actualizarMunicipio(idMunicipio, nuevaEspecializacion, body.isEstaBloqueado());
+        this.servicioMunicipio.actualizarMunicipio(partida, idMunicipio, nuevaEspecializacion);
         return ResponseEntity.ok().build();
     }
 
@@ -187,7 +187,7 @@ public class PartidasApiController implements PartidasApi {
         var cantidad = Math.toIntExact(body.getCantidad());
         MoverGauchosResponse response;
         try {
-            response = servicioPartida.moverGauchos(body.getIdMunicipioOrigen(), body.getIdMunicipioDestino(), cantidad);
+            response = servicioPartida.moverGauchos(body.getIdMunicipioOrigen(), body.getIdMunicipioDestino(), cantidad, partida.getModoDeJuego());
         } catch (MunicipioException | PartidaException e) {
             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -228,7 +228,7 @@ public class PartidasApiController implements PartidasApi {
         if (debugMode) {
             partidas = this.partidaDao.getPartidasFiltradas(fechaInicio, fechaFin, estado);
         } else {
-            partidas = this.partidaDao.getPartidasFiltradasUsuario(fechaInicio, fechaFin, estado, usuarioRequest);
+            partidas = this.servicioPartida.getPartidasFiltradasUsuario(fechaInicio, fechaFin, estado, usuarioRequest);
         }
 
         var partidaModels = partidaSinInfoMapper.partidasParaListar(partidas);
@@ -279,7 +279,7 @@ public class PartidasApiController implements PartidasApi {
         Usuario usuarioRequest = usuarioDao.getByUsername(usernameRequest);
         if (usuarioRequest == null)
             return false;
-        return partida.idUsuarioEnTurnoActual().equals(usuarioRequest.getId());
+        return servicioPartida.idUsuarioEnTurnoActual(partida).equals(usuarioRequest.getId());
     }
 }
 

@@ -19,4 +19,5 @@ public interface UsuarioDao extends Dao<Usuario> {
 
     List<EstadisticasDeUsuarioModel> scoreBoard();
 
+    Long cantidadTotalUsuarios();
 }

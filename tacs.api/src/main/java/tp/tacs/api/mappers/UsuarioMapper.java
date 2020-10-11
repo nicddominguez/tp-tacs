@@ -8,7 +8,7 @@ import tp.tacs.api.model.UsuarioModel;
 public class UsuarioMapper extends AbstractMapper<Usuario, UsuarioModel> {
 
     @Override protected UsuarioModel wrapModel(Usuario model) {
-        return new UsuarioModel().id(model.getId()).nombreDeUsuario(model.getNombre());
+        return new UsuarioModel().id(model.getId()).nombreDeUsuario(model.getNombre()).esAdmin(model.getIsAdmin());
     }
 
     @Override protected Usuario unwrapModel(UsuarioModel model) {

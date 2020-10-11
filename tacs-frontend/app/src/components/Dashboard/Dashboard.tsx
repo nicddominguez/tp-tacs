@@ -11,18 +11,21 @@ import { makeStyles } from "@material-ui/core/styles";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import MenuIcon from "@material-ui/icons/Menu";
-import Map from "@material-ui/icons/Map";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import MenuIcon from "@material-ui/icons/Menu";
 import clsx from "clsx";
-import React, { useEffect } from "react";
-import { Link, Route, useHistory } from "react-router-dom";
-import { dashboardRoutes as routes } from "../Routes/DashboardRoutes";
-import { WololoAuthApiClient, WololoUsuariosApiClient } from "../../api/client";
-import { UsuarioModel, PartidaModel, EstadoDeJuegoModel, ModoDeJuegoModel, PartidaSinInfoModel } from "../../api/api";
+import Estadisticas from "components/Estadisticas/Estadisticas";
+import EstadisticasPartidas from "components/Estadisticas/EstadisticasPartidas";
+import EstadisticasUsuarios from "components/Estadisticas/EstadisticasUsuarios";
+import Scoreboard from "components/Estadisticas/Scoreboard";
 import PantallaDeJuego from "components/Juego/PantallaDeJuego";
 import NuevaPartidaStepper from "components/Partidas/NuevaPartidaStepper";
 import Partidas from "components/Partidas/Partidas";
+import React, { useEffect } from "react";
+import { Link, Route, useHistory } from "react-router-dom";
+import { PartidaSinInfoModel, UsuarioModel } from "../../api/api";
+import { WololoAuthApiClient, WololoUsuariosApiClient } from "../../api/client";
+import { dashboardRoutes as routes } from "../Routes/DashboardRoutes";
 
 const drawerWidth = 240;
 
@@ -96,27 +99,29 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
 export interface DashboardProps {
   flagLoggedOut: () => void;
 }
 
-
 const authApiClient = new WololoAuthApiClient();
 const usuariosApiClient = new WololoUsuariosApiClient();
-
 
 export default function Dashboard(props: DashboardProps) {
   const classes = useStyles();
 
   const [open, setOpen] = React.useState(true);
-  const [partidaSinInfo, setPartidaSinInfo] = React.useState(undefined as PartidaSinInfoModel | undefined);
-  const [usuarioLogueado, setUsuarioLogueado] = React.useState(undefined as UsuarioModel | undefined);
+  const [partidaSinInfo, setPartidaSinInfo] = React.useState(
+    undefined as PartidaSinInfoModel | undefined
+  );
+  const [usuarioLogueado, setUsuarioLogueado] = React.useState(
+    undefined as UsuarioModel | undefined
+  );
   const history = useHistory();
 
   useEffect(() => {
-    if(!usuarioLogueado) {
-      usuariosApiClient.obtenerUsuarioLogueado()
+    if (!usuarioLogueado) {
+      usuariosApiClient
+        .obtenerUsuarioLogueado()
         .then(setUsuarioLogueado)
         .catch(console.error);
     }
@@ -125,7 +130,7 @@ export default function Dashboard(props: DashboardProps) {
   const doLogOut = () => {
     authApiClient.logUserOut();
     props.flagLoggedOut();
-  }
+  };
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -137,14 +142,13 @@ export default function Dashboard(props: DashboardProps) {
 
   const jugarPartida = (partida: PartidaSinInfoModel) => {
     setPartidaSinInfo(partida);
-    history.push('/app/jugar');
-  }
+    history.push("/app/jugar");
+  };
 
   return (
     <div className={classes.root}>
       <CssBaseline />
       <AppBar
-        // TODO: El sidebar no tiene animacion al colapsarse o expandirse
         position="absolute"
         className={clsx(classes.appBar, open && classes.appBarShift)}
       >
@@ -170,16 +174,11 @@ export default function Dashboard(props: DashboardProps) {
           >
             Wololo Dashboard
           </Typography>
-          {usuarioLogueado &&
-          <Typography
-            component="h2"
-            variant="h6"
-            color="inherit"
-            noWrap
-          >
-            {usuarioLogueado.nombreDeUsuario}
-          </Typography>
-          }
+          {usuarioLogueado && (
+            <Typography component="h2" variant="h6" color="inherit" noWrap>
+              {usuarioLogueado.nombreDeUsuario}
+            </Typography>
+          )}
         </Toolbar>
       </AppBar>
       <Drawer
@@ -207,8 +206,10 @@ export default function Dashboard(props: DashboardProps) {
               </ListItem>
             </Link>
           ))}
-          <ListItem button onClick={doLogOut} >
-            <ListItemIcon><ExitToAppIcon /></ListItemIcon>
+          <ListItem button onClick={doLogOut}>
+            <ListItemIcon>
+              <ExitToAppIcon />
+            </ListItemIcon>
             <ListItemText primary="Cerrar Sesión" />
           </ListItem>
         </List>
@@ -216,34 +217,52 @@ export default function Dashboard(props: DashboardProps) {
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
         <Route
-            key="/app/jugar"
-            path="/app/jugar"
-            exact={true}
-            component={() =>
-              <PantallaDeJuego
-                partidaSinInfo={partidaSinInfo}
-                usuarioLogueado={usuarioLogueado}
-              />
-            }
-          />
+          key="/app/jugar"
+          path="/app/jugar"
+          exact={true}
+          component={() => (
+            <PantallaDeJuego
+              partidaSinInfo={partidaSinInfo}
+              usuarioLogueado={usuarioLogueado}
+            />
+          )}
+        />
         <Route
-            key="/app/partidas"
-            path="/app/partidas"
-            exact={false}
-            component={() => <Partidas onClickJugar={jugarPartida} />}
-          />
+          key="/app/partidas"
+          path="/app/partidas"
+          exact
+          component={() => <Partidas onClickJugar={jugarPartida} />}
+        />
         <Route
-            key="/app/nuevaPartida"
-            path="/app/nuevaPartida"
-            exact={true}
-            component={() => <NuevaPartidaStepper />}
-          />
+          key="/app/nuevaPartida"
+          path="/app/nuevaPartida"
+          exact
+          component={() => <NuevaPartidaStepper />}
+        />
         <Route
-            key="/app/estadisticas"
-            path="/app/estadisticas"
-            exact={false}
-            component={() => <h2>Estadisticas</h2>}
-          />
+          key="/app/estadisticas"
+          path="/app/estadisticas"
+          exact
+          component={() => <Estadisticas />}
+        />
+        <Route
+          key="/app/estadisticas/usuarios"
+          path="/app/estadisticas/usuarios"
+          exact
+          component={() => <EstadisticasUsuarios />}
+        />
+        <Route
+          key="/app/estadisticas/partidas"
+          path="/app/estadisticas/partidas"
+          exact
+          component={() => <EstadisticasPartidas />}
+        />
+        <Route
+          key="/app/estadisticas/scoreboard"
+          path="/app/estadisticas/scoreboard"
+          exact
+          component={() => <Scoreboard />}
+        />
       </main>
     </div>
   );

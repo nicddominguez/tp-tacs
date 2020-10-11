@@ -1,5 +1,6 @@
 package tp.tacs.api.servicios;
 
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tp.tacs.api.daos.PartidaDao;
@@ -12,7 +13,9 @@ import java.util.Date;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class ServicioAdmin {
+
     @Autowired
     private Utils utils;
     @Autowired
@@ -28,7 +31,12 @@ public class ServicioAdmin {
         return usuarioDao.estadisticas(idUsuario);
     }
 
-    public List<EstadisticasDeUsuarioModel> tablaDePuntos(Long pagina, Long tamanioPagina) {
+    public List<EstadisticasDeUsuarioModel> tablaDePuntos(Long tamanioPagina, Long pagina) {
         return utils.obtenerListaPaginada(pagina, tamanioPagina, usuarioDao.scoreBoard());
     }
+
+    public Long cantidadTotaUsuarios() {
+        return usuarioDao.cantidadTotalUsuarios();
+    }
+
 }

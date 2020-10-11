@@ -34,7 +34,7 @@ public class ServicioUsuario {
     public List<Usuario> listarUsuarios(String filter) {
         List<Usuario> usuarios = this.usuarioDao.getAll();
         if (filter != null) {
-            usuarios = usuarios.stream().filter(usuario -> usuario.nombreContiene(filter)).collect(Collectors.toList());
+            usuarios = usuarios.stream().filter(usuario -> this.nombreContiene(usuario.getNombre(), filter)).collect(Collectors.toList());
         }
         return usuarios;
     }
@@ -88,5 +88,9 @@ public class ServicioUsuario {
             this.usuarioDao.save(nuevoUsuario);
             return nuevoUsuario;
         });
+    }
+
+    public boolean nombreContiene(String nombre, String letras) {
+        return nombre.toUpperCase().contains(letras.toUpperCase());
     }
 }

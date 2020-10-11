@@ -171,6 +171,10 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/EstadisticasDeUsuarioModel'
+                  cantidadJugadores:
+                    type: integer
+                    format: int64
+                    description: Cantidad total de jugadores
         400:
           description: Bad request
         403:
@@ -839,6 +843,8 @@ components:
       properties:
         id:
           type: string
+        esAdmin:
+          type: boolean
         nombreDeUsuario:
           type: string
     ProvinciaModel:

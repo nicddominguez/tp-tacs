@@ -88,4 +88,9 @@ public class UsuarioDaoMemoria implements UsuarioDao {
         return estadisticasDeUsuarioModels;
     }
 
+    @Override
+    public Long cantidadTotalUsuarios() {
+        return (long) this.usuarios.size();
+    }
+
 }

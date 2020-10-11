@@ -19,6 +19,9 @@ public class UsuarioModel   {
   @JsonProperty("id")
   private String id = null;
 
+  @JsonProperty("esAdmin")
+  private Boolean esAdmin = null;
+
   @JsonProperty("nombreDeUsuario")
   private String nombreDeUsuario = null;
 
@@ -40,6 +43,25 @@ public class UsuarioModel   {
 
   public void setId(String id) {
     this.id = id;
+  }
+
+  public UsuarioModel esAdmin(Boolean esAdmin) {
+    this.esAdmin = esAdmin;
+    return this;
+  }
+
+  /**
+   * Get esAdmin
+   * @return esAdmin
+  **/
+  @ApiModelProperty(value = "")
+  
+    public Boolean isEsAdmin() {
+    return esAdmin;
+  }
+
+  public void setEsAdmin(Boolean esAdmin) {
+    this.esAdmin = esAdmin;
   }
 
   public UsuarioModel nombreDeUsuario(String nombreDeUsuario) {
@@ -73,12 +95,13 @@ public class UsuarioModel   {
     }
     UsuarioModel usuarioModel = (UsuarioModel) o;
     return Objects.equals(this.id, usuarioModel.id) &&
+        Objects.equals(this.esAdmin, usuarioModel.esAdmin) &&
         Objects.equals(this.nombreDeUsuario, usuarioModel.nombreDeUsuario);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, nombreDeUsuario);
+    return Objects.hash(id, esAdmin, nombreDeUsuario);
   }
 
   @Override
@@ -87,6 +110,7 @@ public class UsuarioModel   {
     sb.append("class UsuarioModel {\n");
     
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("    esAdmin: ").append(toIndentedString(esAdmin)).append("\n");
     sb.append("    nombreDeUsuario: ").append(toIndentedString(nombreDeUsuario)).append("\n");
     sb.append("}");
     return sb.toString();

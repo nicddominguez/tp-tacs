@@ -120,4 +120,9 @@ public class UsuarioDaoMongo implements UsuarioDao {
                 ).collect(Collectors.toList());
     }
 
+    @Override
+    public Long cantidadTotalUsuarios() {
+        return this.mongoOps.count(new Query(), Usuario.class);
+    }
+
 }

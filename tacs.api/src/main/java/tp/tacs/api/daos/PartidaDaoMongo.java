@@ -13,7 +13,6 @@ import tp.tacs.api.dominio.partida.Estado;
 import tp.tacs.api.dominio.partida.Partida;
 import tp.tacs.api.dominio.partida.PartidaSinInfo;
 import tp.tacs.api.dominio.usuario.Usuario;
-import tp.tacs.api.mappers.EstadoDeJuegoMapper;
 import tp.tacs.api.mappers.PartidaSinInfoPartidaMapper;
 import tp.tacs.api.model.EstadisticasDeJuegoModel;
 import tp.tacs.api.model.EstadoDeJuegoModel;
@@ -32,7 +31,6 @@ public class PartidaDaoMongo implements PartidaDao {
 
     private final MongoOperations mongoOps;
     private final PartidaSinInfoPartidaMapper partidaSinInfoPartidaMapper;
-    private final EstadoDeJuegoMapper estadoDeJuegoMapper;
 
     @Override
     public Partida get(String id) {
@@ -40,10 +38,9 @@ public class PartidaDaoMongo implements PartidaDao {
     }
 
     @Autowired
-    public PartidaDaoMongo(MongoClient mongoClient, PartidaSinInfoPartidaMapper partidaSinInfoPartidaMapper, EstadoDeJuegoMapper estadoDeJuegoMapper) {
+    public PartidaDaoMongo(MongoClient mongoClient, PartidaSinInfoPartidaMapper partidaSinInfoPartidaMapper) {
         this.mongoOps = new MongoTemplate(mongoClient, "tacs");
         this.partidaSinInfoPartidaMapper = partidaSinInfoPartidaMapper;
-        this.estadoDeJuegoMapper = estadoDeJuegoMapper;
     }
 
     @Override

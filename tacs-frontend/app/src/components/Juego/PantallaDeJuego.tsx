@@ -461,6 +461,7 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
               <Typography>Modo: {municipio?.modo}</Typography>
               <Typography>Producción: {municipio?.produccionDeGauchos}</Typography>
               <Typography>Defensa: {municipio?.puntosDeDefensa}</Typography>
+              <Typography>Altura: {municipio?.altura} m.s.n.m.</Typography>
               {municipio?.estaBloqueado ? <Typography color='error'>Bloqueado</Typography> : undefined}
               <Card>
                 <CardMedia
@@ -488,7 +489,6 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
           <div>
             <DialogTitle>Resumen de ataque</DialogTitle>
             <DialogContent>
-              {/* TODO: Mostrar un resumen del ataque piola */}
               <DialogContentText>
                 Vas a atacar a {municipio?.nombre} desde {municipio?.nombre}
               </DialogContentText>

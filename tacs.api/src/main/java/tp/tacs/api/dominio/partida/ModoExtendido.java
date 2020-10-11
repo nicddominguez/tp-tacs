@@ -4,7 +4,7 @@ public class ModoExtendido extends ModoDeJuego {
 
     public ModoExtendido() {
         this.nombreAMostrar = "Extendido";
-        this.multDefEnAtaque = 0.8f;
-        this.multDefEnDefensa = 1f;
+        this.multDefEnProduccion = 1f;
+        this.multDefEnDefensa = 5f;
     }
 }
