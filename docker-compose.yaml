@@ -16,8 +16,8 @@ services:
     container_name: "tacs-api"
     environment:
      - JWT_SECRET
-     - GOOGLE_OAUTH_CLIENT_ID: ${GOOGLE_OAUTH_CLIENT_ID}
-     - DB_CONNECTION_STRING: ${MONGO_CONNECTION_STRING}
+     - GOOGLE_OAUTH_CLIENT_ID=${GOOGLE_OAUTH_CLIENT_ID}
+     - DB_CONNECTION_STRING=${MONGO_CONNECTION_STRING}
     networks:
      - "tacs-net"
   frontend:
