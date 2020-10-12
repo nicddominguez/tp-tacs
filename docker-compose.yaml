@@ -6,7 +6,7 @@ services:
     container_name: "tacs-api"
     environment:
      - JWT_SECRET
-     - GOOGLE_OAUTH_CLIENT_ID
+     - GOOGLE_OAUTH_CLIENT_ID="475854452552-js6cnac0fjktpav4dcp570860l7etar8.apps.googleusercontent.com"
     networks:
      - "tacs-net"
   frontend:

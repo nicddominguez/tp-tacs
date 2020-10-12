@@ -254,7 +254,7 @@ public class ServicioPartida {
 
     public Partida inicializar(CrearPartidaBody request) {
         String nombreProvincia;
-        if(request.getCantidadMunicipios() <= 1 ){
+        if (request.getCantidadMunicipios() <= 1) {
             throw new PartidaException("No se pudo crear la partida: la cantidad de municipios debe ser mayor a 1");
         }
         try {
@@ -272,10 +272,9 @@ public class ServicioPartida {
                 .fechaCreacion(new Date())
                 .build();
 
-
         var cantidadMunicipiosPartida = Math.toIntExact(request.getCantidadMunicipios());
         List<Municipio> municipios = externalApis.getMunicipios(partida.getIdProvincia(), nombreProvincia);
-        var municipiosDeLaPartida = municipios.subList(0, Math.min(municipios.size(),cantidadMunicipiosPartida));
+        var municipiosDeLaPartida = municipios.subList(0, Math.min(municipios.size(), cantidadMunicipiosPartida));
 
         municipiosDeLaPartida.forEach(municipio -> municipioDao.save(municipio));
 
@@ -319,7 +318,11 @@ public class ServicioPartida {
     }
 
     public void actualizarEstadoPartida(Partida partida, Estado estado) {
-        if(estado != Estado.EN_CURSO)
+        if (estado.equals(Estado.CANCELADA)) {
+            rendirse(partida);
+            return;
+        }
+        if (estado != Estado.EN_CURSO)
             this.terminarPartida(partida, estado);
         else {
             partida.setEstado(estado);
@@ -345,6 +348,23 @@ public class ServicioPartida {
 
     public List<PartidaSinInfo> getPartidasFiltradasUsuario(Date fechaInicio, Date fechaFin, EstadoDeJuegoModel estado, Usuario usuario) {
         return partidaDao.getPartidasFiltradasUsuario(fechaInicio, fechaFin, estado, usuario);
+    }
+
+    private void rendirse(Partida partida) {
+        var jugadorRendido = idUsuarioEnTurnoActual(partida);
+        var nuevosMunicipios = municipioDao.getByIds(partida.getMunicipios()).stream()
+                .filter(municipio -> municipio.getDuenio().getId() != jugadorRendido).collect(Collectors.toList());
+        partida.setMunicipios(nuevosMunicipios.stream().map(Municipio::getId).collect(Collectors.toList()));
+        partida.setIdsJugadoresActuales(
+                partida.getIdsJugadoresActuales().stream().filter(id -> !id.equals(jugadorRendido)).collect(Collectors.toList()));
+        if (partida.getIdsJugadoresActuales().size() == 1)
+            terminarPartida(partida, Estado.TERMINADA);
+        else
+            pasarTurno(partida);
+    }
+
+    private Long idUsuarioEnTurnoActual(Partida partida) {
+        return partida.getIdsJugadoresActuales().get(partida.getUsuarioJugandoIndiceLista());
     }
 
 }

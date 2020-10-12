@@ -22,6 +22,7 @@ public class Partida {
     private Estado estado;
     private String nombreProvincia;
     private String idProvincia;
+    @Setter
     private List<String> municipios;
     private ModoDeJuego modoDeJuego;
     private Date fechaCreacion;
