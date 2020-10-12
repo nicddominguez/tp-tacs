@@ -278,9 +278,9 @@ export class WololoPartidasApiClient extends BaseWololoApiClient {
         )
     }
 
-    public async getPartida(idPartida: string) {
+    public async getPartida(idPartida: string, campos?: string) {
         return this.doAuthenticatedRequest(
-            async (options) => this.partidasApi.getPartida(idPartida, options)
+            async (options) => this.partidasApi.getPartida(idPartida, campos, options)
         );
     }
 

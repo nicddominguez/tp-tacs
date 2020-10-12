@@ -10,7 +10,8 @@ import org.springframework.context.annotation.Configuration;
 public class DbConfig {
 
     public @Bean @ConditionalOnProperty(prefix="application", name="persistance-implementation", havingValue = "mongo") MongoClient mongoClient() {
-        return MongoClients.create("mongodb://root:example@34.95.185.134:27017/");
+        var dbConnectionString = System.getenv("DB_CONNECTION_STRING");
+        return MongoClients.create(dbConnectionString);
     }
 
 }

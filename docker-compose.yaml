@@ -1,12 +1,23 @@
 version: "3.8"
 
 services:
+  db:
+    image: mongo:4.4
+    container_name: "tacs-db"
+    volumes:
+      - tacs_data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+    networks:
+      - "tacs-net"
   api:
     build: "./"
     container_name: "tacs-api"
     environment:
      - JWT_SECRET
-     - GOOGLE_OAUTH_CLIENT_ID="475854452552-js6cnac0fjktpav4dcp570860l7etar8.apps.googleusercontent.com"
+     - GOOGLE_OAUTH_CLIENT_ID=${GOOGLE_OAUTH_CLIENT_ID}
+     - DB_CONNECTION_STRING=${MONGO_CONNECTION_STRING}
     networks:
      - "tacs-net"
   frontend:
@@ -27,3 +38,7 @@ services:
 networks:
   tacs-net:
     driver: bridge
+
+volumes:
+  tacs_data:
+    driver: local
