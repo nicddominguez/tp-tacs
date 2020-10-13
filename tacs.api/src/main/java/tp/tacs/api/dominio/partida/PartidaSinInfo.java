@@ -13,14 +13,14 @@ import java.util.List;
 @Setter
 public class PartidaSinInfo {
 
-    private Long id;
-    private List<Long> jugadoresIds;
+    private String id;
+    private List<String> jugadoresIds;
     @Builder.Default
     private Integer usuarioJugandoIndiceLista = 0;
     private Estado estado;
     private String nombreProvincia;
     private String idProvincia;
-    private List<Long> municipios;
+    private List<String> municipios;
     private ModoDeJuego modoDeJuego;
     private Date fechaCreacion;
     private Usuario ganador;
@@ -28,4 +28,5 @@ public class PartidaSinInfo {
     private Float maxAltura;
     private Float maxDist;
     private Float minDist;
+
 }

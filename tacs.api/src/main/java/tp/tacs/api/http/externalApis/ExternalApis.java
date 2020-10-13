@@ -53,7 +53,7 @@ public class ExternalApis {
             double numeroConComa = (double) i / cantidadImagenes;
             double parteDecimal = numeroConComa - Math.floor(numeroConComa);
             double indiceImagen = (parteDecimal) * cantidadImagenes;
-            municipios.get(i).setUrlImagen(imagenes.get((int) indiceImagen).getLargeImageURL());
+            municipios.get(i).setUrlImagen(imagenes.get((int) indiceImagen).getWebformatURL());
         }
         return municipios;
     }

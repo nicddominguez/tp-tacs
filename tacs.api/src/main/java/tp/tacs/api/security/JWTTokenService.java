@@ -32,7 +32,7 @@ public class JWTTokenService {
         this.jwtAlgorithm = Algorithm.HMAC256(secretKey);
     }
 
-    public String createToken(Long userId, String username, Boolean isAdmin) {
+    public String createToken(String userId, String username, Boolean isAdmin) {
         var calendar = Calendar.getInstance();
         calendar.add(Calendar.HOUR, 1);
         return JWT.create()
@@ -45,7 +45,7 @@ public class JWTTokenService {
                 .sign(this.jwtAlgorithm);
     }
 
-    public String createRefreshToken(Long userId, String username, Boolean isAdmin) {
+    public String createRefreshToken(String userId, String username, Boolean isAdmin) {
         return JWT.create()
                 .withClaim("userId", userId)
                 .withClaim("username", username)

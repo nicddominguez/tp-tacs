@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import tp.tacs.api.daos.PartidaDao;
 import tp.tacs.api.daos.UsuarioDao;
 import tp.tacs.api.dominio.partida.Partida;
+import tp.tacs.api.dominio.partida.PartidaSinInfo;
 import tp.tacs.api.dominio.usuario.Usuario;
 import tp.tacs.api.handler.MunicipioException;
 import tp.tacs.api.handler.PartidaException;
@@ -28,6 +29,7 @@ import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
@@ -71,7 +73,7 @@ public class PartidasApiController implements PartidasApi {
     }
 
     @Override
-    public ResponseEntity<Void> actualizarEstadoPartida(Long idPartida, @Valid ActualizarEstadoPartida body) {
+    public ResponseEntity<Void> actualizarEstadoPartida(String idPartida, @Valid ActualizarEstadoPartida body) {
         var estado = estadoDeJuegoMapper.toEntity(body.getEstado());
         var partida = partidaDao.get(idPartida);
         if(estado == null)
@@ -87,7 +89,7 @@ public class PartidasApiController implements PartidasApi {
     }
 
     @Override
-    public ResponseEntity<Void> actualizarMunicipio(Long idPartida, Long idMunicipio, @Valid ActualizarMunicipio body) {
+    public ResponseEntity<Void> actualizarMunicipio(String idPartida, String idMunicipio, @Valid ActualizarMunicipio body) {
         var modo = body.getModo();
         if(modo == null)
             return new ResponseEntity("No se especificó el nuevo modo del municipio", HttpStatus.BAD_REQUEST);
@@ -98,12 +100,12 @@ public class PartidasApiController implements PartidasApi {
             return new ResponseEntity("El usuario no tiene permisos para actualizar el municipio en este turno", HttpStatus.BAD_REQUEST);
 
         var nuevaEspecializacion = modoDeMunicipioMapper.toEntity(modo);
-        this.servicioMunicipio.actualizarMunicipio(idMunicipio, nuevaEspecializacion, body.isEstaBloqueado());
+        this.servicioMunicipio.actualizarMunicipio(partida, idMunicipio, nuevaEspecializacion);
         return ResponseEntity.ok().build();
     }
 
     @Override
-    public ResponseEntity<AtacarMunicipioResponse> atacarMunicipio(Long idPartida, @Valid AtacarMunicipioBody body) {
+    public ResponseEntity<AtacarMunicipioResponse> atacarMunicipio(String idPartida, @Valid AtacarMunicipioBody body) {
         var idMunicipioAtacante = body.getIdMunicipioAtacante();
         var idMunicipioObjetivo = body.getIdMunicipioObjetivo();
         if(idMunicipioAtacante == null || idMunicipioObjetivo == null)
@@ -158,7 +160,19 @@ public class PartidasApiController implements PartidasApi {
     }
 
     @Override
-    public ResponseEntity<MoverGauchosResponse> moverGauchos(Long idPartida, @Valid MoverGauchosBody body) {
+    public ResponseEntity<OneOfinlineResponse200> getPartida(String idPartida, @Valid String campos) {
+        var partida = servicioPartida.obtenerPartidaPorId(idPartida);
+        if (partida == null)
+            return new ResponseEntity("No existe la partida solicitada", HttpStatus.BAD_REQUEST);
+        if(campos != null && campos.toUpperCase().equals("LIVIANA")){
+            return ResponseEntity.ok(partidaMapper.aPartidaLivianaModel(partida));
+        }
+        return ResponseEntity.ok(partidaMapper.wrap(partida));
+    }
+
+
+    @Override
+    public ResponseEntity<MoverGauchosResponse> moverGauchos(String idPartida, @Valid MoverGauchosBody body) {
 
         if(body.getIdMunicipioDestino() == null || body.getIdMunicipioOrigen() == null)
             return new ResponseEntity("Se requieren los municipios involucrados en la acción", HttpStatus.BAD_REQUEST);
@@ -173,7 +187,7 @@ public class PartidasApiController implements PartidasApi {
         var cantidad = Math.toIntExact(body.getCantidad());
         MoverGauchosResponse response;
         try {
-            response = servicioPartida.moverGauchos(body.getIdMunicipioOrigen(), body.getIdMunicipioDestino(), cantidad);
+            response = servicioPartida.moverGauchos(body.getIdMunicipioOrigen(), body.getIdMunicipioDestino(), cantidad, partida.getModoDeJuego());
         } catch (MunicipioException | PartidaException e) {
             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -181,7 +195,7 @@ public class PartidasApiController implements PartidasApi {
     }
 
     @Override
-    public ResponseEntity<Void> pasarTurno(Long idPartida) {
+    public ResponseEntity<Void> pasarTurno(String idPartida) {
 
         Partida partida = partidaDao.get(idPartida);
         if (partida == null)
@@ -195,7 +209,7 @@ public class PartidasApiController implements PartidasApi {
     }
 
     @Override
-    public ResponseEntity<SimularAtacarMunicipioResponse> simularAtacarMunicipio(Long idPartida, @Valid SimularAtacarMunicipioBody body) {
+    public ResponseEntity<SimularAtacarMunicipioResponse> simularAtacarMunicipio(String idPartida, @Valid SimularAtacarMunicipioBody body) {
         if(body.getIdMunicipioAtacante() == null || body.getIdMunicipioObjetivo() == null)
             return new ResponseEntity("Se requieren los municipios involucrados en la accion", HttpStatus.BAD_REQUEST);
         var partida = partidaDao.get(idPartida);
@@ -206,17 +220,17 @@ public class PartidasApiController implements PartidasApi {
     }
 
     @Override
-    public ResponseEntity<PartidaModel> getPartida(Long idPartida) {
-        var partida = servicioPartida.obtenerPartidaPorId(idPartida);
-        if (partida == null)
-            return new ResponseEntity("No existe la partida solicitada", HttpStatus.BAD_REQUEST);
-        return ResponseEntity.ok(partidaMapper.wrap(partida));
-    }
-
-    @Override
     public ResponseEntity<ListarPartidasResponse> listarPartidas(@Valid Date fechaInicio, @Valid Date fechaFin,
                                                                  @Valid EstadoDeJuegoModel estado, @Valid String ordenarPor, @Valid Long tamanioPagina, @Valid Long pagina) {
-        var partidas = this.partidaDao.getPartidasFiltradas(fechaInicio, fechaFin, estado);
+
+        List<PartidaSinInfo> partidas;
+        Usuario usuarioRequest = usuarioDao.getByUsername(obtenerUsername());
+        if (debugMode) {
+            partidas = this.partidaDao.getPartidasFiltradas(fechaInicio, fechaFin, estado);
+        } else {
+            partidas = this.servicioPartida.getPartidasFiltradasUsuario(fechaInicio, fechaFin, estado, usuarioRequest);
+        }
+
         var partidaModels = partidaSinInfoMapper.partidasParaListar(partidas);
 
         //TODO recibir si ordenar DESC o ASC
@@ -265,7 +279,7 @@ public class PartidasApiController implements PartidasApi {
         Usuario usuarioRequest = usuarioDao.getByUsername(usernameRequest);
         if (usuarioRequest == null)
             return false;
-        return partida.idUsuarioEnTurnoActual().equals(usuarioRequest.getId());
+        return servicioPartida.idUsuarioEnTurnoActual(partida).equals(usuarioRequest.getId());
     }
 }
 

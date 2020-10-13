@@ -1,13 +1,10 @@
 package tp.tacs.api.model;
 
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.validation.annotation.Validated;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+
+import java.util.Objects;
 
 /**
  * SimularAtacarMunicipioBody
@@ -17,12 +14,12 @@ import javax.validation.constraints.*;
 
 public class SimularAtacarMunicipioBody   {
   @JsonProperty("idMunicipioAtacante")
-  private Long idMunicipioAtacante = null;
+  private String idMunicipioAtacante = null;
 
   @JsonProperty("idMunicipioObjetivo")
-  private Long idMunicipioObjetivo = null;
+  private String idMunicipioObjetivo = null;
 
-  public SimularAtacarMunicipioBody idMunicipioAtacante(Long idMunicipioAtacante) {
+  public SimularAtacarMunicipioBody idMunicipioAtacante(String idMunicipioAtacante) {
     this.idMunicipioAtacante = idMunicipioAtacante;
     return this;
   }
@@ -33,15 +30,15 @@ public class SimularAtacarMunicipioBody   {
   **/
   @ApiModelProperty(value = "Id del municipio que ataca")
   
-    public Long getIdMunicipioAtacante() {
+    public String getIdMunicipioAtacante() {
     return idMunicipioAtacante;
   }
 
-  public void setIdMunicipioAtacante(Long idMunicipioAtacante) {
+  public void setIdMunicipioAtacante(String idMunicipioAtacante) {
     this.idMunicipioAtacante = idMunicipioAtacante;
   }
 
-  public SimularAtacarMunicipioBody idMunicipioObjetivo(Long idMunicipioObjetivo) {
+  public SimularAtacarMunicipioBody idMunicipioObjetivo(String idMunicipioObjetivo) {
     this.idMunicipioObjetivo = idMunicipioObjetivo;
     return this;
   }
@@ -52,17 +49,17 @@ public class SimularAtacarMunicipioBody   {
   **/
   @ApiModelProperty(value = "Id del municipio atacado")
   
-    public Long getIdMunicipioObjetivo() {
+    public String getIdMunicipioObjetivo() {
     return idMunicipioObjetivo;
   }
 
-  public void setIdMunicipioObjetivo(Long idMunicipioObjetivo) {
+  public void setIdMunicipioObjetivo(String idMunicipioObjetivo) {
     this.idMunicipioObjetivo = idMunicipioObjetivo;
   }
 
 
   @Override
-  public boolean equals(java.lang.Object o) {
+  public boolean equals(Object o) {
     if (this == o) {
       return true;
     }
@@ -94,7 +91,7 @@ public class SimularAtacarMunicipioBody   {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(java.lang.Object o) {
+  private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }

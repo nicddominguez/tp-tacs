@@ -10,6 +10,7 @@ import tp.tacs.api.dominio.municipio.Municipio;
 import tp.tacs.api.http.HttpClientConnector;
 import tp.tacs.api.http.externalApis.models.TopoData;
 import tp.tacs.api.http.externalApis.models.TopoResult;
+import tp.tacs.api.servicios.ServicioMunicipio;
 
 import java.util.Collection;
 import java.util.List;
@@ -20,6 +21,8 @@ public class OpenTopoDataApi {
 
     @Autowired
     private HttpClientConnector connector;
+    @Autowired
+    private ServicioMunicipio servicioMunicipio;
 
     private final String topoBaseUrl = "https://api.opentopodata.org/v1/srtm90m?locations=";
     private static final Integer LIMITE_REQUESTS = 100;
@@ -32,7 +35,7 @@ public class OpenTopoDataApi {
 
     @SneakyThrows
     private List<TopoData> getTopoData(List<Municipio> municipios) {
-        String coordenadas = municipios.stream().map(Municipio::coordenadasParaTopo)
+        String coordenadas = municipios.stream().map(municipio -> servicioMunicipio.coordenadasParaTopo(municipio))
                 .reduce("", (coord1, coord2) -> coord1 + "%7C" + coord2);
         String url = String.format("%s%s", topoBaseUrl, coordenadas);
         return new Gson().fromJson(connector.get(url), TopoResult.class).getResults();

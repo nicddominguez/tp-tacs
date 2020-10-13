@@ -1,16 +1,13 @@
 package tp.tacs.api.model;
 
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.springframework.validation.annotation.Validated;
+
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
-import tp.tacs.api.model.ModoDeJuegoModel;
-import org.springframework.validation.annotation.Validated;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+import java.util.Objects;
 
 /**
  * CrearPartidaBody
@@ -27,7 +24,7 @@ public class CrearPartidaBody   {
 
   @JsonProperty("idJugadores")
   @Valid
-  private List<Long> idJugadores = null;
+  private List<String> idJugadores = null;
 
   @JsonProperty("modoDeJuego")
   private ModoDeJuegoModel modoDeJuego = null;
@@ -70,14 +67,14 @@ public class CrearPartidaBody   {
     this.cantidadMunicipios = cantidadMunicipios;
   }
 
-  public CrearPartidaBody idJugadores(List<Long> idJugadores) {
+  public CrearPartidaBody idJugadores(List<String> idJugadores) {
     this.idJugadores = idJugadores;
     return this;
   }
 
-  public CrearPartidaBody addIdJugadoresItem(Long idJugadoresItem) {
+  public CrearPartidaBody addIdJugadoresItem(String idJugadoresItem) {
     if (this.idJugadores == null) {
-      this.idJugadores = new ArrayList<Long>();
+      this.idJugadores = new ArrayList<String>();
     }
     this.idJugadores.add(idJugadoresItem);
     return this;
@@ -89,11 +86,11 @@ public class CrearPartidaBody   {
   **/
   @ApiModelProperty(value = "Jugadores")
   
-    public List<Long> getIdJugadores() {
+    public List<String> getIdJugadores() {
     return idJugadores;
   }
 
-  public void setIdJugadores(List<Long> idJugadores) {
+  public void setIdJugadores(List<String> idJugadores) {
     this.idJugadores = idJugadores;
   }
 
@@ -119,7 +116,7 @@ public class CrearPartidaBody   {
 
 
   @Override
-  public boolean equals(java.lang.Object o) {
+  public boolean equals(Object o) {
     if (this == o) {
       return true;
     }
@@ -155,7 +152,7 @@ public class CrearPartidaBody   {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(java.lang.Object o) {
+  private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }

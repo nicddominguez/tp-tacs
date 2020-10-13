@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 public class Usuario {
 
-    private Long id;
+    private String id;
     private String mail;
     private String nombre;
     private String googleId;
@@ -36,7 +36,4 @@ public class Usuario {
         this.rachaActual = 0L;
     }
 
-    public boolean nombreContiene(String nombre) {
-        return this.nombre.toUpperCase().startsWith(nombre.toUpperCase());
-    }
 }

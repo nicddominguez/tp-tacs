@@ -29,6 +29,11 @@
       "name": "application.debug-mode",
       "type": "java.lang.Boolean",
       "description": "Setear en True para saltar validaciones y poder testear la aplicacion"
+    },
+    {
+      "name": "application.persistance-implementation",
+      "type": "java.lang.String",
+      "description": "Valores: memoria, mongo"
     }
   ]
 }

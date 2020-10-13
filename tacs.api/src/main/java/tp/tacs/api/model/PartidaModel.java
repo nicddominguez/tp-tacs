@@ -1,21 +1,16 @@
 package tp.tacs.api.model;
 
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.springframework.validation.annotation.Validated;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import tp.tacs.api.model.DatosDeJuegoModel;
-import tp.tacs.api.model.EstadoDeJuegoModel;
-import tp.tacs.api.model.ModoDeJuegoModel;
-import tp.tacs.api.model.ProvinciaModel;
-import tp.tacs.api.model.UsuarioModel;
-import org.springframework.validation.annotation.Validated;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+import java.util.Objects;
 
 /**
  * Una partida
@@ -23,10 +18,9 @@ import javax.validation.constraints.*;
 @ApiModel(description = "Una partida")
 @Validated
 
-
-public class PartidaModel   {
+public class PartidaModel  implements OneOfinlineResponse200 {
   @JsonProperty("id")
-  private Long id = null;
+  private String id = null;
 
   @JsonProperty("provincia")
   private ProvinciaModel provincia = null;
@@ -53,7 +47,7 @@ public class PartidaModel   {
   @JsonProperty("idGanador")
   private String idGanador = null;
 
-  public PartidaModel id(Long id) {
+  public PartidaModel id(String id) {
     this.id = id;
     return this;
   }
@@ -65,11 +59,11 @@ public class PartidaModel   {
   @ApiModelProperty(required = true, value = "Id de la partida")
       @NotNull
 
-    public Long getId() {
+    public String getId() {
     return id;
   }
 
-  public void setId(Long id) {
+  public void setId(String id) {
     this.id = id;
   }
 
@@ -243,7 +237,7 @@ public class PartidaModel   {
 
 
   @Override
-  public boolean equals(java.lang.Object o) {
+  public boolean equals(Object o) {
     if (this == o) {
       return true;
     }
@@ -289,7 +283,7 @@ public class PartidaModel   {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(java.lang.Object o) {
+  private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }

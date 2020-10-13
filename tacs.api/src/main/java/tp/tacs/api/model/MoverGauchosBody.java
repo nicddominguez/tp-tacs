@@ -1,13 +1,10 @@
 package tp.tacs.api.model;
 
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.validation.annotation.Validated;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+
+import java.util.Objects;
 
 /**
  * MoverGauchosBody
@@ -17,15 +14,15 @@ import javax.validation.constraints.*;
 
 public class MoverGauchosBody   {
   @JsonProperty("idMunicipioOrigen")
-  private Long idMunicipioOrigen = null;
+  private String idMunicipioOrigen = null;
 
   @JsonProperty("idMunicipioDestino")
-  private Long idMunicipioDestino = null;
+  private String idMunicipioDestino = null;
 
   @JsonProperty("cantidad")
   private Long cantidad = null;
 
-  public MoverGauchosBody idMunicipioOrigen(Long idMunicipioOrigen) {
+  public MoverGauchosBody idMunicipioOrigen(String idMunicipioOrigen) {
     this.idMunicipioOrigen = idMunicipioOrigen;
     return this;
   }
@@ -36,15 +33,15 @@ public class MoverGauchosBody   {
   **/
   @ApiModelProperty(value = "Id del municipio de origen")
   
-    public Long getIdMunicipioOrigen() {
+    public String getIdMunicipioOrigen() {
     return idMunicipioOrigen;
   }
 
-  public void setIdMunicipioOrigen(Long idMunicipioOrigen) {
+  public void setIdMunicipioOrigen(String idMunicipioOrigen) {
     this.idMunicipioOrigen = idMunicipioOrigen;
   }
 
-  public MoverGauchosBody idMunicipioDestino(Long idMunicipioDestino) {
+  public MoverGauchosBody idMunicipioDestino(String idMunicipioDestino) {
     this.idMunicipioDestino = idMunicipioDestino;
     return this;
   }
@@ -55,11 +52,11 @@ public class MoverGauchosBody   {
   **/
   @ApiModelProperty(value = "Id del municipio de destino")
   
-    public Long getIdMunicipioDestino() {
+    public String getIdMunicipioDestino() {
     return idMunicipioDestino;
   }
 
-  public void setIdMunicipioDestino(Long idMunicipioDestino) {
+  public void setIdMunicipioDestino(String idMunicipioDestino) {
     this.idMunicipioDestino = idMunicipioDestino;
   }
 
@@ -84,7 +81,7 @@ public class MoverGauchosBody   {
 
 
   @Override
-  public boolean equals(java.lang.Object o) {
+  public boolean equals(Object o) {
     if (this == o) {
       return true;
     }
@@ -118,7 +115,7 @@ public class MoverGauchosBody   {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(java.lang.Object o) {
+  private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }

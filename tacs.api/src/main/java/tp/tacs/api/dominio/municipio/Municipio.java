@@ -1,16 +1,13 @@
 package tp.tacs.api.dominio.municipio;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import tp.tacs.api.dominio.partida.Partida;
+import lombok.*;
 import tp.tacs.api.dominio.usuario.Usuario;
 
 @Builder
 @Getter
 @Setter
 public class Municipio {
-    private Long id;
+    private String id;
     private String nombre;
     private String externalApiId;
     @Builder.Default
@@ -25,50 +22,4 @@ public class Municipio {
     private Double longitud;
     private Float altura;
     private String urlImagen;
-
-    public void agregarGauchos(Integer cantidad) {
-        this.cantGauchos += cantidad;
-    }
-
-    public void sacarGauchos(Integer cantidad) {
-        this.cantGauchos = Math.max(0, cantGauchos - cantidad);
-    }
-
-    public void setCantGauchos(Integer cantGauchos) {
-        this.cantGauchos = Math.max(0, cantGauchos);
-    }
-
-    public boolean estaBloqueado() {
-        return bloqueado;
-    }
-
-    public void bloquear() {
-        this.bloqueado = true;
-    }
-
-    public void desbloquear() {
-        this.bloqueado = false;
-    }
-
-    public Boolean estaBacante() {
-        return duenio == null;
-    }
-
-    public boolean esDe(Long userId) {
-        return duenio.getId().equals(userId);
-    }
-
-    public String coordenadasParaTopo() {
-        return String.format("%s,%s", this.getLatitud().toString(), this.getLongitud().toString());
-    }
-
-    public void actualizarNivelProduccion(Partida partida) {
-        var minAltura = partida.getMinAltura();
-        var maxAltura = partida.getMaxAltura();
-        float multiplicador = 1 - (this.getAltura() - minAltura)
-                / (2 * (maxAltura - minAltura));
-        int cantGauchos = this.getEspecializacion().nivelDeProduccion(multiplicador);
-        this.setNivelDeProduccion(cantGauchos);
-    }
-
 }

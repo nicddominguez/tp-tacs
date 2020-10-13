@@ -31,25 +31,33 @@ public class AdminApiController implements AdminApi {
 
     @Override
     public ResponseEntity<EstadisticasDeJuegoModel> getEstadisticas(@Valid Date fechaInicio, @Valid Date fechaFin) {
-        //todo validaciones de formato de fechas
         return ResponseEntity.ok(servicioAdmin.estadisticasDeJuego(fechaInicio, fechaFin));
     }
 
     @Override
-    public ResponseEntity<EstadisticasDeUsuarioModel> getEstadisticasDeUsuario(Long idUsuario) {
-        // todo validaciones de inputs
-        return ResponseEntity.ok(servicioAdmin.estadisticasDeUsuario(idUsuario));
+
+    public ResponseEntity<EstadisticasDeUsuarioModel> getEstadisticasDeUsuario(String idUsuario) {
+        EstadisticasDeUsuarioModel estadisticas;
+        try {
+            estadisticas = servicioAdmin.estadisticasDeUsuario(idUsuario);
+        }
+        catch (NullPointerException e){
+            return new ResponseEntity("El usuario solicitado no existe", HttpStatus.BAD_REQUEST);
+        }
+        return ResponseEntity.ok(estadisticas);
     }
 
     @Override
     public ResponseEntity<ScoreboardResponse> getScoreboard(@Valid Long tamanioPagina, @Valid Long pagina) {
-        // todo validaciones de inputs
         var listaPaginada = servicioAdmin.tablaDePuntos(tamanioPagina, pagina);
-        ScoreboardResponse scoreboardResponse = new ScoreboardResponse().scoreboard(listaPaginada);
+        Long cantidadUsuarios = servicioAdmin.cantidadTotaUsuarios();
+        ScoreboardResponse scoreboardResponse = new ScoreboardResponse()
+                .scoreboard(listaPaginada)
+                .cantidadUsuarios(cantidadUsuarios);
         return ResponseEntity.ok(scoreboardResponse);
     }
 
-    @Override public ResponseEntity<Void> pasarTurnoAdmin(Long idPartida) {
+    @Override public ResponseEntity<Void> pasarTurnoAdmin(String idPartida) {
         Partida partida = partidaDao.get(idPartida);
         if (partida == null)
             return ResponseEntity.notFound().build();
@@ -62,7 +70,7 @@ public class AdminApiController implements AdminApi {
         }
     }
 
-    @Override public ResponseEntity<String> obtenerJwtUsuario(Long idUsuario) {
+    @Override public ResponseEntity<String> obtenerJwtUsuario(String idUsuario) {
         String jwtUsuario = servicioUsuario.generarJwtParaUsuarioPorId(idUsuario);
         return ResponseEntity.ok(jwtUsuario);
     }

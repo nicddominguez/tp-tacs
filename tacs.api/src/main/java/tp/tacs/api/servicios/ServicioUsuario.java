@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 @Service
 public class ServicioUsuario {
 
-    private final UsuarioDao usuarioDao;
     private final JWTTokenService jwtTokenService;
     private final GoogleIdTokenService googleIdTokenService;
 
@@ -24,8 +23,10 @@ public class ServicioUsuario {
     private final AtomicLong nextUserId = new AtomicLong(0L);
 
     @Autowired
-    public ServicioUsuario(UsuarioDao usuarioDao, JWTTokenService jwtTokenService, GoogleIdTokenService googleIdTokenService) {
-        this.usuarioDao = usuarioDao;
+    UsuarioDao usuarioDao;
+
+    @Autowired
+    public ServicioUsuario(JWTTokenService jwtTokenService, GoogleIdTokenService googleIdTokenService) {
         this.jwtTokenService = jwtTokenService;
         this.googleIdTokenService = googleIdTokenService;
     }
@@ -33,7 +34,7 @@ public class ServicioUsuario {
     public List<Usuario> listarUsuarios(String filter) {
         List<Usuario> usuarios = this.usuarioDao.getAll();
         if (filter != null) {
-            usuarios = usuarios.stream().filter(usuario -> usuario.nombreContiene(filter)).collect(Collectors.toList());
+            usuarios = usuarios.stream().filter(usuario -> this.nombreContiene(usuario.getNombre(), filter)).collect(Collectors.toList());
         }
         return usuarios;
     }
@@ -54,7 +55,7 @@ public class ServicioUsuario {
         );
     }
 
-    public String generarJwtParaUsuarioPorId(Long id) {
+    public String generarJwtParaUsuarioPorId(String id) {
         Usuario usuario = this.usuarioDao.get(id);
         return this.generarJwtParaUsuario(usuario);
     }
@@ -76,9 +77,9 @@ public class ServicioUsuario {
 
         return this.getByGoogleId(googleId).orElseGet(() -> {
             // El usuario no existe, lo creamos
-            var userId = this.nextUserId.getAndIncrement();
+            Long userId = this.nextUserId.getAndIncrement();
             var nuevoUsuario = Usuario.builder()
-                    .id(userId)
+                    .id(userId.toString())
                     .mail(email)
                     .nombre(name)
                     .googleId(googleId)
@@ -87,5 +88,9 @@ public class ServicioUsuario {
             this.usuarioDao.save(nuevoUsuario);
             return nuevoUsuario;
         });
+    }
+
+    public boolean nombreContiene(String nombre, String letras) {
+        return nombre.toUpperCase().contains(letras.toUpperCase());
     }
 }
