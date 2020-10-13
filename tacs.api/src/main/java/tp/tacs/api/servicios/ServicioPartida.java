@@ -353,7 +353,7 @@ public class ServicioPartida {
     private void rendirse(Partida partida) {
         var jugadorRendido = idUsuarioEnTurnoActual(partida);
         var nuevosMunicipios = municipioDao.getByIds(partida.getMunicipios()).stream()
-                .filter(municipio -> municipio.getDuenio().getId() != jugadorRendido).collect(Collectors.toList());
+                .filter(municipio -> !municipio.getDuenio().getId().equalsIgnoreCase(jugadorRendido)).collect(Collectors.toList());
         partida.setMunicipios(nuevosMunicipios.stream().map(Municipio::getId).collect(Collectors.toList()));
         partida.setIdsJugadoresActuales(
                 partida.getIdsJugadoresActuales().stream().filter(id -> !id.equals(jugadorRendido)).collect(Collectors.toList()));
@@ -363,8 +363,5 @@ public class ServicioPartida {
             pasarTurno(partida);
     }
 
-    private Long idUsuarioEnTurnoActual(Partida partida) {
-        return partida.getIdsJugadoresActuales().get(partida.getUsuarioJugandoIndiceLista());
-    }
 
 }
