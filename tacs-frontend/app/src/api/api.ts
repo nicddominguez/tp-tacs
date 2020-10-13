@@ -284,9 +284,9 @@ export interface EstadisticasDeUsuarioModel {
  * @enum {string}
  */
 export enum EstadoDeJuegoModel {
-    EnProgreso = <any> 'EnProgreso',
-    Terminada = <any> 'Terminada',
-    Cancelada = <any> 'Cancelada'
+    EnProgreso = <any> 'ENPROGRESO',
+    Terminada = <any> 'TERMINADA',
+    Cancelada = <any> 'CANCELADA'
 }
 /**
  * 
