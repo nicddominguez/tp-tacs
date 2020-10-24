@@ -165,9 +165,9 @@ public class PartidasApiController implements PartidasApi {
         if (partida == null)
             return new ResponseEntity("No existe la partida solicitada", HttpStatus.BAD_REQUEST);
         if(campos != null && campos.toUpperCase().equals("LIVIANA")){
-            return ResponseEntity.ok(partidaMapper.aPartidaLivianaModel(partida));
+            return ResponseEntity.ok().eTag("etag").body(partidaMapper.aPartidaLivianaModel(partida));
         }
-        return ResponseEntity.ok(partidaMapper.wrap(partida));
+        return ResponseEntity.ok().eTag("etag").body(partidaMapper.wrap(partida));
     }
 
 
