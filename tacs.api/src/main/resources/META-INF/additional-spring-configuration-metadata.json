@@ -34,6 +34,11 @@
       "name": "application.persistance-implementation",
       "type": "java.lang.String",
       "description": "Valores: memoria, mongo"
+    },
+    {
+      "name": "application.admin-emails",
+      "type": "java.lang.String[]",
+      "description": "Emails reconocidos por la app como administradores"
     }
   ]
 }
