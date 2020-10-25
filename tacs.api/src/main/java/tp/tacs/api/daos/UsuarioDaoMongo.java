@@ -4,6 +4,7 @@ import com.mongodb.client.MongoClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
@@ -111,6 +112,7 @@ public class UsuarioDaoMongo implements UsuarioDao {
                 .include("rachaActual")
                 .include("nombre")
                 .include("_id");
+        query.with(Sort.by(Sort.Direction.DESC, "partidasGanadas", "rachaActual", "partidasJugadas"));
         return this.mongoOps.find(query, Usuario.class)
                 .stream().map(usuario -> new EstadisticasDeUsuarioModel()
                                             .usuario(this.usuarioMapper.wrap(usuario))
