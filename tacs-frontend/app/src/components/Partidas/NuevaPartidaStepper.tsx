@@ -248,6 +248,7 @@ const SelectorCantidadMunicipiosStyled = withStyles(styles)(
 interface SelectorUsuarioProps {
   classes?: any;
   onChange: (usuarios: Array<UsuarioModel>) => void;
+  usuarioLogueado?: UsuarioModel;
 }
 
 interface SelectorUsuarioState {
@@ -278,6 +279,10 @@ class SelectorUsuarios extends React.Component<
       page: 0,
       pageSize: 4,
     };
+
+    if (this.props.usuarioLogueado != undefined) {
+      this.state.usuariosSeleccionados.push(this.props.usuarioLogueado);
+    }
 
     this.onChangeFilter = this.onChangeFilter.bind(this);
     this.handleRemoveUser = this.handleRemoveUser.bind(this);
@@ -334,12 +339,16 @@ class SelectorUsuarios extends React.Component<
     this.usuariosApiClient
       .listarUsuarios(
         this.state.filtro == "" ? undefined : this.state.filtro,
-        this.state.pageSize,
+        this.state.pageSize + 1,
         this.state.page
       )
       .then((response) => {
         this.setState({
-          listadoUsuarios: response.usuarios || [],
+          listadoUsuarios:
+            response.usuarios?.filter(
+              (usuario: UsuarioModel) =>
+                usuario.id != this.props.usuarioLogueado?.id
+            ) || [],
           cantidadTotalDeUsuarios: response.cantidadTotalDeUsuarios || 0,
         });
       })
@@ -363,9 +372,11 @@ class SelectorUsuarios extends React.Component<
                 id={`${usuario.id}-${usuario.nombreDeUsuario}`}
                 primary={usuario.nombreDeUsuario}
               />
-              <ListItemIcon onClick={this.handleRemoveUser(usuario)}>
-                <Cancel />
-              </ListItemIcon>
+              {usuario.id != this.props.usuarioLogueado?.id ? (
+                <ListItemIcon onClick={this.handleRemoveUser(usuario)}>
+                  <Cancel />
+                </ListItemIcon>
+              ) : undefined}
             </ListItem>
           ))}
           <ListItem />
@@ -398,7 +409,7 @@ class SelectorUsuarios extends React.Component<
           ))}
           <ListItem>
             <TablePaginationActions
-              count={this.state.cantidadTotalDeUsuarios}
+              count={this.state.cantidadTotalDeUsuarios - 1}
               page={this.state.page}
               rowsPerPage={this.state.pageSize}
               onChangePage={this.handlePage}
@@ -446,6 +457,7 @@ interface NuevaPartidaStepperState {
 
 interface NuevaPartidaStepperProps {
   classes?: any;
+  usuarioLogueado?: UsuarioModel;
 }
 
 export class NuevaPartidaStepper extends React.Component<
@@ -625,7 +637,10 @@ export class NuevaPartidaStepper extends React.Component<
         );
       case 3:
         return (
-          <SelectorUsuariosStyled onChange={this.setUsuariosSeleccionados} />
+          <SelectorUsuariosStyled
+            onChange={this.setUsuariosSeleccionados}
+            usuarioLogueado={this.props.usuarioLogueado}
+          />
         );
       default:
         return "Unknown step";
