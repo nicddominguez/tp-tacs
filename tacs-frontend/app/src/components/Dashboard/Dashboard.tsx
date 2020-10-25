@@ -243,7 +243,7 @@ export default function Dashboard(props: DashboardProps) {
           key="/app/estadisticas"
           path="/app/estadisticas"
           exact
-          component={() => <Estadisticas />}
+          component={() => <Estadisticas usuarioLogueado={usuarioLogueado}/>}
         />
         <Route
           key="/app/estadisticas/usuarios"

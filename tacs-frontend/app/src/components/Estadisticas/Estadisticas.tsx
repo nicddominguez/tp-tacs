@@ -1,5 +1,6 @@
 import { Button, Container, Grid, Paper, Typography } from "@material-ui/core";
 import { createStyles, Theme, withStyles } from "@material-ui/core/styles";
+import { UsuarioModel } from "api";
 import React from "react";
 import { Link } from "react-router-dom";
 
@@ -24,6 +25,7 @@ const useStyles = (theme: Theme) =>
 
 interface Props {
   classes: any;
+  usuarioLogueado?: UsuarioModel;
 }
 
 interface State {}
@@ -43,44 +45,51 @@ class Estadisticas extends React.Component<Props, State> {
             <Typography align="center" variant="h5" className={classes.header}>
               Estadísticas
             </Typography>
-            <Grid item xs={12}>
-              <Link to="/app/estadisticas/usuarios" className={classes.link}>
-                <Button
-                  size="small"
-                  variant="contained"
-                  className={classes.margin}
-                  color="primary"
-                  fullWidth
-                >
-                  Estadísticas de Usuarios
-                </Button>
-              </Link>
-            </Grid>
-            <Grid item xs={12}>
-              <Link to="/app/estadisticas/partidas" className={classes.link}>
-                <Button
-                  size="small"
-                  variant="contained"
-                  className={classes.margin}
-                  color="secondary"
-                  fullWidth
-                >
-                  Estadísticas de Partidas
-                </Button>
-              </Link>
-            </Grid>
-            <Grid item xs={12}>
-              <Link to="/app/estadisticas/scoreboard" className={classes.link}>
-                <Button
-                  size="small"
-                  variant="contained"
-                  className={classes.margin}
-                  fullWidth
-                >
-                  Scoreboard
-                </Button>
-              </Link>
-            </Grid>
+            {this.props.usuarioLogueado?.esAdmin ? 
+              <React.Fragment>
+                <Grid item xs={12}>
+                  <Link to="/app/estadisticas/usuarios" className={classes.link}>
+                    <Button
+                      size="small"
+                      variant="contained"
+                      className={classes.margin}
+                      color="primary"
+                      fullWidth
+                    >
+                      Estadísticas de Usuarios
+                    </Button>
+                  </Link>
+                </Grid>
+                <Grid item xs={12}>
+                  <Link to="/app/estadisticas/partidas" className={classes.link}>
+                    <Button
+                      size="small"
+                      variant="contained"
+                      className={classes.margin}
+                      color="secondary"
+                      fullWidth
+                    >
+                      Estadísticas de Partidas
+                    </Button>
+                  </Link>
+                </Grid>
+                <Grid item xs={12}>
+                  <Link to="/app/estadisticas/scoreboard" className={classes.link}>
+                    <Button
+                      size="small"
+                      variant="contained"
+                      className={classes.margin}
+                      fullWidth
+                    >
+                      Scoreboard
+                    </Button>
+                  </Link>
+                </Grid>
+              </React.Fragment> : 
+              <Typography align="center" variant="h6" className={classes.header} style={{color: 'red'}}>
+                No tiene permisos para ver esta sección
+              </Typography>
+            }        
           </Grid>
         </Paper>
       </Container>
