@@ -123,9 +123,11 @@ function Row(props: {
               <Grid item xs={6}>
                 <Typography variant="body1">
                   Ganador:{" "}
-                  {partida.estado == EstadoDeJuegoModel.EnProgreso
-                    ? "-"
-                    : partida.idGanador}
+                  {partida.idGanador
+                    ? partida.jugadores?.find(
+                        (jugador) => jugador.id == partida.idGanador
+                      )?.nombreDeUsuario
+                    : "Sin ganador aún"}
                 </Typography>
                 <Typography variant="body1" gutterBottom>
                   Cantidad de municipios: {partida.cantidadMunicipios}
