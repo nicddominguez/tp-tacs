@@ -41,7 +41,7 @@ public class ServicioPartida {
     @Autowired
     private MunicipioEnJuegoMapper municipioEnJuegoMapper;
 
-    public void validarAccion(String accion, Partida partida, Usuario duenio) {
+    public void validarTurnoPartida(String accion, Partida partida, Usuario duenio) {
         if (!partida.getEstado().equals(Estado.EN_CURSO)) {
             throw new PartidaException("La partida no está en curso. No se pudo " + accion);
         }
@@ -235,21 +235,47 @@ public class ServicioPartida {
         return partidaDao.get(request);
     }
 
-    public MoverGauchosResponse moverGauchos(String idMunicipioOrigen, String idMunicipioDestino, Integer cantidad, ModoDeJuego modoDeJuego) {
+
+    public MoverGauchosResponse moverGauchos(Partida partida, String idMunicipioOrigen, String idMunicipioDestino, Integer cantidad) {
         var municipioOrigen = municipioDao.get(idMunicipioOrigen);
         var municipioDestino = municipioDao.get(idMunicipioDestino);
+        this.validarTurnoPartida("mover gauchos", partida, municipioOrigen.getDuenio());
+        this.validarBloqueo(municipioOrigen);
+        this.validarDueniosAlMoverGauchos(municipioOrigen.getDuenio(), municipioDestino.getDuenio());
+
+        this.moverGauchos(municipioOrigen, municipioDestino, cantidad);
+
+        municipioDao.save(municipioOrigen);
+        municipioDao.save(municipioDestino);
+        MunicipioEnJuegoModel municipioOrigenModel = municipioEnJuegoMapper.toModel(municipioOrigen, partida.getModoDeJuego());
+        MunicipioEnJuegoModel municipioDestinoModel = municipioEnJuegoMapper.toModel(municipioDestino, partida.getModoDeJuego());
+        return new MoverGauchosResponse()
+                .municipioOrigen(municipioOrigenModel)
+                .municipioDestino(municipioDestinoModel);
+    }
+
+    private void validarDueniosAlMoverGauchos(Usuario duenioOrigen, Usuario duenioDestino) {
+        if (!duenioOrigen.getId().equals(duenioDestino.getId()))
+            throw new MunicipioException("No se puede mover gauchos entre municipios de distinto dueño");
+    }
+
+    private void validarBloqueo(Municipio municipioOrigen) {
+        if (municipioOrigen.isBloqueado()) {
+            throw new MunicipioException(
+                    new StringBuilder("No se pudo realizar la acción, ")
+                            .append(municipioOrigen.getNombre())
+                            .append(" está bloqueado.").toString());
+        }
+    }
+
+    private void moverGauchos(Municipio municipioOrigen, Municipio municipioDestino, Integer cantidad) {
+        if (municipioOrigen.getId().equals(municipioDestino.getId()))
+            throw new MunicipioException("El municipio de origen de los gauchos no puede ser el de destino.");
         if (cantidad > municipioOrigen.getCantGauchos())
             throw new MunicipioException("La cantidad de gauchos a mover no puede ser menor a la que posee el municipio origen.");
         servicioMunicipio.sacarGauchos(municipioOrigen, cantidad);
         servicioMunicipio.agregarGauchos(municipioDestino, cantidad);
         municipioDestino.setBloqueado(true);
-        municipioDao.save(municipioOrigen);
-        municipioDao.save(municipioDestino);
-        MunicipioEnJuegoModel municipioOrigenModel = municipioEnJuegoMapper.toModel(municipioOrigen, modoDeJuego);
-        MunicipioEnJuegoModel municipioDestinoModel = municipioEnJuegoMapper.toModel(municipioDestino, modoDeJuego);
-        return new MoverGauchosResponse()
-                .municipioOrigen(municipioOrigenModel)
-                .municipioDestino(municipioDestinoModel);
     }
 
     public Partida inicializar(CrearPartidaBody request) {
@@ -293,19 +319,12 @@ public class ServicioPartida {
 
         var municipioAtacante = municipioDao.get(idMunicipioAtacante);
         var municipioAtacado = municipioDao.get(idMunicipioAtacado);
-
-        this.validarAccion("atacar", partida, municipioAtacante.getDuenio());
+        this.validarTurnoPartida("atacar", partida, municipioAtacante.getDuenio());
         this.distintoDuenio(municipioAtacante, municipioAtacado);
+        this.validarBloqueo(municipioAtacante);
 
-        Integer gauchosAtacantesFinal = this.gauchosAtacantesFinales(partida, municipioAtacante, municipioAtacado);
-        Integer gauchosDefensoresFinal = this.gauchosDefensoresFinales(partida, municipioAtacante, municipioAtacado);
-        municipioAtacante.setCantGauchos(gauchosAtacantesFinal);
-        municipioAtacado.setCantGauchos(gauchosDefensoresFinal);
+        realizarAtaque(partida, municipioAtacante, municipioAtacado);
 
-        if (gauchosDefensoresFinal <= 0) {
-            municipioAtacado.setDuenio(municipioAtacante.getDuenio());
-            this.moverGauchos(idMunicipioAtacante, idMunicipioAtacado, gauchosAtacantesFinal, partida.getModoDeJuego());
-        }
         municipioDao.save(municipioAtacado);
         municipioDao.save(municipioAtacante);
         if (this.hayGanador(partida)) {
@@ -315,6 +334,18 @@ public class ServicioPartida {
         return new AtacarMunicipioResponse()
                 .municipioAtacado(municipioEnJuegoMapper.toModel(municipioAtacado, partida.getModoDeJuego()))
                 .municipioAtacante(municipioEnJuegoMapper.toModel(municipioAtacante, partida.getModoDeJuego()));
+    }
+
+    private void realizarAtaque(Partida partida, Municipio municipioAtacante, Municipio municipioAtacado) {
+        var gauchosAtacantesFinal = this.gauchosAtacantesFinales(partida, municipioAtacante, municipioAtacado);
+        var gauchosDefensoresFinal = this.gauchosDefensoresFinales(partida, municipioAtacante, municipioAtacado);
+        municipioAtacante.setCantGauchos(gauchosAtacantesFinal);
+        municipioAtacado.setCantGauchos(gauchosDefensoresFinal);
+
+        if (gauchosDefensoresFinal <= 0) {
+            municipioAtacado.setDuenio(municipioAtacante.getDuenio());
+            this.moverGauchos(municipioAtacante, municipioAtacado, gauchosAtacantesFinal);
+        }
     }
 
     public void actualizarEstadoPartida(Partida partida, Estado estado) {
@@ -342,10 +373,6 @@ public class ServicioPartida {
         return partida.getIdsJugadoresActuales().get(partida.getUsuarioJugandoIndiceLista());
     }
 
-    public boolean perteneceALaPartida(PartidaSinInfo partida, Usuario usuario) {
-        return partida.getJugadoresIds().contains(usuario.getId());
-    }
-
     public List<PartidaSinInfo> getPartidasFiltradasUsuario(Date fechaInicio, Date fechaFin, EstadoDeJuegoModel estado, Usuario usuario) {
         return partidaDao.getPartidasFiltradasUsuario(fechaInicio, fechaFin, estado, usuario);
     }
@@ -362,6 +389,5 @@ public class ServicioPartida {
         else
             pasarTurno(partida);
     }
-
 
 }

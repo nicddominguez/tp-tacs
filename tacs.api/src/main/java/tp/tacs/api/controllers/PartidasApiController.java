@@ -187,7 +187,7 @@ public class PartidasApiController implements PartidasApi {
         var cantidad = Math.toIntExact(body.getCantidad());
         MoverGauchosResponse response;
         try {
-            response = servicioPartida.moverGauchos(body.getIdMunicipioOrigen(), body.getIdMunicipioDestino(), cantidad, partida.getModoDeJuego());
+            response = servicioPartida.moverGauchos(partida, body.getIdMunicipioOrigen(), body.getIdMunicipioDestino(), cantidad);
         } catch (MunicipioException | PartidaException e) {
             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
