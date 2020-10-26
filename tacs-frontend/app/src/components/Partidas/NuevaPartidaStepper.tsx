@@ -428,6 +428,11 @@ class SelectorUsuarios extends React.Component<
           label="Filtro"
           value={this.state.filtro}
           onChange={this.onChangeFilter}
+          InputProps={{
+            onKeyDown: (event: React.KeyboardEvent<HTMLInputElement>) => {
+              if(event.key === "Enter") this.buscar();
+            }
+          }}
         />
         <Button color="primary" onClick={this.buscar}>
           Buscar
