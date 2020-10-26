@@ -96,7 +96,7 @@ function Row(props: {
         <TableCell align="center">{partida.provincia?.nombre}</TableCell>
         <TableCell align="center">{partida.modoDeJuego}</TableCell>
         <TableCell align="center">
-          <Button color="primary" onClick={jugarAction}>
+        <Button color="primary" onClick={jugarAction} disabled={partida.estado?.toString()==="Terminada"}>
             Jugar! ⚔️
           </Button>
         </TableCell>
