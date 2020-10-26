@@ -1,3 +1,4 @@
+import { CircularProgress } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import FormControl from "@material-ui/core/FormControl";
 import Grid from "@material-ui/core/Grid";
@@ -43,10 +44,12 @@ const styles = (theme: Theme) =>
     },
     button: {
       marginTop: theme.spacing(1),
+      marginBottom: theme.spacing(1),
       marginRight: theme.spacing(1),
     },
     actionsContainer: {
       marginBottom: theme.spacing(2),
+      display: "flex",
     },
     resetContainer: {
       padding: theme.spacing(3),
@@ -60,6 +63,10 @@ const styles = (theme: Theme) =>
     },
     input: {
       width: 42,
+    },
+    crearButtonContainer: {
+      display: "flex",
+      alignItems: "center"
     },
   });
 
@@ -447,6 +454,7 @@ interface NuevaPartidaStepperState {
   creacionFallida: boolean;
   creacionExitosa: boolean;
   puedeRedireccionar: boolean;
+  loading: boolean;
 }
 
 interface NuevaPartidaStepperProps {
@@ -479,6 +487,7 @@ export class NuevaPartidaStepper extends React.Component<
       creacionFallida: false,
       creacionExitosa: false,
       puedeRedireccionar: false,
+      loading: false,
     };
 
     this.handleBack = this.handleBack.bind(this);
@@ -576,6 +585,7 @@ export class NuevaPartidaStepper extends React.Component<
   }
 
   crearPartida() {
+    this.setState({loading: true});
     const body: CrearPartidaBody = {
       cantidadMunicipios: this.state.cantidadMunicipiosSeleccionada as number,
       idJugadores: this.state.usuariosSeleccionados.map(
@@ -588,9 +598,9 @@ export class NuevaPartidaStepper extends React.Component<
       .crearPartida(body)
       .then((response) => {
         console.log("Partida creada");
-        this.setState({ creacionExitosa: true });
+        this.setState({ creacionExitosa: true, loading: false });
       })
-      .catch((response) => this.setState({ creacionFallida: true }));
+      .catch((response) => this.setState({ creacionFallida: true, loading: false }));
   }
 
   renderActiveStep() {
@@ -654,7 +664,6 @@ export class NuevaPartidaStepper extends React.Component<
               <StepContent>
                 <Typography>{this.renderActiveStep()}</Typography>
                 <div className={this.classes.actionsContainer}>
-                  <div>
                     <Button
                       disabled={this.state.activeStep === 0}
                       onClick={this.handleBack}
@@ -672,20 +681,22 @@ export class NuevaPartidaStepper extends React.Component<
                         Siguiente
                       </Button>
                     ) : (
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={this.handleFinish}
-                        className={this.classes.button}
-                        disabled={
-                          this.state.usuariosSeleccionados.length < 2 ||
-                          this.state.usuariosSeleccionados.length > 4
-                        }
-                      >
-                        Crear
-                      </Button>
+                      <div className={this.classes.crearButtonContainer}>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          onClick={this.handleFinish}
+                          className={this.classes.button}
+                          disabled={
+                            this.state.usuariosSeleccionados.length < 2 ||
+                            this.state.usuariosSeleccionados.length > 4
+                          }
+                        >
+                          Crear
+                        </Button>
+                        {this.state.loading && <CircularProgress size={20} />}
+                      </div>
                     )}
-                  </div>
                 </div>
               </StepContent>
             </Step>
