@@ -312,19 +312,13 @@ class SelectorUsuarios extends React.Component<
 
   handleAddUser(usuarioAAgregar: UsuarioModel) {
     return () => {
-      const oldIndex = this.state.usuariosSeleccionados.indexOf(
-        usuarioAAgregar
-      );
-      const nuevosUsuariosSeleccionados = [...this.state.usuariosSeleccionados];
-
-      if (oldIndex === -1) {
-        nuevosUsuariosSeleccionados.push(usuarioAAgregar);
+      if(!this.state.usuariosSeleccionados.some(u=>u.id === usuarioAAgregar.id)){
+        const nuevosUsuariosSeleccionados = [...this.state.usuariosSeleccionados, usuarioAAgregar];
+        this.setState({
+          usuariosSeleccionados: nuevosUsuariosSeleccionados,
+        });
+        this.props.onChange(nuevosUsuariosSeleccionados);
       }
-
-      this.setState({
-        usuariosSeleccionados: nuevosUsuariosSeleccionados,
-      });
-      this.props.onChange(nuevosUsuariosSeleccionados);
     };
   }
 
