@@ -535,9 +535,6 @@ export class NuevaPartidaStepper extends React.Component<
         activeStep: prevState.activeStep - 1,
       };
     });
-    if (this.state.activeStep === stepNames.length - 1) {
-      this.crearPartida();
-    }
   }
 
   setIdProvincia(id: number) {
