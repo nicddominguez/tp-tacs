@@ -451,6 +451,7 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
 
   renderActionDialog() {
     const municipio = this.state.municipioSeleccionado;
+    const accionesEstanDeshabilitadas = municipio?.estaBloqueado || municipio?.gauchos === 0;
     switch (this.state.estadoJuego) {
       case EstadoJuego.SELECCION:
         return (
@@ -476,11 +477,16 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
               {this.renderBotonCambiarEstadoMunicipio()}
               <Button
                 onClick={this.organizarDesplazamientoGauchos}
-                disabled={municipio?.estaBloqueado || municipio?.gauchos === 0}
+                disabled={accionesEstanDeshabilitadas}
               >
                 Desplazar gauchos
-                </Button>
-              <Button onClick={this.organizarAtaqueAMunicipio}>Organizar ataque</Button>
+              </Button>
+              <Button
+                onClick={this.organizarAtaqueAMunicipio}
+                disabled={accionesEstanDeshabilitadas}
+              >
+                Organizar ataque
+              </Button>
             </DialogActions>
           </div>
         )
