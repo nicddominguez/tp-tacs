@@ -16,10 +16,12 @@ import tp.tacs.api.dominio.usuario.Usuario;
 import tp.tacs.api.mappers.PartidaSinInfoPartidaMapper;
 import tp.tacs.api.model.EstadisticasDeJuegoModel;
 import tp.tacs.api.model.EstadoDeJuegoModel;
+import tp.tacs.api.utils.Utils;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import javax.annotation.PostConstruct;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.springframework.data.mongodb.core.query.Criteria.where;
@@ -113,7 +115,7 @@ public class PartidaDaoMongo implements PartidaDao {
     @Override
     public List<PartidaSinInfo> getPartidasFiltradasUsuario(Date fechaInicio, Date fechaFin, EstadoDeJuegoModel estado, Usuario usuario) {
         var query = this.queryPartidasFiltradas(fechaInicio, fechaFin, estado);
-        query.addCriteria(where(usuario.getId()).in("idsJugadoresOriginales"));
+        query.addCriteria(where("idsJugadoresOriginales").in(usuario.getId()));
         var partidas = this.mongoOps.find(query, Partida.class);
         return partidas.stream().map(partidaSinInfoPartidaMapper::unwrap).collect(Collectors.toList());
     }

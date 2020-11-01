@@ -23,10 +23,6 @@ public class ServicioUsuario {
     private final JWTTokenService jwtTokenService;
     private final GoogleIdTokenService googleIdTokenService;
 
-    // TODO: El id del usuario debería generarlo UsuarioDao cuando se almacena en la DB.
-    //  Implementarlo así ahora rompería el branch de dominio. Will do por ahora.
-    private final AtomicLong nextUserId = new AtomicLong(0L);
-
     @Autowired
     UsuarioDao usuarioDao;
 
@@ -83,9 +79,7 @@ public class ServicioUsuario {
 
         return this.getByGoogleId(googleId).orElseGet(() -> {
             // El usuario no existe, lo creamos
-            Long userId = this.nextUserId.getAndIncrement();
             var nuevoUsuario = Usuario.builder()
-                    .id(userId.toString())
                     .mail(email)
                     .nombre(name)
                     .googleId(googleId)

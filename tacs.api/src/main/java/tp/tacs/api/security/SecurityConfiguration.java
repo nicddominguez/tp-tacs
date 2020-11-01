@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -47,7 +48,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
+        CorsConfiguration cors = new CorsConfiguration();
+        cors.addAllowedMethod(HttpMethod.GET);
+        cors.addAllowedMethod(HttpMethod.POST);
+        cors.addAllowedMethod(HttpMethod.PUT);
+        cors.addAllowedMethod(HttpMethod.PATCH);
+        cors.addAllowedMethod(HttpMethod.DELETE);
+        cors.addAllowedMethod(HttpMethod.OPTIONS);
+        cors.applyPermitDefaultValues();
+        source.registerCorsConfiguration("/**", cors);
         return source;
     }
 

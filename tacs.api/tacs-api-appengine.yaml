@@ -1,0 +1,11 @@
+runtime: java11
+service: default
+
+env_variables:
+  GOOGLE_OAUTH_CLIENT_ID: "475854452552-js6cnac0fjktpav4dcp570860l7etar8.apps.googleusercontent.com"
+  DB_CONNECTION_STRING: "mongodb://root:example@34.95.185.134:27017/"
+
+instance_class: "F4_1G"
+
+automatic_scaling:
+  max_concurrent_requests: 70

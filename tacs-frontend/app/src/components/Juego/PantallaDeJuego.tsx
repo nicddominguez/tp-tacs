@@ -174,7 +174,7 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
 
   pasarTurno() {
     if (this.state.partidaConInfo?.id !== undefined) {
-      adminApiClient.pasarTurno(this.state.partidaConInfo?.id)
+      partidasApiClient.pasarTurno(this.state.partidaConInfo?.id)
         .then(response => {
           this.cargarPartida();
         })
