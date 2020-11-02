@@ -29,23 +29,9 @@ public class PartidaSinInfoPartidaMapper extends AbstractMapper<PartidaSinInfo, 
 
     @Override
     protected PartidaSinInfo unwrapModel(Partida partida) {
-        return PartidaSinInfo.builder()
-                .estado(partida.getEstado())
-                .fechaCreacion(partida.getFechaCreacion())
-                .id(partida.getId())
-                .jugadoresIds(partida.getIdsJugadoresActuales())
-                .municipios(partida.getMunicipios())
-                .ganador(partida.getGanador())
-                .idProvincia(partida.getIdProvincia())
-                .nombreProvincia(partida.getNombreProvincia())
-                .jugadoresIds(partida.getIdsJugadoresActuales())
-                .modoDeJuego(partida.getModoDeJuego())
-                .usuarioJugandoIndiceLista(partida.getUsuarioJugandoIndiceLista())
-                .minAltura(partida.getMinAltura())
-                .minDist(partida.getMinDist())
-                .maxAltura(partida.getMaxAltura())
-                .maxDist(partida.getMaxDist())
-                .build();
+        return new PartidaSinInfo(partida.getId(),partida.getIdsJugadoresActuales(), partida.getUsuarioJugandoIndiceLista(), partida.getEstado(),
+                partida.getNombreProvincia(), partida.getIdProvincia(), partida.getMunicipios(), partida.getModoDeJuego(), partida.getFechaCreacion(),
+                partida.getGanador(), partida.getMinAltura(), partida.getMaxAltura(), partida.getMaxDist(), partida.getMinDist());
     }
 
 }
