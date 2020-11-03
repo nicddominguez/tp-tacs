@@ -3,7 +3,7 @@ service: default
 
 env_variables:
   GOOGLE_OAUTH_CLIENT_ID: "475854452552-js6cnac0fjktpav4dcp570860l7etar8.apps.googleusercontent.com"
-  DB_CONNECTION_STRING: "mongodb+srv://grupo3:wololo@wololocluster.b7glv.mongodb.net/"
+  DB_CONNECTION_STRING: ""
 
 instance_class: "F4_1G"
 

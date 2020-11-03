@@ -53,3 +53,14 @@ security.rutas.administrativas=/admin/**
 server.servlet.context-path=/api/v1
 spring.mvc.date-format=yyyy/MM/dd
 ```
+
+### Deployment
+
+Para el deploy se utilizó MongoDB Atlas y Google App Engine.
+
+Elegimos usar App Engine ya que la autenticación utilizando Google necesita un dominio válido registrado, no puede utilizar una dirección IP. Para cada servicio que ejecutamos en GAE, obtenemos un dominio.
+
+Se utilizan dos servicios en Google App Engine, definidos en:
+
+* `tacs.api/tacs-api-appengine.yaml` -> Archivo de configuración del Backend
+* `tacs-frontend/server/tacs-frontend-appengine.yaml` -> Archivo de configuración del frontend
