@@ -36,7 +36,7 @@ public class OpenTopoDataApi {
     @SneakyThrows
     private List<TopoData> getTopoData(List<Municipio> municipios) {
         String coordenadas = municipios.stream().map(municipio -> servicioMunicipio.coordenadasParaTopo(municipio))
-                .reduce("", (coord1, coord2) -> coord1 + "%7C" + coord2);
+                .reduce("", (coord1, coord2) -> new StringBuilder(coord1).append("%7C").append(coord2).toString());
         String url = String.format("%s%s", topoBaseUrl, coordenadas);
         return new Gson().fromJson(connector.get(url), TopoResult.class).getResults();
     }

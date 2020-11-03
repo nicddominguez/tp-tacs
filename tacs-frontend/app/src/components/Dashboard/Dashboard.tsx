@@ -237,13 +237,15 @@ export default function Dashboard(props: DashboardProps) {
           key="/app/nuevaPartida"
           path="/app/nuevaPartida"
           exact
-          component={() => <NuevaPartidaStepper />}
+          component={() => (
+            <NuevaPartidaStepper usuarioLogueado={usuarioLogueado} />
+          )}
         />
         <Route
           key="/app/estadisticas"
           path="/app/estadisticas"
           exact
-          component={() => <Estadisticas />}
+          component={() => <Estadisticas usuarioLogueado={usuarioLogueado} />}
         />
         <Route
           key="/app/estadisticas/usuarios"

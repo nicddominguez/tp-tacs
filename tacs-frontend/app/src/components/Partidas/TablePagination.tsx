@@ -24,7 +24,7 @@ export default function CustomTablePagination({
 }: Props) {
   return (
     <TablePagination
-      rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
+      rowsPerPageOptions={[5, 10, 25]}
       colSpan={7}
       count={rowsLength}
       rowsPerPage={rowsPerPage}

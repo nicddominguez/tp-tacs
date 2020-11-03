@@ -9,7 +9,7 @@ import {
   EstadoDeJuegoModel,
   MunicipioEnJuegoModel,
   PartidaModel,
-  UsuarioModel
+  UsuarioModel,
 } from "api/api";
 import iconoParaMunicipio from "components/Juego/MapIcons";
 import { Feature, GeoJsonObject, Geometry } from "geojson";
@@ -153,7 +153,9 @@ export default class GameMap extends React.Component<
             <Typography>Municipio: {municipio.nombre}</Typography>
             <Typography>Cantidad de gauchos: {municipio.gauchos}</Typography>
             <Typography>Modo: {municipio.modo}</Typography>
-            {municipio.estaBloqueado ? <Typography color='error'>Bloqueado</Typography> : undefined}
+            {municipio.estaBloqueado ? (
+              <Typography color="error">Bloqueado</Typography>
+            ) : undefined}
           </Popup>
         </Marker>
       );
@@ -184,36 +186,38 @@ export default class GameMap extends React.Component<
           this.renderPopupMunicipio
         )}
 
-        <Control position="bottomleft">
-          <Grid container direction="column" spacing={1}>
-            <Grid item>
-              <Button
-                color={this.esElTurnoDelUsuario() ? "default" : "secondary"}
-                style={{ backgroundColor: "white" }}
-                fullWidth
-              >
-                {this.esElTurnoDelUsuario()
-                  ? "Tu turno"
-                  : `Turno de ${this.nombreUsuario(
-                      this.props.partida?.informacionDeJuego
-                        ?.idUsuarioProximoTurno
-                    )}`}
-              </Button>
+        {this.props.partida?.idGanador == undefined ? (
+          <Control position="bottomleft">
+            <Grid container direction="column" spacing={1}>
+              <Grid item>
+                <Button
+                  color={this.esElTurnoDelUsuario() ? "default" : "secondary"}
+                  style={{ backgroundColor: "white" }}
+                  fullWidth
+                >
+                  {this.esElTurnoDelUsuario()
+                    ? "Tu turno"
+                    : `Turno de ${this.nombreUsuario(
+                        this.props.partida?.informacionDeJuego
+                          ?.idUsuarioProximoTurno
+                      )}`}
+                </Button>
+              </Grid>
+              <Grid item>
+                <Button
+                  onClick={
+                    this.props.onPasarTurno ? this.props.onPasarTurno : () => {}
+                  }
+                  color="primary"
+                  variant="contained"
+                  fullWidth
+                >
+                  Pasar turno
+                </Button>
+              </Grid>
             </Grid>
-            <Grid item>
-              <Button
-                onClick={
-                  this.props.onPasarTurno ? this.props.onPasarTurno : () => {}
-                }
-                color="primary"
-                variant="contained"
-                fullWidth
-              >
-                Pasar turno
-              </Button>
-            </Grid>
-          </Grid>
-        </Control>
+          </Control>
+        ) : undefined}
 
         {/* Para mostrar los jugadores y sus colores */}
         <Control position="bottomright">
@@ -244,21 +248,23 @@ export default class GameMap extends React.Component<
                 </List>
               </Card>
             </Grid>
-            <Grid item>
-              <Button
-                onClick={
-                  this.props.onRendirUsuario
-                    ? this.props.onRendirUsuario
-                    : () => {}
-                }
-                color="secondary"
-                variant="contained"
-                disabled={!this.esElTurnoDelUsuario()}
-                fullWidth
-              >
-                Rendirse
-              </Button>
-            </Grid>
+            {this.props.partida?.idGanador == undefined ? (
+              <Grid item>
+                <Button
+                  onClick={
+                    this.props.onRendirUsuario
+                      ? this.props.onRendirUsuario
+                      : () => {}
+                  }
+                  color="secondary"
+                  variant="contained"
+                  disabled={!this.esElTurnoDelUsuario()}
+                  fullWidth
+                >
+                  Rendirse
+                </Button>
+              </Grid>
+            ) : undefined}
           </Grid>
         </Control>
       </Map>

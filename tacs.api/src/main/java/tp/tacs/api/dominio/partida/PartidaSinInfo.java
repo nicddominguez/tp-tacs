@@ -1,6 +1,6 @@
 package tp.tacs.api.dominio.partida;
 
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import tp.tacs.api.dominio.usuario.Usuario;
@@ -8,14 +8,13 @@ import tp.tacs.api.dominio.usuario.Usuario;
 import java.util.Date;
 import java.util.List;
 
-@Builder
+@AllArgsConstructor
 @Getter
 @Setter
 public class PartidaSinInfo {
 
     private String id;
     private List<String> jugadoresIds;
-    @Builder.Default
     private Integer usuarioJugandoIndiceLista = 0;
     private Estado estado;
     private String nombreProvincia;
@@ -28,5 +27,4 @@ public class PartidaSinInfo {
     private Float maxAltura;
     private Float maxDist;
     private Float minDist;
-
 }

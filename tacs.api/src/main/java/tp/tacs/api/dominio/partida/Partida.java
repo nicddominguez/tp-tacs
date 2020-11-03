@@ -11,7 +11,6 @@ import java.util.List;
 @Builder
 @Getter
 @Setter
-
 public class Partida {
 
     private String id;
@@ -22,7 +21,6 @@ public class Partida {
     private Estado estado;
     private String nombreProvincia;
     private String idProvincia;
-    @Setter
     private List<String> municipios;
     private ModoDeJuego modoDeJuego;
     private Date fechaCreacion;

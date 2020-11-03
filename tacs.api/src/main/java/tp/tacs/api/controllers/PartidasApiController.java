@@ -165,9 +165,9 @@ public class PartidasApiController implements PartidasApi {
         if (partida == null)
             return new ResponseEntity("No existe la partida solicitada", HttpStatus.BAD_REQUEST);
         if(campos != null && campos.toUpperCase().equals("LIVIANA")){
-            return ResponseEntity.ok(partidaMapper.aPartidaLivianaModel(partida));
+            return ResponseEntity.ok().eTag("etag").body(partidaMapper.aPartidaLivianaModel(partida));
         }
-        return ResponseEntity.ok(partidaMapper.wrap(partida));
+        return ResponseEntity.ok().eTag("etag").body(partidaMapper.wrap(partida));
     }
 
 
@@ -187,7 +187,7 @@ public class PartidasApiController implements PartidasApi {
         var cantidad = Math.toIntExact(body.getCantidad());
         MoverGauchosResponse response;
         try {
-            response = servicioPartida.moverGauchos(body.getIdMunicipioOrigen(), body.getIdMunicipioDestino(), cantidad, partida.getModoDeJuego());
+            response = servicioPartida.moverGauchos(partida, body.getIdMunicipioOrigen(), body.getIdMunicipioDestino(), cantidad);
         } catch (MunicipioException | PartidaException e) {
             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

@@ -35,6 +35,8 @@ $ > docker-compose up -d --build
 3. Al acceder al frontend, es importante hacerlo a través de la url `http://localhost:8080` (para nginx) o `http://localhost:3000` (para el server de desarrollo de React).
     * Esto se debe a que la url necesita estar registrada en nuestra aplicación de Google y el registro no permite direcciones IP, de forma que no se puede usar `127.0.0.1` u otra dirección IP directamente.
 
+4. Se debe setear en `tacs.api/src/main/resources/application.properties` la propiedad `application.admin-emails` a la lista de mails que se requiere que sean administradores.
+
 ### Colección de Postman
 
 Se puede importar con este link una colección de Postman para testear la aplicación: https://www.getpostman.com/collections/e5a1ea2fa747c5fb2d7a.

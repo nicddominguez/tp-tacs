@@ -1,3 +1,4 @@
+import { CircularProgress } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import FormControl from "@material-ui/core/FormControl";
 import Grid from "@material-ui/core/Grid";
@@ -43,10 +44,12 @@ const styles = (theme: Theme) =>
     },
     button: {
       marginTop: theme.spacing(1),
+      marginBottom: theme.spacing(1),
       marginRight: theme.spacing(1),
     },
     actionsContainer: {
       marginBottom: theme.spacing(2),
+      display: "flex",
     },
     resetContainer: {
       padding: theme.spacing(3),
@@ -60,6 +63,10 @@ const styles = (theme: Theme) =>
     },
     input: {
       width: 42,
+    },
+    crearButtonContainer: {
+      display: "flex",
+      alignItems: "center"
     },
   });
 
@@ -248,6 +255,7 @@ const SelectorCantidadMunicipiosStyled = withStyles(styles)(
 interface SelectorUsuarioProps {
   classes?: any;
   onChange: (usuarios: Array<UsuarioModel>) => void;
+  usuarioLogueado?: UsuarioModel;
 }
 
 interface SelectorUsuarioState {
@@ -279,6 +287,10 @@ class SelectorUsuarios extends React.Component<
       pageSize: 4,
     };
 
+    if (this.props.usuarioLogueado != undefined) {
+      this.state.usuariosSeleccionados.push(this.props.usuarioLogueado);
+    }
+
     this.onChangeFilter = this.onChangeFilter.bind(this);
     this.handleRemoveUser = this.handleRemoveUser.bind(this);
     this.handleAddUser = this.handleAddUser.bind(this);
@@ -307,19 +319,13 @@ class SelectorUsuarios extends React.Component<
 
   handleAddUser(usuarioAAgregar: UsuarioModel) {
     return () => {
-      const oldIndex = this.state.usuariosSeleccionados.indexOf(
-        usuarioAAgregar
-      );
-      const nuevosUsuariosSeleccionados = [...this.state.usuariosSeleccionados];
-
-      if (oldIndex === -1) {
-        nuevosUsuariosSeleccionados.push(usuarioAAgregar);
+      if(!this.state.usuariosSeleccionados.some(u=>u.id === usuarioAAgregar.id)){
+        const nuevosUsuariosSeleccionados = [...this.state.usuariosSeleccionados, usuarioAAgregar];
+        this.setState({
+          usuariosSeleccionados: nuevosUsuariosSeleccionados,
+        });
+        this.props.onChange(nuevosUsuariosSeleccionados);
       }
-
-      this.setState({
-        usuariosSeleccionados: nuevosUsuariosSeleccionados,
-      });
-      this.props.onChange(nuevosUsuariosSeleccionados);
     };
   }
 
@@ -334,12 +340,16 @@ class SelectorUsuarios extends React.Component<
     this.usuariosApiClient
       .listarUsuarios(
         this.state.filtro == "" ? undefined : this.state.filtro,
-        this.state.pageSize,
+        this.state.pageSize + 1,
         this.state.page
       )
       .then((response) => {
         this.setState({
-          listadoUsuarios: response.usuarios || [],
+          listadoUsuarios:
+            response.usuarios?.filter(
+              (usuario: UsuarioModel) =>
+                usuario.id != this.props.usuarioLogueado?.id
+            ) || [],
           cantidadTotalDeUsuarios: response.cantidadTotalDeUsuarios || 0,
         });
       })
@@ -363,9 +373,11 @@ class SelectorUsuarios extends React.Component<
                 id={`${usuario.id}-${usuario.nombreDeUsuario}`}
                 primary={usuario.nombreDeUsuario}
               />
-              <ListItemIcon onClick={this.handleRemoveUser(usuario)}>
-                <Cancel />
-              </ListItemIcon>
+              {usuario.id != this.props.usuarioLogueado?.id ? (
+                <ListItemIcon onClick={this.handleRemoveUser(usuario)}>
+                  <Cancel />
+                </ListItemIcon>
+              ) : undefined}
             </ListItem>
           ))}
           <ListItem />
@@ -398,7 +410,7 @@ class SelectorUsuarios extends React.Component<
           ))}
           <ListItem>
             <TablePaginationActions
-              count={this.state.cantidadTotalDeUsuarios}
+              count={this.state.cantidadTotalDeUsuarios - 1}
               page={this.state.page}
               rowsPerPage={this.state.pageSize}
               onChangePage={this.handlePage}
@@ -416,6 +428,11 @@ class SelectorUsuarios extends React.Component<
           label="Filtro"
           value={this.state.filtro}
           onChange={this.onChangeFilter}
+          InputProps={{
+            onKeyDown: (event: React.KeyboardEvent<HTMLInputElement>) => {
+              if(event.key === "Enter") this.buscar();
+            }
+          }}
         />
         <Button color="primary" onClick={this.buscar}>
           Buscar
@@ -442,10 +459,12 @@ interface NuevaPartidaStepperState {
   creacionFallida: boolean;
   creacionExitosa: boolean;
   puedeRedireccionar: boolean;
+  loading: boolean;
 }
 
 interface NuevaPartidaStepperProps {
   classes?: any;
+  usuarioLogueado?: UsuarioModel;
 }
 
 export class NuevaPartidaStepper extends React.Component<
@@ -473,6 +492,7 @@ export class NuevaPartidaStepper extends React.Component<
       creacionFallida: false,
       creacionExitosa: false,
       puedeRedireccionar: false,
+      loading: false,
     };
 
     this.handleBack = this.handleBack.bind(this);
@@ -515,9 +535,6 @@ export class NuevaPartidaStepper extends React.Component<
         activeStep: prevState.activeStep - 1,
       };
     });
-    if (this.state.activeStep === stepNames.length - 1) {
-      this.crearPartida();
-    }
   }
 
   setIdProvincia(id: number) {
@@ -570,6 +587,7 @@ export class NuevaPartidaStepper extends React.Component<
   }
 
   crearPartida() {
+    this.setState({loading: true});
     const body: CrearPartidaBody = {
       cantidadMunicipios: this.state.cantidadMunicipiosSeleccionada as number,
       idJugadores: this.state.usuariosSeleccionados.map(
@@ -582,9 +600,9 @@ export class NuevaPartidaStepper extends React.Component<
       .crearPartida(body)
       .then((response) => {
         console.log("Partida creada");
-        this.setState({ creacionExitosa: true });
+        this.setState({ creacionExitosa: true, loading: false });
       })
-      .catch((response) => this.setState({ creacionFallida: true }));
+      .catch((response) => this.setState({ creacionFallida: true, loading: false }));
   }
 
   renderActiveStep() {
@@ -625,7 +643,10 @@ export class NuevaPartidaStepper extends React.Component<
         );
       case 3:
         return (
-          <SelectorUsuariosStyled onChange={this.setUsuariosSeleccionados} />
+          <SelectorUsuariosStyled
+            onChange={this.setUsuariosSeleccionados}
+            usuarioLogueado={this.props.usuarioLogueado}
+          />
         );
       default:
         return "Unknown step";
@@ -645,7 +666,6 @@ export class NuevaPartidaStepper extends React.Component<
               <StepContent>
                 <Typography>{this.renderActiveStep()}</Typography>
                 <div className={this.classes.actionsContainer}>
-                  <div>
                     <Button
                       disabled={this.state.activeStep === 0}
                       onClick={this.handleBack}
@@ -663,20 +683,22 @@ export class NuevaPartidaStepper extends React.Component<
                         Siguiente
                       </Button>
                     ) : (
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={this.handleFinish}
-                        className={this.classes.button}
-                        disabled={
-                          this.state.usuariosSeleccionados.length < 2 ||
-                          this.state.usuariosSeleccionados.length > 4
-                        }
-                      >
-                        Crear
-                      </Button>
+                      <div className={this.classes.crearButtonContainer}>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          onClick={this.handleFinish}
+                          className={this.classes.button}
+                          disabled={
+                            this.state.usuariosSeleccionados.length < 2 ||
+                            this.state.usuariosSeleccionados.length > 4
+                          }
+                        >
+                          Crear
+                        </Button>
+                        {this.state.loading && <CircularProgress size={20} />}
+                      </div>
                     )}
-                  </div>
                 </div>
               </StepContent>
             </Step>

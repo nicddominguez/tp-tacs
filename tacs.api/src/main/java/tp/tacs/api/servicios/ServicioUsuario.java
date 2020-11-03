@@ -1,12 +1,14 @@
 package tp.tacs.api.servicios;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import tp.tacs.api.daos.UsuarioDao;
 import tp.tacs.api.dominio.usuario.Usuario;
 import tp.tacs.api.security.GoogleIdTokenService;
 import tp.tacs.api.security.JWTTokenService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
@@ -15,12 +17,11 @@ import java.util.stream.Collectors;
 @Service
 public class ServicioUsuario {
 
+    @Value("${application.admin-emails}")
+    private ArrayList<String> adminEmails;
+
     private final JWTTokenService jwtTokenService;
     private final GoogleIdTokenService googleIdTokenService;
-
-    // TODO: El id del usuario debería generarlo UsuarioDao cuando se almacena en la DB.
-    //  Implementarlo así ahora rompería el branch de dominio. Will do por ahora.
-    private final AtomicLong nextUserId = new AtomicLong(0L);
 
     @Autowired
     UsuarioDao usuarioDao;
@@ -69,6 +70,7 @@ public class ServicioUsuario {
     }
 
     public Usuario crearUsuario(String idTokenString) {
+
         var idToken = this.googleIdTokenService.verifyToken(idTokenString);
 
         var name = this.googleIdTokenService.extractUserName(idToken);
@@ -77,13 +79,11 @@ public class ServicioUsuario {
 
         return this.getByGoogleId(googleId).orElseGet(() -> {
             // El usuario no existe, lo creamos
-            Long userId = this.nextUserId.getAndIncrement();
             var nuevoUsuario = Usuario.builder()
-                    .id(userId.toString())
                     .mail(email)
                     .nombre(name)
                     .googleId(googleId)
-                    .isAdmin(true)
+                    .isAdmin(adminEmails.contains(email))
                     .build();
             this.usuarioDao.save(nuevoUsuario);
             return nuevoUsuario;

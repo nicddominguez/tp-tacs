@@ -9,6 +9,7 @@ import tp.tacs.api.model.EstadisticasDeUsuarioModel;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -85,6 +86,10 @@ public class UsuarioDaoMemoria implements UsuarioDao {
     public List<EstadisticasDeUsuarioModel> scoreBoard() {
         List<EstadisticasDeUsuarioModel> estadisticasDeUsuarioModels = new ArrayList<>();
         usuarios.forEach(idUsuario -> estadisticasDeUsuarioModels.add(estadisticas(idUsuario.getId())));
+        estadisticasDeUsuarioModels.sort(Comparator
+                .comparing(EstadisticasDeUsuarioModel::getPartidasGanadas).reversed()
+                .thenComparing(EstadisticasDeUsuarioModel::getRachaActual).reversed()
+                .thenComparing(EstadisticasDeUsuarioModel::getPartidasJugadas).reversed());
         return estadisticasDeUsuarioModels;
     }
 

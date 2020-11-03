@@ -202,10 +202,8 @@ export class WololoAdminApiClient extends BaseWololoApiClient {
     }
 
     public async pasarTurno(idPartida: string) {
-        console.log('RUNNING')
         return this.doAuthenticatedRequest(
             async (options) => {
-                console.log('DOING')
                 this.adminApi.pasarTurnoAdmin(idPartida, options)
             }
         );
@@ -327,6 +325,12 @@ export class WololoPartidasApiClient extends BaseWololoApiClient {
         return this.doAuthenticatedRequest(
             async (options) => this.partidasApi.simularAtacarMunicipio(idPartida, body, options)
         )
+    }
+
+    public async pasarTurno(idPartida: string) {
+        return this.doAuthenticatedRequest(
+            async (options) => this.partidasApi.pasarTurno(idPartida, options)
+        );
     }
 
 }
