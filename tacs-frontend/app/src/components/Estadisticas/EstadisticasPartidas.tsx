@@ -44,7 +44,10 @@ class EstadisticasPartidas extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
-    this.state = {};
+    this.state = {
+      fechaInicio: new Date(),
+      fechaFin: new Date()
+    };
 
     this.partidasApiClient = new WololoPartidasApiClient();
     this.adminApiClient = new WololoAdminApiClient();
@@ -53,6 +56,10 @@ class EstadisticasPartidas extends React.Component<Props, State> {
     this.handleFechaFin = this.handleFechaFin.bind(this);
     this.buscarEstadisticas = this.buscarEstadisticas.bind(this);
     this.handleRemoverFiltrar = this.handleRemoverFiltrar.bind(this);
+  }
+
+  componentDidMount() {
+    this.buscarEstadisticas()
   }
 
   dateToStringFormat(date: Date | undefined) {
