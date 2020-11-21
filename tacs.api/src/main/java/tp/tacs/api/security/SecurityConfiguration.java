@@ -55,6 +55,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         cors.addAllowedMethod(HttpMethod.PATCH);
         cors.addAllowedMethod(HttpMethod.DELETE);
         cors.addAllowedMethod(HttpMethod.OPTIONS);
+        cors.addExposedHeader("etag");
         cors.applyPermitDefaultValues();
         source.registerCorsConfiguration("/**", cors);
         return source;

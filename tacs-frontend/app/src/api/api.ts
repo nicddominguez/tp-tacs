@@ -16,7 +16,7 @@ import * as url from "url";
 import * as portableFetch from "portable-fetch";
 import { Configuration } from "./configuration";
 
-const BASE_PATH = `https://tacs-wololo-grupo3.rj.r.appspot.com/api/v1`.replace(/\/+$/, "");
+export const BASE_PATH = `https://tacs-wololo-grupo3.rj.r.appspot.com/api/v1`.replace(/\/+$/, "");
 
 /**
  *

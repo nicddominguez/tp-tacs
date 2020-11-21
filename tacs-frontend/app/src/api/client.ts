@@ -1,3 +1,4 @@
+import { Configuration } from './configuration';
 import {
     AuthApi,
     ProvinciasApi,
@@ -13,8 +14,12 @@ import {
     MoverGauchosBody,
     AtacarMunicipioBody,
     SimularAtacarMunicipioBody,
-    RefreshAccessTokenBody, ActualizarEstadoPartida
+    RefreshAccessTokenBody,
+    ActualizarEstadoPartida,
+    PartidasApiFetchParamCreator,
+    BASE_PATH
 } from './api';
+import * as portableFetch from "portable-fetch";
 
 export class BaseWololoApiClient {
 
@@ -217,23 +222,50 @@ export class PollingPartida {
     private idPartida: string
     private frecuenciaMs: number
     private handler: (response: Promise<PartidaModel>) => void
-    private partidasApiClient: WololoPartidasApiClient
+    private lastEtag: string = ""
+    private lastPartida: any;
+    private configuration: Configuration
     private timeout?: number
 
     constructor(
             idPartida: string,
             frecuenciaMs: number,
             handler: (response: Promise<PartidaModel>) => void,
-            partidasApiClient: WololoPartidasApiClient) {
+            configuration: Configuration) {
         this.idPartida = idPartida;
         this.frecuenciaMs = frecuenciaMs;
         this.handler = handler;
-        this.partidasApiClient = partidasApiClient;
+        this.configuration = configuration;
     }
 
     private doPoll() {
-        const partida = this.partidasApiClient.getPartida(this.idPartida);
-        this.handler(partida);
+        const authHeader = window.localStorage.getItem(BaseWololoApiClient.ACCESS_TOKEN_KEY) || undefined;
+        const options = {
+            headers: {
+                "Authorization": `Bearer ${authHeader}`,
+                "Origin": window.location.origin,
+                "If-None-Match": this.lastEtag
+            }
+        }
+
+        const fetchArgs = PartidasApiFetchParamCreator(this.configuration).getPartida(this.idPartida, undefined, options);
+
+        const partidaPromise = fetch(BASE_PATH + fetchArgs.url, fetchArgs.options).then((response: any) => {
+            if (response.status >= 200 && response.status < 300) {
+                this.lastEtag = response.headers.get('etag');
+                return response.json();
+            } else if (response.status === 304) {
+                return new Promise((resolve, reject) => resolve(this.lastPartida));
+            }
+            throw response;
+        });
+
+        partidaPromise.then(partida => {
+            this.lastPartida = partida;
+        });
+
+        this.handler(partidaPromise);
+
         this.timeout = window.setTimeout(this.doPoll.bind(this), this.frecuenciaMs);
     }
 
@@ -287,7 +319,8 @@ export class WololoPartidasApiClient extends BaseWololoApiClient {
             idPartida,
             frecuenciaMs,
             handler,
-            this
+            // @ts-ignore
+            this.partidasApi.configuration
         );
     }
 
