@@ -384,10 +384,9 @@ public class ServicioPartida {
         partida.setMunicipios(nuevosMunicipios.stream().map(Municipio::getId).collect(Collectors.toList()));
         partida.setIdsJugadoresActuales(
                 partida.getIdsJugadoresActuales().stream().filter(id -> !id.equals(jugadorRendido)).collect(Collectors.toList()));
+        pasarTurno(partida);
         if (partida.getIdsJugadoresActuales().size() == 1)
             terminarPartida(partida, Estado.TERMINADA);
-        else
-            pasarTurno(partida);
     }
 
 }
