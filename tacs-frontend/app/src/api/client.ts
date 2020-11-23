@@ -52,13 +52,15 @@ export class BaseWololoApiClient {
             refreshToken: this.getRefreshToken()
         }
 
+        if(!body.refreshToken) {
+            return;
+        }
+
         const result = await this.doRequest(
             async (options) => new AuthApi().refreshAccessToken(body, options)
         );
 
         this.storeAccessToken(result.token);
-
-        return result;
     }
 
     private addHeaderToOptions(options: any, header: string, value: string) {

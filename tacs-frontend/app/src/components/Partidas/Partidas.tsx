@@ -203,6 +203,10 @@ class Partidas extends React.Component<Props, State> {
   };
 
   listarPartidas = () => {
+    if(!this.partidasApi.userIsLoggedIn()) {
+      return;
+    }
+
     this.partidasApi
       .listarPartidas(
         this.dateToStringFormat(this.state.fechaInicio),
