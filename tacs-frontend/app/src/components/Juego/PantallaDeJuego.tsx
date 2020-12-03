@@ -496,7 +496,7 @@ export default class PantallaDeJuego extends React.Component<PantallaDeJuegoProp
             <DialogTitle>Resumen de ataque</DialogTitle>
             <DialogContent>
               <DialogContentText>
-                Vas a atacar a {municipio?.nombre} desde {municipio?.nombre}
+                Vas a atacar a {this.state.municipioObjetivo?.nombre} desde {municipio?.nombre}
               </DialogContentText>
               <DialogContentText>
                 {this.state.simulacionExitosa ? 'Vas a ganar' : 'Vas a perder'}
